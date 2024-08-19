@@ -23,6 +23,7 @@ const config: Config = {
         navigation: "hsl(var(--navbar))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
+        section: "hsl(0, 0%, 97%)",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -81,6 +82,8 @@ const config: Config = {
         "btn-gradient": "linear-gradient(180deg, #00CCD0 0%, #00AFB3 100%)",
         "btn-out-line-gradient":
           "linear-gradient(180deg, #01CDD0 0%, #01B0B3 100%)",
+        "banner-gradient":
+          "linear-gradient(121.39deg, #00CCD0 22.86%, #D9118D 119.27%)",
       },
       borderWidth: {
         gradient: "1px",
