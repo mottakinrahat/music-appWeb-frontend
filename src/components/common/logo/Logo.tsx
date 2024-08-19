@@ -19,8 +19,8 @@ const Logo = () => {
           />{" "}
           <Image
             className="inline-block mt-6"
-            width={100}
-            height={100}
+            width={200}
+            height={200}
             style={{ height: "auto", width: "auto" }}
             src={logo_text}
             alt="Music Appweb"

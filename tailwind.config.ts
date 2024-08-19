@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
-const config = {
+const config: Config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -58,6 +59,7 @@ const config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        gradient: "12px",
       },
       keyframes: {
         "accordion-down": {
@@ -75,6 +77,11 @@ const config = {
       },
       backgroundImage: {
         "btn-gradient": "linear-gradient(180deg, #00CCD0 0%, #00AFB3 100%)",
+        "btn-out-line-gradient":
+          "linear-gradient(180deg, #01CDD0 0%, #01B0B3 100%)",
+      },
+      borderWidth: {
+        gradient: "1px",
       },
     },
   },
