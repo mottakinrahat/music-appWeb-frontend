@@ -42,7 +42,7 @@ const Card: React.FC<MusicCard | ArtistCard> = ({
   isFavourite,
 }) => {
   return (
-    <div className={`p-4 rounded-lg max-w-sm ${className ? className : ""}`}>
+    <div className={`rounded-lg max-w-md ${className ? className : ""}`}>
       {/* Image Container */}
       <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (
@@ -50,8 +50,8 @@ const Card: React.FC<MusicCard | ArtistCard> = ({
             <Image
               src={imageUrl}
               alt={title || "Card image"}
-              width={200}
-              height={200}
+              width={280}
+              height={280}
               style={{ width: "auto", height: "auto" }}
               className="rounded-lg"
             />
@@ -69,9 +69,9 @@ const Card: React.FC<MusicCard | ArtistCard> = ({
               </div>
             </Link>
             {type === "music" && (
-              <div className="absolute w-10 flex justify-center items-center h-10 backdrop-blur-sm bg-white/10 rounded-lg top-4 right-4">
+              <div className="absolute w-12 h-12 flex justify-center items-center backdrop-blur-sm bg-white/10 rounded-lg top-4 right-4">
                 <button
-                  className="text-background text-lg"
+                  className="text-background text-xl"
                   aria-label="Mark as favorite"
                 >
                   {isFavourite ? <FaHeart /> : <FaRegHeart />}
