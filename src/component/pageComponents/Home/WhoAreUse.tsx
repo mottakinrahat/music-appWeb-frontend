@@ -3,7 +3,7 @@ import React from "react";
 import image1 from "@/assets/images/Image1.png";
 import image2 from "@/assets/images/Image2.png";
 import Image from "next/image";
-import Container from "@/components/common/section/Section";
+import Container from "@/components/common/container/Section";
 
 const WhoAreUse = () => {
   return (

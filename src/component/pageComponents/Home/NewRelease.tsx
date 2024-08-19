@@ -1,4 +1,4 @@
-import Container from "@/components/common/section/Section";
+import Container from "@/components/common/container/Container";
 import Heading from "@/components/ui/heading";
 import * as React from "react";
 

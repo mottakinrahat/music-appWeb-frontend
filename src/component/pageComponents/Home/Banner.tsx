@@ -4,7 +4,7 @@ import Image from "next/image";
 import play from "@/assets/etc/banner/Play.png";
 import music from "@/assets/etc/banner/Decoration.png";
 import image from "@/assets/etc/banner/Image.png";
-import Container from "@/components/common/section/Section";
+import Container from "@/components/common/container/Container";
 
 const Banner = () => {
   return (
