@@ -50,8 +50,8 @@ const Banner = () => {
             height={music.height}
             alt="Music"
             width={music.width}
-            style={{ height: "auto", width: "953px" }}
-            className="absolute bottom-0 w-[953px]"
+            style={{ height: "auto", width: "auto" }}
+            className="absolute bottom-0"
           />
         </div>
       </div>

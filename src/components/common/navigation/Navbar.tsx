@@ -11,7 +11,9 @@ const Navbar = () => {
           <Logo />
         </div>
         <div>
-          <Routes />
+          <ul className="flex gap-10 text-base">
+            <Routes />
+          </ul>
         </div>
         <div>
           <Button variant={"default"}>Login/Sign up</Button>

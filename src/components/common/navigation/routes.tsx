@@ -10,23 +10,19 @@ const Routes = () => {
     { route: "/talents", name: "Talents" },
     { route: "/vr-concerts", name: "VR Concerts" },
   ];
-  return (
-    <ul className="flex gap-10 text-base">
-      {routes.map((route, idx) => (
-        <li key={idx}>
-          <Link href={route.route}>
-            <span
-              className={`nav-link ${
-                path.sep === route.route ? "active font-semibold" : ""
-              }`}
-            >
-              {route.name}
-            </span>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
+  return routes.map((route, idx) => (
+    <li key={idx}>
+      <Link href={route.route}>
+        <span
+          className={`nav-link ${
+            path.sep === route.route ? "active font-semibold" : ""
+          }`}
+        >
+          {route.name}
+        </span>
+      </Link>
+    </li>
+  ));
 };
 
 export default Routes;
