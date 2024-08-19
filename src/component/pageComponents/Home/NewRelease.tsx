@@ -1,4 +1,4 @@
-import Section from "@/components/common/section/Section";
+import Container from "@/components/common/section/Section";
 import Heading from "@/components/ui/heading";
 import * as React from "react";
 
@@ -6,7 +6,7 @@ interface NewReleaseProps {}
 
 const NewRelease: React.FunctionComponent<NewReleaseProps> = () => {
   return (
-    <Section bgGray className=" py-20">
+    <Container bgGray className=" py-20">
       <Heading
         type="primary"
         heading={"New Release"}
@@ -15,7 +15,7 @@ const NewRelease: React.FunctionComponent<NewReleaseProps> = () => {
         Get your ears on the hottest new tracks, from chart-topping anthems to
         underground gems bubbling up from the scene.
       </Heading>
-    </Section>
+    </Container>
   );
 };
 

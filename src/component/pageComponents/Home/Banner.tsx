@@ -4,10 +4,11 @@ import Image from "next/image";
 import play from "@/assets/etc/banner/Play.png";
 import music from "@/assets/etc/banner/Decoration.png";
 import image from "@/assets/etc/banner/Image.png";
+import Container from "@/components/common/section/Section";
 
 const Banner = () => {
   return (
-    <section className="container">
+    <Container>
       <div className="flex w-full">
         {/* Banner Action */}
         <div className="w-1/2 flex-1 max-w-[39rem] my-24">
@@ -55,7 +56,7 @@ const Banner = () => {
           />
         </div>
       </div>
-    </section>
+    </Container>
   );
 };
 

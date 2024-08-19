@@ -3,11 +3,11 @@ import React from "react";
 import image1 from "@/assets/images/Image1.png";
 import image2 from "@/assets/images/Image2.png";
 import Image from "next/image";
-import Section from "@/components/common/section/Section";
+import Container from "@/components/common/section/Section";
 
 const WhoAreUse = () => {
   return (
-    <Section className="flex gap-6">
+    <Container className="flex gap-6">
       <div className="flex-1">
         <div>
           <Image
@@ -40,7 +40,7 @@ const WhoAreUse = () => {
           />
         </div>
       </div>
-    </Section>
+    </Container>
   );
 };
 

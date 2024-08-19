@@ -7,7 +7,7 @@ interface SectionInterface {
   bgGray?: boolean;
 }
 
-const Section: React.FunctionComponent<SectionInterface> = ({
+const Container: React.FunctionComponent<SectionInterface> = ({
   children,
   className,
   props,
@@ -22,4 +22,4 @@ const Section: React.FunctionComponent<SectionInterface> = ({
   );
 };
 
-export default Section;
+export default Container;
