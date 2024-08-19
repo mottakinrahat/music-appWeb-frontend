@@ -14,7 +14,7 @@ const Navbar = () => {
           <Routes />
         </div>
         <div>
-          <Button variant={"default"}>Login</Button>
+          <Button variant={"default"}>Login/Sign up</Button>
         </div>
       </div>
     </nav>
