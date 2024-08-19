@@ -6,6 +6,7 @@ import image from "@/assets/images/img.png";
 import image1 from "@/assets/images/img2.png";
 import image2 from "@/assets/images/img3.png";
 import image3 from "@/assets/images/img4.png";
+import SingleLineMusicCardContainer from "@/components/common/container/SingleLineMusicCardContainer";
 
 interface NewReleaseProps {}
 
@@ -37,27 +38,15 @@ const NewRelease: React.FunctionComponent<NewReleaseProps> = () => {
     },
   ];
   return (
-    <Container bgGray className=" py-20">
-      <Heading
-        type="primary"
-        heading={"New Release"}
-        linkText={"See all new releases"}
-      >
-        Get your ears on the hottest new tracks, from chart-topping anthems to
-        underground gems bubbling up from the scene.
-      </Heading>
-      <div className="grid grid-cols-4 gap-8 my-10">
-        {data.map((music) => (
-          <Card
-            key={music.id}
-            imageUrl={music.imageUrl}
-            artistName={music.artisName}
-            title={music.title}
-            type="music"
-          ></Card>
-        ))}
-      </div>
-    </Container>
+    <SingleLineMusicCardContainer
+      data={data}
+      heading={"New Release"}
+      linkText={"See all new releases"}
+      linkRoute={"/"}
+    >
+      Get your ears on the hottest new tracks, from chart-topping anthems to
+      underground gems bubbling up from the scene.
+    </SingleLineMusicCardContainer>
   );
 };
 
