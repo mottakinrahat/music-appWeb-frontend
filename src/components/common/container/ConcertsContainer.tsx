@@ -2,7 +2,7 @@ import Heading from "@/components/ui/heading";
 import { Url } from "next/dist/shared/lib/router/router";
 import React from "react";
 import Container from "./Container";
-import ConcertsCard from "@/component/Card/ConcertsCard";
+import BlogCard from "@/component/Card/BlogCard";
 
 interface ConcertContainerInterface {
   data: Array<any>;
@@ -32,15 +32,16 @@ const ConcertsContainer: React.FC<ConcertContainerInterface> = ({
           {children}
         </Heading>
         <div className="grid grid-cols-4 gap-6 my-10">
-          {data.map((event: any, idx) => (
-            <ConcertsCard
+          {data?.slice(0, 4).map((blog: any, idx) => (
+            <BlogCard
+              description={blog?.description}
+              type={blog?.type}
               key={idx}
               className={""}
-              eventRoute={"/"}
-              imageUrl={event?.imageUrl}
-              isNotify={event?.isNotify}
-              title={event?.title}
-            ></ConcertsCard>
+              blogRoute={"/"}
+              imageUrl={blog?.imageUrl}
+              title={blog?.title}
+            ></BlogCard>
           ))}
         </div>
       </Container>

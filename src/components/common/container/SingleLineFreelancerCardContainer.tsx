@@ -27,7 +27,7 @@ const SingleLineFreelancerCardContainer: React.FC<
           {children}
         </Heading>
         <div className="grid grid-cols-4 gap-6 my-10">
-          {data.map((freelancer: any, idx) => (
+          {data?.slice(0, 4).map((freelancer: any, idx) => (
             <Card
               key={idx}
               freelancerType={freelancer?.freelancerName}

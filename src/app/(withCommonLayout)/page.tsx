@@ -1,4 +1,5 @@
 import Banner from "@/component/pageComponents/Home/Banner";
+import Blogs from "@/component/pageComponents/Home/Blogs";
 import BrowseFreeLencers from "@/component/pageComponents/Home/BrowseFreeLencers";
 import Events from "@/component/pageComponents/Home/Events";
 import HotSongs from "@/component/pageComponents/Home/HotSongs";
@@ -27,6 +28,7 @@ export default function Home() {
       <HotSongs />
       <Events />
       <VRConcerts />
+      <Blogs />
       <Link href="/music">
         <button>Goto music Page</button>
       </Link>

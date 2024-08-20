@@ -32,7 +32,7 @@ const EventContainer: React.FC<EventContainerInterface> = ({
           {children}
         </Heading>
         <div className="grid grid-cols-3 gap-6 my-10">
-          {data.map((event: any, idx) => (
+          {data?.slice(0, 3).map((event: any, idx) => (
             <EventCard
               key={idx}
               className={""}
