@@ -1,4 +1,5 @@
 import Banner from "@/component/pageComponents/Home/Banner";
+import LimitedOffer from "@/component/pageComponents/Home/LimitedOffer";
 import NewRelease from "@/component/pageComponents/Home/NewRelease";
 import Soponsors from "@/component/pageComponents/Home/Soponsors";
 import TopList from "@/component/pageComponents/Home/TopList";
@@ -15,6 +16,7 @@ export default function Home() {
       <WhoAreUse />
       <NewRelease />
       <TopList />
+      <LimitedOffer />
       <Link href="/music">
         <button>Goto music Page</button>
       </Link>
