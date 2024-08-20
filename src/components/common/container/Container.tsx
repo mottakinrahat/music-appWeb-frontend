@@ -18,9 +18,9 @@ const Container: React.FunctionComponent<SectionInterface> = ({
   return (
     <section
       style={style ? style : {}}
-      className={`${bgGray ? "bg-section" : ""}`}
+      className={`${bgGray ? "bg-section" : ""} py-20`}
     >
-      <div {...props} className={`container my-20 ${className}`}>
+      <div {...props} className={`container ${className}`}>
         {children}
       </div>
     </section>

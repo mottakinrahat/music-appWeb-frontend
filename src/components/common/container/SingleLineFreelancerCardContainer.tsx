@@ -17,7 +17,7 @@ const SingleLineFreelancerCardContainer: React.FC<
 > = ({ data, heading, linkText, linkRoute, children, bgGray }) => {
   return (
     <div>
-      <Container bgGray={bgGray} className={`${bgGray && "py-20"}`}>
+      <Container bgGray={bgGray} className={`${bgGray && ""}`}>
         <Heading
           type="primary"
           heading={heading}

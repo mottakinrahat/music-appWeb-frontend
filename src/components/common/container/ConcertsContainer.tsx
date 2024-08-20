@@ -3,6 +3,7 @@ import { Url } from "next/dist/shared/lib/router/router";
 import React from "react";
 import Container from "./Container";
 import BlogCard from "@/component/Card/BlogCard";
+import ConcertsCard from "@/component/Card/ConcertsCard";
 
 interface ConcertContainerInterface {
   data: Array<any>;
@@ -22,7 +23,7 @@ const ConcertsContainer: React.FC<ConcertContainerInterface> = ({
 }) => {
   return (
     <div>
-      <Container bgGray={bgGray} className={`${bgGray && "py-20"}`}>
+      <Container bgGray={bgGray} className={`${bgGray && ""}`}>
         <Heading
           type="primary"
           heading={heading}
@@ -32,16 +33,15 @@ const ConcertsContainer: React.FC<ConcertContainerInterface> = ({
           {children}
         </Heading>
         <div className="grid grid-cols-4 gap-6 my-10">
-          {data?.slice(0, 4).map((blog: any, idx) => (
-            <BlogCard
-              description={blog?.description}
-              type={blog?.type}
+          {data.map((event: any, idx) => (
+            <ConcertsCard
               key={idx}
               className={""}
-              blogRoute={"/"}
-              imageUrl={blog?.imageUrl}
-              title={blog?.title}
-            ></BlogCard>
+              eventRoute={"/"}
+              imageUrl={event?.imageUrl}
+              isNotify={event?.isNotify}
+              title={event?.title}
+            ></ConcertsCard>
           ))}
         </div>
       </Container>

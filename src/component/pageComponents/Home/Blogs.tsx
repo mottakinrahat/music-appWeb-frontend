@@ -2,6 +2,7 @@ import image from "@/assets/images/Card3.png";
 import image1 from "@/assets/images/Card2.png";
 import image2 from "@/assets/images/Card.png";
 import ConcertsContainer from "@/components/common/container/ConcertsContainer";
+import BlogContainer from "@/components/common/container/BlogContainer";
 
 const Blogs = () => {
   const data = [
@@ -44,7 +45,7 @@ const Blogs = () => {
   ];
   return (
     <div>
-      <ConcertsContainer
+      <BlogContainer
         bgGray={true}
         data={data}
         linkRoute={"/"}
@@ -53,7 +54,7 @@ const Blogs = () => {
       >
         Fuel your passion for music with insightful articles, interviews, and
         exclusive content.
-      </ConcertsContainer>
+      </BlogContainer>
     </div>
   );
 };
