@@ -9,13 +9,15 @@ import { FaHeart, FaRegHeart } from "react-icons/fa6";
 interface MusicCard {
   type: "music";
   musicRoute?: Url;
-  artistType?: String;
+  artistType?: string;
   imageUrl: string;
   title: string;
   artistName: string;
   rating?: number;
+  album?: string;
   isFavourite?: boolean;
   className?: string;
+  albumRouteLink?: Url;
 }
 
 interface ArtistCard {
@@ -23,11 +25,13 @@ interface ArtistCard {
   artistType: string;
   musicRoute?: string;
   imageUrl?: string;
+  album?: string;
   title?: string;
   artistName?: string;
   rating?: number;
   isFavourite?: boolean;
   className?: string;
+  albumRouteLink?: Url;
 }
 
 const Card: React.FC<MusicCard | ArtistCard> = ({
@@ -40,6 +44,8 @@ const Card: React.FC<MusicCard | ArtistCard> = ({
   title,
   className,
   isFavourite,
+  album,
+  albumRouteLink,
 }) => {
   return (
     <div className={`rounded-lg max-w-md ${className ? className : ""}`}>
@@ -90,6 +96,17 @@ const Card: React.FC<MusicCard | ArtistCard> = ({
       <div className="">
         {title && <h2 className="text-2xl font-semibold mb-2">{title}</h2>}
         {artistName && <p className="text-sm text-gray-600">{artistName}</p>}
+        {album && (
+          <p className="text-sm text-gray-600 ">
+            Album:{" "}
+            <Link
+              href={albumRouteLink ? albumRouteLink : "/"}
+              className="underline"
+            >
+              {album}
+            </Link>
+          </p>
+        )}
         {type === "artist" && artistType && (
           <p className="text-base text-textPrimary ">{artistType}</p>
         )}

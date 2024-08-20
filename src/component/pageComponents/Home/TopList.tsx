@@ -1,13 +1,11 @@
-import * as React from "react";
+import SingleLineMusicCardContainer from "@/components/common/container/SingleLineMusicCardContainer";
+import React from "react";
 import image from "@/assets/images/img.png";
 import image1 from "@/assets/images/img2.png";
 import image2 from "@/assets/images/img3.png";
 import image3 from "@/assets/images/img4.png";
-import SingleLineMusicCardContainer from "@/components/common/container/SingleLineMusicCardContainer";
 
-interface NewReleaseProps {}
-
-const NewRelease: React.FunctionComponent<NewReleaseProps> = () => {
+const TopList = () => {
   const data = [
     {
       id: 1,
@@ -36,16 +34,16 @@ const NewRelease: React.FunctionComponent<NewReleaseProps> = () => {
   ];
   return (
     <SingleLineMusicCardContainer
-      bgGray
+      bgGray={false}
       data={data}
-      heading={"New Release"}
-      linkText={"See all new releases"}
+      heading={"Top List"}
+      linkText={"See all off top chart"}
       linkRoute={"/"}
     >
-      Get your ears on the hottest new tracks, from chart-topping anthems to
-      underground gems bubbling up from the scene.
+      See what music is captivating listeners around the globe and discover your
+      next sonic obsession.
     </SingleLineMusicCardContainer>
   );
 };
 
-export default NewRelease;
+export default TopList;

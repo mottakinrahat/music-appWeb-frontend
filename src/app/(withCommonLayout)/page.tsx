@@ -1,6 +1,7 @@
 import Banner from "@/component/pageComponents/Home/Banner";
 import NewRelease from "@/component/pageComponents/Home/NewRelease";
 import Soponsors from "@/component/pageComponents/Home/Soponsors";
+import TopList from "@/component/pageComponents/Home/TopList";
 import WhoAreUse from "@/component/pageComponents/Home/WhoAreUse";
 import Navbar from "@/components/common/navigation/Navbar";
 import Link from "next/link";
@@ -13,6 +14,7 @@ export default function Home() {
       <Soponsors />
       <WhoAreUse />
       <NewRelease />
+      <TopList />
       <Link href="/music">
         <button>Goto music Page</button>
       </Link>

@@ -9,14 +9,15 @@ interface SingleLineMusicCardContainerInterFace {
   linkText?: String;
   linkRoute?: Url | "/";
   children?: String;
+  bgGray: boolean;
 }
 
 const SingleLineMusicCardContainer: React.FC<
   SingleLineMusicCardContainerInterFace
-> = ({ data, heading, linkText, linkRoute, children }) => {
+> = ({ data, heading, linkText, linkRoute, children, bgGray }) => {
   return (
     <div>
-      <Container bgGray className=" py-20">
+      <Container bgGray={bgGray} className=" py-20">
         <Heading
           type="primary"
           heading={heading}
