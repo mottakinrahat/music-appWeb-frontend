@@ -1,14 +1,14 @@
 import Heading from "@/components/ui/heading";
 import Container from "./Container";
 import Card from "@/component/Card/Card";
-import { Url } from "url";
+// import { Url } from "url";
 
 interface SingleLineCardContainerInterFace {
   data: Array<any>;
-  heading?: String;
-  linkText?: String;
-  linkRoute?: Url | "/";
-  children?: String;
+  heading?: string;
+  linkText?: string;
+  linkRoute?: string;
+  children?: string;
   bgGray: boolean;
 }
 

@@ -42,7 +42,7 @@ export default function Features() {
       />
       <div className="w-1/2"></div>
       <div className="relative w-1/2 p-10 flex flex-col justify-center">
-        <h2 className="font-semibold text-5xl mb-6">
+        <h2 className="font-semibold text-5xl mb-12">
           Stream. Support. Discover. All in one place.
         </h2>
         <div className="space-y-6">
@@ -58,7 +58,7 @@ export default function Features() {
                 />
               </div>
               <div>
-                <h3 className="font-bold text-lg">{feature.title}</h3>
+                <h3 className="font-bold text-xl">{feature.title}</h3>
                 <p>{feature.description}</p>
               </div>
             </div>

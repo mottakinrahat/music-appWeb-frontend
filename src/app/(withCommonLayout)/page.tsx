@@ -13,7 +13,7 @@ import VRConcerts from "@/component/pageComponents/Home/VRConcerts";
 import WhoAreUse from "@/component/pageComponents/Home/WhoAreUse";
 import Footer from "@/components/common/footer/Footer";
 import Navbar from "@/components/common/navigation/Navbar";
-import Link from "next/link";
+// import Link from "next/link";
 
 export default function Home() {
   return (
@@ -33,9 +33,9 @@ export default function Home() {
       <Blogs />
       <Features />
       <Footer />
-      <Link href="/music">
+      {/* <Link href="/music">
         <button>Goto music Page</button>
-      </Link>
+      </Link> */}
     </div>
   );
 }

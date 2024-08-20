@@ -40,7 +40,7 @@ const NewRelease: React.FunctionComponent<NewReleaseProps> = () => {
       data={data}
       heading={"New Release"}
       linkText={"See all new releases"}
-      linkRoute={"/"}
+      linkRoute={"/music"}
     >
       Get your ears on the hottest new tracks, from chart-topping anthems to
       underground gems bubbling up from the scene.
