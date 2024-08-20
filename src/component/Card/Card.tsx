@@ -15,6 +15,8 @@ interface BaseCard {
   album?: string;
   musicRoute?: Url;
   albumRouteLink?: Url;
+  freelancerType?: string;
+  freelancerName?: string;
 }
 
 interface MusicCard extends BaseCard {
@@ -24,17 +26,20 @@ interface MusicCard extends BaseCard {
   title?: string;
 }
 
-interface ArtistCard extends BaseCard {
-  type: "artist";
-  artistType?: string;
+interface FreelancerCard extends BaseCard {
+  type: "freelancer";
   imageUrl?: string;
   title?: string;
+  freelancerType: string;
+  freelancerName: string;
+  rating: number;
 }
 
-const Card: React.FC<MusicCard | ArtistCard> = ({
+const Card: React.FC<MusicCard | FreelancerCard> = ({
   type,
   artistName,
-  artistType,
+  freelancerType,
+  freelancerName,
   imageUrl,
   musicRoute,
   rating,
@@ -61,17 +66,19 @@ const Card: React.FC<MusicCard | ArtistCard> = ({
             {/* Overlay */}
             <Link href={musicRoute ? musicRoute : "/"}>
               <div className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                <Image
-                  src={playBtn}
-                  alt={playBtn.src || "Card image"}
-                  width={100}
-                  height={100}
-                  style={{ width: "auto", height: "auto" }}
-                  className="rounded-lg"
-                />
+                {type !== "freelancer" && (
+                  <Image
+                    src={playBtn}
+                    alt={playBtn.src || "Card image"}
+                    width={100}
+                    height={100}
+                    style={{ width: "auto", height: "auto" }}
+                    className="rounded-lg"
+                  />
+                )}
               </div>
             </Link>
-            {type === "music" && (
+            {type !== "freelancer" && (
               <div className="absolute w-12 h-12 flex justify-center items-center backdrop-blur-sm bg-white/10 rounded-lg top-4 right-4">
                 <button
                   className="text-background text-xl"
@@ -93,6 +100,7 @@ const Card: React.FC<MusicCard | ArtistCard> = ({
       <div className="">
         {title && <h2 className="text-2xl font-semibold mb-2">{title}</h2>}
         {artistName && <p className="text-sm text-gray-600">{artistName}</p>}
+
         {album && (
           <p className="text-sm text-gray-600 ">
             Album:{" "}
@@ -104,14 +112,19 @@ const Card: React.FC<MusicCard | ArtistCard> = ({
             </Link>
           </p>
         )}
-        {type === "artist" && artistType && (
-          <p className="text-base text-textPrimary ">{artistType}</p>
-        )}
-        {rating !== undefined && (
-          <div className="flex justify-center items-center mt-2">
-            <span className="text-yellow-500">★</span>
-            <span className="ml-1 text-sm">{rating}</span>
-          </div>
+        {type === "freelancer" && freelancerType && (
+          <>
+            {rating !== undefined && (
+              <div className="mt-2 text-2xl">
+                <span className="text-yellow-500">★</span>
+                <span className="ml-1 text-sm">{rating}</span>
+              </div>
+            )}
+            <p className="text-xl text-textSecondary font-semibold">
+              {freelancerName}
+            </p>
+            <p className="text-base text-textPrimary ">{freelancerType}</p>
+          </>
         )}
       </div>
     </div>

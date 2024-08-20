@@ -1,4 +1,4 @@
-import SingleLineCardContainer from "@/components/common/container/SingleLineCardContainer";
+import SingleLineCardContainer from "@/components/common/container/SingleLineMusicCardContainer";
 import React from "react";
 import image from "@/assets/images/img.png";
 import image1 from "@/assets/images/img2.png";
@@ -34,7 +34,6 @@ const TopList = () => {
   ];
   return (
     <SingleLineCardContainer
-      cardType="music"
       bgGray={false}
       data={data}
       heading={"Top List"}

@@ -5,17 +5,16 @@ import { Url } from "url";
 
 interface SingleLineCardContainerInterFace {
   data: Array<any>;
-  heading?: String;
-  linkText?: String;
+  heading?: string;
+  linkText?: string;
   linkRoute?: Url | "/";
-  children?: String;
+  children?: string;
   bgGray: boolean;
-  cardType: "music" | "artist";
 }
 
-const SingleLineMusicCardContainer: React.FC<
+const SingleLineFreelancerCardContainer: React.FC<
   SingleLineCardContainerInterFace
-> = ({ data, heading, linkText, linkRoute, children, bgGray, cardType }) => {
+> = ({ data, heading, linkText, linkRoute, children, bgGray }) => {
   return (
     <div>
       <Container bgGray={bgGray} className={`${bgGray && "py-20"}`}>
@@ -28,13 +27,15 @@ const SingleLineMusicCardContainer: React.FC<
           {children}
         </Heading>
         <div className="grid grid-cols-4 gap-6 my-10">
-          {data.map((music: any) => (
+          {data.map((freelancer: any, idx) => (
             <Card
-              key={music.id}
-              imageUrl={music.imageUrl}
-              artistName={music.artisName}
-              title={music.title}
-              type={cardType ? cardType : music}
+              key={idx}
+              freelancerType={freelancer?.freelancerName}
+              freelancerName={freelancer?.freelancerType}
+              rating={freelancer?.rating}
+              imageUrl={freelancer?.imageUrl}
+              artistName={freelancer?.artisName}
+              type={"freelancer"}
             ></Card>
           ))}
         </div>
@@ -43,4 +44,4 @@ const SingleLineMusicCardContainer: React.FC<
   );
 };
 
-export default SingleLineMusicCardContainer;
+export default SingleLineFreelancerCardContainer;
