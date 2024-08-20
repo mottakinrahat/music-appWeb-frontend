@@ -7,6 +7,7 @@ import NewRelease from "@/component/pageComponents/Home/NewRelease";
 import Recomended from "@/component/pageComponents/Home/Recomended";
 import Soponsors from "@/component/pageComponents/Home/Soponsors";
 import TopList from "@/component/pageComponents/Home/TopList";
+import VRConcerts from "@/component/pageComponents/Home/VRConcerts";
 import WhoAreUse from "@/component/pageComponents/Home/WhoAreUse";
 import Navbar from "@/components/common/navigation/Navbar";
 import Link from "next/link";
@@ -25,6 +26,7 @@ export default function Home() {
       <Recomended />
       <HotSongs />
       <Events />
+      <VRConcerts />
       <Link href="/music">
         <button>Goto music Page</button>
       </Link>
