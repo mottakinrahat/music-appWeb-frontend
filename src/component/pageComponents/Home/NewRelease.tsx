@@ -3,7 +3,7 @@ import image from "@/assets/images/img.png";
 import image1 from "@/assets/images/img2.png";
 import image2 from "@/assets/images/img3.png";
 import image3 from "@/assets/images/img4.png";
-import SingleLineMusicCardContainer from "@/components/common/container/SingleLineMusicCardContainer";
+import SingleLineCardContainer from "@/components/common/container/SingleLineCardContainer";
 
 interface NewReleaseProps {}
 
@@ -35,7 +35,8 @@ const NewRelease: React.FunctionComponent<NewReleaseProps> = () => {
     },
   ];
   return (
-    <SingleLineMusicCardContainer
+    <SingleLineCardContainer
+      cardType="music"
       bgGray
       data={data}
       heading={"New Release"}
@@ -44,7 +45,7 @@ const NewRelease: React.FunctionComponent<NewReleaseProps> = () => {
     >
       Get your ears on the hottest new tracks, from chart-topping anthems to
       underground gems bubbling up from the scene.
-    </SingleLineMusicCardContainer>
+    </SingleLineCardContainer>
   );
 };
 

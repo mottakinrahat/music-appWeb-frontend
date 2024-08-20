@@ -6,32 +6,29 @@ import { Url } from "url";
 // import { IoHeartOutline } from "react-icons/io5";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 
-interface MusicCard {
-  type: "music";
-  musicRoute?: Url;
-  artistType?: string;
-  imageUrl: string;
-  title: string;
+interface BaseCard {
+  type: string;
   artistName: string;
+  className?: string;
+  isFavourite?: boolean;
   rating?: number;
   album?: string;
-  isFavourite?: boolean;
-  className?: string;
+  musicRoute?: Url;
   albumRouteLink?: Url;
 }
 
-interface ArtistCard {
-  type: "artist";
-  artistType: string;
-  musicRoute?: string;
+interface MusicCard extends BaseCard {
+  type: "music";
   imageUrl?: string;
-  album?: string;
+  artistType?: string;
   title?: string;
-  artistName?: string;
-  rating?: number;
-  isFavourite?: boolean;
-  className?: string;
-  albumRouteLink?: Url;
+}
+
+interface ArtistCard extends BaseCard {
+  type: "artist";
+  artistType?: string;
+  imageUrl?: string;
+  title?: string;
 }
 
 const Card: React.FC<MusicCard | ArtistCard> = ({

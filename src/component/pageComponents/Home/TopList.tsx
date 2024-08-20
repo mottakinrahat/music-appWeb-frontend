@@ -1,4 +1,4 @@
-import SingleLineMusicCardContainer from "@/components/common/container/SingleLineMusicCardContainer";
+import SingleLineCardContainer from "@/components/common/container/SingleLineCardContainer";
 import React from "react";
 import image from "@/assets/images/img.png";
 import image1 from "@/assets/images/img2.png";
@@ -33,7 +33,8 @@ const TopList = () => {
     },
   ];
   return (
-    <SingleLineMusicCardContainer
+    <SingleLineCardContainer
+      cardType="music"
       bgGray={false}
       data={data}
       heading={"Top List"}
@@ -42,7 +43,7 @@ const TopList = () => {
     >
       See what music is captivating listeners around the globe and discover your
       next sonic obsession.
-    </SingleLineMusicCardContainer>
+    </SingleLineCardContainer>
   );
 };
 

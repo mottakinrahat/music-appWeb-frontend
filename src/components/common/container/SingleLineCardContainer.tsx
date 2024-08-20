@@ -3,18 +3,19 @@ import Container from "./Container";
 import Card from "@/component/Card/Card";
 import { Url } from "url";
 
-interface SingleLineMusicCardContainerInterFace {
+interface SingleLineCardContainerInterFace {
   data: Array<any>;
   heading?: String;
   linkText?: String;
   linkRoute?: Url | "/";
   children?: String;
   bgGray: boolean;
+  cardType: "music" | "artist";
 }
 
 const SingleLineMusicCardContainer: React.FC<
-  SingleLineMusicCardContainerInterFace
-> = ({ data, heading, linkText, linkRoute, children, bgGray }) => {
+  SingleLineCardContainerInterFace
+> = ({ data, heading, linkText, linkRoute, children, bgGray, cardType }) => {
   return (
     <div>
       <Container bgGray={bgGray} className={`${bgGray && "py-20"}`}>
@@ -33,7 +34,7 @@ const SingleLineMusicCardContainer: React.FC<
               imageUrl={music.imageUrl}
               artistName={music.artisName}
               title={music.title}
-              type="music"
+              type={cardType ? cardType : music}
             ></Card>
           ))}
         </div>
