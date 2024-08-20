@@ -1,5 +1,7 @@
 import Banner from "@/component/pageComponents/Home/Banner";
 import BrowseFreeLencers from "@/component/pageComponents/Home/BrowseFreeLencers";
+import Events from "@/component/pageComponents/Home/Events";
+import HotSongs from "@/component/pageComponents/Home/HotSongs";
 import LimitedOffer from "@/component/pageComponents/Home/LimitedOffer";
 import NewRelease from "@/component/pageComponents/Home/NewRelease";
 import Recomended from "@/component/pageComponents/Home/Recomended";
@@ -21,6 +23,8 @@ export default function Home() {
       <LimitedOffer />
       <BrowseFreeLencers />
       <Recomended />
+      <HotSongs />
+      <Events />
       <Link href="/music">
         <button>Goto music Page</button>
       </Link>
