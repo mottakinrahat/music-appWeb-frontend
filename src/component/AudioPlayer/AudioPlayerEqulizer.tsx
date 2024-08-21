@@ -1,5 +1,16 @@
-"use client";
 import React, { useRef, useState } from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+  Scatter,
+  Dot,
+} from "recharts";
+import { Chart } from "../chart/Chart";
 
 interface EqualizerProps {
   audioContext: AudioContext | null;
@@ -12,8 +23,8 @@ const Equalizer: React.FC<EqualizerProps> = ({
 }) => {
   const gainNodesRef = useRef<GainNode[]>([]);
   const [gains, setGains] = useState([0, 0, 0, 0, 0, 0]);
+  const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const frequencies = [16, 160, 400, 1000, 2400, 15000];
 
   React.useEffect(() => {
@@ -81,9 +92,70 @@ const Equalizer: React.FC<EqualizerProps> = ({
     classical: [2, 3, 4, 5, 6, 2],
   };
 
+  const data = frequencies.map((freq, index) => ({
+    frequency: `${freq}Hz`,
+    gain: gains[index],
+  }));
+
+  const handleMouseDown = (index: number) => {
+    setDraggingIndex(index);
+  };
+
+  const handleMouseMove = (event: React.MouseEvent) => {
+    if (draggingIndex !== null) {
+      const chartRect = event.currentTarget.getBoundingClientRect();
+      const yOffset = event.clientY - chartRect.top;
+      const newValue = Math.round((200 - yOffset) / 4) - 20; // Adjust range as needed
+      adjustGain(draggingIndex, newValue);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setDraggingIndex(null);
+  };
+
   return (
-    <div>
-      <div>
+    <div
+      style={{ width: "400px", height: "300px" }}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+    >
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart
+          data={data}
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        >
+          <CartesianGrid
+            strokeDasharray="1 0"
+            vertical={true}
+            horizontal={false} // Ensure only horizontal lines are drawn
+          />
+          <XAxis
+            dataKey="frequency"
+            axisLine={false} // Hide the axis line
+            tickLine={false} // Hide the tick lines
+            tick={{ fill: "black" }} // Customize tick values color
+          />
+          <YAxis domain={["auto", "auto"]} />
+          <Line
+            type="linear" // Use linear type for straight lines
+            dataKey="gain"
+            stroke="#00CCD0"
+            strokeWidth={2}
+            dot={<Dot r={6} fill="#00CCD0" stroke="#00CCD0" strokeWidth={2} />}
+            connectNulls
+          />
+          <Scatter
+            data={data}
+            fill="#00CCD0"
+            shape={
+              <Dot r={6} fill="#00CCD0" stroke="#00CCD0" strokeWidth={2} />
+            }
+            onMouseDown={(e, index) => handleMouseDown(index)}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+      <div style={{ marginTop: "20px" }}>
         <h3>Presets:</h3>
         <ul>
           {Object.keys(presets).map((preset) => (
@@ -97,20 +169,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
           ))}
         </ul>
       </div>
-      <div>
-        {frequencies.map((frequency, index) => (
-          <div key={frequency}>
-            <label>{frequency}Hz: </label>
-            <input
-              type="range"
-              min="-40"
-              max="40"
-              value={gains[index]}
-              onChange={(e) => adjustGain(index, parseFloat(e.target.value))}
-            />
-          </div>
-        ))}
-      </div>
+      <Chart />
     </div>
   );
 };

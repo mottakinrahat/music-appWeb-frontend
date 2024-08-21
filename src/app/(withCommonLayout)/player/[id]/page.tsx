@@ -42,14 +42,14 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
 
   // Get current song details
   const currentSong = tracks2[1];
-  // console.log(currentSong);
-  // if (!currentSong) {
-  //   return (
-  //     <div>
-  //       <LoadingAnimation />
-  //     </div>
-  //   ); // Optionally handle loading state
-  // }
+  console.log(currentSong);
+  if (!currentSong) {
+    return (
+      <div>
+        <LoadingAnimation />
+      </div>
+    ); // Optionally handle loading state
+  }
 
   const { title, url, artwork, artist, album } = currentSong;
 
@@ -65,7 +65,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     <div>
       <AudioPlayer
         id={params?.id}
-        url={url}
+        currentSong={currentSong}
         onAudioContextReady={handleAudioContextReady}
       />
       <AudioPlayerEqualizer
