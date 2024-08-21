@@ -2,7 +2,7 @@
 import AudioPlayer from "@/component/AudioPlayer/AudioPlayer";
 import AudioPlayerEqualizer from "@/component/AudioPlayer/AudioPlayerEqulizer";
 import React, { useEffect, useState } from "react";
-import { tracks2 } from "../page";
+// import { tracks2 } from "../page";
 import LoadingAnimation from "@/component/LoadingAnimation/LoadingAnimation";
 
 interface PlayerInterface {
@@ -21,17 +21,25 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
   );
+  const [eqOpen, setEqOpen] = useState(false);
+
+  const [tracks, setTraks] = useState([]);
+  useEffect(() => {
+    fetch("/tracks.json")
+      .then((data) => data.json())
+      .then((tracks) => setTraks(tracks));
+  }, []);
 
   // song loading start
   useEffect(() => {
     // Find the track based on the ID
-    const initialTrackIndex = tracks2.findIndex(
+    const initialTrackIndex = tracks.findIndex(
       (track) => track.id === params.id
     );
     if (initialTrackIndex !== -1) {
       setCurrentTrackIndex(initialTrackIndex);
     }
-  }, [params.id]);
+  }, [params.id, tracks]);
 
   useEffect(() => {
     if (currentTrackIndex !== null) {
@@ -41,8 +49,8 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   }, [currentTrackIndex]);
 
   // Get current song details
-  const currentSong = tracks2[1];
-  console.log(currentSong);
+  const currentSong = tracks[params.id];
+  // console.log(currentSong);
   if (!currentSong) {
     return (
       <div>
@@ -61,17 +69,31 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     setAudioElement(audioElement);
   };
 
+  const handleOpenEqualizer = () => {
+    setEqOpen(!eqOpen);
+    console.log("clicked");
+  };
+
   return (
-    <div>
-      <AudioPlayer
-        id={params?.id}
-        currentSong={currentSong}
-        onAudioContextReady={handleAudioContextReady}
-      />
-      <AudioPlayerEqualizer
-        audioContext={audioContext}
-        audioElement={audioElement}
-      />
+    <div className="flex overflow-hidden w-full">
+      <div className="flex-1 transition-all">
+        <AudioPlayer
+          id={params?.id}
+          currentSong={currentSong}
+          onAudioContextReady={handleAudioContextReady}
+          handleOpenEqualizer={handleOpenEqualizer}
+        />
+      </div>
+      <div
+        className={`h-full max-h-screen  duration-500 transition-all ${
+          eqOpen ? "max-w-3xl w-[400px] " : "w-0"
+        }`}
+      >
+        <AudioPlayerEqualizer
+          audioContext={audioContext}
+          audioElement={audioElement}
+        />
+      </div>
     </div>
   );
 };

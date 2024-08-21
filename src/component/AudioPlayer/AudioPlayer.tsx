@@ -20,7 +20,13 @@ import {
   UserCircleIcon,
   MusicalNoteIcon,
 } from "@heroicons/react/24/outline";
-import { tracks2 } from "@/app/(withCommonLayout)/player/page";
+import {
+  MdOutlineSkipNext,
+  MdOutlineSkipPrevious,
+  MdPauseCircle,
+} from "react-icons/md";
+import { IoMdPlayCircle } from "react-icons/io";
+// import { tracks } from "@/app/(withCommonLayout)/music/page";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -28,18 +34,20 @@ interface AudioPlayerProps {
     audioElement: HTMLAudioElement
   ) => void;
   id: any;
-  currentSong: any;
+  currentSong?: any;
+  handleOpenEqualizer: any;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
   onAudioContextReady,
   id,
   currentSong,
+  handleOpenEqualizer,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const [repeat, setRepeat] = useState<boolean>(false);
-  const [playing, setPlaying] = useState<boolean>(true);
+  const [playing, setPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [played, setPlayed] = useState<number>(0);
@@ -70,6 +78,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
   }, [onAudioContextReady]);
 
+  // console.log(currentSong);
+
   const handlePlayPause = () => {
     if (playing) {
       audioRef.current?.pause();
@@ -79,8 +89,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setPlaying(!playing);
   };
 
-  const handleProgress = (state: { played: number }) => {
-    setPlayed(state.played);
+  const handleProgress = (currentTime: number, duration: number) => {
+    // Calculate the played percentage and set it
+    const playedPercentage = duration ? currentTime / duration : 0;
+    setPlayed(playedPercentage);
   };
 
   const handleDuration = (duration: number) => {
@@ -92,13 +104,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
     if (audioElement) {
       if (repeat) {
-        audioElement.currentTime = 0;
-        audioElement.play();
-      } else if (
-        currentTrackIndex !== null &&
-        currentTrackIndex < tracks2.length - 1
-      ) {
-        setCurrentTrackIndex(currentTrackIndex + 1);
+        audioElement.currentTime = 0; // Restart the track
+        audioElement.play(); // Play the track again
+      } else {
+        // You can handle what happens when the track ends and repeat is not enabled (e.g., stop playback)
+        audioElement.pause(); // Pause the track
       }
     }
   };
@@ -122,12 +132,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const handleSeek = (e: ChangeEvent<HTMLInputElement>) => {
+    const newTime = parseFloat(e.target.value);
+
     if (audioRef.current) {
-      audioRef.current.currentTime = parseFloat(e.target.value);
-      setCurrentTime(parseFloat(e.target.value));
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
     }
   };
-
   const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value);
     setVolume(newVolume);
@@ -233,15 +244,21 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 />{" "}
                 <span className="text-[16px]">10s</span>
               </button>
+              <button className="text-white text-lg hover:text-gray-300">
+                <MdOutlineSkipPrevious className="h-7 w-7" />
+              </button>
               <button
                 onClick={handlePlayPause}
-                className="text-white text-3xl mx-2 hover:text-gray-300"
+                className="text-white text-lg  flex items-center justify-center mx-2 hover:text-gray-300"
               >
                 {playing ? (
-                  <FaPause color="white" className="text-black h-4 w-4" />
+                  <MdPauseCircle className="h-10 w-10" />
                 ) : (
-                  <FaPlay color="white" className="text-black h-4 w-4" />
+                  <IoMdPlayCircle className="h-10 w-10" />
                 )}
+              </button>
+              <button className="text-white text-lg hover:text-gray-300">
+                <MdOutlineSkipNext className="h-7 w-7" />
               </button>
               <button
                 onClick={handleNextTenSecond}
@@ -296,14 +313,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <audio
             ref={audioRef}
             src="/aud.mp3"
-            onTimeUpdate={() =>
-              setCurrentTime(audioRef.current?.currentTime || 0)
-            }
-            onLoadedMetadata={() =>
-              setDuration(audioRef.current?.duration || 0)
-            }
+            onTimeUpdate={() => {
+              const currentTime = audioRef.current?.currentTime || 0;
+              const duration = audioRef.current?.duration || 0;
+              handleProgress(currentTime, duration);
+              setCurrentTime(currentTime);
+            }}
+            autoPlay={true}
+            onLoadedMetadata={() => {
+              setDuration(audioRef.current?.duration || 0);
+            }}
             onEnded={handleEnded}
-            controls
           >
             Your browser does not support the audio element.
           </audio>
@@ -311,11 +331,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <div className="w-full flex items-center">
             <input
               type="range"
-              min="0"
-              max="1"
               step="0.01"
-              value={played}
               className="w-full mx-2 accent-white"
+              min="0"
+              max={duration}
+              value={currentTime}
               onChange={handleSeek}
             />
           </div>
@@ -330,6 +350,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
           <div className="flex justify-between items-center">
             <KaraokeAirFriendEtc
+              handleOpenEqualizer={handleOpenEqualizer}
               karaokeOn={karaokeOn}
               SetKaraokeOn={setKaraokeOn}
             />
