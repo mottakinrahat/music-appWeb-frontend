@@ -125,7 +125,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
     >
       <h3 className="text-3xl font-semibold mb-8">EQ Settings</h3>
       <div
-        className={`transition-opacity duration-300 ${
+        className={`transition-opacity duration-300 w-full ${
           !isOn ? "opacity-40 " : "opacity-100"
         }`}
       >
@@ -189,14 +189,14 @@ const Equalizer: React.FC<EqualizerProps> = ({
               // console.log(preset);
               return (
                 <li
-                  onClick={() => setSelectedPreset(preset)}
+                  onClick={() => {
+                    setSelectedPreset(preset);
+                    applyPreset(presets[preset as PresetKeys]);
+                  }}
                   key={index}
                   className="flex cursor-pointer justify-between w-[8rem] items-center"
                 >
-                  <button
-                    className="my-1"
-                    onClick={() => applyPreset(presets[preset as PresetKeys])}
-                  >
+                  <button className="my-1">
                     {preset.charAt(0).toUpperCase() + preset.slice(1)}
                   </button>
                   {selectedPreset === preset && (

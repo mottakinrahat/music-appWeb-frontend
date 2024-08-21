@@ -21,7 +21,7 @@ export function Chart({ data }: ChartInfc) {
     <Dot {...props} r={4} fill="#00CCD0" stroke="#00CCD0" />
   );
   return (
-    <Card className="border-0 shadow-none">
+    <Card className="border-0 shadow-none w-full">
       <CardContent className="border-0">
         <ChartContainer config={chartConfig}>
           <AreaChart
@@ -42,7 +42,7 @@ export function Chart({ data }: ChartInfc) {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0, 5)}
             />
             {/* <ChartTooltip
               cursor={false}

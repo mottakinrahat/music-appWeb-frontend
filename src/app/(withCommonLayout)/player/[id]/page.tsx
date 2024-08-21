@@ -23,7 +23,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   );
   const [eqOpen, setEqOpen] = useState(false);
 
-  const [tracks, setTraks] = useState([]);
+  const [tracks, setTraks] = useState<any>([]);
   useEffect(() => {
     fetch("/tracks.json")
       .then((data) => data.json())
@@ -34,7 +34,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   useEffect(() => {
     // Find the track based on the ID
     const initialTrackIndex = tracks.findIndex(
-      (track) => track.id === params.id
+      (track: any) => track.id === params.id
     );
     if (initialTrackIndex !== -1) {
       setCurrentTrackIndex(initialTrackIndex);

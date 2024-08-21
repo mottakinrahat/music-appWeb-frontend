@@ -19,7 +19,7 @@ const AudioList = () => {
         underground gems bubbling up from the scene.
       </p>
       <div className="flex flex-wrap justify-between items-center mt-[48px]">
-        {tracks?.map((track) => (
+        {tracks?.map((track: any) => (
           <Link key={track?.id} href={`player/${track?.id}`}>
             <div className="max-w-[282px]">
               <Image
