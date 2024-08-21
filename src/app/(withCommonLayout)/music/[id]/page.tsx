@@ -11,7 +11,7 @@ import PauseIcon from "../../../../assets/icons/pauseIcon.svg";
 import PreviousIcon from "../../../../assets/icons/arrow_back (1).svg";
 import NextIcon from "../../../../assets/icons/arrow_back.svg";
 
-import { tracks } from "../page"; // Adjust path as necessary
+// import { tracks } from "../page"; // Adjust path as necessary
 import { useRouter } from "next/navigation";
 import KaraokeAirFriendEtc from "@/component/MusicPlayer/KaraokeAirFriendEtc";
 import VolumeSettingDownRepeat from "@/component/MusicPlayer/VolumeSettingDownRepeat";
@@ -130,7 +130,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
 
   useEffect(() => {
     // Find the track based on the ID
-    const initialTrackIndex = tracks.findIndex((track) => track.id === id);
+    const initialTrackIndex = tracks.findIndex((track: any) => track.id === id);
     if (initialTrackIndex !== -1) {
       setCurrentTrackIndex(initialTrackIndex);
     }
