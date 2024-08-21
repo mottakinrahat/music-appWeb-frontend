@@ -15,16 +15,24 @@ const Equalizer: React.FC<EqualizerProps> = ({
 }) => {
   const gainNodesRef = useRef<GainNode[]>([]);
   const [gains, setGains] = useState([0, 0, 0, 0, 0, 0]);
-  const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const frequencies = [16, 160, 400, 1000, 2400, 15000];
+  // Frequencies for the equalizer
+  const frequencies = [60, 160, 400, 1000, 2400, 15000];
+  const frequencyLabels = ["60Hz", "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
+
   // EQ toggle
   const [isOn, setIsOn] = useState(false);
 
   const toggleSwitch = () => {
     setIsOn(!isOn);
+    setGains([0, 0, 0, 0, 0, 0]);
+    if (!isOn) {
+      setSelectedPreset("rock");
+    }
+    if (isOn) {
+      setSelectedPreset(null);
+    }
   };
 
   React.useEffect(() => {
@@ -91,38 +99,14 @@ const Equalizer: React.FC<EqualizerProps> = ({
     "bass booster": [7, 5, 3, 1, -1, -5],
     classical: [2, 3, 4, 5, 6, 2],
   };
-  const frequencyData = ["16Hz", "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
+
   const data = frequencies.map((freq, index) => ({
-    frequency: `${frequencyData[index]}`,
+    frequency: frequencyLabels[index],
     gain: gains[index],
   }));
 
-  // console.log("presets", presets);
-
-  const handleMouseDown = (index: number) => {
-    setDraggingIndex(index);
-  };
-
-  const handleMouseMove = (event: React.MouseEvent) => {
-    if (draggingIndex !== null) {
-      const chartRect = event.currentTarget.getBoundingClientRect();
-      const yOffset = event.clientY - chartRect.top;
-      const newValue = Math.round((200 - yOffset) / 4) - 20; // Adjust range as needed
-      adjustGain(draggingIndex, newValue);
-    }
-  };
-
-  const handleMouseUp = () => {
-    setDraggingIndex(null);
-  };
-  // console.log(data);
-
   return (
-    <div
-      className="p-10 w-[400px]"
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-    >
+    <div className="p-10 w-[400px]">
       <h3 className="text-3xl font-semibold mb-8">EQ Settings</h3>
       <div
         className={`transition-opacity duration-300 w-full ${
@@ -132,44 +116,9 @@ const Equalizer: React.FC<EqualizerProps> = ({
         <Chart data={data} />
       </div>
 
-      {/* <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          data={data}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid
-            strokeDasharray="1 0"
-            vertical={true}
-            horizontal={false} // Ensure only horizontal lines are drawn
-          />
-          <XAxis
-            dataKey="frequency"
-            axisLine={false} // Hide the axis line
-            tickLine={false} // Hide the tick lines
-            tick={{ fill: "black" }} // Customize tick values color (if needed)
-          />
-
-          <Line
-            type="monotone"
-            dataKey="gain"
-            stroke="#00CCD0"
-            strokeWidth={2}
-            dot={<Dot r={6} fill="#00CCD0" stroke="#00CCD0" strokeWidth={2} />}
-            connectNulls
-          />
-          <Scatter
-            data={data}
-            fill="#00CCD0"
-            shape={
-              <Dot r={6} fill="#00CCD0" stroke="#00CCD0" strokeWidth={2} />
-            }
-            onMouseDown={(e, index) => handleMouseDown(index)}
-          />
-        </LineChart>
-      </ResponsiveContainer> */}
       <div style={{ marginTop: "20px" }}>
         <div className="flex justify-between">
-          <h3 className="font-semibold">Equlizer</h3>
+          <h3 className="font-semibold">Equalizer</h3>
           <div
             onClick={toggleSwitch}
             className={`w-10 h-6 flex items-center rounded-full duration-300 p-1 cursor-pointer ${
@@ -185,49 +134,43 @@ const Equalizer: React.FC<EqualizerProps> = ({
         </div>
         {isOn ? (
           <ul>
-            {Object.keys(presets).map((preset, index) => {
-              // console.log(preset);
-              return (
-                <li
-                  onClick={() => {
-                    setSelectedPreset(preset);
-                    applyPreset(presets[preset as PresetKeys]);
-                  }}
-                  key={index}
-                  className="flex cursor-pointer justify-between w-[8rem] items-center"
-                >
-                  <button className="my-1">
-                    {preset.charAt(0).toUpperCase() + preset.slice(1)}
-                  </button>
-                  {selectedPreset === preset && (
-                    <div>
-                      <IoCheckmarkSharp className="text-accent" />
-                    </div>
-                  )}
-                </li>
-              );
-            })}
+            {Object.keys(presets).map((preset, index) => (
+              <li
+                onClick={() => {
+                  setSelectedPreset(preset);
+                  applyPreset(presets[preset as PresetKeys]);
+                }}
+                key={index}
+                className="flex cursor-pointer justify-between w-[8rem] items-center"
+              >
+                <button className="my-1">
+                  {preset.charAt(0).toUpperCase() + preset.slice(1)}
+                </button>
+                {selectedPreset === preset && (
+                  <div>
+                    <IoCheckmarkSharp className="text-accent" />
+                  </div>
+                )}
+              </li>
+            ))}
           </ul>
         ) : (
           <ul>
-            {Object.keys(presets).map((preset, index) => {
-              // console.log(preset);
-              return (
-                <li
-                  key={index}
-                  className="flex justify-between w-[8rem] items-center opacity-70"
-                >
-                  <button className="my-1" disabled={true}>
-                    {preset.charAt(0).toUpperCase() + preset.slice(1)}
-                  </button>
-                  {selectedPreset === preset && (
-                    <div>
-                      <IoCheckmarkSharp className="text-accent" />
-                    </div>
-                  )}
-                </li>
-              );
-            })}
+            {Object.keys(presets).map((preset, index) => (
+              <li
+                key={index}
+                className="flex justify-between w-[8rem] items-center opacity-70"
+              >
+                <button className="my-1" disabled>
+                  {preset.charAt(0).toUpperCase() + preset.slice(1)}
+                </button>
+                {selectedPreset === preset && (
+                  <div>
+                    <IoCheckmarkSharp className="text-accent" />
+                  </div>
+                )}
+              </li>
+            ))}
           </ul>
         )}
       </div>

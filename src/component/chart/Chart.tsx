@@ -42,7 +42,7 @@ export function Chart({ data }: ChartInfc) {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 5)}
+              tickFormatter={(value) => value.slice(0, 4)}
             />
             {/* <ChartTooltip
               cursor={false}
@@ -50,7 +50,7 @@ export function Chart({ data }: ChartInfc) {
             /> */}
             <defs>
               <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#00CCD0" stopOpacity={0.8} />
+                <stop offset="0%" stopColor="#00CCD0" stopOpacity={0.6} />
                 <stop offset="100%" stopColor="#00CCD0" stopOpacity={0.01} />
               </linearGradient>
             </defs>
