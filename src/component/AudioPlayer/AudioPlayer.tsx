@@ -1,16 +1,29 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+import LoadingAnimation from "../LoadingAnimation/LoadingAnimation";
+import { tracks2 } from "@/app/(withCommonLayout)/player/page";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
     audioContext: AudioContext,
     audioElement: HTMLAudioElement
   ) => void;
+  id: any;
+  url: any;
 }
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({ onAudioContextReady }) => {
+const AudioPlayer: React.FC<AudioPlayerProps> = ({
+  onAudioContextReady,
+  id,
+  url,
+}) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
+    null
+  );
+  const [repeat, setRepeat] = useState<boolean>(false);
+  const [playing, setPlaying] = useState<boolean>(true);
 
   useEffect(() => {
     const handleInteraction = () => {
@@ -34,6 +47,22 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ onAudioContextReady }) => {
   }, [onAudioContextReady]);
 
   const [currentTime, setCurrentTime] = useState(0);
+  //   const id = parseInt(params.id);
+  // song loading start
+  useEffect(() => {
+    // Find the track based on the ID
+    const initialTrackIndex = tracks2.findIndex((track) => track.id === id);
+    if (initialTrackIndex !== -1) {
+      setCurrentTrackIndex(initialTrackIndex);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (currentTrackIndex !== null) {
+      setPlaying(true);
+      // router.push(`/music/${tracks[currentTrackIndex].id}`);
+    }
+  }, [currentTrackIndex]);
 
   const handlePause = () => {
     if (audioRef.current) {
@@ -70,8 +99,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ onAudioContextReady }) => {
       <audio
         ref={audioRef}
         onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
+        controls
       >
-        <source src="/aud.mp3" type="audio/mpeg" />
+        <source src={url} type="audio/mpeg" />
+        Your browser does not support the audio element.
       </audio>
 
       {/* Custom controls */}
