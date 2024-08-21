@@ -311,7 +311,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
               max="1"
               step="0.01"
               value={played}
-              className="w-full mx-2 accent-white cursor-pointer"
+              className="w-full mx-2 accent-white"
               onChange={handleSeek}
             />
           </div>
