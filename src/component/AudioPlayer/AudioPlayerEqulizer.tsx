@@ -14,7 +14,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
   audioElement,
 }) => {
   const gainNodesRef = useRef<GainNode[]>([]);
-  const [gains, setGains] = useState([5, 3, 0, -3, -5, -7]);
+  const [gains, setGains] = useState([0, 0, 0, 0, 0, 0]);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
 
@@ -97,7 +97,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
     gain: gains[index],
   }));
 
-  console.log("presets", presets);
+  // console.log("presets", presets);
 
   const handleMouseDown = (index: number) => {
     setDraggingIndex(index);
@@ -115,7 +115,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
   const handleMouseUp = () => {
     setDraggingIndex(null);
   };
-  console.log(data);
+  // console.log(data);
 
   return (
     <div
@@ -211,7 +211,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
         ) : (
           <ul>
             {Object.keys(presets).map((preset, index) => {
-              console.log(preset);
+              // console.log(preset);
               return (
                 <li
                   key={index}
