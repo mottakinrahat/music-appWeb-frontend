@@ -8,10 +8,10 @@ import SkipNextIcon from "@/assets/icons/skip_next.svg";
 import SkipPreviousIcon from "@/assets/icons/skip_previous.svg";
 import PreviousIcon from "@/assets/icons/arrow_back (1).svg";
 import NextIcon from "@/assets/icons/arrow_back.svg";
-import KaraokeAirFriendEtc from "@/component/MusicPlayer/KaraokeAirFriendEtc";
-import VolumeSettingDownRepeat from "@/component/MusicPlayer/VolumeSettingDownRepeat";
+import KaraokeAirFriendEtc from "@/components/MusicPlayer/KaraokeAirFriendEtc";
+import VolumeSettingDownRepeat from "@/components/MusicPlayer/VolumeSettingDownRepeat";
 import { formatTime } from "@/utils/FormatTime";
-import { DropDownBtn } from "@/component/MusicPlayer/DropDownBtn";
+import { DropDownBtn } from "@/components/MusicPlayer/DropDownBtn";
 import {
   PlusCircleIcon,
   HeartIcon,

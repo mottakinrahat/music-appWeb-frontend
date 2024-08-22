@@ -1,9 +1,9 @@
 "use client";
-import AudioPlayer from "@/component/AudioPlayer/AudioPlayer";
-import AudioPlayerEqualizer from "@/component/AudioPlayer/components/AudioPlayerEqulizer";
+import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
+import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
 import React, { useEffect, useState } from "react";
 // import { tracks2 } from "../page";
-import LoadingAnimation from "@/component/LoadingAnimation/LoadingAnimation";
+import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 
 interface PlayerInterface {
   params: {

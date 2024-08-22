@@ -12,6 +12,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
   ({ src, onTimeUpdate, autoPlay = false, onLoadedMetadata, onEnded }, ref) => {
     return (
       <audio
+        crossOrigin="anonymous"
         ref={ref}
         src={src}
         onTimeUpdate={onTimeUpdate}

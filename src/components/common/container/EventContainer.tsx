@@ -1,4 +1,4 @@
-import EventCard from "@/component/Card/EventCard";
+import EventCard from "@/components/Card/EventCard";
 import Heading from "@/components/ui/heading";
 import { Url } from "next/dist/shared/lib/router/router";
 import React from "react";
@@ -23,12 +23,7 @@ const EventContainer: React.FC<EventContainerInterface> = ({
   return (
     <div>
       <Container bgGray={bgGray} className={`${bgGray && ""}`}>
-        <Heading
-          type="primary"
-          heading={heading}
-          linkText={linkText}
-          route={linkRoute}
-        >
+        <Heading type="primary" heading={heading} linkText={linkText} route={linkRoute}>
           {children}
         </Heading>
         <div className="grid grid-cols-3 gap-6 my-10">
