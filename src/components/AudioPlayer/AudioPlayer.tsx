@@ -323,7 +323,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
           <AudioControls
             ref={audioRef}
-            src="https://res.cloudinary.com/dnzhxznox/video/upload/v1724321850/mdqhcpscicydbrbzedws.mp3"
+            src={url}
             onTimeUpdate={() => {
               const currentTime = audioRef.current?.currentTime || 0;
               const duration = audioRef.current?.duration || 0;
