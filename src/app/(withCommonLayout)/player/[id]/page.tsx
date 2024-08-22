@@ -86,7 +86,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
       </div>
       <div
         className={`h-full max-h-screen  duration-500 transition-all ${
-          eqOpen ? "max-w-3xl w-[400px] " : "w-0"
+          eqOpen ? "max-w-3xl w-[500px] " : "w-0"
         }`}
       >
         <AudioPlayerEqualizer

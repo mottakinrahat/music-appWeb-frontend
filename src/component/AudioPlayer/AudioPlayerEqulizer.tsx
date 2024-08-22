@@ -18,8 +18,8 @@ const Equalizer: React.FC<EqualizerProps> = ({
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
 
   // Frequencies for the equalizer
+  const frequencyLabels = [`60Hz`, "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
   const frequencies = [60, 160, 400, 1000, 2400, 15000];
-  const frequencyLabels = ["60Hz", "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
 
   // EQ toggle
   const [isOn, setIsOn] = useState(false);
@@ -106,7 +106,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
   }));
 
   return (
-    <div className="p-10 w-[400px]">
+    <div className="p-10 w-[500px]">
       <h3 className="text-3xl font-semibold mb-8">EQ Settings</h3>
       <div
         className={`transition-opacity duration-300 w-full ${
