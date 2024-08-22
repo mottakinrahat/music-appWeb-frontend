@@ -252,6 +252,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
     </>
   );
 
+  //  three dot content functions
+
+
   return (
     <div>
       <div
