@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
+import { Chart } from "@/components/chart/Chart";
 import React, { useRef, useState, useEffect } from "react";
-import { Chart } from "../chart/Chart";
+// import { Chart } from "../chart/Chart";
 import { IoCheckmarkSharp } from "react-icons/io5";
 
 interface EqualizerProps {

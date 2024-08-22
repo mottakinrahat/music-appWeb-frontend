@@ -14,6 +14,8 @@ const LoadingAnimation = () => {
         wrapperClass="wrapper-class"
         visible={true}
       />
+      {/*  */}
+      {/*  */}
     </div>
   );
 };

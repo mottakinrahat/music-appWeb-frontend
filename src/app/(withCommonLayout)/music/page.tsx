@@ -46,7 +46,7 @@ import Link from "next/link";
 // ];
 
 const AudioList: React.FC = () => {
-  const [tracks, setTraks] = useState([]);
+  const [tracks, setTraks] = useState<any>([]);
   useEffect(() => {
     fetch("/tracks.json")
       .then((data) => data.json())
@@ -62,7 +62,7 @@ const AudioList: React.FC = () => {
         underground gems bubbling up from the scene.
       </p>
       <div className="flex flex-wrap justify-between items-center mt-[48px]">
-        {tracks.map((track) => (
+        {tracks.map((track: any) => (
           <Link key={track?.id} href={`player/${track?.id}`}>
             <div className="max-w-[282px]">
               <Image

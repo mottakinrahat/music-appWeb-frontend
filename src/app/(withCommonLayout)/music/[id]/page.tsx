@@ -13,10 +13,10 @@ import NextIcon from "../../../../assets/icons/arrow_back.svg";
 
 // import { tracks } from "../page"; // Adjust path as necessary
 import { useRouter } from "next/navigation";
-import KaraokeAirFriendEtc from "@/component/MusicPlayer/KaraokeAirFriendEtc";
-import VolumeSettingDownRepeat from "@/component/MusicPlayer/VolumeSettingDownRepeat";
+import KaraokeAirFriendEtc from "@/components/MusicPlayer/KaraokeAirFriendEtc";
+import VolumeSettingDownRepeat from "@/components/MusicPlayer/VolumeSettingDownRepeat";
 import { formatTime } from "@/utils/FormatTime";
-import { DropDownBtn } from "@/component/MusicPlayer/DropDownBtn";
+import { DropDownBtn } from "@/components/MusicPlayer/DropDownBtn";
 import {
   PlusCircleIcon,
   HeartIcon,
@@ -25,7 +25,7 @@ import {
   UserCircleIcon,
   MusicalNoteIcon,
 } from "@heroicons/react/24/outline";
-import LoadingAnimation from "@/component/LoadingAnimation/LoadingAnimation";
+import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 
 // Define types for track
 interface Track {
@@ -50,9 +50,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
   const [played, setPlayed] = useState<number>(0);
   const [volume, setVolume] = useState<number>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
-    null
-  );
+  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(null);
   const [repeat, setRepeat] = useState<boolean>(false);
   const playerRef = useRef<ReactPlayer | null>(null);
 
@@ -68,8 +66,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
 
   useEffect(() => {
     // Initialize the AudioContext
-    const audioContext = new (window.AudioContext ||
-      (window as any).webkitAudioContext)();
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
     setContext(audioContext);
 
     // Cleanup function
@@ -83,8 +80,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
   useEffect(() => {
     if (context && playerRef.current) {
       // Ensure the media element is ready
-      const mediaElement =
-        playerRef.current.getInternalPlayer() as HTMLMediaElement;
+      const mediaElement = playerRef.current.getInternalPlayer() as HTMLMediaElement;
 
       if (mediaElement && mediaElement instanceof HTMLMediaElement) {
         console.log("Media element:", mediaElement); // Debug: Check the media element
@@ -115,9 +111,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
     }
   }, [context]);
 
-  const handleFrequencyChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFrequencyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(event.target.value);
     if (filterNode) {
       filterNode.frequency.value = value;
@@ -175,10 +169,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
     if (repeat) {
       playerRef.current?.seekTo(0);
       setPlaying(true);
-    } else if (
-      currentTrackIndex !== null &&
-      currentTrackIndex < tracks.length - 1
-    ) {
+    } else if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
       setCurrentTrackIndex(currentTrackIndex + 1);
     }
   };
@@ -252,6 +243,8 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
     </>
   );
 
+  //  three dot content functions
+
   return (
     <div>
       <div
@@ -287,9 +280,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
             <div className="text-white flex items-center gap-2">
               <Image src={artwork} alt="Album Art" height={80} width={80} />
               <div>
-                <h2 className="text-white text-xl font-semibold mb-1">
-                  {title}
-                </h2>
+                <h2 className="text-white text-xl font-semibold mb-1">{title}</h2>
                 <div className="flex items-center gap-2">
                   <p>{artist}</p>
                   <span className="size-2 bg-white rounded-xl"></span>
@@ -304,37 +295,26 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
                 onClick={handlePreviousTenSecond}
                 className="text-white text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
               >
-                <img src={PreviousIcon.src} alt="PreviousIcon" />{" "}
-                <span className="text-[16px]">10s</span>
+                <img src={PreviousIcon.src} alt="PreviousIcon" /> <span className="text-[16px]">10s</span>
               </button>
-              <button
-                onClick={goToPreviousSong}
-                className="text-white text-3xl mx-2 hover:text-gray-300"
-              >
+              <button onClick={goToPreviousSong} className="text-white text-3xl mx-2 hover:text-gray-300">
                 <img src={SkipPreviousIcon.src} alt="SkipPreviousIcon" />
               </button>
-              <button
-                onClick={handlePlayPause}
-                className="text-white text-3xl mx-2 hover:text-gray-300"
-              >
+              <button onClick={handlePlayPause} className="text-white text-3xl mx-2 hover:text-gray-300">
                 {playing ? (
                   <FaPause color="white" className="z-999 text-black h-4 w-4" />
                 ) : (
                   <FaPlay color="white" className="z-999 text-black h-4 w-4" />
                 )}
               </button>
-              <button
-                onClick={goToNextSong}
-                className="text-white text-3xl mx-2 hover:text-gray-300"
-              >
+              <button onClick={goToNextSong} className="text-white text-3xl mx-2 hover:text-gray-300">
                 <img src={SkipNextIcon.src} alt="SkipNextIcon" />
               </button>
               <button
                 onClick={handleNextTenSecond}
                 className="text-white text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
               >
-                <span className="text-[16px]">10s</span>{" "}
-                <img src={NextIcon.src} alt="NextIcon" />
+                <span className="text-[16px]">10s</span> <img src={NextIcon.src} alt="NextIcon" />
               </button>
             </div>
 
@@ -346,11 +326,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
                     {repeat ? (
                       <img src={RepeatIcon.src} alt="RepeatIcon" />
                     ) : (
-                      <img
-                        src={RepeatIcon.src}
-                        className="bg-red-200 h-4 w-4"
-                        alt="RepeatIcon"
-                      />
+                      <img src={RepeatIcon.src} className="bg-red-200 h-4 w-4" alt="RepeatIcon" />
                     )}
                   </div>
                 </div>
@@ -385,23 +361,15 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
           </div>
           <div className="w-full">
             <div className="flex justify-between gap-3 items-center px-3">
-              <span className="text-white text-sm">
-                {formatTime(played * duration)}
-              </span>
+              <span className="text-white text-sm">{formatTime(played * duration)}</span>
               <span className="text-white text-sm">{formatTime(duration)}</span>
             </div>
           </div>
 
           {/* Volume Control */}
           <div className="flex !justify-between items-center">
-            <KaraokeAirFriendEtc
-              karaokeOn={karaokeOn}
-              SetKaraokeOn={setKaraokeOn}
-            />
-            <VolumeSettingDownRepeat
-              volume={volume}
-              handleVolumeChange={handleVolumeChange}
-            />
+            <KaraokeAirFriendEtc karaokeOn={karaokeOn} SetKaraokeOn={setKaraokeOn} />
+            <VolumeSettingDownRepeat volume={volume} handleVolumeChange={handleVolumeChange} />
           </div>
         </div>
       </div>

@@ -8,10 +8,10 @@ import SkipNextIcon from "@/assets/icons/skip_next.svg";
 import SkipPreviousIcon from "@/assets/icons/skip_previous.svg";
 import PreviousIcon from "@/assets/icons/arrow_back (1).svg";
 import NextIcon from "@/assets/icons/arrow_back.svg";
-import KaraokeAirFriendEtc from "@/component/MusicPlayer/KaraokeAirFriendEtc";
-import VolumeSettingDownRepeat from "@/component/MusicPlayer/VolumeSettingDownRepeat";
+import KaraokeAirFriendEtc from "@/components/MusicPlayer/KaraokeAirFriendEtc";
+import VolumeSettingDownRepeat from "@/components/MusicPlayer/VolumeSettingDownRepeat";
 import { formatTime } from "@/utils/FormatTime";
-import { DropDownBtn } from "@/component/MusicPlayer/DropDownBtn";
+import { DropDownBtn } from "@/components/MusicPlayer/DropDownBtn";
 import {
   PlusCircleIcon,
   HeartIcon,
@@ -20,30 +20,20 @@ import {
   UserCircleIcon,
   MusicalNoteIcon,
 } from "@heroicons/react/24/outline";
-import {
-  MdOutlineSkipNext,
-  MdOutlineSkipPrevious,
-  MdPauseCircle,
-} from "react-icons/md";
+import { MdOutlineSkipNext, MdOutlineSkipPrevious, MdPauseCircle } from "react-icons/md";
 import { IoMdPlayCircle } from "react-icons/io";
+import AudioControls from "./components/AudioControls";
+import RepeatActionButton from "./components/RepeatActionButton";
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
 interface AudioPlayerProps {
-  onAudioContextReady: (
-    audioContext: AudioContext,
-    audioElement: HTMLAudioElement
-  ) => void;
+  onAudioContextReady: (audioContext: AudioContext, audioElement: HTMLAudioElement) => void;
   id: any;
   currentSong?: any;
   handleOpenEqualizer: any;
 }
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({
-  onAudioContextReady,
-  id,
-  currentSong,
-  handleOpenEqualizer,
-}) => {
+const AudioPlayer: React.FC<AudioPlayerProps> = ({ onAudioContextReady, id, currentSong, handleOpenEqualizer }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const [repeat, setRepeat] = useState<boolean>(false);
@@ -53,17 +43,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [played, setPlayed] = useState<number>(0);
   const [volume, setVolume] = useState<number>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
-    null
-  );
+  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(null);
 
   const { title, url, artwork, artist, album } = currentSong;
 
   useEffect(() => {
     const handleInteraction = () => {
       if (!audioContextRef.current) {
-        const audioContext = new (window.AudioContext ||
-          (window as any).webkitAudioContext)();
+        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
         audioContextRef.current = audioContext;
         onAudioContextReady(audioContext, audioRef.current as HTMLAudioElement);
       } else if (audioContextRef.current.state === "suspended") {
@@ -115,19 +102,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const handlePreviousTenSecond = () => {
     if (audioRef.current) {
-      audioRef.current.currentTime = Math.max(
-        audioRef.current.currentTime - 10,
-        0
-      );
+      audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 10, 0);
     }
   };
 
   const handleNextTenSecond = () => {
     if (audioRef.current) {
-      audioRef.current.currentTime = Math.min(
-        audioRef.current.currentTime + 10,
-        duration
-      );
+      audioRef.current.currentTime = Math.min(audioRef.current.currentTime + 10, duration);
     }
   };
 
@@ -182,10 +163,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className="audio-controls relative">
-      <div
-        className="w-full h-screen bg-cover bg-center"
-        style={{ backgroundImage: `url(${artwork})` }}
-      >
+      <div className="w-full h-screen bg-cover bg-center" style={{ backgroundImage: `url(${artwork})` }}>
+        {/* Dropdown section */}
         <div className="absolute p-[120px] right-0 text-white">
           <DropDownBtn
             dropDownContent={threeDotContent}
@@ -219,9 +198,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 width={80}
               />
               <div>
-                <h2 className="text-white text-xl font-semibold mb-1">
-                  {title}
-                </h2>
+                <h2 className="text-white text-xl font-semibold mb-1">{title}</h2>
                 <div className="flex items-center gap-2">
                   <p>{artist}</p>
                   <span className="size-2 bg-white rounded-xl"></span>
@@ -251,11 +228,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 onClick={handlePlayPause}
                 className="text-white text-lg  flex items-center justify-center mx-2 hover:text-gray-300"
               >
-                {playing ? (
-                  <MdPauseCircle className="h-10 w-10" />
-                ) : (
-                  <IoMdPlayCircle className="h-10 w-10" />
-                )}
+                {playing ? <MdPauseCircle className="h-10 w-10" /> : <IoMdPlayCircle className="h-10 w-10" />}
               </button>
               <button className="text-white text-lg hover:text-gray-300">
                 <MdOutlineSkipNext className="h-7 w-7" />
@@ -275,7 +248,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               </button>
             </div>
 
-            <div>
+            {/* repeat button component */}
+
+            <RepeatActionButton toggleRepeat={toggleRepeat} src={LyricsIcon.src} repeat={repeat} />
+
+            {/* <div>
               <button className="text-white text-3xl mx-2 hover:text-gray-300">
                 <div className="flex justify-start items-center gap-[24px]">
                   <Image
@@ -307,10 +284,26 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                   </div>
                 </div>
               </button>
-            </div>
+            </div> */}
           </div>
 
-          <audio
+          <AudioControls
+            ref={audioRef}
+            src="/aud.mp3"
+            onTimeUpdate={() => {
+              const currentTime = audioRef.current?.currentTime || 0;
+              const duration = audioRef.current?.duration || 0;
+              handleProgress(currentTime, duration);
+              setCurrentTime(currentTime);
+            }}
+            autoPlay={true}
+            onLoadedMetadata={() => {
+              setDuration(audioRef.current?.duration || 0);
+            }}
+            onEnded={handleEnded}
+          />
+
+          {/* <audio
             ref={audioRef}
             src="/aud.mp3"
             onTimeUpdate={() => {
@@ -326,7 +319,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             onEnded={handleEnded}
           >
             Your browser does not support the audio element.
-          </audio>
+          </audio> */}
 
           <div className="w-full flex items-center">
             <input
@@ -341,9 +334,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           </div>
           <div className="w-full">
             <div className="flex justify-between gap-3 items-center px-3">
-              <span className="text-white text-sm">
-                {formatTime(currentTime)}
-              </span>
+              <span className="text-white text-sm">{formatTime(currentTime)}</span>
               <span className="text-white text-sm">{formatTime(duration)}</span>
             </div>
           </div>
@@ -354,10 +345,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               karaokeOn={karaokeOn}
               SetKaraokeOn={setKaraokeOn}
             />
-            <VolumeSettingDownRepeat
-              volume={volume}
-              handleVolumeChange={handleVolumeChange}
-            />
+            <VolumeSettingDownRepeat volume={volume} handleVolumeChange={handleVolumeChange} />
           </div>
         </div>
       </div>
