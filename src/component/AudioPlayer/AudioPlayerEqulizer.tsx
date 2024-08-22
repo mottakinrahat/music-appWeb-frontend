@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import { Chart } from "../chart/Chart";
@@ -13,53 +14,66 @@ const Equalizer: React.FC<EqualizerProps> = ({
   audioElement,
 }) => {
   const gainNodesRef = useRef<GainNode[]>([]);
-  const [gains, setGains] = useState([0, 0, 0, 0, 0, 0]);
+  const [gains, setGains] = useState<number[]>([]);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
-  const isEqOn = localStorage.getItem("isEqOn");
-
-  const [isOn, setIsOn] = useState(isEqOn == "true" ? true : false);
+  const [isOn, setIsOn] = useState(false);
 
   // Frequencies for the equalizer
   const frequencyLabels = [`60Hz`, "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const frequencies = [60, 160, 400, 1000, 2400, 15000];
 
   // Default preset
   const defaultPreset = "flat";
 
+  useEffect(() => {
+    // Load the EQ state from localStorage on component mount
+    const savedSettings = localStorage.getItem("eqSettings");
+    const savedIsEqOn = localStorage.getItem("isEqOn");
+
+    if (savedSettings) {
+      const { gains: savedGains, preset } = JSON.parse(savedSettings);
+      setGains(savedGains);
+      setSelectedPreset(preset);
+    } else {
+      // Apply default preset if no saved settings
+      const defaultGains = presets[defaultPreset];
+      setGains(defaultGains);
+      setSelectedPreset(defaultPreset);
+    }
+
+    setIsOn(savedIsEqOn === "true");
+  }, []);
+
   const toggleSwitch = () => {
     localStorage.setItem("isEqOn", (!isOn).toString());
-    setIsOn((prevIsOn) => {
-      if (!prevIsOn) {
-        // If turning EQ on
-        const savedSettings = localStorage.getItem("eqSettings");
-        if (savedSettings) {
-          const { gains: savedGains, preset } = JSON.parse(savedSettings);
-          setGains(savedGains);
-          setSelectedPreset(preset);
-          applyPreset(savedGains);
-        } else {
-          // No saved settings, apply default preset
-          const defaultGains = presets[defaultPreset];
-          setGains(defaultGains);
-          setSelectedPreset(defaultPreset);
-          applyPreset(defaultGains);
-        }
+    if (isOn) {
+      // If turning EQ off
+      localStorage.setItem(
+        "eqSettings",
+        JSON.stringify({
+          gains,
+          preset: selectedPreset,
+        })
+      );
+      setGains([0, 0, 0, 0, 0, 0]);
+      setSelectedPreset(null);
+    } else {
+      // If turning EQ on
+      const savedSettings = localStorage.getItem("eqSettings");
+      if (savedSettings) {
+        const { gains: savedGains, preset } = JSON.parse(savedSettings);
+        setGains(savedGains);
+        setSelectedPreset(preset);
+        applyPreset(savedGains);
       } else {
-        // If turning EQ off
-        localStorage.setItem(
-          "eqSettings",
-          JSON.stringify({
-            gains,
-            preset: selectedPreset,
-          })
-        );
-        setGains([0, 0, 0, 0, 0, 0]);
-        setSelectedPreset(null);
+        // Apply default preset if no saved settings
+        const defaultGains = presets[defaultPreset];
+        setGains(defaultGains);
+        setSelectedPreset(defaultPreset);
+        applyPreset(defaultGains);
       }
-
-      return !prevIsOn;
-    });
+    }
+    setIsOn((prevIsOn) => !prevIsOn);
   };
 
   useEffect(() => {
