@@ -46,7 +46,7 @@ import Link from "next/link";
 // ];
 
 const AudioList: React.FC = () => {
-  const [tracks, setTraks] = useState([]);
+  const [tracks, setTraks] = useState<any>([]);
   useEffect(() => {
     fetch("/tracks.json")
       .then((data) => data.json())
