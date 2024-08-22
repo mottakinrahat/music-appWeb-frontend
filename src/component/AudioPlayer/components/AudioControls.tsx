@@ -1,4 +1,4 @@
-import React, { forwardRef, Ref } from "react";
+import React, { forwardRef } from "react";
 
 interface AudioControlsProps {
   src: string;

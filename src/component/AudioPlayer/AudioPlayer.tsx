@@ -23,6 +23,7 @@ import {
 import { MdOutlineSkipNext, MdOutlineSkipPrevious, MdPauseCircle } from "react-icons/md";
 import { IoMdPlayCircle } from "react-icons/io";
 import AudioControls from "./components/AudioControls";
+import RepeatActionButton from "./components/RepeatActionButton";
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
 interface AudioPlayerProps {
@@ -246,7 +247,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ onAudioContextReady, id, curr
               </button>
             </div>
 
-            <div>
+            {/* repeat button component */}
+
+            <RepeatActionButton toggleRepeat={toggleRepeat} src={LyricsIcon.src} repeat={repeat} />
+
+            {/* <div>
               <button className="text-white text-3xl mx-2 hover:text-gray-300">
                 <div className="flex justify-start items-center gap-[24px]">
                   <Image
@@ -278,7 +283,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ onAudioContextReady, id, curr
                   </div>
                 </div>
               </button>
-            </div>
+            </div> */}
           </div>
 
           <AudioControls

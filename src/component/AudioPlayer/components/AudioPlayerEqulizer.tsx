@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 
-import { Chart } from "../chart/Chart";
+import { Chart } from "../../chart/Chart";
 import { IoCheckmarkSharp } from "react-icons/io5";
 
 interface EqualizerProps {
@@ -9,10 +9,7 @@ interface EqualizerProps {
   audioElement: HTMLAudioElement | null;
 }
 
-const Equalizer: React.FC<EqualizerProps> = ({
-  audioContext,
-  audioElement,
-}) => {
+const Equalizer: React.FC<EqualizerProps> = ({ audioContext, audioElement }) => {
   const gainNodesRef = useRef<GainNode[]>([]);
   const [gains, setGains] = useState([0, 0, 0, 0, 0, 0]);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
@@ -109,11 +106,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
   return (
     <div className="p-10 w-[500px]">
       <h3 className="text-3xl font-semibold mb-8">EQ Settings</h3>
-      <div
-        className={`transition-opacity duration-300 w-full ${
-          !isOn ? "opacity-40 " : "opacity-100"
-        }`}
-      >
+      <div className={`transition-opacity duration-300 w-full ${!isOn ? "opacity-40 " : "opacity-100"}`}>
         <Chart data={data} />
       </div>
 
@@ -144,9 +137,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
                 key={index}
                 className="flex cursor-pointer justify-between w-[8rem] items-center"
               >
-                <button className="my-1">
-                  {preset.charAt(0).toUpperCase() + preset.slice(1)}
-                </button>
+                <button className="my-1">{preset.charAt(0).toUpperCase() + preset.slice(1)}</button>
                 {selectedPreset === preset && (
                   <div>
                     <IoCheckmarkSharp className="text-accent" />
@@ -158,10 +149,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
         ) : (
           <ul>
             {Object.keys(presets).map((preset, index) => (
-              <li
-                key={index}
-                className="flex justify-between w-[8rem] items-center opacity-70"
-              >
+              <li key={index} className="flex justify-between w-[8rem] items-center opacity-70">
                 <button className="my-1" disabled>
                   {preset.charAt(0).toUpperCase() + preset.slice(1)}
                 </button>
