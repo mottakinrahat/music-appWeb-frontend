@@ -11,7 +11,7 @@ import PauseIcon from "../../../../assets/icons/pauseIcon.svg";
 import PreviousIcon from "../../../../assets/icons/arrow_back (1).svg";
 import NextIcon from "../../../../assets/icons/arrow_back.svg";
 
-import { tracks } from "../page"; // Adjust path as necessary
+// import { tracks } from "../page"; // Adjust path as necessary
 import { useRouter } from "next/navigation";
 import KaraokeAirFriendEtc from "@/component/MusicPlayer/KaraokeAirFriendEtc";
 import VolumeSettingDownRepeat from "@/component/MusicPlayer/VolumeSettingDownRepeat";
@@ -23,7 +23,7 @@ import {
   ShareIcon,
   CircleStackIcon,
   UserCircleIcon,
-  MusicalNoteIcon
+  MusicalNoteIcon,
 } from "@heroicons/react/24/outline";
 import LoadingAnimation from "@/component/LoadingAnimation/LoadingAnimation";
 
@@ -50,9 +50,79 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
   const [played, setPlayed] = useState<number>(0);
   const [volume, setVolume] = useState<number>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(null);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
+    null
+  );
   const [repeat, setRepeat] = useState<boolean>(false);
   const playerRef = useRef<ReactPlayer | null>(null);
+
+  const [context, setContext] = useState<AudioContext | null>(null);
+  const [filterNode, setFilterNode] = useState<BiquadFilterNode | null>(null);
+
+  const [tracks, setTraks] = useState([]);
+  useEffect(() => {
+    fetch("/tracks.json")
+      .then((data) => data.json())
+      .then((tracks) => setTraks(tracks));
+  }, []);
+
+  useEffect(() => {
+    // Initialize the AudioContext
+    const audioContext = new (window.AudioContext ||
+      (window as any).webkitAudioContext)();
+    setContext(audioContext);
+
+    // Cleanup function
+    return () => {
+      if (audioContext) {
+        audioContext.close();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (context && playerRef.current) {
+      // Ensure the media element is ready
+      const mediaElement =
+        playerRef.current.getInternalPlayer() as HTMLMediaElement;
+
+      if (mediaElement && mediaElement instanceof HTMLMediaElement) {
+        console.log("Media element:", mediaElement); // Debug: Check the media element
+
+        // Create a MediaElementAudioSourceNode
+        const source = context.createMediaElementSource(mediaElement);
+
+        // Create a BiquadFilterNode for frequency manipulation
+        const filter = context.createBiquadFilter();
+        setFilterNode(filter);
+
+        // Set filter type to 'lowpass' (or 'highpass', 'bandpass', etc. based on your needs)
+        filter.type = "lowpass";
+        filter.frequency.value = 1000; // Set the initial frequency
+
+        // Connect the source node to the filter node and then to the context's destination
+        source.connect(filter);
+        filter.connect(context.destination);
+
+        // Cleanup function
+        return () => {
+          if (source) source.disconnect();
+          if (filter) filter.disconnect();
+        };
+      } else {
+        console.error("The media element is not valid.");
+      }
+    }
+  }, [context]);
+
+  const handleFrequencyChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = parseFloat(event.target.value);
+    if (filterNode) {
+      filterNode.frequency.value = value;
+    }
+  };
 
   // Extract ID from params
   const id = parseInt(params.id);
@@ -60,11 +130,11 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
 
   useEffect(() => {
     // Find the track based on the ID
-    const initialTrackIndex = tracks.findIndex((track) => track.id === id);
+    const initialTrackIndex = tracks.findIndex((track: any) => track.id === id);
     if (initialTrackIndex !== -1) {
       setCurrentTrackIndex(initialTrackIndex);
     }
-  }, [id]);
+  }, [id, tracks]);
 
   useEffect(() => {
     if (currentTrackIndex !== null) {
@@ -76,7 +146,11 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
   // Get current song details
   const currentSong = tracks[currentTrackIndex as number];
   if (!currentSong) {
-    return <div><LoadingAnimation /></div>; // Optionally handle loading state
+    return (
+      <div>
+        <LoadingAnimation />
+      </div>
+    ); // Optionally handle loading state
   }
 
   const { title, url, artwork, artist, album } = currentSong;
@@ -101,7 +175,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
     if (repeat) {
       playerRef.current?.seekTo(0);
       setPlaying(true);
-    } else if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
+    } else if (
+      currentTrackIndex !== null &&
+      currentTrackIndex < tracks.length - 1
+    ) {
       setCurrentTrackIndex(currentTrackIndex + 1);
     }
   };
@@ -179,7 +256,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
     <div>
       <div
         className="w-full h-screen bg-cover bg-center"
-        style={{ backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)` }}
+        style={{
+          backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
+        }}
       >
         <div className="absolute p-[120px] right-0 text-white">
           <DropDownBtn
@@ -326,6 +405,15 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
           </div>
         </div>
       </div>
+      <input
+        type="range"
+        min="20"
+        max="20000"
+        step="10"
+        onChange={handleFrequencyChange}
+        title="Adjust Frequency"
+        defaultValue="100"
+      />
     </div>
   );
 };
