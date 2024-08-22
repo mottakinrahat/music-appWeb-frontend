@@ -19,6 +19,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
 
   // Frequencies for the equalizer
   const frequencyLabels = [`60Hz`, "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const frequencies = [60, 160, 400, 1000, 2400, 15000];
 
   // EQ toggle
