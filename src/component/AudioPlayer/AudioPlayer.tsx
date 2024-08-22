@@ -164,6 +164,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ onAudioContextReady, id, curr
   return (
     <div className="audio-controls relative">
       <div className="w-full h-screen bg-cover bg-center" style={{ backgroundImage: `url(${artwork})` }}>
+        {/* Dropdown section */}
         <div className="absolute p-[120px] right-0 text-white">
           <DropDownBtn
             dropDownContent={threeDotContent}
