@@ -1,11 +1,7 @@
 "use client";
 import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import Image from "next/image";
-import { FaPlay, FaPause } from "react-icons/fa";
-import RepeatIcon from "@/assets/icons/repeat.svg";
 import LyricsIcon from "@/assets/icons/lyrics.svg";
-import SkipNextIcon from "@/assets/icons/skip_next.svg";
-import SkipPreviousIcon from "@/assets/icons/skip_previous.svg";
 import PreviousIcon from "@/assets/icons/arrow_back (1).svg";
 import NextIcon from "@/assets/icons/arrow_back.svg";
 import KaraokeAirFriendEtc from "@/components/MusicPlayer/KaraokeAirFriendEtc";
@@ -28,6 +24,7 @@ import {
 import { IoMdPlayCircle } from "react-icons/io";
 import AudioControls from "./components/AudioControls";
 import RepeatActionButton from "./components/RepeatActionButton";
+
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
 interface AudioPlayerProps {
@@ -49,16 +46,27 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const [repeat, setRepeat] = useState<boolean>(false);
-  const [playing, setPlaying] = useState<boolean>(false);
+  const [playing, setPlaying] = useState<boolean>(true);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [played, setPlayed] = useState<number>(0);
-  const [volume, setVolume] = useState<number>(1);
+  const [volume, setVolume] = useState<number>(0.8);
+  const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
   );
 
+  useEffect(() => {
+    const volume = localStorage.getItem("volume");
+    if (!volume) {
+      localStorage.setItem("volume", "0.8");
+      setVolume(0.8);
+    }
+    if (volume) {
+      setVolume(parseFloat(volume));
+    }
+  }, []);
   const { title, url, artwork, artist, album } = currentSong;
 
   useEffect(() => {
@@ -80,6 +88,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
   }, [onAudioContextReady]);
 
+  // console.log(volume);
   // console.log(currentSong);
 
   const handlePlayPause = () => {
@@ -89,6 +98,42 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       audioRef.current?.play();
     }
     setPlaying(!playing);
+  };
+
+  // devJibon
+  // handle palyback Speed
+  const handlePlaybackSpeed = (speed: number) => {
+    if (playbackSpeed === 1) {
+      setPlaybackSpeed(1.5);
+    } else if (playbackSpeed === 1.5) {
+      setPlaybackSpeed(2);
+    } else if (playbackSpeed === 2) {
+      setPlaybackSpeed(0.25);
+    } else if (playbackSpeed === 0.25) {
+      setPlaybackSpeed(0.5);
+    } else if (playbackSpeed === 0.75) {
+      setPlaybackSpeed(0.5);
+    } else {
+      setPlaybackSpeed(1);
+    }
+  };
+  const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
+    localStorage.setItem("volume", JSON.stringify(newVolume));
+    const oldVolume = localStorage.getItem("volume");
+    if (oldVolume) {
+      setVolume(parseFloat(oldVolume));
+    }
+  };
+
+  // handle Mute
+  const handleMute = () => {
+    const getVolume = localStorage.getItem("volume");
+    if (volume > 0) {
+      setVolume(0);
+    } else {
+      setVolume(getVolume ? parseFloat(getVolume) : 0.8);
+    }
   };
 
   const handleProgress = (currentTime: number, duration: number) => {
@@ -139,13 +184,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (audioRef.current) {
       audioRef.current.currentTime = newTime;
       setCurrentTime(newTime);
-    }
-  };
-  const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume;
     }
   };
 
@@ -322,15 +360,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           </div>
 
           <AudioControls
+            volume={volume}
             ref={audioRef}
             src={url}
+            playbackRate={playbackSpeed}
             onTimeUpdate={() => {
               const currentTime = audioRef.current?.currentTime || 0;
               const duration = audioRef.current?.duration || 0;
               handleProgress(currentTime, duration);
               setCurrentTime(currentTime);
             }}
-            autoPlay={true}
+            autoPlay={playing}
             onLoadedMetadata={() => {
               setDuration(audioRef.current?.duration || 0);
             }}
@@ -382,8 +422,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               SetKaraokeOn={setKaraokeOn}
             />
             <VolumeSettingDownRepeat
+              handlePlaybackSpeed={handlePlaybackSpeed}
+              playbackSpeed={playbackSpeed}
               volume={volume}
               handleVolumeChange={handleVolumeChange}
+              handleMute={handleMute}
             />
           </div>
         </div>

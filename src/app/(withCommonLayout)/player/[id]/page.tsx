@@ -1,9 +1,9 @@
 "use client";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
+import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import React, { useEffect, useState } from "react";
 // import { tracks2 } from "../page";
-import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 
 interface PlayerInterface {
   params: {
@@ -13,10 +13,14 @@ interface PlayerInterface {
 
 const Player: React.FC<PlayerInterface> = ({ params }) => {
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
+  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
+    null
+  );
   const [repeat, setRepeat] = useState<boolean>(false);
   const [playing, setPlaying] = useState<boolean>(true);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(null);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
+    null
+  );
   const [eqOpen, setEqOpen] = useState(false);
 
   const [tracks, setTraks] = useState<any>([]);
@@ -29,7 +33,9 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   // song loading start
   useEffect(() => {
     // Find the track based on the ID
-    const initialTrackIndex = tracks.findIndex((track: any) => track.id === params.id);
+    const initialTrackIndex = tracks.findIndex(
+      (track: any) => track.id === params.id
+    );
     if (initialTrackIndex !== -1) {
       setCurrentTrackIndex(initialTrackIndex);
     }
@@ -55,7 +61,10 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
 
   const { title, url, artwork, artist, album } = currentSong;
 
-  const handleAudioContextReady = (audioContext: AudioContext, audioElement: HTMLAudioElement) => {
+  const handleAudioContextReady = (
+    audioContext: AudioContext,
+    audioElement: HTMLAudioElement
+  ) => {
     setAudioContext(audioContext);
     setAudioElement(audioElement);
   };
@@ -75,8 +84,15 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
           handleOpenEqualizer={handleOpenEqualizer}
         />
       </div>
-      <div className={`h-full max-h-screen  duration-500 transition-all ${eqOpen ? "max-w-3xl w-[500px] " : "w-0"}`}>
-        <AudioPlayerEqualizer audioContext={audioContext} audioElement={audioElement} />
+      <div
+        className={`h-full max-h-screen  duration-500 transition-all ${
+          eqOpen ? "max-w-3xl w-[500px] " : "w-0"
+        }`}
+      >
+        <AudioPlayerEqualizer
+          audioContext={audioContext}
+          audioElement={audioElement}
+        />
       </div>
     </div>
   );

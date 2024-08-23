@@ -10,7 +10,7 @@ interface EqualizerProps {
   audioElement: HTMLAudioElement | null;
 }
 
-const Equalizer: React.FC<EqualizerProps> = ({
+const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
   audioContext,
   audioElement,
 }) => {
@@ -227,4 +227,4 @@ const Equalizer: React.FC<EqualizerProps> = ({
   );
 };
 
-export default Equalizer;
+export default AudioPlayerEqualizer;
