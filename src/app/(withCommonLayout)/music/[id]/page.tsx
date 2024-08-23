@@ -8,12 +8,13 @@ import SkipNextIcon from "../../../../assets/icons/skip_next.svg";
 import SkipPreviousIcon from "../../../../assets/icons/skip_previous.svg";
 import PreviousIcon from "../../../../assets/icons/arrow_back (1).svg";
 import NextIcon from "../../../../assets/icons/arrow_back.svg";
-import { tracks } from "../page"; // Adjust path as necessary
+
+// import { tracks } from "../page"; // Adjust path as necessary
 import { useRouter } from "next/navigation";
-import KaraokeAirFriendEtc from "@/component/MusicPlayer/KaraokeAirFriendEtc";
-import VolumeSettingDownRepeat from "@/component/MusicPlayer/VolumeSettingDownRepeat";
+import KaraokeAirFriendEtc from "@/components/MusicPlayer/KaraokeAirFriendEtc";
+import VolumeSettingDownRepeat from "@/components/MusicPlayer/VolumeSettingDownRepeat";
 import { formatTime } from "@/utils/FormatTime";
-import { DropDownBtn } from "@/component/MusicPlayer/DropDownBtn";
+import { DropDownBtn } from "@/components/MusicPlayer/DropDownBtn";
 import {
   PlusCircleIcon,
   HeartIcon,
@@ -22,10 +23,8 @@ import {
   UserCircleIcon,
   MusicalNoteIcon,
 } from "@heroicons/react/24/outline";
-import LoadingAnimation from "@/component/LoadingAnimation/LoadingAnimation";
-import { ArrowPathRoundedSquareIcon } from "@heroicons/react/24/solid";
-import { RepeatIcon, NotRepeatIcon } from "@/utils/IconsSvg";
-import { Span } from "next/dist/trace";
+import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
+
 // Define types for track
 interface Track {
   id: number;
@@ -55,17 +54,81 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
   const [repeat, setRepeat] = useState<boolean>(false);
   const playerRef = useRef<ReactPlayer | null>(null);
 
+  const [context, setContext] = useState<AudioContext | null>(null);
+  const [filterNode, setFilterNode] = useState<BiquadFilterNode | null>(null);
+
+  const [tracks, setTraks] = useState([]);
+  useEffect(() => {
+    fetch("/tracks.json")
+      .then((data) => data.json())
+      .then((tracks) => setTraks(tracks));
+  }, []);
+
+  useEffect(() => {
+    // Initialize the AudioContext
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    setContext(audioContext);
+
+    // Cleanup function
+    return () => {
+      if (audioContext) {
+        audioContext.close();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (context && playerRef.current) {
+      // Ensure the media element is ready
+      const mediaElement = playerRef.current.getInternalPlayer() as HTMLMediaElement;
+
+      if (mediaElement && mediaElement instanceof HTMLMediaElement) {
+        console.log("Media element:", mediaElement); // Debug: Check the media element
+
+        // Create a MediaElementAudioSourceNode
+        const source = context.createMediaElementSource(mediaElement);
+
+        // Create a BiquadFilterNode for frequency manipulation
+        const filter = context.createBiquadFilter();
+        setFilterNode(filter);
+
+        // Set filter type to 'lowpass' (or 'highpass', 'bandpass', etc. based on your needs)
+        filter.type = "lowpass";
+        filter.frequency.value = 1000; // Set the initial frequency
+
+        // Connect the source node to the filter node and then to the context's destination
+        source.connect(filter);
+        filter.connect(context.destination);
+
+        // Cleanup function
+        return () => {
+          if (source) source.disconnect();
+          if (filter) filter.disconnect();
+        };
+      } else {
+        console.error("The media element is not valid.");
+      }
+    }
+  }, [context]);
+
+  const handleFrequencyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(event.target.value);
+    if (filterNode) {
+      filterNode.frequency.value = value;
+    }
+  };
+
   // Extract ID from params
   const id = parseInt(params.id);
   const router = useRouter();
 
   useEffect(() => {
     // Find the track based on the ID
-    const initialTrackIndex = tracks.findIndex((track) => track.id === id);
+    const initialTrackIndex = tracks.findIndex((track: any) => track.id === id);
     if (initialTrackIndex !== -1) {
       setCurrentTrackIndex(initialTrackIndex);
     }
-  }, [id]);
+  }, [id, tracks]);
 
   useEffect(() => {
     if (currentTrackIndex !== null) {
@@ -183,6 +246,8 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
     </>
   );
 
+  //  three dot content functions
+
   return (
     <div>
       <div
@@ -218,9 +283,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
             <div className="text-white flex items-center gap-2">
               <Image src={artwork} alt="Album Art" height={80} width={80} />
               <div>
-                <h2 className="text-white text-xl font-semibold mb-1">
-                  {title}
-                </h2>
+                <h2 className="text-white text-xl font-semibold mb-1">{title}</h2>
                 <div className="flex items-center gap-2">
                   <p>{artist}</p>
                   <span className="size-2 bg-white rounded-xl"></span>
@@ -235,37 +298,26 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
                 onClick={handlePreviousTenSecond}
                 className="text-white text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
               >
-                <img src={PreviousIcon.src} alt="PreviousIcon" />{" "}
-                <span className="text-[16px]">10s</span>
+                <img src={PreviousIcon.src} alt="PreviousIcon" /> <span className="text-[16px]">10s</span>
               </button>
-              <button
-                onClick={goToPreviousSong}
-                className="text-white text-3xl mx-2 hover:text-gray-300"
-              >
+              <button onClick={goToPreviousSong} className="text-white text-3xl mx-2 hover:text-gray-300">
                 <img src={SkipPreviousIcon.src} alt="SkipPreviousIcon" />
               </button>
-              <button
-                onClick={handlePlayPause}
-                className="text-white text-3xl mx-2 hover:text-gray-300"
-              >
+              <button onClick={handlePlayPause} className="text-white text-3xl mx-2 hover:text-gray-300">
                 {playing ? (
                   <FaPause color="white" className="z-999 text-black h-4 w-4" />
                 ) : (
                   <FaPlay color="white" className="z-999 text-black h-4 w-4" />
                 )}
               </button>
-              <button
-                onClick={goToNextSong}
-                className="text-white text-3xl mx-2 hover:text-gray-300"
-              >
+              <button onClick={goToNextSong} className="text-white text-3xl mx-2 hover:text-gray-300">
                 <img src={SkipNextIcon.src} alt="SkipNextIcon" />
               </button>
               <button
                 onClick={handleNextTenSecond}
                 className="text-white text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
               >
-                <span className="text-[16px]">10s</span>{" "}
-                <img src={NextIcon.src} alt="NextIcon" />
+                <span className="text-[16px]">10s</span> <img src={NextIcon.src} alt="NextIcon" />
               </button>
             </div>
 
@@ -277,7 +329,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
                     {repeat ? (
                       <span> {RepeatIcon}</span>
                     ) : (
-                      <span>{NotRepeatIcon}</span>
+                      <img src={RepeatIcon.src} className="bg-red-200 h-4 w-4" alt="RepeatIcon" />
                     )}
                   </div>
                 </div>
@@ -312,26 +364,27 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
           </div>
           <div className="w-full">
             <div className="flex justify-between gap-3 items-center px-3">
-              <span className="text-white text-sm">
-                {formatTime(played * duration)}
-              </span>
+              <span className="text-white text-sm">{formatTime(played * duration)}</span>
               <span className="text-white text-sm">{formatTime(duration)}</span>
             </div>
           </div>
 
           {/* Volume Control */}
           <div className="flex !justify-between items-center">
-            <KaraokeAirFriendEtc
-              karaokeOn={karaokeOn}
-              SetKaraokeOn={setKaraokeOn}
-            />
-            <VolumeSettingDownRepeat
-              volume={volume}
-              handleVolumeChange={handleVolumeChange}
-            />
+            <KaraokeAirFriendEtc karaokeOn={karaokeOn} SetKaraokeOn={setKaraokeOn} />
+            <VolumeSettingDownRepeat volume={volume} handleVolumeChange={handleVolumeChange} />
           </div>
         </div>
       </div>
+      <input
+        type="range"
+        min="20"
+        max="20000"
+        step="10"
+        onChange={handleFrequencyChange}
+        title="Adjust Frequency"
+        defaultValue="100"
+      />
     </div>
   );
 };
