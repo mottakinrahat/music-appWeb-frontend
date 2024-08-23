@@ -1,8 +1,12 @@
+"use client";
 import Link from "next/link";
-import path from "path";
+import { usePathname } from "next/navigation";
+// import path from "path";
 import React from "react";
 
 const Routes = () => {
+  const activeRoute = usePathname();
+
   const routes = [
     { route: "/", name: "Home" },
     { route: "/music", name: "Music" },
@@ -10,12 +14,13 @@ const Routes = () => {
     { route: "/talents", name: "Talents" },
     { route: "/vr-concerts", name: "VR Concerts" },
   ];
+
   return routes.map((route, idx) => (
     <li key={idx}>
       <Link href={route.route}>
         <span
           className={`nav-link ${
-            path.sep === route.route ? "active font-semibold" : ""
+            activeRoute === route.route ? "active font-semibold" : ""
           }`}
         >
           {route.name}
