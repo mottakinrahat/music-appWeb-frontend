@@ -3,6 +3,7 @@ import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import React, { useEffect, useState } from "react";
+import { cursorTo } from "readline";
 // import { tracks2 } from "../page";
 
 interface PlayerInterface {
@@ -31,34 +32,39 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   }, []);
 
   const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
-  console.log(currentSong);
-
-  console.log(tracks[0]);
   // song loading start
   useEffect(() => {
     // Find the track based on the ID
     const initialTrackIndex = tracks.findIndex(
-      (track: any) => track.id === params.id
+      (track: any) => track.id === parseInt(params.id)
     );
     if (initialTrackIndex !== -1) {
       setCurrentTrackIndex(initialTrackIndex);
     }
     setCurrentSong(tracks[params.id]);
   }, [params.id, tracks]);
-
+  console.log();
   useEffect(() => {
     if (currentTrackIndex !== null) {
       setPlaying(true);
       // router.push(`/music/${tracks[currentTrackIndex].id}`);
     }
-  }, [currentTrackIndex]);
+  }, []);
 
   const handlePrev = () => {
-    setCurrentSong(parseInt(params.id) - 1);
+    if (currentTrackIndex !== null && currentTrackIndex > 0) {
+      const newIndex = currentTrackIndex - 1;
+      setCurrentTrackIndex(newIndex);
+      setCurrentSong(tracks[newIndex]);
+    }
   };
-
+  
   const handleNext = () => {
-    setCurrentSong(parseInt(params.id) + 1);
+    if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
+      const newIndex = currentTrackIndex + 1;
+      setCurrentTrackIndex(newIndex);
+      setCurrentSong(tracks[newIndex]);
+    }
   };
   if (!currentSong) {
     return (
@@ -67,7 +73,6 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
       </div>
     ); // Optionally handle loading state
   }
-
   // const { title, url, artwork, artist, album } = currentSong;
 
   const handleAudioContextReady = (

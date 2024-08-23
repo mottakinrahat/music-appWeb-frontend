@@ -231,7 +231,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     <div className="audio-controls relative">
       <div
         className="w-full h-screen bg-cover bg-center"
-        style={{ backgroundImage: `url(${artwork})` }}
+        style={{
+          backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
+        }}
       >
         {/* Dropdown section */}
         <div className="absolute p-[120px] right-0 text-white">
