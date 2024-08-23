@@ -22,14 +22,18 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     null
   );
   const [eqOpen, setEqOpen] = useState(false);
-
   const [tracks, setTraks] = useState<any>([]);
+
   useEffect(() => {
     fetch("/tracks.json")
       .then((data) => data.json())
       .then((tracks) => setTraks(tracks));
   }, []);
 
+  const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
+  console.log(currentSong);
+
+  console.log(tracks[0]);
   // song loading start
   useEffect(() => {
     // Find the track based on the ID
@@ -39,6 +43,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     if (initialTrackIndex !== -1) {
       setCurrentTrackIndex(initialTrackIndex);
     }
+    setCurrentSong(tracks[params.id]);
   }, [params.id, tracks]);
 
   useEffect(() => {
@@ -48,9 +53,13 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     }
   }, [currentTrackIndex]);
 
-  // Get current song details
-  const currentSong = tracks[params.id];
-  // console.log(currentSong);
+  const handlePrev = () => {
+    setCurrentSong(parseInt(params.id) - 1);
+  };
+
+  const handleNext = () => {
+    setCurrentSong(parseInt(params.id) + 1);
+  };
   if (!currentSong) {
     return (
       <div>
@@ -59,7 +68,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     ); // Optionally handle loading state
   }
 
-  const { title, url, artwork, artist, album } = currentSong;
+  // const { title, url, artwork, artist, album } = currentSong;
 
   const handleAudioContextReady = (
     audioContext: AudioContext,
@@ -78,6 +87,8 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     <div className="flex overflow-hidden w-full">
       <div className="flex-1 transition-all">
         <AudioPlayer
+          handleNext={handleNext}
+          handlePrev={handlePrev}
           id={params?.id}
           currentSong={currentSong}
           onAudioContextReady={handleAudioContextReady}

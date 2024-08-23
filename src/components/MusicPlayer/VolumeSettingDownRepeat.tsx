@@ -52,7 +52,7 @@ const VolumeSettingDownRepeat = ({
         <li className="flex justify-between items-center">
           EQ:{" "}
           <span>
-            <Switch onClick={handleEq} id="airplane-mode" />
+            <Switch checked={isEqOn} onClick={handleEq} id="airplane-mode" />
           </span>
         </li>
       </ul>

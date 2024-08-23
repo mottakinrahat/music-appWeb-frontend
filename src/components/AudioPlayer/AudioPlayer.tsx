@@ -33,15 +33,19 @@ interface AudioPlayerProps {
     audioElement: HTMLAudioElement
   ) => void;
   id: any;
+  handleNext: any;
   currentSong?: any;
   handleOpenEqualizer: any;
+  handlePrev: any;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
   onAudioContextReady,
   id,
-  currentSong,
+  currentSong: songData,
   handleOpenEqualizer,
+  handleNext,
+  handlePrev,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -57,6 +61,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     null
   );
 
+  const [currentSong, setCurrentSong] = useState<any>(songData);
+
   useEffect(() => {
     const volume = localStorage.getItem("volume");
     if (!volume) {
@@ -66,9 +72,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (volume) {
       setVolume(parseFloat(volume));
     }
-  }, []);
-  const { title, url, artwork, artist, album } = currentSong;
+    setCurrentSong(songData);
+  }, [currentSong, songData]);
 
+  const { title, url, artwork, artist, album } = currentSong;
   useEffect(() => {
     const handleInteraction = () => {
       if (!audioContextRef.current) {
@@ -285,7 +292,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 />{" "}
                 <span className="text-[16px]">10s</span>
               </button>
-              <button className="text-white text-lg hover:text-gray-300">
+              <button
+                onClick={handlePrev}
+                className="text-white text-lg hover:text-gray-300"
+              >
                 <MdOutlineSkipPrevious className="h-7 w-7" />
               </button>
               <button
@@ -298,7 +308,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                   <IoMdPlayCircle className="h-10 w-10" />
                 )}
               </button>
-              <button className="text-white text-lg hover:text-gray-300">
+              <button
+                onClick={handleNext}
+                className="text-white text-lg hover:text-gray-300"
+              >
                 <MdOutlineSkipNext className="h-7 w-7" />
               </button>
               <button

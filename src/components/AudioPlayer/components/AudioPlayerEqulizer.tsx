@@ -2,7 +2,6 @@
 "use client";
 import { Chart } from "@/components/chart/Chart";
 import React, { useRef, useState, useEffect } from "react";
-// import { Chart } from "../chart/Chart";
 import { IoCheckmarkSharp } from "react-icons/io5";
 
 interface EqualizerProps {
@@ -45,6 +44,16 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
     setIsOn(savedIsEqOn === "true");
   }, []);
 
+  useEffect(() => {
+    const eq = localStorage.getItem("isEqOn");
+    if (!eq) {
+      localStorage.setItem("isEqOn", JSON.stringify(!isOn));
+    }
+    if (eq) {
+      setIsOn(eq === "true" ? true : false);
+    }
+  }, [isOn]);
+
   const toggleSwitch = () => {
     localStorage.setItem("isEqOn", (!isOn).toString());
     if (isOn) {
@@ -56,8 +65,8 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
           preset: selectedPreset,
         })
       );
-      setGains([0, 0, 0, 0, 0, 0]);
       setSelectedPreset(null);
+      setGains([0, 0, 0, 0, 0, 0]);
     } else {
       // If turning EQ on
       const savedSettings = localStorage.getItem("eqSettings");
@@ -86,7 +95,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
         filter.type = "peaking";
         filter.frequency.value = frequency;
         filter.Q.value = 1;
-        filter.gain.value = 0;
+        filter.gain.value = isOn ? gains[frequencies.indexOf(frequency)] : 0;
         return filter;
       });
 
@@ -100,7 +109,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
 
       gainNodesRef.current = filters;
     }
-  }, [audioContext, audioElement, frequencies]);
+  }, [audioContext, audioElement, frequencies, isOn, gains]);
 
   const adjustGain = (index: number, value: number) => {
     if (gainNodesRef.current[index]) {
