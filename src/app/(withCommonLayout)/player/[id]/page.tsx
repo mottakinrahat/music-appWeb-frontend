@@ -49,7 +49,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
       setPlaying(true);
       // router.push(`/music/${tracks[currentTrackIndex].id}`);
     }
-  }, []);
+  }, [currentTrackIndex]);
 
   const handlePrev = () => {
     if (currentTrackIndex !== null && currentTrackIndex > 0) {
@@ -58,7 +58,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
       setCurrentSong(tracks[newIndex]);
     }
   };
-  
+
   const handleNext = () => {
     if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
       const newIndex = currentTrackIndex + 1;
