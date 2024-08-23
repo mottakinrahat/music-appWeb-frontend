@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": 0,
     "title": "Enna Sona",
     "artist": "Arijit Singh",
     "album": "Ok Janu",
@@ -8,7 +8,7 @@
     "url": "https://res.cloudinary.com/dnzhxznox/video/upload/v1724324674/gz8idsntb6zsacwbmunl.mp3"
   },
   {
-    "id": 2,
+    "id": 1,
     "title": "Tujhe Kitna Chahne Lage hum",
     "artist": "Arijit Singh",
     "album": "Kabir Singh",
@@ -16,7 +16,7 @@
     "url": "https://res.cloudinary.com/dnzhxznox/video/upload/v1724324880/io00wbrrde99u7my2wsz.mp3"
   },
   {
-    "id": 3,
+    "id":2,
     "title": "Kaise Hua",
     "artist": "Vishal Mishra",
     "album": "Kabir Singh",
@@ -24,7 +24,7 @@
     "url": "https://res.cloudinary.com/dnzhxznox/video/upload/v1724324980/w9uhtxqdzk9dfjvndjgi.mp3"
   },
   {
-    "id": 4,
+    "id": 3,
     "title": "Naino Ki To Baat",
     "artist": "Prateeksha Shrivastava",
     "album": "Tu Mera Hai Sanam",
