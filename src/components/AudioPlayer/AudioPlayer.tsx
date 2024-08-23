@@ -267,13 +267,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 className="w-10 h-10 md:h-16 md:w-24"
               />
               <div>
-                <h2 className="text-white text-base md:text-xl font-semibold mb-1">
+                <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1">
                   {title}
                 </h2>
                 <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
                   <p>{artist}</p>
                   <div className="flex items-center max-md:hidden gap-2">
-                    <div className="size-2 bg-white rounded-full"></div>
+                    <div className="size-2 bg-white rounded-full ml-2"></div>
                     <p>Album: {album}</p>
                   </div>
                 </div>
