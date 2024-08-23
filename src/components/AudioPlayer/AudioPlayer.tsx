@@ -257,12 +257,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           />
         </div>
-        <div className="flex flex-col justify-end pb-[82px] h-full bg-black bg-opacity-10 gap-[24px] px-[120px]">
+        <div className="flex flex-col relative justify-end pb-[82px] h-full bg-black bg-opacity-10 gap-[24px] px-[120px]">
           <div className="w-full flex justify-between items-center px-4 mb-4">
             <div className="text-white flex items-center gap-2">
               <Image
                 priority
-                style={{ width: "auto", height: "auto" }}
+                style={{ width: "120px", height: "80px" }}
                 src={artwork}
                 alt="Album Art"
                 height={80}
@@ -280,7 +280,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center">
+            <div className="flex absolute left-1/2 -translate-x-1/2 items-center">
               <button
                 onClick={handlePreviousTenSecond}
                 className="text-white group text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
