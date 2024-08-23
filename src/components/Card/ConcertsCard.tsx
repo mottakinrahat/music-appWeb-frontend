@@ -22,7 +22,7 @@ const ConcertsCard: React.FC<ConcertCardInterface> = ({
   isNotify,
 }) => {
   return (
-    <div className={`rounded-lg max-w-md ${className ? className : ""}`}>
+    <div className={`rounded-lg w-full max-w-md ${className ? className : ""}`}>
       {/* Image Container */}
       <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (
@@ -32,8 +32,7 @@ const ConcertsCard: React.FC<ConcertCardInterface> = ({
               alt={title || "Card image"}
               width={280}
               height={280}
-              style={{ width: "auto", height: "auto" }}
-              className="rounded-lg"
+              className="rounded-lg w-full"
             />
             {/* Overlay */}
             <Link href={eventRoute ? eventRoute : "/"}>
