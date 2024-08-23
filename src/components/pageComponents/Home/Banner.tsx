@@ -12,7 +12,7 @@ const Banner = () => {
       <div className="flex flex-col-reverse lg:flex-row max-lg:items-center w-full">
         {/* Banner Action */}
         <div className="lg:w-1/2 flex-1 text-center md:text-left max-w-[39rem] my-5 md:my-10 lg:my-24">
-          <h1 className="text-5xl leading-tight lg:text-[4rem] font-bold text-textSecondary lg:leading-[4.75rem]">
+          <h1 className="text-3xl sm:text-5xl leading-tight lg:text-[4rem] font-bold text-textSecondary lg:leading-[4.75rem]">
             Revolutionize the way you
             <span className="text-secondary inline-block">experience</span>{" "}
             music
@@ -22,14 +22,14 @@ const Banner = () => {
             your creativity. Explore millions of songs, from chart-topping hits
             to underground gems, and lose yourself in a sonic adventure.
           </p>
-          <div className="flex justify-center md:justify-normal gap-6">
+          <div className="flex justify-center flex-wrap md:justify-normal gap-6">
             <Button>Join Now</Button>
             <OutlineButton>Discover more</OutlineButton>
           </div>
         </div>
         {/* Banner image part */}
         <div className="lg:w-1/2 flex-1 mt-10 md:mt-48 lg:mt-0 relative flex justify-end ">
-          <div className="bg-banner-gradient  relative h-[20rem] w-[20rem] md:w-[30rem] lg:w-4/5 lg:h-4/5 mt-auto rounded-t-md">
+          <div className="bg-banner-gradient  relative h-[15rem] w-[15rem] min-[380px]:h-[20rem] min-[380px]:w-[20rem] md:w-[30rem] lg:w-4/5 lg:h-4/5 mt-auto rounded-t-md">
             <Image
               src={play}
               height={play.height}

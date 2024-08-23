@@ -41,8 +41,8 @@ export default function Features() {
         }}
       />
       <div className="lg:w-1/2"></div>
-      <div className="relative lg:w-1/2 p-10 flex flex-col justify-center">
-        <h2 className="font-semibold text-5xl mb-12">
+      <div className="relative lg:w-1/2 p-3 sm:p-4 md:p-10 flex flex-col justify-center">
+        <h2 className="font-semibold text-3xl sm:text-5xl mb-12">
           Stream. Support. Discover. All in one place.
         </h2>
         <div className="space-y-6">
