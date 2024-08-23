@@ -22,5 +22,13 @@
     "album": "Kabir Singh",
     "artwork": "https://static.abplive.com/wp-content/uploads/2019/04/06192544/kabir-singh.jpg?impolicy=abp_cdn&imwidth=1200&height=675",
     "url": "https://res.cloudinary.com/dnzhxznox/video/upload/v1724324980/w9uhtxqdzk9dfjvndjgi.mp3"
+  },
+  {
+    "id": 4,
+    "title": "Naino Ki To Baat",
+    "artist": "Prateeksha Shrivastava",
+    "album": "Tu Mera Hai Sanam",
+    "artwork": "https://a10.gaanacdn.com/gn_img/albums/P7m3GvNKqx/7m3GBpYEKq/size_l.jpg",
+    "url": "https://res.cloudinary.com/dnzhxznox/video/upload/v1724405518/seg1edqe3t50ypfbrsr7.mp3"
   }
 ]
