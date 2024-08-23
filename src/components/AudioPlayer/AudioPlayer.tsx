@@ -205,7 +205,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         <span>Add to playlist</span>
       </h2>
       <h2 className="flex justify-start items-center gap-2">
-        <HeartIcon className="h-6 w-6" />
+        <HeartIcon  className="h-6 w-6" />
         <span>Add to favorites</span>
       </h2>
       <h2 className="flex justify-start items-center gap-2">
