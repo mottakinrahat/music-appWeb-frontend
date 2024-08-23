@@ -4,9 +4,9 @@ import DownloadIcon from "../../assets/icons/download.svg";
 import SettingsIcon from "../../assets/icons/settings.svg";
 import QueueMusicIcon from "../../assets/icons/queue_music.svg";
 import { SpeakerXMarkIcon } from "@heroicons/react/24/outline";
-import { DropDownBtn } from "./DropDownBtn";
 import { Switch } from "@/components/ui/switch";
 import { MuteIcon, VolumeIcon } from "@/utils/IconsSvg";
+import { DropDownBtn } from "@/components/MusicPlayer/DropDownBtn";
 const VolumeSettingDownRepeat = ({ volume, handleVolumeChange }: any) => {
   const [eq, setEq] = React.useState(false);
   const settingContent = (
