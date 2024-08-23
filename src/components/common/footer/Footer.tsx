@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
     <Container bgGray className=" text-textPrimary ">
       <div className="max-w-6xl mx-auto flex flex-wrap">
         {/* First Section */}
-        <div className="w-full md:w-1/2 p-4">
+        <div className="w-full md:w-1/2 sm:p-4">
           <div className=" max-w-sm mb-4">
             <Image
               src={logo} // Replace with actual logo path
@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Second Section */}
-        <div className="w-full md:w-1/2 p-4 flex flex-wrap">
+        <div className="w-full md:w-1/2 sm:p-4 flex flex-wrap">
           <div className="w-1/2 mb-4">
             <ul className="space-y-2">
               <li>
