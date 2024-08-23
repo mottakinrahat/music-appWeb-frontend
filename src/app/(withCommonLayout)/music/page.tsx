@@ -55,7 +55,7 @@ const AudioList: React.FC = () => {
 
   console.log(tracks);
   return (
-    <div className="bg-[#F7F7F7] h-screen mx-[120px] mt-10">
+    <div className=" h-screen mx-[120px] mt-10">
       <h2 className="text-3xl font-bold">New release</h2>
       <p className="text-[16px] max-w-[588px]">
         Get your ears on the hottest new tracks, from chart-topping anthems to underground gems bubbling up from the
@@ -72,7 +72,7 @@ const AudioList: React.FC = () => {
                 className="h-[282px] w-[282px] object-cover object-center rounded-xl"
                 alt={track?.title || "Track Artwork"}
               />
-              <h2 className="text-[24px] font-bold">{track?.title}</h2>
+              <h2 className="text-[20px] font-bold">{track?.title}</h2>
               <h5 className="text-[16px]">{track?.artist}</h5>
             </div>
           </Link>

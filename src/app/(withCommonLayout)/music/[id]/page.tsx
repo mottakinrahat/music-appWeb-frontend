@@ -3,11 +3,9 @@ import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import ReactPlayer from "react-player";
 import { FaPlay, FaPause } from "react-icons/fa";
 import Image from "next/image";
-import RepeatIcon from "../../../../assets/icons/repeat.svg";
 import LyricsIcon from "../../../../assets/icons/lyrics.svg";
 import SkipNextIcon from "../../../../assets/icons/skip_next.svg";
 import SkipPreviousIcon from "../../../../assets/icons/skip_previous.svg";
-import PauseIcon from "../../../../assets/icons/pauseIcon.svg";
 import PreviousIcon from "../../../../assets/icons/arrow_back (1).svg";
 import NextIcon from "../../../../assets/icons/arrow_back.svg";
 
@@ -50,7 +48,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
   const [played, setPlayed] = useState<number>(0);
   const [volume, setVolume] = useState<number>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(null);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
+    null
+  );
   const [repeat, setRepeat] = useState<boolean>(false);
   const playerRef = useRef<ReactPlayer | null>(null);
 
@@ -169,7 +169,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
     if (repeat) {
       playerRef.current?.seekTo(0);
       setPlaying(true);
-    } else if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
+    } else if (
+      currentTrackIndex !== null &&
+      currentTrackIndex < tracks.length - 1
+    ) {
       setCurrentTrackIndex(currentTrackIndex + 1);
     }
   };
@@ -324,7 +327,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
                   <img src={LyricsIcon.src} alt="LyricsIcon" />
                   <div onClick={toggleRepeat}>
                     {repeat ? (
-                      <img src={RepeatIcon.src} alt="RepeatIcon" />
+                      <span> {RepeatIcon}</span>
                     ) : (
                       <img src={RepeatIcon.src} className="bg-red-200 h-4 w-4" alt="RepeatIcon" />
                     )}
