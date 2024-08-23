@@ -24,6 +24,7 @@ import {
   MusicalNoteIcon,
 } from "@heroicons/react/24/outline";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
+import { RepeatIcon } from "@/utils/IconsSvg";
 
 // Define types for track
 interface Track {
@@ -329,7 +330,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
                     {repeat ? (
                       <span> {RepeatIcon}</span>
                     ) : (
-                      <img src={RepeatIcon.src} className="bg-red-200 h-4 w-4" alt="RepeatIcon" />
+                      <span> {RepeatIcon}</span>
                     )}
                   </div>
                 </div>
