@@ -3,7 +3,6 @@ import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import React, { useEffect, useState } from "react";
-import { cursorTo } from "readline";
 // import { tracks2 } from "../page";
 
 interface PlayerInterface {
@@ -85,7 +84,6 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
 
   const handleOpenEqualizer = () => {
     setEqOpen(!eqOpen);
-    console.log("clicked");
   };
 
   return (
