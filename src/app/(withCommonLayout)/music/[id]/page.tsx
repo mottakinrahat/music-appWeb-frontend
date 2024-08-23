@@ -3,14 +3,11 @@ import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import ReactPlayer from "react-player";
 import { FaPlay, FaPause } from "react-icons/fa";
 import Image from "next/image";
-import RepeatIcon from "../../../../assets/icons/repeat.svg";
 import LyricsIcon from "../../../../assets/icons/lyrics.svg";
 import SkipNextIcon from "../../../../assets/icons/skip_next.svg";
 import SkipPreviousIcon from "../../../../assets/icons/skip_previous.svg";
-import PauseIcon from "../../../../assets/icons/pauseIcon.svg";
 import PreviousIcon from "../../../../assets/icons/arrow_back (1).svg";
 import NextIcon from "../../../../assets/icons/arrow_back.svg";
-
 import { tracks } from "../page"; // Adjust path as necessary
 import { useRouter } from "next/navigation";
 import KaraokeAirFriendEtc from "@/component/MusicPlayer/KaraokeAirFriendEtc";
@@ -23,10 +20,12 @@ import {
   ShareIcon,
   CircleStackIcon,
   UserCircleIcon,
-  MusicalNoteIcon
+  MusicalNoteIcon,
 } from "@heroicons/react/24/outline";
 import LoadingAnimation from "@/component/LoadingAnimation/LoadingAnimation";
-
+import { ArrowPathRoundedSquareIcon } from "@heroicons/react/24/solid";
+import { RepeatIcon, NotRepeatIcon } from "@/utils/IconsSvg";
+import { Span } from "next/dist/trace";
 // Define types for track
 interface Track {
   id: number;
@@ -50,7 +49,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
   const [played, setPlayed] = useState<number>(0);
   const [volume, setVolume] = useState<number>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(null);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
+    null
+  );
   const [repeat, setRepeat] = useState<boolean>(false);
   const playerRef = useRef<ReactPlayer | null>(null);
 
@@ -76,7 +77,11 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
   // Get current song details
   const currentSong = tracks[currentTrackIndex as number];
   if (!currentSong) {
-    return <div><LoadingAnimation /></div>; // Optionally handle loading state
+    return (
+      <div>
+        <LoadingAnimation />
+      </div>
+    ); // Optionally handle loading state
   }
 
   const { title, url, artwork, artist, album } = currentSong;
@@ -101,7 +106,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
     if (repeat) {
       playerRef.current?.seekTo(0);
       setPlaying(true);
-    } else if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
+    } else if (
+      currentTrackIndex !== null &&
+      currentTrackIndex < tracks.length - 1
+    ) {
       setCurrentTrackIndex(currentTrackIndex + 1);
     }
   };
@@ -179,7 +187,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
     <div>
       <div
         className="w-full h-screen bg-cover bg-center"
-        style={{ backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)` }}
+        style={{
+          backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
+        }}
       >
         <div className="absolute p-[120px] right-0 text-white">
           <DropDownBtn
@@ -265,13 +275,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
                   <img src={LyricsIcon.src} alt="LyricsIcon" />
                   <div onClick={toggleRepeat}>
                     {repeat ? (
-                      <img src={RepeatIcon.src} alt="RepeatIcon" />
+                      <span> {RepeatIcon}</span>
                     ) : (
-                      <img
-                        src={RepeatIcon.src}
-                        className="bg-red-200 h-4 w-4"
-                        alt="RepeatIcon"
-                      />
+                      <span>{NotRepeatIcon}</span>
                     )}
                   </div>
                 </div>

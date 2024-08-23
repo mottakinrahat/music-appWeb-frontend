@@ -3,10 +3,10 @@ import { FaVolumeDown, FaVolumeMute } from "react-icons/fa";
 import DownloadIcon from "../../assets/icons/download.svg";
 import SettingsIcon from "../../assets/icons/settings.svg";
 import QueueMusicIcon from "../../assets/icons/queue_music.svg";
-import VolumeIcon from "../../assets/icons/volume_up.svg";
-import { Cog8ToothIcon } from "@heroicons/react/24/outline";
+import { SpeakerXMarkIcon } from "@heroicons/react/24/outline";
 import { DropDownBtn } from "./DropDownBtn";
 import { Switch } from "@/components/ui/switch";
+import { MuteIcon, VolumeIcon } from "@/utils/IconsSvg";
 const VolumeSettingDownRepeat = ({ volume, handleVolumeChange }: any) => {
   const [eq, setEq] = React.useState(false);
   const settingContent = (
@@ -34,15 +34,11 @@ const VolumeSettingDownRepeat = ({ volume, handleVolumeChange }: any) => {
         <div className="flex justify-end items-center ">
           {volume === 0 ? (
             <button className="text-white text-3xl mx-2 hover:text-gray-300">
-              <FaVolumeMute />
-            </button>
-          ) : volume < 0.5 ? (
-            <button className="text-white text-3xl mx-2 hover:text-gray-300">
-              <FaVolumeDown />
+              {MuteIcon}
             </button>
           ) : (
             <button className="text-white text-3xl mx-2 hover:text-gray-300">
-              <img src={VolumeIcon.src} alt="VolumeIcon" />
+              {VolumeIcon}
             </button>
           )}
           <input
@@ -63,7 +59,7 @@ const VolumeSettingDownRepeat = ({ volume, handleVolumeChange }: any) => {
             dropDownContent={settingContent}
             buttonContent={
               <>
-                <img src={SettingsIcon.src}  alt="sdf" />
+                <img src={SettingsIcon.src} alt="sdf" />
               </>
             }
           />
