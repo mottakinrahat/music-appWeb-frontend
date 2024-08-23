@@ -24,13 +24,15 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
     <div>
       <div className="text-white text-2xl mx-2 hover:text-gray-300">
         <div className="flex justify-start items-center gap-[24px]">
-          <Image
-            width={100}
-            height={100}
-            style={{ width: "auto", height: "auto" }}
-            src={src}
-            alt="LyricsIcon"
-          />
+          <div className="hidden lg:block">
+            <Image
+              width={100}
+              height={100}
+              style={{ width: "auto", height: "auto" }}
+              src={src}
+              alt="LyricsIcon"
+            />
+          </div>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>

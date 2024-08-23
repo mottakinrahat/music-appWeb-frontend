@@ -99,8 +99,10 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
         />
       </div>
       <div
-        className={`h-full max-h-screen  duration-500 transition-all ${
-          eqOpen ? "max-w-3xl w-[500px] " : "w-0"
+        className={`h-full bg-white max-h-screen overflow-hidden max-lg:absolute  duration-500 transition-all ${
+          eqOpen
+            ? "max-w-3xl w-[400px] lg:w-[500px] overflow-hidden right-[0]"
+            : "w-0 -right-full "
         }`}
       >
         <AudioPlayerEqualizer

@@ -1,9 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import Image from "next/image";
 import LyricsIcon from "@/assets/icons/lyrics.svg";
-import PreviousIcon from "@/assets/icons/arrow_back (1).svg";
-import NextIcon from "@/assets/icons/arrow_back.svg";
+
 import KaraokeAirFriendEtc from "@/components/MusicPlayer/KaraokeAirFriendEtc";
 import VolumeSettingDownRepeat from "@/components/MusicPlayer/VolumeSettingDownRepeat";
 import { formatTime } from "@/utils/FormatTime";
@@ -16,14 +16,12 @@ import {
   UserCircleIcon,
   MusicalNoteIcon,
 } from "@heroicons/react/24/outline";
-import {
-  MdOutlineSkipNext,
-  MdOutlineSkipPrevious,
-  MdPauseCircle,
-} from "react-icons/md";
-import { IoMdPlayCircle } from "react-icons/io";
+
 import AudioControls from "./components/AudioControls";
 import RepeatActionButton from "./components/RepeatActionButton";
+import PlayButtons from "./components/PlayButtons";
+import MusicControls from "../MusicPlayer/MusicControls";
+import Volumn from "../MusicPlayer/Volumn";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
@@ -236,7 +234,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         }}
       >
         {/* Dropdown section */}
-        <div className="absolute p-[120px] right-0 text-white">
+        <div className="absolute p-4 xl:p-[120px] right-0 text-white">
           <DropDownBtn
             dropDownContent={threeDotContent}
             buttonContent={
@@ -257,80 +255,40 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           />
         </div>
-        <div className="flex flex-col relative justify-end pb-[82px] h-full bg-black bg-opacity-10 gap-[24px] px-[120px]">
-          <div className="w-full flex justify-between items-center px-4 mb-4">
+        <div className="flex flex-col justify-end h-full bg-black bg-opacity-10 gap-2 lg:gap-[24px] md:p-10 p-4  xl:px-[120px]">
+          <div className="w-full flex justify-between items-center px-4 md:mb-4">
             <div className="text-white flex items-center gap-2">
-              <Image
-                priority
-                style={{ width: "120px", height: "80px" }}
+              <img
+                // style={{ width: "auto", height: "auto" }}
                 src={artwork}
                 alt="Album Art"
-                height={80}
-                width={80}
+                // height={80}
+                // width={80}
+                className="w-10 h-10 md:h-16 md:w-24"
               />
               <div>
-                <h2 className="text-white text-xl font-semibold mb-1">
+                <h2 className="text-white text-base md:text-xl font-semibold mb-1">
                   {title}
                 </h2>
-                <div className="flex items-center gap-2">
+                <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
                   <p>{artist}</p>
-                  <span className="size-2 bg-white rounded-xl"></span>
-                  <p>Album: {album}</p>
+                  <div className="flex items-center max-md:hidden gap-2">
+                    <div className="size-2 bg-white rounded-full"></div>
+                    <p>Album: {album}</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex absolute left-1/2 -translate-x-1/2 items-center">
-              <button
-                onClick={handlePreviousTenSecond}
-                className="text-white group text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
-              >
-                <Image
-                  width={100}
-                  height={100}
-                  style={{ width: "auto", height: "auto" }}
-                  src={PreviousIcon.src}
-                  alt="PreviousIcon"
-                  className="group-hover:opacity-70"
-                />{" "}
-                <span className="text-[16px]">10s</span>
-              </button>
-              <button
-                onClick={handlePrev}
-                className="text-white text-lg hover:text-gray-300"
-              >
-                <MdOutlineSkipPrevious className="h-7 w-7" />
-              </button>
-              <button
-                onClick={handlePlayPause}
-                className="text-white text-lg  flex items-center justify-center mx-2 hover:text-gray-300"
-              >
-                {playing ? (
-                  <MdPauseCircle className="h-10 w-10" />
-                ) : (
-                  <IoMdPlayCircle className="h-10 w-10" />
-                )}
-              </button>
-              <button
-                onClick={handleNext}
-                className="text-white text-lg hover:text-gray-300"
-              >
-                <MdOutlineSkipNext className="h-7 w-7" />
-              </button>
-              <button
-                onClick={handleNextTenSecond}
-                className="text-white group text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
-              >
-                <span className="text-[16px]">10s</span>{" "}
-                <Image
-                  width={100}
-                  height={100}
-                  style={{ width: "auto", height: "auto" }}
-                  src={NextIcon.src}
-                  alt="NextIcon"
-                  className="group-hover:opacity-70"
-                />
-              </button>
+            <div className="hidden xl:block">
+              <PlayButtons
+                handleNext={handleNext}
+                handleNextTenSecond={handleNextTenSecond}
+                handlePlayPause={handlePlayPause}
+                handlePreviousTenSecond={handlePreviousTenSecond}
+                handlePrev={handlePrev}
+                playing={playing}
+              />
             </div>
 
             {/* repeat button component */}
@@ -340,40 +298,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               src={LyricsIcon.src}
               repeat={repeat}
             />
-
-            {/* <div>
-              <button className="text-white text-3xl mx-2 hover:text-gray-300">
-                <div className="flex justify-start items-center gap-[24px]">
-                  <Image
-                    width={100}
-                    height={100}
-                    style={{ width: "auto", height: "auto" }}
-                    src={LyricsIcon.src}
-                    alt="LyricsIcon"
-                  />
-                  <div onClick={toggleRepeat}>
-                    {repeat ? (
-                      <Image
-                        width={100}
-                        height={100}
-                        style={{ width: "auto", height: "auto" }}
-                        src={RepeatIcon.src}
-                        alt="RepeatIcon"
-                      />
-                    ) : (
-                      <Image
-                        width={100}
-                        height={100}
-                        style={{ width: "auto", height: "auto" }}
-                        src={RepeatIcon.src}
-                        className="bg-red-200 h-4 w-4"
-                        alt="RepeatIcon"
-                      />
-                    )}
-                  </div>
-                </div>
-              </button>
-            </div> */}
           </div>
 
           <AudioControls
@@ -394,24 +318,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             onEnded={handleEnded}
           />
 
-          {/* <audio
-            ref={audioRef}
-            src="/aud.mp3"
-            onTimeUpdate={() => {
-              const currentTime = audioRef.current?.currentTime || 0;
-              const duration = audioRef.current?.duration || 0;
-              handleProgress(currentTime, duration);
-              setCurrentTime(currentTime);
-            }}
-            autoPlay={true}
-            onLoadedMetadata={() => {
-              setDuration(audioRef.current?.duration || 0);
-            }}
-            onEnded={handleEnded}
-          >
-            Your browser does not support the audio element.
-          </audio> */}
-
           <div className="w-full flex items-center">
             <input
               type="range"
@@ -431,6 +337,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               <span className="text-white text-sm">{formatTime(duration)}</span>
             </div>
           </div>
+          <div className="flex w-full xl:hidden">
+            <PlayButtons
+              handleNext={handleNext}
+              handleNextTenSecond={handleNextTenSecond}
+              handlePlayPause={handlePlayPause}
+              handlePreviousTenSecond={handlePreviousTenSecond}
+              handlePrev={handlePrev}
+              playing={playing}
+            />
+          </div>
 
           <div className="flex justify-between items-center">
             <KaraokeAirFriendEtc
@@ -445,6 +361,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               handleVolumeChange={handleVolumeChange}
               handleMute={handleMute}
             />
+          </div>
+          <div className="md:hidden flex justify-between">
+            <Volumn
+              handleMute={handleMute}
+              handleVolumeChange={handleVolumeChange}
+              volume={volume}
+            />
+            <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
           </div>
         </div>
       </div>

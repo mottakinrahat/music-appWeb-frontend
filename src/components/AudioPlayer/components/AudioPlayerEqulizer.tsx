@@ -157,7 +157,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
   }));
 
   return (
-    <div className="p-10 w-[500px]">
+    <div className="p-10 bg-white h-full md:w-[500px] w-[400px]">
       <h3 className="text-3xl font-semibold mb-8">EQ Settings</h3>
       <div
         className={`transition-opacity duration-300 w-full ${
