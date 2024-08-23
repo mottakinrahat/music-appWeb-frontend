@@ -283,7 +283,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             <div className="flex items-center">
               <button
                 onClick={handlePreviousTenSecond}
-                className="text-white text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
+                className="text-white group text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
               >
                 <Image
                   width={100}
@@ -291,6 +291,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                   style={{ width: "auto", height: "auto" }}
                   src={PreviousIcon.src}
                   alt="PreviousIcon"
+                  className="group-hover:opacity-70"
                 />{" "}
                 <span className="text-[16px]">10s</span>
               </button>
@@ -318,7 +319,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               </button>
               <button
                 onClick={handleNextTenSecond}
-                className="text-white text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
+                className="text-white group text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
               >
                 <span className="text-[16px]">10s</span>{" "}
                 <Image
@@ -327,6 +328,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                   style={{ width: "auto", height: "auto" }}
                   src={NextIcon.src}
                   alt="NextIcon"
+                  className="group-hover:opacity-70"
                 />
               </button>
             </div>

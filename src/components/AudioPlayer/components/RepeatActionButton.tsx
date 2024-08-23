@@ -22,7 +22,7 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
 }) => {
   return (
     <div>
-      <button className="text-white text-2xl mx-2 hover:text-gray-300">
+      <div className="text-white text-2xl mx-2 hover:text-gray-300">
         <div className="flex justify-start items-center gap-[24px]">
           <Image
             width={100}
@@ -51,7 +51,7 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
             </Tooltip>
           </TooltipProvider>
         </div>
-      </button>
+      </div>
     </div>
   );
 };
