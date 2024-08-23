@@ -20,6 +20,8 @@ import {
 import AudioControls from "./components/AudioControls";
 import RepeatActionButton from "./components/RepeatActionButton";
 import PlayButtons from "./components/PlayButtons";
+import MusicControls from "../MusicPlayer/MusicControls";
+import Volumn from "../MusicPlayer/Volumn";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
@@ -253,7 +255,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           />
         </div>
-        <div className="flex flex-col justify-end h-full bg-black bg-opacity-10 gap-[24px] md:p-10 p-4  xl:px-[120px]">
+        <div className="flex flex-col justify-end h-full bg-black bg-opacity-10 gap-2 lg:gap-[24px] md:p-10 p-4  xl:px-[120px]">
           <div className="w-full flex justify-between items-center px-4 md:mb-4">
             <div className="text-white flex items-center gap-2">
               <img
@@ -327,6 +329,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               onChange={handleSeek}
             />
           </div>
+          <div className="w-full">
+            <div className="flex justify-between gap-3 items-center px-3">
+              <span className="text-white text-sm">
+                {formatTime(currentTime)}
+              </span>
+              <span className="text-white text-sm">{formatTime(duration)}</span>
+            </div>
+          </div>
           <div className="flex w-full xl:hidden">
             <PlayButtons
               handleNext={handleNext}
@@ -336,14 +346,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               handlePrev={handlePrev}
               playing={playing}
             />
-          </div>
-          <div className="w-full">
-            <div className="flex justify-between gap-3 items-center px-3">
-              <span className="text-white text-sm">
-                {formatTime(currentTime)}
-              </span>
-              <span className="text-white text-sm">{formatTime(duration)}</span>
-            </div>
           </div>
 
           <div className="flex justify-between items-center">
@@ -359,6 +361,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               handleVolumeChange={handleVolumeChange}
               handleMute={handleMute}
             />
+          </div>
+          <div className="md:hidden flex justify-between">
+            <Volumn
+              handleMute={handleMute}
+              handleVolumeChange={handleVolumeChange}
+              volume={volume}
+            />
+            <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
           </div>
         </div>
       </div>

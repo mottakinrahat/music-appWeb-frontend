@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 import micOnIcon from "../../assets/icons/mic_external_on.svg";
-import instantMix from "../../assets/icons/instant_mix.svg";
-import airPlay from "../../assets/icons/airplay.svg";
-import addDevice from "../../assets/icons/add-device-svgrepo-com 2.svg";
+import MusicControls from "./MusicControls";
+
 const KaraokeAirFriendEtc = ({
   karaokeOn,
   SetKaraokeOn,
@@ -25,19 +25,8 @@ const KaraokeAirFriendEtc = ({
           </div>
         )}
       </div>
-      <div>
-        <img
-          onClick={() => handleOpenEqualizer()}
-          className="cursor-pointer"
-          src={instantMix.src}
-          alt="RepeatIcon"
-        />
-      </div>
-      <div>
-        <img src={airPlay.src} alt="RepeatIcon" />
-      </div>
-      <div>
-        <img src={addDevice.src} alt="RepeatIcon" />
+      <div className="max-md:hidden">
+        <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
       </div>
     </div>
   );
