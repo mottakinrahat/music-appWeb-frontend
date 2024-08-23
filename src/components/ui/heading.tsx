@@ -3,10 +3,10 @@ import Link from "next/link";
 import React from "react";
 interface Heading {
   type: "primary" | "secondary";
-  heading?: String;
-  children?: String;
-  linkText?: String;
-  route?: Url | "/";
+  heading?: string;
+  children?: string;
+  linkText?: string;
+  route?: string;
   colorText?: String;
 }
 
@@ -20,14 +20,16 @@ const Heading: React.FC<Heading> = ({
 }: Heading) => {
   if (type === "primary")
     return (
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-4">
         <div className="max-w-xl">
-          <h2 className="text-5xl mb-4 font-semibold">{heading}</h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl mb-4 font-semibold">
+            {heading}
+          </h2>
           <p className="text-textPrimary">{children}</p>
         </div>
         <div>
           <Link
-            className="underline text-accent font-semibold text-base"
+            className="underline flex justify-center lg:justify-start mx-auto: text-accent font-semibold text-base"
             href={route ? route : "/"}
           >
             {linkText}

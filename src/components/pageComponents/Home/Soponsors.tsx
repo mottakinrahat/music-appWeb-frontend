@@ -11,7 +11,7 @@ import Image from "next/image";
 const Soponsors = () => {
   const sponsors = [sponsor1, sponsor2, sponsor3, sponsor4, sponsor5, sponsor6];
   return (
-    <div className="bg-section py-10">
+    <div className="bg-section py-5 md:py-8 lg:py-10">
       <Marquee className="container" pauseOnHover>
         {sponsors.map((sponsor, idx) => (
           <Image

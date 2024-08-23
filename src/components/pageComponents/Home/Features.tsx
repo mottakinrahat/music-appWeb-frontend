@@ -27,10 +27,10 @@ export default function Features() {
   ];
 
   return (
-    <div className="relative max-w-[1400px] mx-auto py-16 flex">
+    <div className="relative max-w-[1400px] mx-auto py-8 lg:py-16 flex">
       {/* Background wrapper */}
       <div
-        className="absolute top-0"
+        className="absolute hidden lg:block top-0"
         style={{
           backgroundImage: `url(${featuresImage.src})`,
           backgroundPosition: "center",
@@ -40,14 +40,14 @@ export default function Features() {
           height: "100%", // Full height of the container
         }}
       />
-      <div className="w-1/2"></div>
-      <div className="relative w-1/2 p-10 flex flex-col justify-center">
+      <div className="lg:w-1/2"></div>
+      <div className="relative lg:w-1/2 p-10 flex flex-col justify-center">
         <h2 className="font-semibold text-5xl mb-12">
           Stream. Support. Discover. All in one place.
         </h2>
         <div className="space-y-6">
           {features?.map((feature, idx) => (
-            <div key={idx} className="flex items-center">
+            <div key={idx} className="sm:flex items-center">
               <div className="bg-[#FFF0F9] rounded-lg flex justify-center items-center w-12 h-12 mr-4">
                 <Image
                   src={feature.icon}

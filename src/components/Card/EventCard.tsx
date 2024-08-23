@@ -22,7 +22,7 @@ const EventCard: React.FC<EventCardInterface> = ({
   isNotify,
 }) => {
   return (
-    <div className={`rounded-lg max-w-md ${className ? className : ""}`}>
+    <div className={`rounded-lg max-w-sm ${className ? className : ""}`}>
       {/* Image Container */}
       <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (
