@@ -32,7 +32,7 @@ const BlogCard: React.FC<BlogCardInterface> = ({
               alt={title || "Card image"}
               width={280}
               height={280}
-             
+              style={{ width: "100%", height: "auto", objectFit: "cover" }}
               className="rounded-lg w-full "
             />
             {/* Overlay */}

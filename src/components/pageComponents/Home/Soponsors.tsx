@@ -20,7 +20,12 @@ const Soponsors = () => {
             height={100}
             alt="Music"
             width={200}
-            style={{ height: "50px", width: "auto", margin: "0 40px " }}
+            style={{
+              height: "50px",
+              width: "auto",
+              margin: "0 40px ",
+              objectFit: "cover",
+            }}
             className="z-10"
           />
         ))}

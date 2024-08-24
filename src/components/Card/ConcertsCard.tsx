@@ -32,6 +32,7 @@ const ConcertsCard: React.FC<ConcertCardInterface> = ({
               alt={title || "Card image"}
               width={280}
               height={280}
+              style={{ width: "100%", height: "auto", objectFit: "cover" }}
               className="rounded-lg w-full"
             />
             {/* Overlay */}

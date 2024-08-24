@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
               alt="Logo"
               width={200}
               height={200}
-              style={{ height: "auto", width: "150px" }}
+              style={{ height: "auto", width: "150px", objectFit: "cover" }}
               className="mb-4"
             />
             <p className="text-textPrimary">

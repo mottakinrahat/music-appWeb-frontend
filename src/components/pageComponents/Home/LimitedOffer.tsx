@@ -22,7 +22,7 @@ const LimitedOffer = () => {
           src={image2}
           height={image2.height}
           width={image2.width}
-          style={{ width: "auto", height: "125px" }}
+          style={{ width: "auto", height: "125px", objectFit: "cover" }}
           className="absolute top-0 left-0 hidden lg:block"
         />
         <Image
@@ -30,7 +30,7 @@ const LimitedOffer = () => {
           src={image1}
           height={image1.height}
           width={image1.width}
-          style={{ width: "auto", height: "420px" }}
+          style={{ width: "auto", height: "420px", objectFit: "cover" }}
           className="hidden lg:block"
         />
         <div className="lg:-ml-16">

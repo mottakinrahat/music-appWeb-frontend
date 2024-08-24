@@ -60,7 +60,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
               alt={title || "Card image"}
               width={280}
               height={280}
-              style={{ width: "auto", height: "auto" }}
+              style={{ width: "100%", height: "auto", objectFit: "cover" }}
               className="rounded-lg"
             />
             {/* Overlay */}
