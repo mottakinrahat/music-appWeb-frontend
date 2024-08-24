@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import DInput from "@/components/forms/DInput";
 import DCheckbox from "@/components/forms/DCheckbox";
 import DFileUploader from "@/components/forms/DFileUploader";
+import DSelect from "@/components/forms/DSelect";
 
 const Login = () => {
   const defaultValues = {
@@ -13,14 +14,21 @@ const Login = () => {
     password: "securePassword12",
   };
   const handleLogin = () => {};
+
+  const options = [
+    {
+      label: "One",
+      value: "One",
+    },
+  ];
   return (
     <div>
       <DForm resolver={zodResolver(formSchema)} onSubmit={handleLogin} defaultValues={defaultValues}>
-        <h1>
-          <DInput name="email" />
-          <DCheckbox name="select" />
-          <DFileUploader name="folder" />
-        </h1>
+        <DInput name="email" />
+        <DCheckbox name="select" />
+        <DFileUploader name="folder" />
+        <DInput name="FIle" />
+        <DSelect name="HEllo" options={options} />
       </DForm>
     </div>
   );
