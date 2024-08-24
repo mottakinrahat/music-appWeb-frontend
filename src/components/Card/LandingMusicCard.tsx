@@ -21,7 +21,7 @@ const LandingMusicCard = ({
   albumCard,
 }: LandingMusicCardInterface) => {
   return (
-    <div className="flex justify-between py-2 items-center max-w-lg">
+    <div className="flex justify-between gap-4 py-2 items-center max-w-lg">
       <div className="flex items-center gap-3">
         <div>
           <img

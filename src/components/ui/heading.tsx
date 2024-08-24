@@ -7,6 +7,7 @@ interface Heading {
   linkText?: string;
   route?: string;
   colorText?: string;
+  className?: string;
 }
 
 const Heading: React.FC<Heading> = ({
@@ -16,10 +17,15 @@ const Heading: React.FC<Heading> = ({
   linkText,
   route,
   colorText,
+  className,
 }: Heading) => {
   if (type === "primary")
     return (
-      <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-4">
+      <div
+        className={`flex flex-col lg:flex-row justify-between lg:items-center gap-4 ${
+          className && className
+        }`}
+      >
         <div className="max-w-xl">
           <h2 className="text-3xl md:text-4xl lg:text-5xl mb-4 font-semibold">
             {heading}
@@ -39,11 +45,17 @@ const Heading: React.FC<Heading> = ({
 
   if (type === "secondary")
     return (
-      <div className="max-w-xl my-6">
+      <div className={`max-w-xl my-6  ${className && className}`}>
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold">
           {heading} <span className="text-secondary">{colorText}</span>
         </h1>
-        <p className="text-textPrimary mt-4">{children}</p>
+        <p
+          className={
+            className ? `text-[#CDD7E8] mt-4` : "text-textPrimary mt-4"
+          }
+        >
+          {children}
+        </p>
       </div>
     );
 };

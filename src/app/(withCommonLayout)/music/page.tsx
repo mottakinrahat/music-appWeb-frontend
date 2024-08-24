@@ -9,6 +9,8 @@ import RecentlyPlayed from "@/components/pageComponents/music/RecentlyPlayed";
 import TopCharts from "@/components/pageComponents/music/TopCharts";
 import TopAlbums from "@/components/pageComponents/music/TopAlbums";
 import TrandingPlaylist from "@/components/pageComponents/music/TrandingPlaylist";
+import Footer from "@/components/common/footer/Footer";
+import BeltWithKaraoke from "@/components/pageComponents/music/BeltWithKaraoke";
 
 const AudioList = () => {
   const [tracks, setTraks] = useState([]);
@@ -27,8 +29,10 @@ const AudioList = () => {
       <TopAlbums />
       <RecentlyPlayed />
       <TrandingPlaylist />
+      <BeltWithKaraoke />
       <Recomended album />
       <Features />
+      <Footer />
     </>
   );
 };
