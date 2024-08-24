@@ -27,7 +27,6 @@ const useJazzAudioProcessing = (audioElement: HTMLAudioElement | null) => {
     filter.connect(audioContext.destination);
 
     // Log connection for debugging
-    console.log("Audio processing setup complete.");
 
     // Cleanup on unmount
     return () => {

@@ -86,7 +86,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ params }) => {
         playerRef.current.getInternalPlayer() as HTMLMediaElement;
 
       if (mediaElement && mediaElement instanceof HTMLMediaElement) {
-        console.log("Media element:", mediaElement); // Debug: Check the media element
+        // Debug: Check the media element
 
         // Create a MediaElementAudioSourceNode
         const source = context.createMediaElementSource(mediaElement);

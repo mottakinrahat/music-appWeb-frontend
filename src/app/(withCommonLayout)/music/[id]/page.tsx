@@ -42,7 +42,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     }
     setCurrentSong(tracks[params.id]);
   }, [params.id, tracks]);
-  console.log();
+
   useEffect(() => {
     if (currentTrackIndex !== null) {
       setPlaying(true);
