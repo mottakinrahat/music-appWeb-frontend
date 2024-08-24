@@ -1,6 +1,5 @@
 import EventCard from "@/components/Card/EventCard";
 import Heading from "@/components/ui/heading";
-import { Url } from "next/dist/shared/lib/router/router";
 import React from "react";
 import Container from "./Container";
 
@@ -8,7 +7,7 @@ interface EventContainerInterface {
   data: Array<any>;
   heading?: string;
   linkText?: string;
-  linkRoute: Url | "/";
+  linkRoute: string | "/";
   children?: string;
   bgGray: boolean;
 }
@@ -23,10 +22,15 @@ const EventContainer: React.FC<EventContainerInterface> = ({
   return (
     <div>
       <Container bgGray={bgGray} className={`${bgGray && ""}`}>
-        <Heading type="primary" heading={heading} linkText={linkText} route={linkRoute}>
+        <Heading
+          type="primary"
+          heading={heading}
+          linkText={linkText}
+          route={linkRoute}
+        >
           {children}
         </Heading>
-        <div className="grid grid-cols-3 gap-6 my-10">
+        <div className="flex flex-col items-center lg:flex-row justify-center gap-6 my-10">
           {data?.slice(0, 3).map((event: any, idx) => (
             <EventCard
               key={idx}

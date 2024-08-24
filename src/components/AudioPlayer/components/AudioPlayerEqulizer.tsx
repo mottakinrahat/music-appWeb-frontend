@@ -2,7 +2,6 @@
 "use client";
 import { Chart } from "@/components/chart/Chart";
 import React, { useRef, useState, useEffect } from "react";
-// import { Chart } from "../chart/Chart";
 import { IoCheckmarkSharp } from "react-icons/io5";
 
 interface EqualizerProps {
@@ -10,7 +9,10 @@ interface EqualizerProps {
   audioElement: HTMLAudioElement | null;
 }
 
-const Equalizer: React.FC<EqualizerProps> = ({ audioContext, audioElement }) => {
+const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
+  audioContext,
+  audioElement,
+}) => {
   const gainNodesRef = useRef<GainNode[]>([]);
   const [gains, setGains] = useState<number[]>([]);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
@@ -42,7 +44,16 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioContext, audioElement }) => 
     setIsOn(savedIsEqOn === "true");
   }, []);
 
-  // tootle switch
+  useEffect(() => {
+    const eq = localStorage.getItem("isEqOn");
+    if (!eq) {
+      localStorage.setItem("isEqOn", JSON.stringify(!isOn));
+    }
+    if (eq) {
+      setIsOn(eq === "true" ? true : false);
+    }
+  }, [isOn]);
+
   const toggleSwitch = () => {
     localStorage.setItem("isEqOn", (!isOn).toString());
     if (isOn) {
@@ -54,8 +65,8 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioContext, audioElement }) => 
           preset: selectedPreset,
         })
       );
+      setSelectedPreset(null);
       setGains([0, 0, 0, 0, 0, 0]);
-      setSelectedPreset(defaultPreset); // Set to default preset when turning off
     } else {
       // If turning EQ on
       const savedSettings = localStorage.getItem("eqSettings");
@@ -84,7 +95,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioContext, audioElement }) => 
         filter.type = "peaking";
         filter.frequency.value = frequency;
         filter.Q.value = 1;
-        filter.gain.value = 0;
+        filter.gain.value = isOn ? gains[frequencies.indexOf(frequency)] : 0;
         return filter;
       });
 
@@ -98,7 +109,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioContext, audioElement }) => 
 
       gainNodesRef.current = filters;
     }
-  }, [audioContext, audioElement, frequencies]);
+  }, [audioContext, audioElement, frequencies, isOn, gains]);
 
   const adjustGain = (index: number, value: number) => {
     if (gainNodesRef.current[index]) {
@@ -146,7 +157,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioContext, audioElement }) => 
   }));
 
   return (
-    <div className="p-10 w-[500px]">
+    <div className="p-10 bg-white h-full md:w-[500px] w-[400px]">
       <h3 className="text-3xl font-semibold mb-8">EQ Settings</h3>
       <div className={`transition-opacity duration-300 w-full ${!isOn ? "opacity-40 " : "opacity-100"}`}>
         <Chart data={data} />
@@ -216,4 +227,4 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioContext, audioElement }) => 
   );
 };
 
-export default Equalizer;
+export default AudioPlayerEqualizer;

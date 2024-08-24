@@ -22,7 +22,7 @@ const EventCard: React.FC<EventCardInterface> = ({
   isNotify,
 }) => {
   return (
-    <div className={`rounded-lg max-w-md ${className ? className : ""}`}>
+    <div className={`rounded-lg w-full max-w-sm ${className ? className : ""}`}>
       {/* Image Container */}
       <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (
@@ -32,8 +32,7 @@ const EventCard: React.FC<EventCardInterface> = ({
               alt={title || "Card image"}
               width={280}
               height={280}
-              style={{ width: "auto", height: "auto" }}
-              className="rounded-lg"
+              className="rounded-lg w-full"
             />
             {/* Overlay */}
             <Link href={eventRoute ? eventRoute : "/"}>
@@ -58,7 +57,7 @@ const EventCard: React.FC<EventCardInterface> = ({
 
       {/* Card Content */}
       <div className="flex gap-4">
-        <div className="bg-[#FCECF6] p-4 rounded-xl text-center text-secondary">
+        <div className="bg-[#FCECF6] h-fit p-4 rounded-xl text-center text-secondary">
           <div className="font-bold text-5xl">12</div>
           <div>Apr</div>
         </div>

@@ -7,9 +7,9 @@ import Container from "@/components/common/container/Container";
 
 const WhoAreUse = () => {
   return (
-    <Container className="flex gap-6">
+    <Container className="flex flex-col md:flex-row gap-6">
       <div className="flex-1">
-        <div>
+        <div className="flex flex-col-reverse md:flex-col">
           <Image
             src={image1}
             height={image1.width}
@@ -18,7 +18,7 @@ const WhoAreUse = () => {
             style={{ height: "auto", width: "100%" }}
             className=""
           />
-          <Heading type="secondary" heading={"For"} colorText={"Artists"}>
+          <Heading type="secondary" heading={"For"} colorText={"Listeners"}>
             Share your music directly with fans, keep control of your pricing,
             and build a thriving community.
           </Heading>

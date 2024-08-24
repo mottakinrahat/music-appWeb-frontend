@@ -22,7 +22,7 @@ const BlogCard: React.FC<BlogCardInterface> = ({
   type,
 }) => {
   return (
-    <div className={`rounded-lg max-w-md ${className ? className : ""}`}>
+    <div className={`rounded-lg max-w-md w-full ${className ? className : ""}`}>
       {/* Image Container */}
       <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (
@@ -32,8 +32,8 @@ const BlogCard: React.FC<BlogCardInterface> = ({
               alt={title || "Card image"}
               width={280}
               height={280}
-              style={{ width: "auto", height: "auto" }}
-              className="rounded-lg"
+             
+              className="rounded-lg w-full "
             />
             {/* Overlay */}
             <Link href={blogRoute ? blogRoute : "/"}>

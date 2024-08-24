@@ -1,15 +1,13 @@
 import Heading from "@/components/ui/heading";
-import { Url } from "next/dist/shared/lib/router/router";
 import React from "react";
 import Container from "./Container";
-import BlogCard from "@/components/Card/BlogCard";
 import ConcertsCard from "@/components/Card/ConcertsCard";
 
 interface ConcertContainerInterface {
   data: Array<any>;
   heading?: string;
   linkText?: string;
-  linkRoute: Url | "/";
+  linkRoute: string;
   children?: string;
   bgGray: boolean;
 }
@@ -24,10 +22,15 @@ const ConcertsContainer: React.FC<ConcertContainerInterface> = ({
   return (
     <div>
       <Container bgGray={bgGray} className={`${bgGray && ""}`}>
-        <Heading type="primary" heading={heading} linkText={linkText} route={linkRoute}>
+        <Heading
+          type="primary"
+          heading={heading}
+          linkText={linkText}
+          route={linkRoute}
+        >
           {children}
         </Heading>
-        <div className="grid grid-cols-4 gap-6 my-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 my-10">
           {data.map((event: any, idx) => (
             <ConcertsCard
               key={idx}

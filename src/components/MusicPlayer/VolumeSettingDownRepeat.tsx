@@ -1,19 +1,46 @@
-import React from "react";
-import { FaVolumeDown, FaVolumeMute } from "react-icons/fa";
+/* eslint-disable @next/next/no-img-element */
+"use client";
+import React, { useEffect, useState } from "react";
 import DownloadIcon from "../../assets/icons/download.svg";
-import SettingsIcon from "../../assets/icons/settings.svg";
 import QueueMusicIcon from "../../assets/icons/queue_music.svg";
-import VolumeIcon from "../../assets/icons/volume_up.svg";
-import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { DropDownBtn } from "./DropDownBtn";
 import { Switch } from "@/components/ui/switch";
-const VolumeSettingDownRepeat = ({ volume, handleVolumeChange }: any) => {
-  const [eq, setEq] = React.useState(false);
+import { IoSettingsOutline } from "react-icons/io5";
+import Volumn from "./Volumn";
+const VolumeSettingDownRepeat = ({
+  volume,
+  handleVolumeChange,
+  handlePlaybackSpeed,
+  playbackSpeed,
+  handleMute,
+}: any) => {
+  const [isEqOn, setEqOn] = useState(false);
+  useEffect(() => {
+    const eq = localStorage.getItem("isEqOn");
+    if (!eq) {
+      localStorage.setItem("isEqOn", JSON.stringify(!isEqOn));
+    }
+    if (eq) {
+      setEqOn(JSON.parse(eq!));
+    }
+  }, [isEqOn]);
+
+  const handleEq = () => {
+    setEqOn(!isEqOn);
+    localStorage.setItem("isEqOn", JSON.stringify(!isEqOn));
+  };
+
   const settingContent = (
     <>
       <ul className="flex flex-col gap-[16px] p-[16px]">
         <li className="flex justify-between items-center">
-          <span> Playback speed:</span> <span className="font-bold">0.25</span>
+          <span> Playback speed:</span>{" "}
+          <span
+            onClick={handlePlaybackSpeed}
+            className="font-bold cursor-pointer"
+          >
+            x{playbackSpeed}
+          </span>
         </li>
         <li className="flex justify-between items-center">
           Sound quality: <span className="font-bold">High</span>
@@ -21,8 +48,7 @@ const VolumeSettingDownRepeat = ({ volume, handleVolumeChange }: any) => {
         <li className="flex justify-between items-center">
           EQ:{" "}
           <span>
-            {" "}
-            <Switch onClick={() => setEq(!eq)} id="airplane-mode" />
+            <Switch checked={isEqOn} onClick={handleEq} id="airplane-mode" />
           </span>
         </li>
       </ul>
@@ -31,39 +57,22 @@ const VolumeSettingDownRepeat = ({ volume, handleVolumeChange }: any) => {
   return (
     <div>
       <div className="flex justify-center items-center gap-[24px]">
-        <div className="flex justify-end items-center ">
-          {volume === 0 ? (
-            <button className="text-white text-3xl mx-2 hover:text-gray-300">
-              <FaVolumeMute />
-            </button>
-          ) : volume < 0.5 ? (
-            <button className="text-white text-3xl mx-2 hover:text-gray-300">
-              <FaVolumeDown />
-            </button>
-          ) : (
-            <button className="text-white text-3xl mx-2 hover:text-gray-300">
-              <img src={VolumeIcon.src} alt="VolumeIcon" />
-            </button>
-          )}
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={volume}
-            className="w-1/2 mx-2 accent-white"
-            onChange={handleVolumeChange}
+        <div className="max-md:hidden">
+          <Volumn
+            handleMute={handleMute}
+            handleVolumeChange={handleVolumeChange}
+            volume={volume}
           />
         </div>
         <div>
           <img src={DownloadIcon.src} alt="DownloadIcon" />
         </div>
-        <div>
+        <div className={"group"}>
           <DropDownBtn
             dropDownContent={settingContent}
             buttonContent={
               <>
-                <img src={SettingsIcon.src}  alt="sdf" />
+                <IoSettingsOutline className="active:text-accent group-hover:text-accent hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
               </>
             }
           />

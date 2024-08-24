@@ -1,13 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import Image from "next/image";
-import { FaPlay, FaPause } from "react-icons/fa";
-import RepeatIcon from "@/assets/icons/repeat.svg";
 import LyricsIcon from "@/assets/icons/lyrics.svg";
-import SkipNextIcon from "@/assets/icons/skip_next.svg";
-import SkipPreviousIcon from "@/assets/icons/skip_previous.svg";
-import PreviousIcon from "@/assets/icons/arrow_back (1).svg";
-import NextIcon from "@/assets/icons/arrow_back.svg";
+
 import KaraokeAirFriendEtc from "@/components/MusicPlayer/KaraokeAirFriendEtc";
 import VolumeSettingDownRepeat from "@/components/MusicPlayer/VolumeSettingDownRepeat";
 import { formatTime } from "@/utils/FormatTime";
@@ -20,14 +16,13 @@ import {
   UserCircleIcon,
   MusicalNoteIcon,
 } from "@heroicons/react/24/outline";
-import {
-  MdOutlineSkipNext,
-  MdOutlineSkipPrevious,
-  MdPauseCircle,
-} from "react-icons/md";
-import { IoMdPlayCircle } from "react-icons/io";
+
 import AudioControls from "./components/AudioControls";
 import RepeatActionButton from "./components/RepeatActionButton";
+import PlayButtons from "./components/PlayButtons";
+import MusicControls from "../MusicPlayer/MusicControls";
+import Volumn from "../MusicPlayer/Volumn";
+
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
 interface AudioPlayerProps {
@@ -36,31 +31,49 @@ interface AudioPlayerProps {
     audioElement: HTMLAudioElement
   ) => void;
   id: any;
+  handleNext: any;
   currentSong?: any;
   handleOpenEqualizer: any;
+  handlePrev: any;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
   onAudioContextReady,
   id,
-  currentSong,
+  currentSong: songData,
   handleOpenEqualizer,
+  handleNext,
+  handlePrev,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const [repeat, setRepeat] = useState<boolean>(false);
-  const [playing, setPlaying] = useState<boolean>(false);
+  const [playing, setPlaying] = useState<boolean>(true);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [played, setPlayed] = useState<number>(0);
-  const [volume, setVolume] = useState<number>(1);
+  const [volume, setVolume] = useState<number>(0.8);
+  const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
   );
 
-  const { title, url, artwork, artist, album } = currentSong;
+  const [currentSong, setCurrentSong] = useState<any>(songData);
 
+  useEffect(() => {
+    const volume = localStorage.getItem("volume");
+    if (!volume) {
+      localStorage.setItem("volume", "0.8");
+      setVolume(0.8);
+    }
+    if (volume) {
+      setVolume(parseFloat(volume));
+    }
+    setCurrentSong(songData);
+  }, [currentSong, songData]);
+
+  const { title, url, artwork, artist, album } = currentSong;
   useEffect(() => {
     const handleInteraction = () => {
       if (!audioContextRef.current) {
@@ -80,6 +93,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
   }, [onAudioContextReady]);
 
+  // console.log(volume);
   // console.log(currentSong);
 
   const handlePlayPause = () => {
@@ -89,6 +103,42 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       audioRef.current?.play();
     }
     setPlaying(!playing);
+  };
+
+  // devJibon
+  // handle palyback Speed
+  const handlePlaybackSpeed = (speed: number) => {
+    if (playbackSpeed === 1) {
+      setPlaybackSpeed(1.5);
+    } else if (playbackSpeed === 1.5) {
+      setPlaybackSpeed(2);
+    } else if (playbackSpeed === 2) {
+      setPlaybackSpeed(0.25);
+    } else if (playbackSpeed === 0.25) {
+      setPlaybackSpeed(0.5);
+    } else if (playbackSpeed === 0.75) {
+      setPlaybackSpeed(0.5);
+    } else {
+      setPlaybackSpeed(1);
+    }
+  };
+  const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
+    localStorage.setItem("volume", JSON.stringify(newVolume));
+    const oldVolume = localStorage.getItem("volume");
+    if (oldVolume) {
+      setVolume(parseFloat(oldVolume));
+    }
+  };
+
+  // handle Mute
+  const handleMute = () => {
+    const getVolume = localStorage.getItem("volume");
+    if (volume > 0) {
+      setVolume(0);
+    } else {
+      setVolume(getVolume ? parseFloat(getVolume) : 0.8);
+    }
   };
 
   const handleProgress = (currentTime: number, duration: number) => {
@@ -141,13 +191,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setCurrentTime(newTime);
     }
   };
-  const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume;
-    }
-  };
 
   const toggleRepeat = () => {
     setRepeat(!repeat);
@@ -160,7 +203,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         <span>Add to playlist</span>
       </h2>
       <h2 className="flex justify-start items-center gap-2">
-        <HeartIcon className="h-6 w-6" />
+        <HeartIcon  className="h-6 w-6" />
         <span>Add to favorites</span>
       </h2>
       <h2 className="flex justify-start items-center gap-2">
@@ -186,10 +229,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     <div className="audio-controls relative">
       <div
         className="w-full h-screen bg-cover bg-center"
-        style={{ backgroundImage: `url(${artwork})` }}
+        style={{
+          backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
+        }}
       >
         {/* Dropdown section */}
-        <div className="absolute p-[120px] right-0 text-white">
+        <div className="absolute p-4 xl:p-[120px] right-0 text-white">
           <DropDownBtn
             dropDownContent={threeDotContent}
             buttonContent={
@@ -210,72 +255,40 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           />
         </div>
-        <div className="flex flex-col justify-end pb-[82px] h-full bg-black bg-opacity-10 gap-[24px] px-[120px]">
-          <div className="w-full flex justify-between items-center px-4 mb-4">
+        <div className="flex flex-col justify-end h-full bg-black bg-opacity-10 gap-2 lg:gap-[24px] md:p-10 p-4  xl:px-[120px]">
+          <div className="w-full flex justify-between items-center px-4 md:mb-4">
             <div className="text-white flex items-center gap-2">
-              <Image
-                priority
-                style={{ width: "auto", height: "auto" }}
+              <img
+                // style={{ width: "auto", height: "auto" }}
                 src={artwork}
                 alt="Album Art"
-                height={80}
-                width={80}
+                // height={80}
+                // width={80}
+                className="w-10 h-10 md:h-16 md:w-24"
               />
               <div>
-                <h2 className="text-white text-xl font-semibold mb-1">
+                <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1">
                   {title}
                 </h2>
-                <div className="flex items-center gap-2">
+                <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
                   <p>{artist}</p>
-                  <span className="size-2 bg-white rounded-xl"></span>
-                  <p>Album: {album}</p>
+                  <div className="flex items-center max-md:hidden gap-2">
+                    <div className="size-2 bg-white rounded-full ml-2"></div>
+                    <p>Album: {album}</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center">
-              <button
-                onClick={handlePreviousTenSecond}
-                className="text-white text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
-              >
-                <Image
-                  width={100}
-                  height={100}
-                  style={{ width: "auto", height: "auto" }}
-                  src={PreviousIcon.src}
-                  alt="PreviousIcon"
-                />{" "}
-                <span className="text-[16px]">10s</span>
-              </button>
-              <button className="text-white text-lg hover:text-gray-300">
-                <MdOutlineSkipPrevious className="h-7 w-7" />
-              </button>
-              <button
-                onClick={handlePlayPause}
-                className="text-white text-lg  flex items-center justify-center mx-2 hover:text-gray-300"
-              >
-                {playing ? (
-                  <MdPauseCircle className="h-10 w-10" />
-                ) : (
-                  <IoMdPlayCircle className="h-10 w-10" />
-                )}
-              </button>
-              <button className="text-white text-lg hover:text-gray-300">
-                <MdOutlineSkipNext className="h-7 w-7" />
-              </button>
-              <button
-                onClick={handleNextTenSecond}
-                className="text-white text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
-              >
-                <span className="text-[16px]">10s</span>{" "}
-                <Image
-                  width={100}
-                  height={100}
-                  style={{ width: "auto", height: "auto" }}
-                  src={NextIcon.src}
-                  alt="NextIcon"
-                />
-              </button>
+            <div className="hidden xl:block">
+              <PlayButtons
+                handleNext={handleNext}
+                handleNextTenSecond={handleNextTenSecond}
+                handlePlayPause={handlePlayPause}
+                handlePreviousTenSecond={handlePreviousTenSecond}
+                handlePrev={handlePrev}
+                playing={playing}
+              />
             </div>
 
             {/* repeat button component */}
@@ -285,75 +298,25 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               src={LyricsIcon.src}
               repeat={repeat}
             />
-
-            {/* <div>
-              <button className="text-white text-3xl mx-2 hover:text-gray-300">
-                <div className="flex justify-start items-center gap-[24px]">
-                  <Image
-                    width={100}
-                    height={100}
-                    style={{ width: "auto", height: "auto" }}
-                    src={LyricsIcon.src}
-                    alt="LyricsIcon"
-                  />
-                  <div onClick={toggleRepeat}>
-                    {repeat ? (
-                      <Image
-                        width={100}
-                        height={100}
-                        style={{ width: "auto", height: "auto" }}
-                        src={RepeatIcon.src}
-                        alt="RepeatIcon"
-                      />
-                    ) : (
-                      <Image
-                        width={100}
-                        height={100}
-                        style={{ width: "auto", height: "auto" }}
-                        src={RepeatIcon.src}
-                        className="bg-red-200 h-4 w-4"
-                        alt="RepeatIcon"
-                      />
-                    )}
-                  </div>
-                </div>
-              </button>
-            </div> */}
           </div>
 
           <AudioControls
+            volume={volume}
             ref={audioRef}
             src={url}
+            playbackRate={playbackSpeed}
             onTimeUpdate={() => {
               const currentTime = audioRef.current?.currentTime || 0;
               const duration = audioRef.current?.duration || 0;
               handleProgress(currentTime, duration);
               setCurrentTime(currentTime);
             }}
-            autoPlay={true}
+            autoPlay={playing}
             onLoadedMetadata={() => {
               setDuration(audioRef.current?.duration || 0);
             }}
             onEnded={handleEnded}
           />
-
-          {/* <audio
-            ref={audioRef}
-            src="/aud.mp3"
-            onTimeUpdate={() => {
-              const currentTime = audioRef.current?.currentTime || 0;
-              const duration = audioRef.current?.duration || 0;
-              handleProgress(currentTime, duration);
-              setCurrentTime(currentTime);
-            }}
-            autoPlay={true}
-            onLoadedMetadata={() => {
-              setDuration(audioRef.current?.duration || 0);
-            }}
-            onEnded={handleEnded}
-          >
-            Your browser does not support the audio element.
-          </audio> */}
 
           <div className="w-full flex items-center">
             <input
@@ -374,6 +337,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               <span className="text-white text-sm">{formatTime(duration)}</span>
             </div>
           </div>
+          <div className="flex w-full xl:hidden">
+            <PlayButtons
+              handleNext={handleNext}
+              handleNextTenSecond={handleNextTenSecond}
+              handlePlayPause={handlePlayPause}
+              handlePreviousTenSecond={handlePreviousTenSecond}
+              handlePrev={handlePrev}
+              playing={playing}
+            />
+          </div>
 
           <div className="flex justify-between items-center">
             <KaraokeAirFriendEtc
@@ -382,9 +355,20 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               SetKaraokeOn={setKaraokeOn}
             />
             <VolumeSettingDownRepeat
+              handlePlaybackSpeed={handlePlaybackSpeed}
+              playbackSpeed={playbackSpeed}
               volume={volume}
               handleVolumeChange={handleVolumeChange}
+              handleMute={handleMute}
             />
+          </div>
+          <div className="md:hidden flex justify-between">
+            <Volumn
+              handleMute={handleMute}
+              handleVolumeChange={handleVolumeChange}
+              volume={volume}
+            />
+            <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
           </div>
         </div>
       </div>
