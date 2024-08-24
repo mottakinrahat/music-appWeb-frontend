@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 import { FaFacebook } from "react-icons/fa6";
 import { FaApple } from "react-icons/fa";
 import DCheckbox from "@/components/forms/DCheckbox";
-import { formSchema } from "./loginSchema";
 import axios from "axios";
+import { loginSchema } from "./loginSchema";
 
 const Login = () => {
   const defaultValues = {};
@@ -29,7 +29,7 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <DForm
-        resolver={zodResolver(formSchema)}
+        resolver={zodResolver(loginSchema)}
         className="flex flex-col gap-5 max-w-xl mx-auto"
         onSubmit={handleLogin}
         defaultValues={defaultValues}
