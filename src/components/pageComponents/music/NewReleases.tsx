@@ -1,6 +1,7 @@
 import Card from "@/components/Card/Card";
 import Container from "@/components/common/container/Container";
 import Heading from "@/components/ui/heading";
+import songImg from "@/assets/etc/png/song.jpg";
 import {
   Pagination,
   PaginationContent,
@@ -10,8 +11,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import Loading from "@/app/(withCommonLayout)/music/loading";
 
 const NewReleases = ({ tracks }: any) => {
+  console.log(tracks);
+  if (tracks.length <= 0) return <Loading />;
   return (
     <Container bgGray={true}>
       <Heading type="primary" heading={"New release"}>
@@ -23,11 +27,17 @@ const NewReleases = ({ tracks }: any) => {
           .concat(tracks, tracks, tracks)
           ?.map((music: any, idx: number) => (
             <Card
-              musicRoute={`/music/${music?.id}`}
+              musicRoute={`/music/${music?._id}`}
               key={idx}
-              imageUrl={music.imageUrl ? music.imageUrl : music.artwork}
-              artistName={music.artist}
-              title={music.title}
+              imageUrl={
+                music.imageUrl
+                  ? music.imageUrl
+                  : music.artwork
+                  ? music.artwork
+                  : songImg.src
+              }
+              artistName={music.artist ? music.artist : music.songArtist}
+              title={music.title ? music.title : music.songName}
               type={music}
             ></Card>
           ))}

@@ -11,13 +11,15 @@ import TopAlbums from "@/components/pageComponents/music/TopAlbums";
 import TrandingPlaylist from "@/components/pageComponents/music/TrandingPlaylist";
 import Footer from "@/components/common/footer/Footer";
 import BeltWithKaraoke from "@/components/pageComponents/music/BeltWithKaraoke";
+import axios from "axios";
 
 const AudioList = () => {
   const [tracks, setTraks] = useState([]);
   useEffect(() => {
-    fetch("/tracks.json")
-      .then((data) => data.json())
-      .then((tracks) => setTraks(tracks));
+    axios
+      .get("https://music-app-web.vercel.app/api/v1/songs")
+      .then((data) => setTraks(data.data.data.songs));
+    // .then((tracks) => setTraks(tracks));
   }, []);
 
   return (

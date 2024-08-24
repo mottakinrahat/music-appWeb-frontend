@@ -2,6 +2,7 @@
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 // import { tracks2 } from "../page";
 
@@ -25,22 +26,25 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   const [tracks, setTraks] = useState<any>([]);
 
   useEffect(() => {
-    fetch("/tracks.json")
-      .then((data) => data.json())
-      .then((tracks) => setTraks(tracks));
+    axios
+      .get("https://music-app-web.vercel.app/api/v1/songs")
+      .then((data) => setTraks(data.data.data.songs));
   }, []);
 
   const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
+
+  console.log(currentSong);
   // song loading start
   useEffect(() => {
     // Find the track based on the ID
-    const initialTrackIndex = tracks.findIndex(
-      (track: any) => track.id === parseInt(params.id)
+    const initialTrackIndex = tracks?.findIndex(
+      (track: any) => track?._id === params?.id
     );
+    console.log(initialTrackIndex);
     if (initialTrackIndex !== -1) {
       setCurrentTrackIndex(initialTrackIndex);
     }
-    setCurrentSong(tracks[params.id]);
+    setCurrentSong(tracks[initialTrackIndex]);
   }, [params.id, tracks]);
 
   useEffect(() => {
@@ -48,7 +52,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
       setPlaying(true);
       // router.push(`/music/${tracks[currentTrackIndex].id}`);
     }
-  }, [currentTrackIndex]);
+  }, [currentTrackIndex, tracks]);
 
   const handlePrev = () => {
     if (currentTrackIndex !== null && currentTrackIndex > 0) {
@@ -88,7 +92,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
 
   return (
     <div className="flex overflow-hidden w-full">
-      <div className="flex-1 transition-all">
+      <div className="flex-1 transition-all ">
         <AudioPlayer
           handleNext={handleNext}
           handlePrev={handlePrev}

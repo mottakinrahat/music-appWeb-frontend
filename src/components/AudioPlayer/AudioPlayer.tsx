@@ -22,6 +22,10 @@ import RepeatActionButton from "./components/RepeatActionButton";
 import PlayButtons from "./components/PlayButtons";
 import MusicControls from "../MusicPlayer/MusicControls";
 import Volumn from "../MusicPlayer/Volumn";
+import axios from "axios";
+import { toast } from "sonner";
+import { Toaster } from "../ui/sonner";
+import Link from "next/link";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
@@ -72,8 +76,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
     setCurrentSong(songData);
   }, [currentSong, songData]);
-
-  const { title, url, artwork, artist, album, id: songId } = currentSong;
+  // Main Song
+  const {
+    songName,
+    songLink,
+    artwork,
+    songArtist,
+    songAlbum,
+    _id: songId,
+  } = currentSong;
 
   useEffect(() => {
     const handleInteraction = () => {
@@ -197,16 +208,53 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setRepeat(!repeat);
   };
 
-  const handleAddtoPlayList = () => {
+  const handleAddtoPlayList = async () => {
+    const user = JSON.parse(localStorage?.getItem("user")!);
+    const userId = user?._id;
     const playListData = {
       id: songId,
-      userId: null,
+      userId: userId,
     };
-    console.log(playListData);
+
+    toast("Please wait, adding to playlist... ", {
+      duration: 1000,
+    });
+    await axios
+      .put(
+        `https://music-app-web.vercel.app/api/v1/songs/play-list/${songId}/${userId}`,
+        playListData
+      )
+      .then((res) => {
+        if (res.data)
+          toast(
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src={artwork} // Replace this with the image URL
+                alt={songName}
+                style={{
+                  width: "40px", // Adjust the size as needed
+                  height: "40px",
+                  borderRadius: "8px",
+                  marginRight: "8px",
+                }}
+              />
+              <div>
+                <div style={{ fontWeight: "bold" }}>Playlist Added</div>
+                <div>{`${songName}, ${songAlbum?.albumName}`}</div>
+              </div>
+            </div>,
+            {
+              action: {
+                label: "Undo",
+                onClick: () => console.log(),
+              },
+            }
+          );
+      });
   };
 
   const threeDotContent = (
-    <div className="font-bold px-[16px] py-[24px] flex flex-col gap-[24px]">
+    <div className="font-bold select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
       <h2
         onClick={handleAddtoPlayList}
         className="flex cursor-pointer justify-start items-center gap-2"
@@ -239,6 +287,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className="audio-controls relative">
+      <Toaster position="top-right" />
       <div
         className="w-full h-screen bg-cover bg-center"
         style={{
@@ -280,13 +329,18 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               />
               <div>
                 <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1">
-                  {title}
+                  {songName}
                 </h2>
                 <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
-                  <p>{artist}</p>
+                  <p>{songArtist}</p>
                   <div className="flex items-center max-md:hidden gap-2">
                     <div className="size-2 bg-white rounded-full ml-2"></div>
-                    <p>Album: {album}</p>
+                    <p>
+                      Album:{" "}
+                      <Link href={"#"} className="underline">
+                        {songAlbum.albumName}
+                      </Link>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -315,7 +369,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <AudioControls
             volume={volume}
             ref={audioRef}
-            src={url}
+            src={songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={() => {
               const currentTime = audioRef.current?.currentTime || 0;
