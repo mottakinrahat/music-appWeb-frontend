@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { Toaster } from "../ui/sonner";
 import Link from "next/link";
 import ShareCard from "../Card/ShareCard";
+import { useRouter } from "next/navigation";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
@@ -87,7 +88,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     songAlbum,
     _id: songId,
   } = currentSong;
-
+  const router = useRouter();
   useEffect(() => {
     const handleInteraction = () => {
       if (!audioContextRef.current) {
@@ -217,7 +218,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       id: songId,
       userId: userId,
     };
-
+    if (!userId) {
+      toast("please login first");
+      router.push("/login");
+    }
     toast("Please wait, adding to playlist... ", {
       duration: 1000,
     });
@@ -261,7 +265,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       id: songId,
       userId: userId,
     };
-
+    if (!userId) {
+      toast("please login first");
+      router.push("/login");
+    }
     toast("Please wait, adding to favorites... ", {
       duration: 1000,
     });
