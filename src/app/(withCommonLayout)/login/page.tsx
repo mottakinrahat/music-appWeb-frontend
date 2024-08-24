@@ -7,6 +7,9 @@ import DInput from "@/components/forms/DInput";
 import DCheckbox from "@/components/forms/DCheckbox";
 import DFileUploader from "@/components/forms/DFileUploader";
 import DSelect from "@/components/forms/DSelect";
+import DTextarea from "@/components/forms/DTextArea";
+import SocialLogin from "@/components/common/socialLogin/SocialLogin";
+import { FcGoogle } from "react-icons/fc";
 
 const Login = () => {
   const defaultValues = {
@@ -29,7 +32,13 @@ const Login = () => {
         <DFileUploader name="folder" />
         <DInput name="FIle" />
         <DSelect name="HEllo" options={options} />
+        <DTextarea name="hello" />
       </DForm>
+      <SocialLogin
+        icon={<FcGoogle />}
+        text="Login with Google"
+        className="flex items-center px-4 py-2 rounded-lg text-black font-medium"
+      />
     </div>
   );
 };
