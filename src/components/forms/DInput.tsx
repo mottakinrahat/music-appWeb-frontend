@@ -49,7 +49,9 @@ const DInput = ({
             disabled={disabled}
             required={required}
             type={type}
-            className={` ${error ? "border-red-500" : "border-gray-300 w-full flex"} ${className}`}
+            className={` ${
+              error ? "border-red-500" : "border-gray-300 w-full flex"
+            } ${className} focus-visible:shadow-none focus-visible:outline-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-accent`}
           />
           {error && <span className="text-red-500 text-sm mt-1">{error.message}</span>}
         </div>

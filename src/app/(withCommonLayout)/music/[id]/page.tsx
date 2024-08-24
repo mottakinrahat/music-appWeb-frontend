@@ -40,7 +40,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     const initialTrackIndex = tracks?.findIndex(
       (track: any) => track?._id === params?.id
     );
-    console.log(initialTrackIndex);
+    // console.log(initialTrackIndex);
     if (initialTrackIndex !== -1) {
       setCurrentTrackIndex(initialTrackIndex);
     }

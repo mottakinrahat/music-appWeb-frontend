@@ -1,43 +1,53 @@
 "use client";
-import DForm from "@/components/forms/DForm";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import DInput from "@/components/forms/DInput";
 import SocialLogin from "@/components/common/socialLogin/SocialLogin";
-import { FcGoogle } from "react-icons/fc";
-import { Button } from "@/components/ui/button";
-import { FaFacebook } from "react-icons/fa6";
-import { FaApple } from "react-icons/fa";
 import DCheckbox from "@/components/forms/DCheckbox";
-import axios from "axios";
-import { loginSchema } from "./loginSchema";
+import DForm from "@/components/forms/DForm";
+import DInput from "@/components/forms/DInput";
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+import { FaApple, FaFacebook } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { z } from "zod";
 
-const Login = () => {
+const signupSchema = z.object({});
+
+const SignupPage: React.FC = () => {
   const defaultValues = {};
-  const handleLogin = (e: any) => {
-    const formData = e;
-    console.log(formData);
-    axios.post("https://music-app-web.vercel.app/api/v1/auth/login", e).then((res) => {
-      const user = res?.data?.data?.user;
-      localStorage.setItem("token", res.data.data?.token);
-      localStorage.setItem("user", JSON.stringify(user));
 
-      console.log(res);
-    });
+  const handleSubmit = (data: any) => {
+    console.log(data);
   };
 
   return (
-    <div className=" flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center">
       <DForm
-        resolver={zodResolver(loginSchema)}
+        resolver={zodResolver(signupSchema)}
         className="flex flex-col gap-5 max-w-xl mx-auto"
-        onSubmit={handleLogin}
+        onSubmit={handleSubmit}
         defaultValues={defaultValues}
       >
-        <h1 className="text-[#262626] text-5xl font-semibold ">Log in</h1>
+        <h1 className="text-[#262626] text-5xl font-semibold ">Create an account</h1>
         <p className="font-semibold text-base leading-6">
-          Don&apos;t hanve an account? <span className="text-accent">Create an account</span>
+          Already have an account?<span className="text-accent"> Log in </span>
         </p>
+
+        <div className="flex items-start justify-between gap-5">
+          <DInput
+            defaultValue={"Ruhul"}
+            labelTextColor="#262626"
+            name="firstName"
+            label="First Name"
+            placeholder="Enter your first name"
+          />
+          <DInput
+            defaultValue={"Islam"}
+            labelTextColor="#262626"
+            name="lastName"
+            label="Last Name"
+            placeholder="Enter your last name"
+          />
+        </div>
         {/* email */}
         <DInput
           defaultValue={"ruhul@gmail.com"}
@@ -52,6 +62,13 @@ const Login = () => {
           labelTextColor="#262626"
           name="password"
           label="Password"
+          placeholder="Enter your password"
+        />
+        <DInput
+          defaultValue={"@1111aA1111"}
+          labelTextColor="#262626"
+          name="confirmPassword"
+          label="Confirm Password"
           placeholder="Enter your password"
         />
         {/* submit Button */}
@@ -109,4 +126,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignupPage;
