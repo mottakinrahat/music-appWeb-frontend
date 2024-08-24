@@ -10,10 +10,7 @@ interface EqualizerProps {
   audioElement: HTMLAudioElement | null;
 }
 
-const Equalizer: React.FC<EqualizerProps> = ({
-  audioContext,
-  audioElement,
-}) => {
+const Equalizer: React.FC<EqualizerProps> = ({ audioContext, audioElement }) => {
   const gainNodesRef = useRef<GainNode[]>([]);
   const [gains, setGains] = useState<number[]>([]);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
@@ -45,6 +42,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
     setIsOn(savedIsEqOn === "true");
   }, []);
 
+  // tootle switch
   const toggleSwitch = () => {
     localStorage.setItem("isEqOn", (!isOn).toString());
     if (isOn) {
@@ -57,7 +55,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
         })
       );
       setGains([0, 0, 0, 0, 0, 0]);
-      setSelectedPreset(null);
+      setSelectedPreset(defaultPreset); // Set to default preset when turning off
     } else {
       // If turning EQ on
       const savedSettings = localStorage.getItem("eqSettings");
@@ -150,11 +148,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
   return (
     <div className="p-10 w-[500px]">
       <h3 className="text-3xl font-semibold mb-8">EQ Settings</h3>
-      <div
-        className={`transition-opacity duration-300 w-full ${
-          !isOn ? "opacity-40 " : "opacity-100"
-        }`}
-      >
+      <div className={`transition-opacity duration-300 w-full ${!isOn ? "opacity-40 " : "opacity-100"}`}>
         <Chart data={data} />
       </div>
 
@@ -192,9 +186,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
                 key={index}
                 className="flex cursor-pointer justify-between w-[8rem] items-center"
               >
-                <button className="my-1">
-                  {preset.charAt(0).toUpperCase() + preset.slice(1)}
-                </button>
+                <button className="my-1">{preset.charAt(0).toUpperCase() + preset.slice(1)}</button>
                 {selectedPreset === preset && (
                   <div>
                     <IoCheckmarkSharp className="text-accent" />
@@ -206,10 +198,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
         ) : (
           <ul>
             {Object.keys(presets).map((preset, index) => (
-              <li
-                key={index}
-                className="flex justify-between w-[8rem] items-center opacity-70"
-              >
+              <li key={index} className="flex justify-between w-[8rem] items-center opacity-70">
                 <button className="my-1" disabled>
                   {preset.charAt(0).toUpperCase() + preset.slice(1)}
                 </button>
