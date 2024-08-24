@@ -39,7 +39,7 @@ const LandingMusicCard = ({
           </h2>
           <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
             {/* <p>{artist}</p> */}
-            <div className="flex items-center max-md:hidden gap-2">
+            <div className="flex items-center gap-2">
               {!albumCard ? (
                 <p>
                   Album:{" "}

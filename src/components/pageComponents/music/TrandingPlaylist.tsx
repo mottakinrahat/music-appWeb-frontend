@@ -164,7 +164,7 @@ const TrandingPlaylist = () => {
       </Heading>
 
       <Tabs defaultValue="top-50" className="w-full justify-between my-10">
-        <TabsList className="flex justify-between">
+        <TabsList className="flex flex-wrap justify-between">
           {tabNames.map((tab) => (
             <TabsTrigger key={tab} value={tab}>
               {tab}

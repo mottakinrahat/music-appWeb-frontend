@@ -76,7 +76,7 @@ const TopCharts = () => {
       >
         Dive into the heart of what{"'"}s trending with our Top 100 chart.
       </Heading>
-      <div className="grid grid-cols-2 mt-10 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 mt-10 gap-x-4">
         {data?.map((music, idx) => (
           <LandingMusicCard
             key={idx}

@@ -129,7 +129,7 @@ const TopAlbums = () => {
       >
         Dive into the heart of what{"'"}s trending with our Top 100 chart.
       </Heading>
-      <div className="flex justify-between gap-5">
+      <div className="justify-between lg:flex gap-5">
         <div className="flex flex-col justify-center">
           <h2 className="text-2xl mb-5 md:text-4xl max-w-md font-semibold">
             No.1 On charts
@@ -139,8 +139,8 @@ const TopAlbums = () => {
               priority
               src={data[0].imageUrl}
               alt={data[0].title || "Card image"}
-              width={200}
-              height={200}
+              width={300}
+              height={300}
               style={{
                 width: "auto",
                 height: "auto",
@@ -162,7 +162,7 @@ const TopAlbums = () => {
           <div className="text-xl font-semibold mt-4">{data[0].album}</div>
           <div>{data[0].artistName}</div>
         </div>
-        <div className="flex-1 grid grid-cols-3 mt-10 gap-3">
+        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  mt-10 gap-3">
           {data?.map((music, idx) => (
             <LandingMusicCard
               albumCard
