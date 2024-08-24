@@ -33,7 +33,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
 
   const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
 
-  console.log(currentSong);
+  // console.log(currentSong);
   // song loading start
   useEffect(() => {
     // Find the track based on the ID

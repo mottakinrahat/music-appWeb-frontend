@@ -244,13 +244,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 <div style={{ fontWeight: "bold" }}>Playlist Added</div>
                 <div>{`${songName}, ${songAlbum?.albumName}`}</div>
               </div>
-            </div>,
-            {
-              action: {
-                label: "Undo",
-                onClick: () => console.log(),
-              },
-            }
+            </div>
           );
       })
       .catch((err) => {
@@ -294,13 +288,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 <div style={{ fontWeight: "bold" }}>Favorites Added</div>
                 <div>{`${songName}, ${songAlbum?.albumName}`}</div>
               </div>
-            </div>,
-            {
-              action: {
-                label: "Undo",
-                onClick: () => console.log(),
-              },
-            }
+            </div>
           );
       })
       .catch((err) => {
