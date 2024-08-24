@@ -25,9 +25,9 @@ const Login = () => {
         const user = res?.data?.data?.user;
         localStorage.setItem("token", res.data.data?.token);
         localStorage.setItem("user", JSON.stringify(user));
+        router.push("/");
       });
-    router.push("/");
-  };
+    };
 
   return (
     <div className=" flex items-center justify-center">
