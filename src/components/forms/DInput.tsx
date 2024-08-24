@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { Label } from "../ui/label";
@@ -15,7 +14,7 @@ type DInputProps = {
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
-  labelTextColor?: "text-black" | "text-white";
+  labelTextColor?: string;
 };
 
 const DInput = ({
@@ -39,10 +38,7 @@ const DInput = ({
       render={({ field, fieldState: { error } }) => (
         <div className={` w-full `}>
           {label && (
-            <Label
-              htmlFor={name}
-              className={cn(labelTextColor, "block mb-2 text-lg w-full")}
-            >
+            <Label htmlFor={name} className={cn(labelTextColor, "block mb-2 font-semibold text-lg w-full")}>
               {label}
             </Label>
           )}
@@ -52,14 +48,10 @@ const DInput = ({
             id={name}
             disabled={disabled}
             required={required}
-
             type={type}
-            className={` ${error ? "border-red-500" : "border-gray-300 w-full flex"
-              } ${className}`}
+            className={` ${error ? "border-red-500" : "border-gray-300 w-full flex"} ${className}`}
           />
-          {error && (
-            <span className="text-red-500 text-sm mt-1">{error.message}</span>
-          )}
+          {error && <span className="text-red-500 text-sm mt-1">{error.message}</span>}
         </div>
       )}
     />
