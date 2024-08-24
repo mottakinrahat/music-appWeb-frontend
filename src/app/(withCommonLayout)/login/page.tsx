@@ -27,7 +27,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className=" flex items-center justify-center">
       <DForm
         resolver={zodResolver(loginSchema)}
         className="flex flex-col gap-5 max-w-xl mx-auto"
