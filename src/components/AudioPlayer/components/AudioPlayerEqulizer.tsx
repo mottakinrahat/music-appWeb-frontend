@@ -159,11 +159,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
   return (
     <div className="p-10 bg-white h-full md:w-[500px] w-[400px]">
       <h3 className="text-3xl font-semibold mb-8">EQ Settings</h3>
-      <div
-        className={`transition-opacity duration-300 w-full ${
-          !isOn ? "opacity-40 " : "opacity-100"
-        }`}
-      >
+      <div className={`transition-opacity duration-300 w-full ${!isOn ? "opacity-40 " : "opacity-100"}`}>
         <Chart data={data} />
       </div>
 
@@ -201,9 +197,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
                 key={index}
                 className="flex cursor-pointer justify-between w-[8rem] items-center"
               >
-                <button className="my-1">
-                  {preset.charAt(0).toUpperCase() + preset.slice(1)}
-                </button>
+                <button className="my-1">{preset.charAt(0).toUpperCase() + preset.slice(1)}</button>
                 {selectedPreset === preset && (
                   <div>
                     <IoCheckmarkSharp className="text-accent" />
@@ -215,10 +209,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
         ) : (
           <ul>
             {Object.keys(presets).map((preset, index) => (
-              <li
-                key={index}
-                className="flex justify-between w-[8rem] items-center opacity-70"
-              >
+              <li key={index} className="flex justify-between w-[8rem] items-center opacity-70">
                 <button className="my-1" disabled>
                   {preset.charAt(0).toUpperCase() + preset.slice(1)}
                 </button>
