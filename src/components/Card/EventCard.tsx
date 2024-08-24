@@ -31,7 +31,6 @@ const EventCard: React.FC<EventCardInterface> = ({
           <div className="rounded-xl  relative w-full cursor-pointer overflow-hidden group">
             <div className="relative h-fit w-full">
               {" "}
-              {/* Maintains aspect ratio */}
               <Image
                 src={imageUrl}
                 alt={title || "Card image"}

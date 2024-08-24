@@ -10,7 +10,7 @@ const Blogs = () => {
       id: 1,
       imageUrl: image.src,
       type: "Interview",
-      artisName: "Helen Khilar",
+      artistName: "Helen Khilar",
       title: "A Beginner's Guide to the Nuances of Jazz",
       description:
         "Lets delve into the captivating story of The Volta. We explore their DIY origins, their infectious blend of indie roc ...",
@@ -19,7 +19,7 @@ const Blogs = () => {
       id: 2,
       imageUrl: image1.src,
       type: "Genre Exploration",
-      artisName: "Helen Khilar",
+      artistName: "Helen Khilar",
       title: "An Interview with Rising Star, Luna Sky",
       description:
         "Ever wondered how your favorite songs come to life? This article takes you behind the scenes of music produ ...",
@@ -28,7 +28,7 @@ const Blogs = () => {
       id: 3,
       imageUrl: image2.src,
       type: "Behind-the-scenes",
-      artisName: "Helen Khilar",
+      artistName: "Helen Khilar",
       title: "The Magic Behind Your Favorite Albums",
       description:
         "Dive into the rich history of jazz music. This article explores the evolution of jazz, key subgenres, and iconic...",
@@ -37,7 +37,7 @@ const Blogs = () => {
       id: 4,
       imageUrl: image1.src,
       type: "Artist Spotlight",
-      artisName: "Helen Khilar",
+      artistName: "Helen Khilar",
       title: "Meteoric Rise of Indie Rock Band, The Volta",
       description:
         "In this exclusive interview, Luna Sky opens up about her musical influences, and the inspiration behind his ...",

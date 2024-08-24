@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import NewReleases from "@/components/pageComponents/music/NewReleases";
+import Navbar from "@/components/common/navigation/Navbar";
+import HotPlayLists from "@/components/pageComponents/music/HotPlayLists";
 
 const AudioList = () => {
   const [tracks, setTraks] = useState([]);
@@ -10,7 +12,13 @@ const AudioList = () => {
       .then((tracks) => setTraks(tracks));
   }, []);
 
-  return <NewReleases tracks={tracks} />;
+  return (
+    <>
+      <Navbar />
+      <NewReleases tracks={tracks} />;
+      <HotPlayLists />
+    </>
+  );
 };
 
 export default AudioList;

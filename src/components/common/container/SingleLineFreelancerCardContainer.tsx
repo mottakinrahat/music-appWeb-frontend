@@ -37,7 +37,7 @@ const SingleLineFreelancerCardContainer: React.FC<
                     freelancerName={freelancer?.freelancerType}
                     rating={freelancer?.rating}
                     imageUrl={freelancer?.imageUrl}
-                    artistName={freelancer?.artisName}
+                    artistName={freelancer?.artistName}
                     type={"freelancer"}
                   ></Card>
                 ))
@@ -48,7 +48,7 @@ const SingleLineFreelancerCardContainer: React.FC<
                   freelancerName={freelancer?.freelancerType}
                   rating={freelancer?.rating}
                   imageUrl={freelancer?.imageUrl}
-                  artistName={freelancer?.artisName}
+                  artistName={freelancer?.artistName}
                   type={"freelancer"}
                 ></Card>
               ))}

@@ -8,25 +8,25 @@ const VRConcerts = () => {
     {
       id: 1,
       imageUrl: image.src,
-      artisName: "Helen Khilar",
+      artistName: "Helen Khilar",
       title: "Major Festival (Pop/Rock)",
     },
     {
       id: 2,
       imageUrl: image1.src,
-      artisName: "Helen Khilar",
+      artistName: "Helen Khilar",
       title: "An Evening with Joni Mitchell",
     },
     {
       id: 3,
       imageUrl: image2.src,
-      artisName: "Helen Khilar",
+      artistName: "Helen Khilar",
       title: "Pulse Tour: DJ Zedd",
     },
     {
       id: 4,
       imageUrl: image1.src,
-      artisName: "Helen Khilar",
+      artistName: "Helen Khilar",
       title: "Pulse Tour: DJ Zedd",
     },
   ];

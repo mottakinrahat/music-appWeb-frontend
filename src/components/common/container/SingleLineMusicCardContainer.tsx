@@ -34,7 +34,7 @@ const SingleLineMusicCardContainer: React.FC<
                 <Card
                   key={idx}
                   imageUrl={music.imageUrl}
-                  artistName={music.artisName}
+                  artistName={music.artistName}
                   title={music.title}
                   type={music}
                 ></Card>
@@ -43,7 +43,7 @@ const SingleLineMusicCardContainer: React.FC<
               <Card
                 key={idx}
                 imageUrl={music.imageUrl ? music.imageUrl : music.artwork}
-                artistName={music.artisName}
+                artistName={music.artistName}
                 title={music.title}
                 type={music}
               ></Card>
