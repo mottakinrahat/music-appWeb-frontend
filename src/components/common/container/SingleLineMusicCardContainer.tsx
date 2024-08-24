@@ -17,41 +17,39 @@ const SingleLineMusicCardContainer: React.FC<
   SingleLineCardContainerInterFace
 > = ({ data, heading, linkText, linkRoute, singleLine, children, bgGray }) => {
   return (
-    <div>
-      <Container bgGray={bgGray} className={`${bgGray && ""}`}>
-        <Heading
-          type="primary"
-          heading={heading}
-          linkText={linkText}
-          route={linkRoute}
-        >
-          {children}
-        </Heading>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 my-10">
-          {singleLine
-            ? data
-                ?.slice(0, 4)
-                ?.map((freelancer: any, idx) => (
-                  <Card
-                    key={idx}
-                    imageUrl={freelancer.imageUrl}
-                    artistName={freelancer.artisName}
-                    title={freelancer.title}
-                    type={freelancer}
-                  ></Card>
-                ))
-            : data?.map((freelancer: any, idx) => (
+    <Container bgGray={bgGray} className={`${bgGray && ""}`}>
+      <Heading
+        type="primary"
+        heading={heading}
+        linkText={linkText}
+        route={linkRoute}
+      >
+        {children}
+      </Heading>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 my-10">
+        {singleLine
+          ? data
+              ?.slice(0, 4)
+              ?.map((music: any, idx) => (
                 <Card
                   key={idx}
-                  imageUrl={freelancer.imageUrl}
-                  artistName={freelancer.artisName}
-                  title={freelancer.title}
-                  type={freelancer}
+                  imageUrl={music.imageUrl}
+                  artistName={music.artisName}
+                  title={music.title}
+                  type={music}
                 ></Card>
-              ))}
-        </div>
-      </Container>
-    </div>
+              ))
+          : data?.map((music: any, idx) => (
+              <Card
+                key={idx}
+                imageUrl={music.imageUrl ? music.imageUrl : music.artwork}
+                artistName={music.artisName}
+                title={music.title}
+                type={music}
+              ></Card>
+            ))}
+      </div>
+    </Container>
   );
 };
 

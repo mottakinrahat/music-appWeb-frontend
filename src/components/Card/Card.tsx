@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import playBtn from "@/assets/icons/play_circle.png";
 import Link from "next/link";
-import { Url } from "url";
 // import { IoHeartOutline } from "react-icons/io5";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 
@@ -13,8 +12,8 @@ interface BaseCard {
   isFavourite?: boolean;
   rating?: number;
   album?: string;
-  musicRoute?: Url;
-  albumRouteLink?: Url;
+  musicRoute?: string;
+  albumRouteLink?: string;
   freelancerType?: string;
   freelancerName?: string;
 }
@@ -54,13 +53,18 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
       {/* Image Container */}
       <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (
-          <div className="rounded-xl relative cursor-pointer overflow-hidden group">
+          <div className="rounded-xl flex w-full h-fit relative cursor-pointer overflow-hidden group">
             <Image
+              priority
               src={imageUrl}
               alt={title || "Card image"}
               width={280}
               height={280}
-              style={{ width: "100%", height: "auto", objectFit: "cover" }}
+              style={{
+                width: "auto",
+                height: "auto",
+                aspectRatio: "1 / 1",
+              }}
               className="rounded-lg"
             />
             {/* Overlay */}
@@ -98,7 +102,9 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
 
       {/* Card Content */}
       <div className="">
-        {title && <h2 className="text-2xl font-semibold mb-2">{title}</h2>}
+        {title && (
+          <h2 className="text-xl lg:text-2xl font-semibold mb-2">{title}</h2>
+        )}
         {artistName && <p className="text-sm text-gray-600">{artistName}</p>}
 
         {album && (
