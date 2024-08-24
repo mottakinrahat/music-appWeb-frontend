@@ -37,7 +37,7 @@ const LogInSignUpNav: React.FC = () => {
             {/* Dropdown Country */}
             <div>
               <Select defaultValue="us">
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] focus-visible:shadow-none focus-visible:outline-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-accent">
                   <SelectValue placeholder="Select a country" />
                 </SelectTrigger>
                 <SelectContent>
