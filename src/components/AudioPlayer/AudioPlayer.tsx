@@ -231,7 +231,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           toast(
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
-                src={artwork} // Replace this with the image URL
+                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
                 alt={songName}
                 style={{
                   width: "40px", // Adjust the size as needed
@@ -252,6 +252,61 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               },
             }
           );
+      })
+      .catch((err) => {
+        if (err) {
+          toast.error("Failed to add to playlist");
+        }
+      });
+  };
+
+  const handleAddtoFavourite = async () => {
+    const user = JSON.parse(localStorage?.getItem("user")!);
+    const userId = user?._id;
+    const playListData = {
+      id: songId,
+      userId: userId,
+    };
+
+    toast("Please wait, adding to favorites... ", {
+      duration: 1000,
+    });
+    await axios
+      .put(
+        `https://music-app-web.vercel.app/api/v1/songs/fav-list/${songId}/${userId}`,
+        playListData
+      )
+      .then((res) => {
+        if (res.data)
+          toast(
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
+                alt={songName}
+                style={{
+                  width: "40px", // Adjust the size as needed
+                  height: "40px",
+                  borderRadius: "8px",
+                  marginRight: "8px",
+                }}
+              />
+              <div>
+                <div style={{ fontWeight: "bold" }}>Favorites Added</div>
+                <div>{`${songName}, ${songAlbum?.albumName}`}</div>
+              </div>
+            </div>,
+            {
+              action: {
+                label: "Undo",
+                onClick: () => console.log(),
+              },
+            }
+          );
+      })
+      .catch((err) => {
+        if (err) {
+          toast.error("Failed to add to playlist");
+        }
       });
   };
 
@@ -264,7 +319,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         <PlusCircleIcon className="h-6 w-6" />
         <span>Add to playlist</span>
       </h2>
-      <h2 className="flex hover:text-black cursor-pointer justify-start items-center gap-2">
+      <h2
+        onClick={handleAddtoFavourite}
+        className="flex hover:text-black cursor-pointer justify-start items-center gap-2"
+      >
         <HeartIcon className="h-6 w-6" />
         <span>Add to favorites</span>
       </h2>
