@@ -9,6 +9,7 @@ interface LandingMusicCardInterface {
   artist: string;
   album: string;
   artwork: string;
+  albumCard?: boolean;
 }
 
 const LandingMusicCard = ({
@@ -17,6 +18,7 @@ const LandingMusicCard = ({
   artwork,
   title,
   id,
+  albumCard,
 }: LandingMusicCardInterface) => {
   return (
     <div className="flex justify-between py-2 items-center max-w-lg">
@@ -33,24 +35,30 @@ const LandingMusicCard = ({
         </div>
         <div>
           <h2 className=" text-base md:text-2xl gap-2 font-semibold mb-1">
-            {title}
+            {albumCard ? album : title}
           </h2>
           <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
             {/* <p>{artist}</p> */}
             <div className="flex items-center max-md:hidden gap-2">
-              <p>
-                Album:{" "}
-                <Link className="underline" href={`/album${id}`}>
-                  {album}
-                </Link>
-              </p>
+              {!albumCard ? (
+                <p>
+                  Album:{" "}
+                  <Link className="underline" href={`/album${id}`}>
+                    {album}
+                  </Link>
+                </p>
+              ) : (
+                <p>{artist}</p>
+              )}
             </div>
           </div>
         </div>
       </div>
-      <div>
-        <img src={playBtn.src} alt="" />
-      </div>
+      {!albumCard && (
+        <div>
+          <img className="cursor-pointer" src={playBtn.src} alt="" />
+        </div>
+      )}
     </div>
   );
 };

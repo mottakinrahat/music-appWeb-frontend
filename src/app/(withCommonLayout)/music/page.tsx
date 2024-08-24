@@ -7,6 +7,7 @@ import Features from "@/components/pageComponents/Home/Features";
 import Recomended from "@/components/pageComponents/Home/Recomended";
 import RecentlyPlayed from "@/components/pageComponents/music/RecentlyPlayed";
 import TopCharts from "@/components/pageComponents/music/TopCharts";
+import TopAlbums from "@/components/pageComponents/music/TopAlbums";
 
 const AudioList = () => {
   const [tracks, setTraks] = useState([]);
@@ -21,8 +22,9 @@ const AudioList = () => {
       <Navbar />
       <NewReleases tracks={tracks} />;
       <HotPlayLists />
-      <RecentlyPlayed />
       <TopCharts />
+      <TopAlbums />
+      <RecentlyPlayed />
       <Recomended album />
       <Features />
     </>

@@ -3,7 +3,7 @@ import React from "react";
 interface Heading {
   type: "primary" | "secondary";
   heading?: string;
-  children?: string;
+  children?: React.ReactNode;
   linkText?: string;
   route?: string;
   colorText?: string;
