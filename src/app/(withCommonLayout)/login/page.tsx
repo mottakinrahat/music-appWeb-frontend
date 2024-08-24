@@ -10,15 +10,24 @@ import { FaFacebook } from "react-icons/fa6";
 import { FaApple } from "react-icons/fa";
 import DCheckbox from "@/components/forms/DCheckbox";
 import { formSchema } from "./loginSchema";
+import axios from "axios";
 
 const Login = () => {
   const defaultValues = {};
   const handleLogin = (e: any) => {
-    console.log(e);
+    const formData = e;
+    console.log(formData);
+    axios.post("https://music-app-web.vercel.app/api/v1/auth/login", e).then((res) => {
+      const user = res?.data?.data?.user;
+      localStorage.setItem("token", res.data.data?.token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      console.log(res);
+    });
   };
 
   return (
-    <div className="h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center">
       <DForm
         resolver={zodResolver(formSchema)}
         className="flex flex-col gap-5 max-w-xl mx-auto"
@@ -30,9 +39,21 @@ const Login = () => {
           Don&apos;t hanve an account? <span className="text-accent">Create an account</span>
         </p>
         {/* email */}
-        <DInput labelTextColor="#262626" name="email" label="Email" placeholder="Enter your email" />
+        <DInput
+          defaultValue={"ruhul@gmail.com"}
+          labelTextColor="#262626"
+          name="email"
+          label="Email"
+          placeholder="Enter your email"
+        />
         {/* Password */}
-        <DInput labelTextColor="#262626" name="password" label="Password" placeholder="Enter your password" />
+        <DInput
+          defaultValue={"@1111aA1111"}
+          labelTextColor="#262626"
+          name="password"
+          label="Password"
+          placeholder="Enter your password"
+        />
         {/* submit Button */}
         <Button type="submit" className="text-white hover:bg-accent hover:text-white bg-accent rounded-md ">
           Log in
