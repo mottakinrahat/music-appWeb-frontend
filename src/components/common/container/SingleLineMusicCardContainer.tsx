@@ -11,11 +11,21 @@ interface SingleLineCardContainerInterFace {
   children?: string;
   bgGray: boolean;
   singleLine?: boolean;
+  album?: boolean;
 }
 
 const SingleLineMusicCardContainer: React.FC<
   SingleLineCardContainerInterFace
-> = ({ data, heading, linkText, linkRoute, singleLine, children, bgGray }) => {
+> = ({
+  data,
+  heading,
+  linkText,
+  linkRoute,
+  singleLine,
+  children,
+  bgGray,
+  album,
+}) => {
   return (
     <Container bgGray={bgGray} className={`${bgGray && ""}`}>
       <Heading
@@ -32,6 +42,7 @@ const SingleLineMusicCardContainer: React.FC<
               ?.slice(0, 4)
               ?.map((music: any, idx) => (
                 <Card
+                  album={album ? music.album : ""}
                   key={idx}
                   imageUrl={music.imageUrl}
                   artistName={music.artistName}
@@ -41,6 +52,7 @@ const SingleLineMusicCardContainer: React.FC<
               ))
           : data?.map((music: any, idx) => (
               <Card
+                album={album ? music.album : ""}
                 key={idx}
                 imageUrl={music.imageUrl ? music.imageUrl : music.artwork}
                 artistName={music.artistName}

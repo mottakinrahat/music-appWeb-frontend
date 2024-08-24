@@ -1,4 +1,3 @@
-import { Url } from "next/dist/shared/lib/router/router";
 import Link from "next/link";
 import React from "react";
 interface Heading {
@@ -7,7 +6,7 @@ interface Heading {
   children?: string;
   linkText?: string;
   route?: string;
-  colorText?: String;
+  colorText?: string;
 }
 
 const Heading: React.FC<Heading> = ({

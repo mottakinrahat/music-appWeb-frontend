@@ -1,6 +1,15 @@
 import Card from "@/components/Card/Card";
 import Container from "@/components/common/container/Container";
 import Heading from "@/components/ui/heading";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const NewReleases = ({ tracks }: any) => {
   return (
@@ -23,6 +32,24 @@ const NewReleases = ({ tracks }: any) => {
             ></Card>
           ))}
       </div>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">1</PaginationLink>
+            <PaginationLink href="#">2</PaginationLink>
+            <PaginationLink href="#">3</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href="#" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </Container>
   );
 };
