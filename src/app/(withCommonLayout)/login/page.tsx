@@ -27,15 +27,15 @@ const Login = () => {
   };
 
   return (
-    <div className=" flex items-center  max-w-xl mx-auto flex-col justify-center">
+    <div className=" flex items-center  max-w-xl mx-auto flex-col justify-center p-4">
       <DForm
         resolver={zodResolver(loginSchema)}
         className="flex flex-col gap-5 w-full"
         onSubmit={handleLogin}
         defaultValues={defaultValues}
       >
-        <h1 className="text-[#262626] text-5xl font-semibold ">Log in</h1>
-        <p className="font-semibold text-base leading-6">
+        <h1 className="text-[#262626] md:text-5xl font-semibold text-2xl ">Log in</h1>
+        <p className="font-semibold md:text-base text-sm leading-6">
           Don&apos;t hanve an account? <span className="text-accent">Create an account</span>
         </p>
         {/* email */}
@@ -70,10 +70,10 @@ const Login = () => {
         <div className="flex justify-between h-[3rem]">
           <div className="flex gap-2 ">
             <DCheckbox name="rememberPassword" label="rememberPassword" />
-            <p>Remember Password</p>
+            <p className="text-sm md:text-base ">Remember Password</p>
           </div>
           <div>
-            <p className="underline text-accent cursor-pointer">Forgot Password</p>
+            <p className="underline text-accent cursor-pointer text-sm md:text-base">Forgot Password</p>
           </div>
         </div>
       </DForm>
@@ -99,7 +99,7 @@ const Login = () => {
         />
       </div>
 
-      <p className="text-[#4C4C4C] mt-5">
+      <p className="text-[#4C4C4C] mt-5 text-sm md:text-base">
         By clicking &quot;Log in&quot; above, you acknowledge that you have read and you agree to our General{" "}
         <span className="font-semibold">Terms and Conditions</span> and have read and acknowledge the{" "}
         <span className="font-semibold">Privacy policy.</span>

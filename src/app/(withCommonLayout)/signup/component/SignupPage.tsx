@@ -42,12 +42,12 @@ const SignupPage: React.FC = () => {
     <div className="min-h-screen flex flex-col max-w-xl mx-auto items-center justify-center">
       <DForm
         resolver={zodResolver(signupSchema)}
-        className="flex flex-col gap-5 w-full"
+        className="flex flex-col gap-5 w-full p-4"
         onSubmit={handleSubmit}
         defaultValues={defaultValues}
       >
-        <h1 className="text-[#262626] text-5xl font-semibold">Create an account</h1>
-        <p className="font-semibold text-base leading-6">
+        <h1 className="text-[#262626] md:text-5xl text-2xl font-semibold">Create an account</h1>
+        <p className="font-semibold md:text-base leading-6 text-sm">
           Already have an account?<span className="text-accent"> Log in </span>
         </p>
 
@@ -106,7 +106,7 @@ const SignupPage: React.FC = () => {
       </DForm>
 
       {/* Social Logins */}
-      <div className="w-full space-y-5">
+      <div className="w-full space-y-5 p-4">
         <SocialLogin
           icon={<FcGoogle />}
           text="Continue with Google"
@@ -126,7 +126,7 @@ const SignupPage: React.FC = () => {
         />
       </div>
 
-      <p className="text-[#4C4C4C] mt-5">
+      <p className="text-[#4C4C4C] mt-5 p-4 text-sm md:text-base">
         By clicking &quot;Sign up&quot; above, you acknowledge that you have read and you agree to our General{" "}
         <span className="font-semibold">Terms and Conditions</span> and have read and acknowledge the{" "}
         <span className="font-semibold">Privacy policy.</span>
