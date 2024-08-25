@@ -27,10 +27,10 @@ const Login = () => {
   };
 
   return (
-    <div className=" flex items-center justify-center">
+    <div className=" flex items-center  max-w-xl mx-auto flex-col justify-center">
       <DForm
         resolver={zodResolver(loginSchema)}
-        className="flex flex-col gap-5 max-w-xl mx-auto"
+        className="flex flex-col gap-5 w-full"
         onSubmit={handleLogin}
         defaultValues={defaultValues}
       >
@@ -53,6 +53,7 @@ const Login = () => {
           name="password"
           label="Password"
           placeholder="Enter your password"
+          type="password"
         />
         {/* submit Button */}
         <Button type="submit" className="text-white hover:bg-accent hover:text-white bg-accent rounded-md ">
@@ -66,30 +67,6 @@ const Login = () => {
           <div className="flex-grow h-[1px] bg-gradient-to-r from-black to-white"></div>
         </div>
 
-        {/* google Login */}
-
-        <SocialLogin
-          icon={<FcGoogle />}
-          text="Login with Google"
-          className="flex items-center px-4 py-2 bg-[#F2F2F2] rounded-lg justify-center text-black font-semibold"
-        />
-
-        {/* Facebook Login */}
-
-        <SocialLogin
-          icon={<FaFacebook />}
-          text="Login with Facebook"
-          className="flex items-center px-4 py-2 bg-[#1877F2] rounded-lg justify-center text-white font-semibold"
-        />
-
-        {/* Apple Login  */}
-
-        <SocialLogin
-          icon={<FaApple />}
-          text="Login with Facebook"
-          className="flex items-center px-4 py-2 bg-black rounded-lg justify-center text-white font-semibold"
-        />
-
         <div className="flex justify-between h-[3rem]">
           <div className="flex gap-2 ">
             <DCheckbox name="rememberPassword" label="rememberPassword" />
@@ -99,12 +76,34 @@ const Login = () => {
             <p className="underline text-accent cursor-pointer">Forgot Password</p>
           </div>
         </div>
-        <p className="text-[#4C4C4C]">
-          By clicking &quot;Log in&quot; above, you acknowledge that you have read and you agree to our General{" "}
-          <span className="font-semibold">Terms and Conditions</span> and have read and acknowledge the{" "}
-          <span className="font-semibold">Privacy policy.</span>
-        </p>
       </DForm>
+
+      {/* Social Logins */}
+      <div className="w-full space-y-5">
+        <SocialLogin
+          icon={<FcGoogle />}
+          text="Continue with Google"
+          className="flex w-full items-center px-4 py-2 bg-[#F2F2F2] rounded-lg justify-center text-black font-semibold"
+        />
+
+        <SocialLogin
+          icon={<FaFacebook />}
+          text="Continue with Facebook"
+          className="flex w-full items-center px-4 py-2 bg-[#1877F2] rounded-lg justify-center text-white font-semibold"
+        />
+
+        <SocialLogin
+          icon={<FaApple />}
+          text="Continue with Apple"
+          className="flex w-full items-center px-4 py-2 bg-black rounded-lg justify-center text-white font-semibold"
+        />
+      </div>
+
+      <p className="text-[#4C4C4C] mt-5">
+        By clicking &quot;Log in&quot; above, you acknowledge that you have read and you agree to our General{" "}
+        <span className="font-semibold">Terms and Conditions</span> and have read and acknowledge the{" "}
+        <span className="font-semibold">Privacy policy.</span>
+      </p>
     </div>
   );
 };
