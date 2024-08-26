@@ -5,7 +5,6 @@ import {
   EmailShareButton,
   WhatsappShareButton,
   TelegramShareButton,
-  FacebookMessengerShareButton,
 } from "react-share";
 import {
   AlertDialog,
@@ -22,7 +21,6 @@ import {
   FaEnvelope,
   FaWhatsapp,
   FaTelegram,
-  FaFacebookMessenger,
 } from "react-icons/fa";
 
 interface AlertDialogFace {

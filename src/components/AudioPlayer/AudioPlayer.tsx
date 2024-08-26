@@ -61,9 +61,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [volume, setVolume] = useState<number>(0.8);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
-    null
-  );
+  // const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
+  //   null
+  // );
 
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const [share, setShare] = useState<boolean>(false);
