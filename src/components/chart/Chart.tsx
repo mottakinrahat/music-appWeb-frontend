@@ -23,8 +23,9 @@ export function Chart({ data }: ChartInfc) {
   } satisfies ChartConfig;
 
   const CustomDot = (props: any) => (
-    <Dot {...props} r={4} fill="#00CCD0" stroke="#00CCD0" />
+    <Dot {...props} r={7} fill="#00CCD0" stroke="#00CCD0" />
   );
+
   return (
     <Card className="border-0 p-0 -mx-10 shadow-none w-full">
       <CardContent className="border-0 p-0">
@@ -35,14 +36,15 @@ export function Chart({ data }: ChartInfc) {
             <XAxis
               dataKey="frequency"
               tickLine={false}
+              height={80}
               axisLine={false}
               tickMargin={8}
-              domain={["60Hz", "15kHz"]} // Example with string values for domain
+              domain={["60Hz", "15kHz"]}
+              tick={{ fill: "#00CCD0" }}
             />
 
             <YAxis
               domain={[-10, 10]}
-              tickLine={false}
               axisLine={false}
               tick={false}
               tickMargin={0}

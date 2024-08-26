@@ -129,9 +129,9 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
   };
 
   type PresetKeys =
+    | "flat"
     | "rock"
     | "jazz"
-    | "flat"
     | "dance"
     | "deep"
     | "electronic"
@@ -140,9 +140,9 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
     | "classical";
 
   const presets: Record<PresetKeys, number[]> = {
+    flat: [0, 0, 0, 0, 0, 0],
     rock: [5, 3, 0, -3, -5, -7],
     jazz: [0, 2, 5, 3, 0, -2],
-    flat: [0, 0, 0, 0, 0, 0],
     dance: [4, 5, 2, -1, -2, -4],
     deep: [6, 4, 2, 0, -2, -4],
     electronic: [5, 4, 3, 1, -1, -3],
@@ -201,7 +201,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
                 key={index}
                 className="flex cursor-pointer justify-between w-[8rem] items-center"
               >
-                <button className="my-1">
+                <button className="my-2">
                   {preset.charAt(0).toUpperCase() + preset.slice(1)}
                 </button>
                 {selectedPreset === preset && (
