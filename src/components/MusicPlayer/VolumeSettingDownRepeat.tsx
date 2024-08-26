@@ -7,17 +7,22 @@ import { DropDownBtn } from "./DropDownBtn";
 import { Switch } from "@/components/ui/switch";
 import { IoSettingsOutline } from "react-icons/io5";
 import Volumn from "./Volumn";
+import DownloadOffline from "./DownloadOffline";
 
 interface VolumeSettingDownRepeatProps {
   volume: number;
   handleVolumeChange: any;
   handleMute: () => void;
+  songName: string;
+  songUrl: string;
 }
 
 const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   volume,
   handleVolumeChange,
   handleMute,
+  songName,
+  songUrl,
 }: any) => {
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
   const [quality, setQuality] = useState<any>("high");
@@ -118,8 +123,12 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
             volume={volume}
           />
         </div>
-        <div>
+        {/* <div>
           <img src={DownloadIcon.src} alt="DownloadIcon" />
+        </div> */}
+        {/* Download button  */}
+        <div>
+          <DownloadOffline songName={songName} songUrl={songUrl} />
         </div>
         <div className={"group"}>
           <DropDownBtn

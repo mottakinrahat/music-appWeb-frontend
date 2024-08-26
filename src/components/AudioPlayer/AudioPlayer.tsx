@@ -497,6 +497,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               SetKaraokeOn={setKaraokeOn}
             />
             <VolumeSettingDownRepeat
+              songName={songName}
+              songUrl={songLink}
               volume={volume}
               handleVolumeChange={handleVolumeChange}
               handleMute={handleMute}

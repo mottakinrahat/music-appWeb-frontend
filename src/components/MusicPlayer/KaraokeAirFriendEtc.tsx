@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import micOnIcon from "../../assets/icons/mic_external_on.svg";
+import CurrentPlayingUsers from "../AudioPlayer/components/CurrentPlayingUsers";
 import MusicControls from "./MusicControls";
 
 const KaraokeAirFriendEtc = ({
@@ -24,6 +25,9 @@ const KaraokeAirFriendEtc = ({
             <h2>Karaoke mode (Off)</h2>
           </div>
         )}
+      </div>
+      <div>
+        <CurrentPlayingUsers />
       </div>
       <div className="max-md:hidden">
         <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
