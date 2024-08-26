@@ -77,7 +77,11 @@ const Navbar = ({ blur = false }: NavInterface) => {
       } h-16 md:h-20 lg:h-24 flex items-center`}
     >
       <Toaster position="bottom-center" />
-      <div className="container flex justify-between flex-wrap items-center">
+      <div
+        className={`${
+          blur ? "md:p-10 p-4  xl:px-[120px]" : "container"
+        } w-full flex justify-between flex-wrap items-center`}
+      >
         <div>
           <Logo />
         </div>

@@ -59,8 +59,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [duration, setDuration] = useState<number>(0);
   const [played, setPlayed] = useState<number>(0);
   const [volume, setVolume] = useState<number>(0.8);
-  const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
+  const [playbackSpeed, setPlaybackSpeed] = useState<any>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
+
   // const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
   //   null
   // );
@@ -68,9 +69,18 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const [share, setShare] = useState<boolean>(false);
 
+  const speed = localStorage.getItem("speed");
   useEffect(() => {
-    const volume = localStorage.getItem("volume");
+    if (!speed) {
+      localStorage.setItem("speed", "1");
+      setPlaybackSpeed(1);
+    }
 
+    if (speed) {
+      setPlaybackSpeed(parseFloat(speed));
+    }
+
+    const volume = localStorage.getItem("volume");
     if (!volume) {
       localStorage.setItem("volume", "0.8");
       setVolume(0.8);
@@ -86,7 +96,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (volume) {
       setRepeat(getRepeat);
     }
-  }, [currentSong, songData]);
+  }, [currentSong, songData, speed, volume]);
   // Main Song
   const {
     songName,
@@ -130,21 +140,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   // devJibon
   // handle palyback Speed
-  const handlePlaybackSpeed = (speed: number) => {
-    if (playbackSpeed === 1) {
-      setPlaybackSpeed(1.5);
-    } else if (playbackSpeed === 1.5) {
-      setPlaybackSpeed(2);
-    } else if (playbackSpeed === 2) {
-      setPlaybackSpeed(0.25);
-    } else if (playbackSpeed === 0.25) {
-      setPlaybackSpeed(0.5);
-    } else if (playbackSpeed === 0.75) {
-      setPlaybackSpeed(0.5);
-    } else {
-      setPlaybackSpeed(1);
-    }
-  };
+
   const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value);
     localStorage.setItem("volume", JSON.stringify(newVolume));
@@ -214,7 +210,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setCurrentTime(newTime);
     }
   };
-
+  //  repeat toggle
   const toggleRepeat = () => {
     if (repeat === "repeat-all") {
       setRepeat("repeat-one");
@@ -228,6 +224,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
+  // handle playlist add
   const handleAddtoPlayList = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
     const userId = user?._id;
@@ -362,7 +359,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className="audio-controls relative">
-      <Toaster position="top-right" />
       <ShareCard
         open={share}
         setOpen={setShare}
@@ -501,8 +497,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               SetKaraokeOn={setKaraokeOn}
             />
             <VolumeSettingDownRepeat
-              handlePlaybackSpeed={handlePlaybackSpeed}
-              playbackSpeed={playbackSpeed}
               volume={volume}
               handleVolumeChange={handleVolumeChange}
               handleMute={handleMute}

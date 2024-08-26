@@ -7,13 +7,20 @@ import { DropDownBtn } from "./DropDownBtn";
 import { Switch } from "@/components/ui/switch";
 import { IoSettingsOutline } from "react-icons/io5";
 import Volumn from "./Volumn";
-const VolumeSettingDownRepeat = ({
+
+interface VolumeSettingDownRepeatProps {
+  volume: number;
+  handleVolumeChange: any;
+  handleMute: () => void;
+}
+
+const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   volume,
   handleVolumeChange,
-  handlePlaybackSpeed,
-  playbackSpeed,
   handleMute,
 }: any) => {
+  const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
+  const [quality, setQuality] = useState<any>("high");
   const [isEqOn, setEqOn] = useState(false);
   useEffect(() => {
     const eq = localStorage.getItem("isEqOn");
@@ -23,32 +30,79 @@ const VolumeSettingDownRepeat = ({
     if (eq) {
       setEqOn(JSON.parse(eq!));
     }
+    const playbackRate = localStorage.getItem("speed");
+    if (!playbackRate) {
+      localStorage.setItem("speed", "1");
+    }
+    if (playbackRate) {
+      const getPlayBackRate: number = parseFloat(playbackRate!);
+      setPlaybackSpeed(parseFloat(getPlayBackRate.toFixed(2)));
+    }
   }, [isEqOn]);
 
-  const handleEq = () => {
-    setEqOn(!isEqOn);
-    localStorage.setItem("isEqOn", JSON.stringify(!isEqOn));
+  // toggle quality
+  const toggleQuality = () => {
+    if (quality === "high") {
+      setQuality("medium");
+      localStorage.setItem("quality", "medium");
+    } else if (quality === "medium") {
+      setQuality("low");
+      localStorage.setItem("quality", "low");
+    } else if (quality === "low") {
+      setQuality("high");
+      localStorage.setItem("quality", "high");
+    }
+  };
+
+  // handle palyback speed
+  const handlePlaybackSpeed = () => {
+    if (playbackSpeed === 1) {
+      setPlaybackSpeed(1.5);
+      localStorage.setItem("speed", "1.5");
+    } else if (playbackSpeed === 1.5) {
+      setPlaybackSpeed(2);
+      localStorage.setItem("speed", "2");
+    } else if (playbackSpeed === 2) {
+      setPlaybackSpeed(0.25);
+      localStorage.setItem("speed", "0.25");
+    } else if (playbackSpeed === 0.25) {
+      setPlaybackSpeed(0.5);
+      localStorage.setItem("speed", "0.5");
+    } else if (playbackSpeed === 0.75) {
+      setPlaybackSpeed(0.75);
+      localStorage.setItem("speed", "0.75");
+    } else {
+      setPlaybackSpeed(1);
+      localStorage.setItem("speed", "1");
+    }
   };
 
   const settingContent = (
     <>
       <ul className="flex flex-col gap-[16px] p-[16px]">
         <li className="flex justify-between items-center">
+          <span>169 BPM</span>
+        </li>
+        <li className="flex justify-between items-center">
           <span> Playback speed:</span>{" "}
           <span
-            onClick={handlePlaybackSpeed}
-            className="font-bold cursor-pointer"
+            onClick={() => handlePlaybackSpeed()}
+            className="font-semibold select-none cursor-pointer"
           >
-            x{playbackSpeed}
+            {playbackSpeed.toFixed(2)}
           </span>
         </li>
         <li className="flex justify-between items-center">
-          Sound quality: <span className="font-bold">High</span>
-        </li>
-        <li className="flex justify-between items-center">
-          EQ:{" "}
-          <span>
-            <Switch checked={isEqOn} onClick={handleEq} id="airplane-mode" />
+          Sound quality:{" "}
+          <span
+            onClick={toggleQuality}
+            className="font-semibold select-none cursor-pointer"
+          >
+            {quality === "high"
+              ? "High"
+              : quality === "medium"
+              ? "Medium"
+              : "Low"}
           </span>
         </li>
       </ul>

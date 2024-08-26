@@ -109,7 +109,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
         </div>
 
         <div
-          className={` bg-white h-full mt-28 overflow-hidden max-lg:absolute transition-all duration-500 ${
+          className={` bg-white h-full mt-[96px] max-lg:absolute transition-all duration-500 ${
             eqOpen
               ? "max-w-3xl w-[400px] lg:w-[500px] right-0 bottom-0"
               : "w-0 -right-full bottom-0"
