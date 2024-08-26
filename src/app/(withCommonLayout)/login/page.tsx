@@ -68,52 +68,42 @@ const Login = () => {
           <div className="flex-grow h-[1px] bg-gradient-to-r from-black to-white"></div>
         </div>
 
-        <div className="flex justify-between h-[3rem]">
-          <div className="flex gap-2 ">
-            <DCheckbox name="rememberPassword" label="rememberPassword" />
-            <p className="text-sm md:text-base ">Remember Password</p>
+        {/* Social Logins */}
+        <div className="w-full space-y-5">
+          <SocialLogin
+            icon={<FcGoogle />}
+            text="Continue with Google"
+            className="flex w-full items-center px-4 py-2 bg-[#F2F2F2] rounded-lg justify-center text-black font-semibold"
+          />
+
+          <SocialLogin
+            icon={<FaFacebook />}
+            text="Continue with Facebook"
+            className="flex w-full items-center px-4 py-2 bg-[#1877F2] rounded-lg justify-center text-white font-semibold"
+          />
+
+          <SocialLogin
+            icon={<FaApple />}
+            text="Continue with Apple"
+            className="flex w-full items-center px-4 py-2 bg-black rounded-lg justify-center text-white font-semibold"
+          />
+
+          <div className="flex justify-between h-[3rem]">
+            <div className="flex gap-2 ">
+              <DCheckbox name="rememberPassword" label="rememberPassword" />
+              <p>Remember Password</p>
+            </div>
+            <div>
+              <p className="underline text-accent cursor-pointer">Forgot Password</p>
+            </div>
           </div>
-          <div>
-            <p className="underline text-accent cursor-pointer text-sm md:text-base">Forgot Password</p>
-          </div>
+          <p className="text-[#4C4C4C]">
+            By clicking &quot;Log in&quot; above, you acknowledge that you have read and you agree to our General{" "}
+            <span className="font-semibold">Terms and Conditions</span> and have read and acknowledge the{" "}
+            <span className="font-semibold">Privacy policy.</span>
+          </p>
         </div>
       </DForm>
-
-      {/* Social Logins */}
-      <div className="w-full space-y-5">
-        <SocialLogin
-          icon={<FcGoogle />}
-          text="Continue with Google"
-          className="flex w-full items-center px-4 py-2 bg-[#F2F2F2] rounded-lg justify-center text-black font-semibold"
-        />
-
-        <SocialLogin
-          icon={<FaFacebook />}
-          text="Continue with Facebook"
-          className="flex w-full items-center px-4 py-2 bg-[#1877F2] rounded-lg justify-center text-white font-semibold"
-        />
-
-        <SocialLogin
-          icon={<FaApple />}
-          text="Continue with Apple"
-          className="flex w-full items-center px-4 py-2 bg-black rounded-lg justify-center text-white font-semibold"
-        />
-
-        <div className="flex justify-between h-[3rem]">
-          <div className="flex gap-2 ">
-            <DCheckbox name="rememberPassword" label="rememberPassword" />
-            <p>Remember Password</p>
-          </div>
-          <div>
-            <p className="underline text-accent cursor-pointer">Forgot Password</p>
-          </div>
-        </div>
-        <p className="text-[#4C4C4C]">
-          By clicking &quot;Log in&quot; above, you acknowledge that you have read and you agree to our General{" "}
-          <span className="font-semibold">Terms and Conditions</span> and have read and acknowledge the{" "}
-          <span className="font-semibold">Privacy policy.</span>
-        </p>
-      </div>
     </div>
   );
 };
