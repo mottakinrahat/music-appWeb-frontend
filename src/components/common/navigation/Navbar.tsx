@@ -10,7 +10,6 @@ import ToastCard from "@/components/Card/ToastCard";
 import { Toaster } from "@/components/ui/sonner";
 import { MdOutlineCancel } from "react-icons/md";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
-import { usePathname } from "next/navigation";
 
 interface NavInterface {
   blur?: boolean; // blur the background image? default is false.
@@ -20,14 +19,12 @@ const Navbar = ({ blur = false }: NavInterface) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Check if user is stored in localStorage and set state
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
     }
 
-    // Listen for localStorage changes
     const handleStorageChange = () => {
       const updatedUser = localStorage.getItem("user");
       if (updatedUser) {
@@ -76,8 +73,8 @@ const Navbar = ({ blur = false }: NavInterface) => {
   return (
     <nav
       className={`${
-        blur ? "bg-white/10 fixed z-50 w-full text-white" : "bg-navigation"
-      } py-3 md:py-5 lg:py-7`}
+        blur ? "bg-white/10 fixed  z-50 w-full text-white" : "bg-navigation"
+      } h-16 md:h-20 lg:h-24 flex items-center`}
     >
       <Toaster position="bottom-center" />
       <div className="container flex justify-between flex-wrap items-center">
@@ -87,7 +84,7 @@ const Navbar = ({ blur = false }: NavInterface) => {
         <div>
           <ul
             className={`flex gap-10 ${
-              blur ? "text-white" : "text-base"
+              blur ? "text-white z-40" : "text-base"
             } max-lg:hidden`}
           >
             <Routes />
@@ -104,7 +101,6 @@ const Navbar = ({ blur = false }: NavInterface) => {
             </Button>
           )}
         </div>
-        {/* Responsive Navigation */}
         <div className="lg:hidden">
           <ToggleMenu />
         </div>

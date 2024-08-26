@@ -130,7 +130,7 @@ const TopAlbums = () => {
         Dive into the heart of what{"'"}s trending with our Top 100 chart.
       </Heading>
       <div className="justify-between lg:flex gap-5">
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col mt-10 justify-center">
           <h2 className="text-2xl mb-5 md:text-4xl max-w-md font-semibold">
             No.1 On charts
           </h2>
@@ -146,7 +146,7 @@ const TopAlbums = () => {
                 height: "auto",
                 aspectRatio: "1 / 1",
               }}
-              className="rounded-lg max-w-sm"
+              className="rounded-lg max-w-xs"
             />
             <div className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150"></div>
             <div className="absolute w-12 h-12 flex  justify-center items-center backdrop-blur-sm bg-white/10 rounded-lg top-4 right-4">

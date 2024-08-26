@@ -27,7 +27,7 @@ const Heading: React.FC<Heading> = ({
         }`}
       >
         <div className="max-w-xl">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl mb-4 font-semibold">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl  mb-4 font-semibold">
             {heading}
           </h2>
           <p className="text-textPrimary">{children}</p>
@@ -46,7 +46,7 @@ const Heading: React.FC<Heading> = ({
   if (type === "secondary")
     return (
       <div className={`max-w-xl my-6  ${className && className}`}>
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl lg:leading-snug font-semibold">
           {heading} <span className="text-secondary">{colorText}</span>
         </h1>
         <p

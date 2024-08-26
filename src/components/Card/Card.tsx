@@ -64,8 +64,9 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
                 width: "auto",
                 height: "auto",
                 aspectRatio: "1 / 1",
+                objectFit: "cover",
               }}
-              className="rounded-lg"
+              className="rounded-lg "
             />
             {/* Overlay */}
             <Link href={musicRoute ? musicRoute : "/"}>

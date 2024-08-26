@@ -5,7 +5,6 @@ import Navbar from "@/components/common/navigation/Navbar";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-// import { tracks2 } from "../page";
 
 interface PlayerInterface {
   params: {
@@ -34,14 +33,10 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
 
   const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
 
-  // console.log(currentSong);
-  // song loading start
   useEffect(() => {
-    // Find the track based on the ID
     const initialTrackIndex = tracks?.findIndex(
       (track: any) => track?._id === params?.id
     );
-    // console.log(initialTrackIndex);
     if (initialTrackIndex !== -1) {
       setCurrentTrackIndex(initialTrackIndex);
     }
@@ -51,7 +46,6 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   useEffect(() => {
     if (currentTrackIndex !== null) {
       setPlaying(true);
-      // router.push(`/music/${tracks[currentTrackIndex].id}`);
     }
   }, [currentTrackIndex, tracks]);
 
@@ -70,14 +64,14 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
       setCurrentSong(tracks[newIndex]);
     }
   };
+
   if (!currentSong) {
     return (
       <div>
         <LoadingAnimation />
       </div>
-    ); // Optionally handle loading state
+    );
   }
-  // const { title, url, artwork, artist, album } = currentSong;
 
   const handleAudioContextReady = (
     audioContext: AudioContext,
@@ -92,29 +86,40 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   };
 
   return (
-    <div className="flex overflow-hidden w-full">
-      <Navbar blur />
-      <div className="flex-1 transition-all ">
-        <AudioPlayer
-          handleNext={handleNext}
-          handlePrev={handlePrev}
-          id={params?.id}
-          currentSong={currentSong}
-          onAudioContextReady={handleAudioContextReady}
-          handleOpenEqualizer={handleOpenEqualizer}
-        />
-      </div>
-      <div
-        className={`h-full bg-white max-h-screen overflow-hidden max-lg:absolute  duration-500 transition-all ${
-          eqOpen
-            ? "max-w-3xl w-[400px] lg:w-[500px] overflow-hidden right-[0]"
-            : "w-0 -right-full "
-        }`}
-      >
-        <AudioPlayerEqualizer
-          audioContext={audioContext}
-          audioElement={audioElement}
-        />
+    <div
+      className="flex flex-col h-screen overflow-hidden w-full"
+      style={{
+        backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="absolute w-full h-screen bg-black opacity-10 z-10"></div>
+      <div className="flex z-20 flex-grow relative">
+        <Navbar blur />
+        <div className="flex-1 transition-all">
+          <AudioPlayer
+            handleNext={handleNext}
+            handlePrev={handlePrev}
+            id={params?.id}
+            currentSong={currentSong}
+            onAudioContextReady={handleAudioContextReady}
+            handleOpenEqualizer={handleOpenEqualizer}
+          />
+        </div>
+
+        <div
+          className={` bg-white h-full mt-28 overflow-hidden max-lg:absolute transition-all duration-500 ${
+            eqOpen
+              ? "max-w-3xl w-[400px] lg:w-[500px] right-0 bottom-0"
+              : "w-0 -right-full bottom-0"
+          }`}
+        >
+          <AudioPlayerEqualizer
+            audioContext={audioContext}
+            audioElement={audioElement}
+          />
+        </div>
       </div>
     </div>
   );

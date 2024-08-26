@@ -353,9 +353,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       />
       <div
         className="w-full h-screen bg-cover bg-center"
-        style={{
-          backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
-        }}
+        // style={{
+        //   backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
+        // }}
       >
         {/* Dropdown section */}
         <div className="absolute p-4 xl:p-[120px] right-0 text-white">
@@ -379,7 +379,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           />
         </div>
-        <div className="flex flex-col justify-end h-full bg-black bg-opacity-10 gap-2 lg:gap-[24px] md:p-10 p-4  xl:px-[120px]">
+        <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4  xl:px-[120px]">
           <div className="w-full flex justify-between items-center px-4 md:mb-4">
             <div className="text-white flex items-center gap-2">
               <img

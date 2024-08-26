@@ -8,7 +8,7 @@ import Container from "@/components/common/container/Container";
 
 const Banner = () => {
   return (
-    <Container>
+    <div className="container pt-20">
       <div className="flex flex-col-reverse lg:flex-row max-lg:items-center w-full">
         {/* Banner Action */}
         <div className="lg:w-1/2 flex-1 text-center md:text-left max-w-[39rem] my-5 md:my-10 lg:my-24">
@@ -29,14 +29,14 @@ const Banner = () => {
         </div>
         {/* Banner image part */}
         <div className="lg:w-1/2 flex-1 mt-10 md:mt-48 lg:mt-0 relative flex justify-end ">
-          <div className="bg-banner-gradient  relative h-[15rem] w-[15rem] min-[380px]:h-[20rem] min-[380px]:w-[20rem] md:w-[30rem] lg:w-4/5 lg:h-4/5 mt-auto rounded-t-md">
+          <div className="bg-banner-gradient relative h-[15rem] w-[15rem] min-[380px]:h-[20rem] min-[380px]:w-[20rem] md:w-[30rem] lg:w-4/5 lg:h-4/5 mt-auto rounded-t-md">
             <Image
               src={play}
               height={play.height}
               alt="Music"
               width={play.width}
               style={{ height: "auto", width: "80%", objectFit: "cover" }}
-              className="mx-auto -my-9"
+              className="mx-auto -my-4 sm:-my-6  md:-my-9"
             />
             <Image
               src={image}
@@ -44,7 +44,7 @@ const Banner = () => {
               alt="Music"
               width={image.width}
               style={{ height: "auto", width: "80%", objectFit: "cover" }}
-              className="absolute z-10 bottom-0 w-[100%] left-1/2 -translate-x-1/2"
+              className="absolute  bottom-0 z-20 w-[100%]  left-1/2 -translate-x-1/2"
             />
           </div>
           <Image
@@ -53,11 +53,11 @@ const Banner = () => {
             alt="Music"
             width={music.width}
             style={{ width: "100%", height: "auto", objectFit: "cover" }}
-            className="absolute bottom-0"
+            className="absolute 2xl:scale-[1.20] xl:left-10 bottom-0 2xl:bottom-16 "
           />
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 
