@@ -3,24 +3,45 @@ import Container from "@/components/common/container/Container";
 import DFileUploader from "@/components/forms/DFileUploader";
 import DForm from "@/components/forms/DForm";
 import DInput from "@/components/forms/DInput";
-import DSelect from "@/components/forms/DSelect";
 import DSelectTag from "@/components/forms/DSelectTag";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
-import { z } from "zod";
-
-const signUpCreatorSchema = z.object({});
+import signUpCreatorSchema from "./signupCreatorSchema";
 
 const SignupCreatorComponenet: React.FC = () => {
   const defaultValues = {};
-  const options = [
-    { value: "apple", label: "Apple" },
-    { value: "banana", label: "Banana" },
-    { value: "blueberry", label: "Blueberry" },
-    { value: "grapes", label: "Grapes" },
-    { value: "pineapple", label: "Pineapple" },
+  const expertiseOptions = [
+    { value: "musicProduction", label: "Music Production" },
+    { value: "soundEngineering", label: "Sound Engineering" },
+    { value: "mixingMastering", label: "Mixing and Mastering" },
+    { value: "songwriting", label: "Songwriting" },
+    { value: "composition", label: "Composition" },
+    { value: "musicTheory", label: "Music Theory" },
+    { value: "musicArrangement", label: "Music Arrangement" },
+    { value: "vocalPerformance", label: "Vocal Performance" },
+    { value: "instrumentalPerformance", label: "Instrumental Performance" },
+    { value: "liveSound", label: "Live Sound" },
+    { value: "musicLicensing", label: "Music Licensing" },
+    { value: "musicBusiness", label: "Music Business" },
+    { value: "musicEducation", label: "Music Education" },
+    { value: "musicTechnology", label: "Music Technology" },
+    { value: "djing", label: "DJing" },
   ];
+
+  const dawOptions = [
+    { value: "abletonLive", label: "Ableton Live" },
+    { value: "logicPro", label: "Logic Pro" },
+    { value: "flStudio", label: "FL Studio" },
+    { value: "proTools", label: "Pro Tools" },
+    { value: "cubase", label: "Cubase" },
+    { value: "studioOne", label: "Studio One" },
+    { value: "reason", label: "Reason" },
+    { value: "garageBand", label: "GarageBand" },
+    { value: "reaper", label: "Reaper" },
+    { value: "audacity", label: "Audacity" },
+  ];
+
   const handleSubmit = (data: any) => {
     console.log(data);
   };
@@ -67,6 +88,20 @@ const SignupCreatorComponenet: React.FC = () => {
             placeholder="Enter your email"
           />
 
+          {/* Select tag */}
+
+          <DSelectTag
+            required={true}
+            name="expertise"
+            label="Select your area(s) of specialty"
+            options={expertiseOptions}
+          />
+
+          {/* DAW software proficiency */}
+
+          <DSelectTag required={true} name="proficiency" label="DAW software proficiency" options={dawOptions} />
+          {/* File Uploader */}
+
           <DFileUploader name="music" label="Do you have any sample work?" />
 
           {/* Portfolio Link */}
@@ -82,7 +117,7 @@ const SignupCreatorComponenet: React.FC = () => {
 
           {/* Password */}
           <DInput
-            defaultValue={"@1111aA1111"}
+            defaultValue={"12345678A@a"}
             labelTextColor="#262626"
             name="password"
             label="Password"
@@ -92,16 +127,14 @@ const SignupCreatorComponenet: React.FC = () => {
           {/* confirm Password */}
 
           <DInput
-            defaultValue={"@1111aA1111"}
+            defaultValue={"12345678A@a"}
             labelTextColor="#262626"
             name="confirmPassword"
             label="Confirm Password"
             placeholder="Enter your password"
             type="password"
           />
-          {/* Select tag */}
 
-          <DSelectTag name="fruit" label="Fruits" options={options} required />
           {/* Submit Button */}
 
           <Button type="submit" variant="default">

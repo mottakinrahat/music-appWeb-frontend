@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Check } from "lucide-react"; // Assuming you're using Lucide icons (same as ShadCN)
+import { Check } from "lucide-react";
 import { GoPlus } from "react-icons/go";
 
 type Option = {
@@ -25,7 +25,7 @@ type DSelectProps = {
   className?: string;
   required?: boolean;
   placeholder?: string;
-  defaultValue?: Option[]; // Added default value support
+  defaultValue?: Option[];
   [key: string]: any;
 };
 
@@ -36,14 +36,13 @@ const DSelectTag = ({
   className = "",
   required = false,
   placeholder = "Select an option",
-  defaultValue = [], // Added default value support
+  defaultValue = [],
   ...props
 }: DSelectProps) => {
   const { control, setValue } = useFormContext();
   const [selectedTags, setSelectedTags] = useState<Option[]>(defaultValue);
   const [currentValue, setCurrentValue] = useState<string>("");
 
-  // UseEffect only runs when defaultValue changes
   useEffect(() => {
     if (defaultValue.length) {
       setSelectedTags(defaultValue);
@@ -57,7 +56,7 @@ const DSelectTag = ({
       const newTags = [...selectedTags, selectedOption];
       setSelectedTags(newTags);
       setValue(name, newTags);
-      setCurrentValue(""); // Clear current selection after adding
+      setCurrentValue("");
     }
   };
 
@@ -67,16 +66,14 @@ const DSelectTag = ({
     setValue(name, updatedTags);
   };
 
-  // Filter out selected tags from options
   const filteredOptions = options.filter((option) => !selectedTags.some((tag) => tag.value === option.value));
-
-  // Check if all options are selected
   const allOptionsSelected = options.length > 0 && selectedTags.length === options.length;
 
   return (
     <Controller
       control={control}
       name={name}
+      defaultValue={[]}
       render={({ field, fieldState: { error } }) => (
         <div className={`mb-4 ${className}`}>
           {label && (
@@ -86,10 +83,11 @@ const DSelectTag = ({
           )}
           <div className="flex items-center space-x-2">
             <Select
+              {...field}
               value={currentValue}
               onValueChange={(value) => setCurrentValue(value)}
               {...props}
-              disabled={allOptionsSelected} // Disable select if all options are selected
+              disabled={allOptionsSelected}
             >
               <SelectTrigger className={`w-full ${error ? "border-red-500" : "border-gray-300"}`} aria-label={label}>
                 <SelectValue placeholder={allOptionsSelected ? "All selected" : placeholder} />
@@ -115,22 +113,18 @@ const DSelectTag = ({
               </SelectContent>
             </Select>
 
-            {/* Add button */}
             <button
               type="button"
               onClick={handleAddTag}
-              className={`p-2 h-[40px] flex items-center justify-center w-[40px] ${
-                allOptionsSelected ? "bg-gray-400" : "bg-white"
-              } text-white rounded-md border`}
+              className={`p-2 h-[40px] flex items-center justify-center w-[40px] bg-white text-white rounded-md border`}
               aria-label="Add Tag"
-              disabled={allOptionsSelected} // Disable add button if all options are selected
+              disabled={allOptionsSelected}
             >
               <GoPlus className="text-black" />
             </button>
           </div>
           {error && <span className="text-red-500 text-sm mt-1">{error.message}</span>}
 
-          {/* selected options */}
           <div className="mt-2 flex flex-wrap gap-2">
             {selectedTags.map((tag) => (
               <span

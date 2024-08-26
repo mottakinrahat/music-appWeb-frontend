@@ -7,6 +7,7 @@ import { CloudUpload, XCircle } from "lucide-react";
 import cloudUpoadImage from "@/assets/icons/cloud_upload.svg";
 import Image from "next/image";
 
+// Define the props for the DFileUploader component
 type DFileUploaderProps = {
   name: string;
   label?: string;
@@ -16,6 +17,7 @@ type DFileUploaderProps = {
   labelTextColor?: "text-black" | "text-white";
 };
 
+// DFileUploader component
 const DFileUploader = ({
   name,
   label,
@@ -24,10 +26,10 @@ const DFileUploader = ({
   disabled = false,
   labelTextColor = "text-black",
 }: DFileUploaderProps) => {
-  const { control, setValue } = useFormContext();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { control, setValue } = useFormContext(); // Get control and setValue from useFormContext
+  const fileInputRef = useRef<HTMLInputElement>(null); // Create a ref for the file input
 
-  // Handle file drop
+  // Handle file drop event
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLLabelElement>) => {
       e.preventDefault();
@@ -36,29 +38,31 @@ const DFileUploader = ({
       const files = e.dataTransfer.files;
       if (files.length > 0) {
         const fileList = Array.from(files);
-        setValue(name, fileList);
+        setValue(name, fileList); // Set the dropped files to the form state
       }
     },
     [name, setValue]
   );
 
-  // Prevent default behavior on drag events
+  // Prevent default behavior on drag over event
   const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
+  // Prevent default behavior on drag enter event
   const handleDragEnter = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
+  // Prevent default behavior on drag leave event
   const handleDragLeave = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  // Reset file input value
+  // Reset the file input value
   const resetFileInput = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -88,8 +92,7 @@ const DFileUploader = ({
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
           >
-            {/* <CloudUpload className="w-8 h-8 mb-2" /> */}
-            {/* next js image */}
+            {/* Display cloud upload image */}
             <Image src={cloudUpoadImage} alt="cloud upload" width={50} height={50} />
 
             <span className="text-center text-[#262626] font-normal mt-4">
@@ -98,6 +101,7 @@ const DFileUploader = ({
             <Input
               {...field}
               type="file"
+              accept="audio/*" // Accept only audio files
               multiple // Enable multiple file selection
               onChange={(e) => onChange(Array.from((e.target as HTMLInputElement).files || []))}
               className="hidden"
@@ -105,7 +109,7 @@ const DFileUploader = ({
               disabled={disabled}
               required={required}
               onBlur={onBlur}
-              ref={fileInputRef} // Attach ref to the file input
+              ref={fileInputRef} 
             />
             {value && value.length > 0 && (
               <div className="flex flex-col mt-2 text-sm text-gray-500 ">
