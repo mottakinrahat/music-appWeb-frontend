@@ -2,10 +2,13 @@ import { ReactNode, useState } from "react";
 import {
   AlertDialog,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
+import { Button } from "../ui/button";
+import OutlineButton from "../ui/outlineButton";
 
 interface AlertCardProps {
   title: string;
@@ -25,7 +28,7 @@ const AlertCard = ({
   isOpen,
   onClose,
   onConfirm,
-  confirmText = "Confirm",
+  confirmText = "Ok",
   cancelText = "Cancel",
 }: AlertCardProps) => {
   return (
@@ -37,17 +40,17 @@ const AlertCard = ({
             <AlertDialogHeader>
               <AlertDialogTitle>{title}</AlertDialogTitle>
             </AlertDialogHeader>
-            <div>{message}</div>
+            <AlertDialogDescription>{message}</AlertDialogDescription>
           </div>
         </div>
         <AlertDialogFooter>
-          <button onClick={onClose} className="btn btn-outline">
+          <Button onClick={onClose} className="">
             {cancelText}
-          </button>
+          </Button>
           {onConfirm && (
-            <button onClick={onConfirm} className="btn btn-primary">
+            <OutlineButton onClick={onConfirm} className="">
               {confirmText}
-            </button>
+            </OutlineButton>
           )}
         </AlertDialogFooter>
       </AlertDialogContent>

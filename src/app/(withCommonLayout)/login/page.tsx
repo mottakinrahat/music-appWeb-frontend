@@ -12,6 +12,9 @@ import DCheckbox from "@/components/forms/DCheckbox";
 import axios from "axios";
 import { loginSchema } from "./loginSchema";
 import { useRouter } from "next/navigation";
+import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import ToastCard from "@/components/Card/ToastCard";
+import { Toaster } from "@/components/ui/sonner";
 
 const Login = () => {
   const router = useRouter();
@@ -26,11 +29,22 @@ const Login = () => {
         localStorage.setItem("token", res.data.data?.token);
         localStorage.setItem("user", JSON.stringify(user));
         router.push("/");
+      })
+      .then(() => {
+        ToastCard({
+          title: "Log in successful.",
+          message: "Log in has been successful.",
+          icon: (
+            <IoCheckmarkDoneCircleOutline className="w-6 h-6 text-green-500" />
+          ),
+          duration: 2000,
+        });
       });
-    };
+  };
 
   return (
     <div className=" flex items-center justify-center">
+      <Toaster position="bottom-center" />
       <DForm
         resolver={zodResolver(loginSchema)}
         className="flex flex-col gap-5 max-w-xl mx-auto"

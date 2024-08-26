@@ -7,13 +7,6 @@ interface ToastCardProps {
   message: any;
   icon?: ReactNode;
   duration?: number;
-  position?:
-    | "bottom-left"
-    | "bottom-right"
-    | "top-center"
-    | "bottom-center"
-    | "top-right"
-    | "top-left";
 }
 
 const ToastCard = ({
@@ -21,7 +14,6 @@ const ToastCard = ({
   message,
   icon,
   duration = 3000,
-  position = "top-center",
 }: ToastCardProps) => {
   toast(
     <div className="flex items-center space-x-3">
@@ -33,7 +25,7 @@ const ToastCard = ({
     </div>,
     { duration }
   );
-  return <Toaster position={position} />;
+  return null;
 };
 
 export default ToastCard;

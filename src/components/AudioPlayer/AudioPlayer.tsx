@@ -274,7 +274,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     });
     await axios
       .put(
-        `https://music-app-web.vercel.app/api/v1/songs/fav-list/${songId}/${userId}`,
+        `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
         playListData
       )
       .then((res) => {
