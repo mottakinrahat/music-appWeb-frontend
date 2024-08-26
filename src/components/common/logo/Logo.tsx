@@ -26,6 +26,7 @@ const Logo = () => {
             alt="Music Appweb"
           />
         </div>
+        
       </div>
     </Link>
   );
