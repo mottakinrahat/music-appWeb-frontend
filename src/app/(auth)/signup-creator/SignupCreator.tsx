@@ -30,6 +30,7 @@ const SignupCreatorComponenet: React.FC = () => {
           </p>
 
           <div className="flex items-start justify-between gap-5">
+            {/* Fist Name */}
             <DInput
               defaultValue={"Ruhul"}
               labelTextColor="#262626"
@@ -37,6 +38,8 @@ const SignupCreatorComponenet: React.FC = () => {
               label="First Name"
               placeholder="Enter your first name"
             />
+            {/* Last Name */}
+
             <DInput
               defaultValue={"Islam"}
               labelTextColor="#262626"
@@ -53,6 +56,20 @@ const SignupCreatorComponenet: React.FC = () => {
             label="Email"
             placeholder="Enter your email"
           />
+
+          <DFileUploader name="music" label="Do you have any sample work?" />
+
+          {/* Portfolio Link */}
+
+          <DInput
+            defaultValue={"https://www.google.com"}
+            labelTextColor="#262626"
+            name="portfolio"
+            label="Link to your online portfolio website"
+            placeholder="ex: yourname332@mail.com"
+            type="text"
+          />
+
           {/* Password */}
           <DInput
             defaultValue={"@1111aA1111"}
@@ -62,6 +79,8 @@ const SignupCreatorComponenet: React.FC = () => {
             placeholder="Enter your password"
             type="password"
           />
+          {/* confirm Password */}
+
           <DInput
             defaultValue={"@1111aA1111"}
             labelTextColor="#262626"
@@ -71,12 +90,17 @@ const SignupCreatorComponenet: React.FC = () => {
             type="password"
           />
 
-          <DFileUploader name="music" label="Do you have any sample work?" />
           {/* Submit Button */}
+
           <Button type="submit" variant="default">
             Sign up
           </Button>
         </DForm>
+        <p className="text-[#4C4C4C] mt-5 p-4 text-sm md:text-base">
+          By clicking &quot;Sign up&quot; above, you acknowledge that you have read and you agree to our General{" "}
+          <span className="font-semibold">Terms and Conditions</span> and have read and acknowledge the{" "}
+          <span className="font-semibold">Privacy policy.</span>
+        </p>
       </div>
     </div>
   );
