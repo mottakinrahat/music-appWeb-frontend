@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useState, useRef, useEffect, ChangeEvent } from "react";
-import Image from "next/image";
+import placeHolder from "@/assets/etc/png/song.jpg";
 import LyricsIcon from "@/assets/icons/lyrics.svg";
 
 import KaraokeAirFriendEtc from "@/components/MusicPlayer/KaraokeAirFriendEtc";
@@ -22,6 +22,12 @@ import RepeatActionButton from "./components/RepeatActionButton";
 import PlayButtons from "./components/PlayButtons";
 import MusicControls from "../MusicPlayer/MusicControls";
 import Volumn from "../MusicPlayer/Volumn";
+import axios from "axios";
+import { toast } from "sonner";
+import { Toaster } from "../ui/sonner";
+import Link from "next/link";
+import ShareCard from "../Card/ShareCard";
+import { useRouter } from "next/navigation";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
@@ -30,7 +36,7 @@ interface AudioPlayerProps {
     audioContext: AudioContext,
     audioElement: HTMLAudioElement
   ) => void;
-  id: any;
+  id?: any;
   handleNext: any;
   currentSong?: any;
   handleOpenEqualizer: any;
@@ -60,6 +66,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   );
 
   const [currentSong, setCurrentSong] = useState<any>(songData);
+  const [share, setShare] = useState<boolean>(false);
 
   useEffect(() => {
     const volume = localStorage.getItem("volume");
@@ -72,8 +79,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
     setCurrentSong(songData);
   }, [currentSong, songData]);
-
-  const { title, url, artwork, artist, album } = currentSong;
+  // Main Song
+  const {
+    songName,
+    songLink,
+    artwork,
+    songArtist,
+    songAlbum,
+    _id: songId,
+  } = currentSong;
+  const router = useRouter();
   useEffect(() => {
     const handleInteraction = () => {
       if (!audioContextRef.current) {
@@ -196,29 +211,132 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setRepeat(!repeat);
   };
 
+  const handleAddtoPlayList = async () => {
+    const user = JSON.parse(localStorage?.getItem("user")!);
+    const userId = user?._id;
+    const playListData = {
+      id: songId,
+      userId: userId,
+    };
+    if (!userId) {
+      toast("please login first");
+      router.push("/login");
+    }
+    toast("Please wait, adding to playlist... ", {
+      duration: 1000,
+    });
+    await axios
+      .put(
+        `https://music-app-web.vercel.app/api/v1/songs/play-list/${songId}/${userId}`,
+        playListData
+      )
+      .then((res) => {
+        if (res.data)
+          toast(
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
+                alt={songName}
+                style={{
+                  width: "40px", // Adjust the size as needed
+                  height: "40px",
+                  borderRadius: "8px",
+                  marginRight: "8px",
+                }}
+              />
+              <div>
+                <div style={{ fontWeight: "bold" }}>Playlist Added</div>
+                <div>{`${songName}, ${songAlbum?.albumName}`}</div>
+              </div>
+            </div>
+          );
+      })
+      .catch((err) => {
+        if (err) {
+          toast.error("Failed to add to playlist");
+        }
+      });
+  };
+
+  const handleAddtoFavourite = async () => {
+    const user = JSON.parse(localStorage?.getItem("user")!);
+    const userId = user?._id;
+    const playListData = {
+      id: songId,
+      userId: userId,
+    };
+    if (!userId) {
+      toast("please login first");
+      router.push("/login");
+    }
+    toast("Please wait, adding to favorites... ", {
+      duration: 1000,
+    });
+    await axios
+      .put(
+        `https://music-app-web.vercel.app/api/v1/songs/fav-list/${songId}/${userId}`,
+        playListData
+      )
+      .then((res) => {
+        if (res.data)
+          toast(
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
+                alt={songName}
+                style={{
+                  width: "40px", // Adjust the size as needed
+                  height: "40px",
+                  borderRadius: "8px",
+                  marginRight: "8px",
+                }}
+              />
+              <div>
+                <div style={{ fontWeight: "bold" }}>Favorites Added</div>
+                <div>{`${songName}, ${songAlbum?.albumName}`}</div>
+              </div>
+            </div>
+          );
+      })
+      .catch((err) => {
+        if (err) {
+          toast.error("Failed to add to playlist");
+        }
+      });
+  };
+
   const threeDotContent = (
-    <div className="font-bold px-[16px] py-[24px] flex flex-col gap-[24px]">
-      <h2 className="flex justify-start items-center gap-2">
+    <div className="font-bold text-gray-600 select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
+      <h2
+        onClick={handleAddtoPlayList}
+        className="flex hover:text-black cursor-pointer justify-start items-center gap-2"
+      >
         <PlusCircleIcon className="h-6 w-6" />
         <span>Add to playlist</span>
       </h2>
-      <h2 className="flex justify-start items-center gap-2">
-        <HeartIcon  className="h-6 w-6" />
+      <h2
+        onClick={handleAddtoFavourite}
+        className="flex hover:text-black cursor-pointer justify-start items-center gap-2"
+      >
+        <HeartIcon className="h-6 w-6" />
         <span>Add to favorites</span>
       </h2>
-      <h2 className="flex justify-start items-center gap-2">
+      <h2
+        onClick={() => setShare(!share)}
+        className="flex hover:text-black cursor-pointer justify-start items-center gap-2"
+      >
         <ShareIcon className="h-6 w-6" />
         <span>Share</span>
       </h2>
-      <h2 className="flex justify-start items-center gap-2">
+      <h2 className="flex hover:text-black cursor-pointer justify-start items-center gap-2">
         <CircleStackIcon className="h-6 w-6" />
         <span>Go album</span>
       </h2>
-      <h2 className="flex justify-start items-center gap-2">
+      <h2 className="flex hover:text-black cursor-pointer justify-start items-center gap-2">
         <UserCircleIcon className="h-6 w-6" />
         <span>Go artist</span>
       </h2>
-      <h2 className="flex justify-start items-center gap-2">
+      <h2 className="flex hover:text-black cursor-pointer justify-start items-center gap-2">
         <MusicalNoteIcon className="h-6 w-6" />
         <span>Song credit</span>
       </h2>
@@ -227,6 +345,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className="audio-controls relative">
+      <Toaster position="top-right" />
+      <ShareCard
+        open={share}
+        setOpen={setShare}
+        shareUrl={`https://music-web-liangu.vercel.app//music/66c99c0a36fe71b995557d6b`}
+      />
       <div
         className="w-full h-screen bg-cover bg-center"
         style={{
@@ -260,21 +384,26 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             <div className="text-white flex items-center gap-2">
               <img
                 // style={{ width: "auto", height: "auto" }}
-                src={artwork}
+                src={artwork ? artwork : placeHolder.src}
                 alt="Album Art"
                 // height={80}
                 // width={80}
-                className="w-10 h-10 md:h-16 md:w-24"
+                className="w-10 h-10 md:h-16 md:w-16 rounded-lg object-cover"
               />
               <div>
                 <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1">
-                  {title}
+                  {songName}
                 </h2>
                 <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
-                  <p>{artist}</p>
+                  <p>{songArtist}</p>
                   <div className="flex items-center max-md:hidden gap-2">
                     <div className="size-2 bg-white rounded-full ml-2"></div>
-                    <p>Album: {album}</p>
+                    <p>
+                      Album:{" "}
+                      <Link href={"#"} className="underline">
+                        {songAlbum.albumName}
+                      </Link>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -303,7 +432,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <AudioControls
             volume={volume}
             ref={audioRef}
-            src={url}
+            src={songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={() => {
               const currentTime = audioRef.current?.currentTime || 0;

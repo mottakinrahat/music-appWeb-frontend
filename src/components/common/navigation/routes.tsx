@@ -16,7 +16,7 @@ const Routes = () => {
   ];
 
   return routes.map((route, idx) => (
-    <li key={idx}>
+    <span className="block text-black" key={idx}>
       <Link href={route.route}>
         <span
           className={`nav-link ${
@@ -26,7 +26,7 @@ const Routes = () => {
           {route.name}
         </span>
       </Link>
-    </li>
+    </span>
   ));
 };
 

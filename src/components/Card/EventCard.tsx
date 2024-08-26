@@ -22,21 +22,26 @@ const EventCard: React.FC<EventCardInterface> = ({
   isNotify,
 }) => {
   return (
-    <div className={`rounded-lg w-full max-w-sm ${className ? className : ""}`}>
+    <div
+      className={`rounded-lg w-full  max-w-md ${className ? className : ""}`}
+    >
       {/* Image Container */}
-      <div className="relative w-fit drop-shadow  mb-4">
+      <div className="relative w-fit  drop-shadow  mb-4">
         {imageUrl ? (
-          <div className="rounded-xl relative cursor-pointer overflow-hidden group">
-            <Image
-              src={imageUrl}
-              alt={title || "Card image"}
-              width={280}
-              height={280}
-              className="rounded-lg w-full"
-            />
+          <div className="rounded-xl  relative w-full cursor-pointer overflow-hidden group">
+            <div className="relative h-fit w-full">
+              {" "}
+              <Image
+                src={imageUrl}
+                alt={title || "Card image"}
+                width={500}
+                height={300}
+                className="rounded-lg"
+              />
+            </div>
             {/* Overlay */}
             <Link href={eventRoute ? eventRoute : "/"}>
-              <div className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150"></div>
+              <div className="absolute inset-0 bg-black flex w-full justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150"></div>
             </Link>
 
             <div className="absolute w-12 h-12 flex justify-center items-center backdrop-blur-sm bg-white/10 rounded-lg top-6 right-6">

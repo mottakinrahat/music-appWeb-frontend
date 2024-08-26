@@ -1,41 +1,41 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import NewReleases from "@/components/pageComponents/music/NewReleases";
+import Navbar from "@/components/common/navigation/Navbar";
+import HotPlayLists from "@/components/pageComponents/music/HotPlayLists";
+import Features from "@/components/pageComponents/Home/Features";
+import Recomended from "@/components/pageComponents/Home/Recomended";
+import RecentlyPlayed from "@/components/pageComponents/music/RecentlyPlayed";
+import TopCharts from "@/components/pageComponents/music/TopCharts";
+import TopAlbums from "@/components/pageComponents/music/TopAlbums";
+import TrandingPlaylist from "@/components/pageComponents/music/TrandingPlaylist";
+import Footer from "@/components/common/footer/Footer";
+import BeltWithKaraoke from "@/components/pageComponents/music/BeltWithKaraoke";
+import axios from "axios";
 
 const AudioList = () => {
   const [tracks, setTraks] = useState([]);
   useEffect(() => {
-    fetch("/tracks.json")
-      .then((data) => data.json())
-      .then((tracks) => setTraks(tracks));
+    axios
+      .get("https://music-app-web.vercel.app/api/v1/songs")
+      .then((data) => setTraks(data.data.data.songs));
+    // .then((tracks) => setTraks(tracks));
   }, []);
 
   return (
-    <div className=" h-screen  mx-[16px] lg:mx-[120px] mt-10">
-      <h2 className="text-3xl font-bold">New release</h2>
-      <p className="text-[16px] max-w-[588px]">
-        Get your ears on the hottest new tracks, from chart-topping anthems to
-        underground gems bubbling up from the scene.
-      </p>
-      <div className="flex flex-wrap lg:justify-between justify-center gap-[24px] items-start mt-[48px]">
-        {tracks?.map((track: any) => (
-          <Link key={track?.id} href={`music/${track?.id}`}>
-            <div className="max-w-[282px]">
-              <Image
-                src={track?.artwork}
-                height={282}
-                width={282}
-                className="h-[282px] w-[282px] object-cover object-center rounded-xl"
-                alt={track?.title || "Track Artwork"}
-              />
-              <h2 className="text-[24px] font-bold">{track?.title}</h2>
-              <h5 className="text-[16px]">{track?.artist}</h5>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
+    <>
+      <Navbar  />
+      <NewReleases tracks={tracks} />;
+      <HotPlayLists />
+      <TopCharts />
+      <TopAlbums />
+      <RecentlyPlayed />
+      <TrandingPlaylist />
+      <BeltWithKaraoke />
+      <Recomended album />
+      <Features />
+      <Footer />
+    </>
   );
 };
 

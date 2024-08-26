@@ -30,7 +30,7 @@ const EventContainer: React.FC<EventContainerInterface> = ({
         >
           {children}
         </Heading>
-        <div className="flex flex-col items-center lg:flex-row justify-center gap-6 my-10">
+        <div className="flex flex-col justify-between items-center lg:flex-row gap-6 my-10">
           {data?.slice(0, 3).map((event: any, idx) => (
             <EventCard
               key={idx}

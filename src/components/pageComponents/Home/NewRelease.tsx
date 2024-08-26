@@ -12,25 +12,25 @@ const NewRelease: React.FunctionComponent<NewReleaseProps> = () => {
     {
       id: 1,
       imageUrl: image.src,
-      artisName: "Helen Khilar",
+      artistName: "Helen Khilar",
       title: "Love me babe",
     },
     {
       id: 2,
       imageUrl: image1.src,
-      artisName: "Helen Khilar",
+      artistName: "Helen Khilar",
       title: "Love me babe",
     },
     {
       id: 3,
       imageUrl: image2.src,
-      artisName: "Helen Khilar",
+      artistName: "Helen Khilar",
       title: "Love me babe",
     },
     {
       id: 4,
       imageUrl: image3.src,
-      artisName: "Helen Khilar",
+      artistName: "Helen Khilar",
       title: "Love me babe",
     },
   ];

@@ -35,7 +35,7 @@ const Banner = () => {
               height={play.height}
               alt="Music"
               width={play.width}
-              style={{ height: "auto", width: "80%" }}
+              style={{ height: "auto", width: "80%", objectFit: "cover" }}
               className="mx-auto -my-9"
             />
             <Image
@@ -43,7 +43,7 @@ const Banner = () => {
               height={image.height}
               alt="Music"
               width={image.width}
-              style={{ height: "auto", width: "80%" }}
+              style={{ height: "auto", width: "80%", objectFit: "cover" }}
               className="absolute z-10 bottom-0 w-[100%] left-1/2 -translate-x-1/2"
             />
           </div>
@@ -52,7 +52,7 @@ const Banner = () => {
             height={music.height}
             alt="Music"
             width={music.width}
-            style={{ height: "auto", width: "auto" }}
+            style={{ width: "100%", height: "auto", objectFit: "cover" }}
             className="absolute bottom-0"
           />
         </div>

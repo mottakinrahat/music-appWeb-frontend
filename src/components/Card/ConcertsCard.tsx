@@ -27,13 +27,16 @@ const ConcertsCard: React.FC<ConcertCardInterface> = ({
       <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (
           <div className="rounded-xl relative cursor-pointer overflow-hidden group">
-            <Image
-              src={imageUrl}
-              alt={title || "Card image"}
-              width={280}
-              height={280}
-              className="rounded-lg w-full"
-            />
+            <div className="relative h-fit w-full">
+              {" "}
+              <Image
+                src={imageUrl}
+                alt={title || "Card image"}
+                width={500}
+                height={300}
+                className="rounded-lg"
+              />
+            </div>
             {/* Overlay */}
             <Link href={eventRoute ? eventRoute : "/"}>
               <div className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150"></div>

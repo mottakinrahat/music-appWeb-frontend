@@ -49,9 +49,9 @@ const ToggleMenu = () => {
               <Logo />
             </DrawerTitle>
             <DrawerDescription>
-              <ul className="space-y-3 mt-5">
+              <span className="space-y-3 block mt-5">
                 <Routes />
-              </ul>
+              </span>
             </DrawerDescription>
           </DrawerHeader>
         </DrawerContent>

@@ -15,7 +15,7 @@ const WhoAreUse = () => {
             height={image1.width}
             alt="Musician"
             width={image1.height}
-            style={{ height: "auto", width: "100%" }}
+            style={{ width: "100%", height: "auto", objectFit: "cover" }}
             className=""
           />
           <Heading type="secondary" heading={"For"} colorText={"Listeners"}>
@@ -35,7 +35,7 @@ const WhoAreUse = () => {
             height={image2.width}
             alt="Musician"
             width={image2.height}
-            style={{ height: "auto", width: "100%" }}
+            style={{ width: "100%", height: "auto", objectFit: "cover" }}
             className=""
           />
         </div>
