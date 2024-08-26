@@ -12,9 +12,6 @@ import DCheckbox from "@/components/forms/DCheckbox";
 import axios from "axios";
 import { loginSchema } from "./loginSchema";
 import { useRouter } from "next/navigation";
-import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
-import ToastCard from "@/components/Card/ToastCard";
-import { Toaster } from "@/components/ui/sonner";
 
 const Login = () => {
   const router = useRouter();
@@ -29,22 +26,11 @@ const Login = () => {
         localStorage.setItem("token", res.data.data?.token);
         localStorage.setItem("user", JSON.stringify(user));
         router.push("/");
-      })
-      .then(() => {
-        ToastCard({
-          title: "Log in successful.",
-          message: "Log in has been successful.",
-          icon: (
-            <IoCheckmarkDoneCircleOutline className="w-6 h-6 text-green-500" />
-          ),
-          duration: 2000,
-        });
       });
   };
 
   return (
-    <div className=" flex items-center justify-center">
-      <Toaster position="bottom-center" />
+    <div className=" flex items-center  max-w-xl mx-auto flex-col justify-center p-4">
       <DForm
         resolver={zodResolver(loginSchema)}
         className="flex flex-col gap-5 w-full"
@@ -56,7 +42,7 @@ const Login = () => {
           Don&apos;t hanve an account?{" "}
           <span className="text-accent">Create an account</span>
         </p>
-        {/* email */}
+        {/* {/ email /} */}
         <DInput
           defaultValue={"ruhul@gmail.com"}
           labelTextColor="#262626"
@@ -64,7 +50,7 @@ const Login = () => {
           label="Email"
           placeholder="Enter your email"
         />
-        {/* Password */}
+        {/* {/ Password /} */}
         <DInput
           defaultValue={"@1111aA1111"}
           labelTextColor="#262626"
@@ -73,7 +59,7 @@ const Login = () => {
           placeholder="Enter your password"
           type="password"
         />
-        {/* submit Button */}
+        {/* {/ submit Button /} */}
         <Button
           type="submit"
           className="text-white hover:bg-accent hover:text-white bg-accent rounded-md "
@@ -81,14 +67,13 @@ const Login = () => {
           Log in
         </Button>
 
-        {/* devider */}
+        {/* {/ devider /} */}
         <div className="flex items-center justify-center ">
           <div className="flex-grow h-[1px] bg-gradient-to-r to-black from-white"></div>
           <p className="mx-4">or</p>
           <div className="flex-grow h-[1px] bg-gradient-to-r from-black to-white"></div>
         </div>
 
-        {/* Social Logins */}
         <div className="w-full space-y-5">
           <SocialLogin
             icon={<FcGoogle />}

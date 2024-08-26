@@ -1,7 +1,7 @@
 import LogInSignUpNav from "@/components/common/navigation/LogInSignUpNav";
 import React from "react";
 
-const LoginLayout = ({ children }: { children: React.ReactNode }) => {
+const SignUpCreator = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex flex-col  ">
       <LogInSignUpNav />
@@ -10,4 +10,4 @@ const LoginLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default LoginLayout;
+export default SignUpCreator;
