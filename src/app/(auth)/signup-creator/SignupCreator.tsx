@@ -102,7 +102,7 @@ const SignupCreatorComponenet: React.FC = () => {
           <DSelectTag required={true} name="proficiency" label="DAW software proficiency" options={dawOptions} />
           {/* File Uploader */}
 
-          <DFileUploader name="music" label="Do you have any sample work?" />
+          <DFileUploader accept="audio/*" name="music" label="Do you have any sample work?" />
 
           {/* Portfolio Link */}
 

@@ -15,6 +15,7 @@ type DFileUploaderProps = {
   required?: boolean;
   disabled?: boolean;
   labelTextColor?: "text-black" | "text-white";
+  accept?: string;
 };
 
 // DFileUploader component
@@ -25,6 +26,7 @@ const DFileUploader = ({
   required = false,
   disabled = false,
   labelTextColor = "text-black",
+  accept,
 }: DFileUploaderProps) => {
   const { control, setValue } = useFormContext(); // Get control and setValue from useFormContext
   const fileInputRef = useRef<HTMLInputElement>(null); // Create a ref for the file input
@@ -101,7 +103,7 @@ const DFileUploader = ({
             <Input
               {...field}
               type="file"
-              accept="audio/*" // Accept only audio files
+              accept={accept} // Accept only audio files
               multiple // Enable multiple file selection
               onChange={(e) => onChange(Array.from((e.target as HTMLInputElement).files || []))}
               className="hidden"
@@ -109,7 +111,7 @@ const DFileUploader = ({
               disabled={disabled}
               required={required}
               onBlur={onBlur}
-              ref={fileInputRef} 
+              ref={fileInputRef}
             />
             {value && value.length > 0 && (
               <div className="flex flex-col mt-2 text-sm text-gray-500 ">
