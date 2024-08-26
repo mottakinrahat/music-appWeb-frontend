@@ -48,7 +48,7 @@ const DSelect =({
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
-            ))}
+            ))}    
           </select>
           {error && <span className="text-red-500 text-sm mt-1">{error.message}</span>}
         </div>

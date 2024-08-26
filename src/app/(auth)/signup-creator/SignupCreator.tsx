@@ -3,6 +3,8 @@ import Container from "@/components/common/container/Container";
 import DFileUploader from "@/components/forms/DFileUploader";
 import DForm from "@/components/forms/DForm";
 import DInput from "@/components/forms/DInput";
+import DSelect from "@/components/forms/DSelect";
+import DSelectTag from "@/components/forms/DSelectTag";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
@@ -12,9 +14,17 @@ const signUpCreatorSchema = z.object({});
 
 const SignupCreatorComponenet: React.FC = () => {
   const defaultValues = {};
+  const options = [
+    { value: "apple", label: "Apple" },
+    { value: "banana", label: "Banana" },
+    { value: "blueberry", label: "Blueberry" },
+    { value: "grapes", label: "Grapes" },
+    { value: "pineapple", label: "Pineapple" },
+  ];
   const handleSubmit = (data: any) => {
     console.log(data);
   };
+
   return (
     <div>
       <div className="max-w-xl mx-auto">
@@ -89,7 +99,9 @@ const SignupCreatorComponenet: React.FC = () => {
             placeholder="Enter your password"
             type="password"
           />
+          {/* Select tag */}
 
+          <DSelectTag name="fruit" label="Fruits" options={options} required />
           {/* Submit Button */}
 
           <Button type="submit" variant="default">
