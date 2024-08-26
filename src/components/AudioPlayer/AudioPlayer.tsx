@@ -53,7 +53,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const [repeat, setRepeat] = useState<boolean>(false);
+  const [repeat, setRepeat] = useState<any>("repeat-all");
   const [playing, setPlaying] = useState<boolean>(true);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
@@ -70,6 +70,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   useEffect(() => {
     const volume = localStorage.getItem("volume");
+
     if (!volume) {
       localStorage.setItem("volume", "0.8");
       setVolume(0.8);
@@ -78,6 +79,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setVolume(parseFloat(volume));
     }
     setCurrentSong(songData);
+    const getRepeat = localStorage.getItem("repeat");
+    if (!getRepeat) {
+      localStorage.setItem("repeat", repeat);
+    }
+    if (volume) {
+      setRepeat(getRepeat);
+    }
   }, [currentSong, songData]);
   // Main Song
   const {
@@ -208,7 +216,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const toggleRepeat = () => {
-    setRepeat(!repeat);
+    if (repeat === "repeat-all") {
+      setRepeat("repeat-one");
+      localStorage.setItem("repeat", "repeat-one");
+    } else if (repeat === "repeat-one") {
+      setRepeat("repeat-off");
+      localStorage.setItem("repeat", "repeat-off");
+    } else if (repeat === "repeat-off") {
+      setRepeat("repeat-all");
+      localStorage.setItem("repeat", "repeat-all");
+    }
   };
 
   const handleAddtoPlayList = async () => {

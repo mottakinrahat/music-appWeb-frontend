@@ -4,15 +4,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { TbRepeatOff } from "react-icons/tb";
+import { LucideRepeat, LucideRepeat1, LucideRepeat2 } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { IoMdRepeat } from "react-icons/io";
 
 // inrerface
-interface RepeatActionButtonProps {
+export interface RepeatActionButtonProps {
   toggleRepeat: any;
   src: string;
-  repeat: boolean;
+  repeat: "repeat-all" | "repeat-one" | "repeat-off";
 }
 
 const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
@@ -22,7 +24,7 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
 }) => {
   return (
     <div>
-      <div className="text-white text-2xl mx-2 hover:text-gray-300">
+      <div className="text-white text-2xl mx-2 active:text-gray-300">
         <div className="flex justify-start items-center gap-[24px]">
           <div className="hidden lg:block">
             <Image
@@ -36,19 +38,24 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <div
-                  className="active:text-accent transition-colors"
-                  onClick={toggleRepeat}
-                >
-                  {repeat ? (
-                    <IoMdRepeat />
+                <div onClick={toggleRepeat}>
+                  {repeat === "repeat-one" ? (
+                    <LucideRepeat1 />
+                  ) : repeat === "repeat-all" ? (
+                    <LucideRepeat />
                   ) : (
-                    <IoMdRepeat className="text-accent  " />
+                    <TbRepeatOff />
                   )}
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{`Repeat ${!repeat ? "on" : "off"}`}</p>
+                <p>{`Repeat ${
+                  repeat === "repeat-one"
+                    ? "on"
+                    : repeat === "repeat-all"
+                    ? "all"
+                    : "off"
+                }`}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
