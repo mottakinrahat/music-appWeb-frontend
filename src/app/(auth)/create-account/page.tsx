@@ -4,12 +4,7 @@ import Image from "next/image";
 import React from "react";
 
 const CreateAnAccount = () => {
-  return (
-    <Container>
-      hello
-      <img src="http://surl.li/lmxpen" alt="" />
-    </Container>
-  );
+  return <Container>hello</Container>;
 };
 
 export default CreateAnAccount;
