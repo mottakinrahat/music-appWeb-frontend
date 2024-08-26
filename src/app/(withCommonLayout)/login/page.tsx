@@ -19,15 +19,13 @@ const Login = () => {
   const handleLogin = (e: any) => {
     const formData = e;
     console.log(formData);
-    axios
-      .post("https://music-app-web.vercel.app/api/v1/auth/login", e)
-      .then((res) => {
-        const user = res?.data?.data?.user;
-        localStorage.setItem("token", res.data.data?.token);
-        localStorage.setItem("user", JSON.stringify(user));
-        router.push("/");
-      });
-    };
+    axios.post("https://music-app-web.vercel.app/api/v1/auth/login", e).then((res) => {
+      const user = res?.data?.data?.user;
+      localStorage.setItem("token", res.data.data?.token);
+      localStorage.setItem("user", JSON.stringify(user));
+      router.push("/");
+    });
+  };
 
   return (
     <div className=" flex items-center  max-w-xl mx-auto flex-col justify-center p-4">
@@ -39,8 +37,7 @@ const Login = () => {
       >
         <h1 className="text-[#262626] text-5xl font-semibold ">Log in</h1>
         <p className="font-semibold text-base leading-6">
-          Don&apos;t hanve an account?{" "}
-          <span className="text-accent">Create an account</span>
+          Don&apos;t hanve an account? <span className="text-accent">Create an account</span>
         </p>
         {/* email */}
         <DInput
@@ -60,10 +57,7 @@ const Login = () => {
           type="password"
         />
         {/* submit Button */}
-        <Button
-          type="submit"
-          className="text-white hover:bg-accent hover:text-white bg-accent rounded-md "
-        >
+        <Button type="submit" className="text-white hover:bg-accent hover:text-white bg-accent rounded-md ">
           Log in
         </Button>
 
@@ -111,19 +105,15 @@ const Login = () => {
             <p>Remember Password</p>
           </div>
           <div>
-            <p className="underline text-accent cursor-pointer">
-              Forgot Password
-            </p>
+            <p className="underline text-accent cursor-pointer">Forgot Password</p>
           </div>
         </div>
         <p className="text-[#4C4C4C]">
-          By clicking &quot;Log in&quot; above, you acknowledge that you have
-          read and you agree to our General{" "}
-          <span className="font-semibold">Terms and Conditions</span> and have
-          read and acknowledge the{" "}
+          By clicking &quot;Log in&quot; above, you acknowledge that you have read and you agree to our General{" "}
+          <span className="font-semibold">Terms and Conditions</span> and have read and acknowledge the{" "}
           <span className="font-semibold">Privacy policy.</span>
         </p>
-      </DForm>
+      </div>
     </div>
   );
 };
