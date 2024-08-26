@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import Logo from "../logo/Logo";
 import Routes from "./routes";
@@ -9,12 +10,13 @@ import ToastCard from "@/components/Card/ToastCard";
 import { Toaster } from "@/components/ui/sonner";
 import { MdOutlineCancel } from "react-icons/md";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import { usePathname } from "next/navigation";
 
 interface NavInterface {
   blur?: boolean; // blur the background image? default is false.
 }
 
-const Navbar = ({ blur }: NavInterface) => {
+const Navbar = ({ blur = false }: NavInterface) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -74,7 +76,7 @@ const Navbar = ({ blur }: NavInterface) => {
   return (
     <nav
       className={`${
-        blur ? "bg-white/10" : "bg-navigation"
+        blur ? "bg-white/10 fixed z-50 w-full text-white" : "bg-navigation"
       } py-3 md:py-5 lg:py-7`}
     >
       <Toaster position="bottom-center" />

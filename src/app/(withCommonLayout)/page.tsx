@@ -1,4 +1,3 @@
-"use client";
 import Banner from "@/components/pageComponents/Home/Banner";
 import Blogs from "@/components/pageComponents/Home/Blogs";
 import BrowseFreeLencers from "@/components/pageComponents/Home/BrowseFreeLencers";
@@ -14,12 +13,11 @@ import VRConcerts from "@/components/pageComponents/Home/VRConcerts";
 import WhoAreUse from "@/components/pageComponents/Home/WhoAreUse";
 import Footer from "@/components/common/footer/Footer";
 import Navbar from "@/components/common/navigation/Navbar";
-import { useEffect, useState } from "react";
-import { Coming_Soon } from "next/font/google";
+// import { useEffect, useState } from "react";
+// import { Coming_Soon } from "next/font/google";
 // import Link from "next/link";
 
 export default function Home() {
- 
   return (
     <div className="">
       <Navbar />

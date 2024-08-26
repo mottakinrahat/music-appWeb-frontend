@@ -1,6 +1,7 @@
 "use client";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
+import Navbar from "@/components/common/navigation/Navbar";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -92,6 +93,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
 
   return (
     <div className="flex overflow-hidden w-full">
+      <Navbar blur />
       <div className="flex-1 transition-all ">
         <AudioPlayer
           handleNext={handleNext}

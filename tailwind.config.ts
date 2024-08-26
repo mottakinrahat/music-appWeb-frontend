@@ -84,6 +84,8 @@ const config: Config = {
       },
       backgroundImage: {
         "btn-gradient": "linear-gradient(180deg, #00CCD0 0%, #00AFB3 100%)",
+        "btn-gradient-hover":
+          "linear-gradient(180deg, #00AFB3 0%, #00CCD0  100%)",
         "btn-out-line-gradient":
           "linear-gradient(180deg, #01CDD0 0%, #01B0B3 100%)",
         "banner-gradient":

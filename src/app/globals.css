@@ -77,3 +77,10 @@
   background-image: linear-gradient(180deg, #01cdd0 0%, #01b0b3 100%);
   border-radius: 12px !important;
 }
+.btn-outline-gradient::before:hover {
+  content: "";
+  width: fit-content;
+  padding: 1px;
+  background-image: linear-gradient(180deg, #01b0b3 0%, #01cdd0 100%);
+  border-radius: 12px !important;
+}

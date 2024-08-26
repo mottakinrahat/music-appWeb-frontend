@@ -16,7 +16,7 @@ const Routes = () => {
   ];
 
   return routes.map((route, idx) => (
-    <span className="block text-black" key={idx}>
+    <span className="block " key={idx}>
       <Link href={route.route}>
         <span
           className={`nav-link ${

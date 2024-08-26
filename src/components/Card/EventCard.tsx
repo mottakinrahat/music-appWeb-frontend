@@ -61,13 +61,13 @@ const EventCard: React.FC<EventCardInterface> = ({
       </div>
 
       {/* Card Content */}
-      <div className="flex gap-4">
-        <div className="bg-[#FCECF6] h-fit p-4 rounded-xl text-center text-secondary">
-          <div className="font-bold text-5xl">12</div>
+      <div className="flex gap-5">
+        <div className="bg-[#FCECF6] h-fit p-4 py-2 leading-tight rounded-xl text-center text-secondary">
+          <div className="font-bold text-[2.5rem]">12</div>
           <div>Apr</div>
         </div>
         <div>
-          <h2 className="text-3xl flex-1 font-semibold mb-2">{title}</h2>
+          <h2 className="text-2xl flex-1 font-semibold mb-2">{title}</h2>
           <div className="text-textPrimary text-base flex gap-2 items-center">
             <GoLocation /> Los Angeles, CA
           </div>
