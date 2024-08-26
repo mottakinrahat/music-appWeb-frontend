@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Check } from "lucide-react"; // Assuming you're using Lucide icons (same as ShadCN)
+import { GoPlus } from "react-icons/go";
 
 type Option = {
   value: string;
@@ -67,9 +68,7 @@ const DSelectTag = ({
   };
 
   // Filter out selected tags from options
-  const filteredOptions = options.filter(
-    (option) => !selectedTags.some((tag) => tag.value === option.value)
-  );
+  const filteredOptions = options.filter((option) => !selectedTags.some((tag) => tag.value === option.value));
 
   // Check if all options are selected
   const allOptionsSelected = options.length > 0 && selectedTags.length === options.length;
@@ -92,10 +91,7 @@ const DSelectTag = ({
               {...props}
               disabled={allOptionsSelected} // Disable select if all options are selected
             >
-              <SelectTrigger
-                className={`w-full ${error ? "border-red-500" : "border-gray-300"}`}
-                aria-label={label}
-              >
+              <SelectTrigger className={`w-full ${error ? "border-red-500" : "border-gray-300"}`} aria-label={label}>
                 <SelectValue placeholder={allOptionsSelected ? "All selected" : placeholder} />
               </SelectTrigger>
               <SelectContent>
@@ -118,31 +114,37 @@ const DSelectTag = ({
                 </SelectGroup>
               </SelectContent>
             </Select>
+
+            {/* Add button */}
             <button
               type="button"
               onClick={handleAddTag}
-              className={`p-2 ${allOptionsSelected ? "bg-gray-400" : "bg-blue-500"} text-white rounded`}
+              className={`p-2 h-[40px] flex items-center justify-center w-[40px] ${
+                allOptionsSelected ? "bg-gray-400" : "bg-white"
+              } text-white rounded-md border`}
               aria-label="Add Tag"
               disabled={allOptionsSelected} // Disable add button if all options are selected
             >
-              Add
+              <GoPlus className="text-black" />
             </button>
           </div>
           {error && <span className="text-red-500 text-sm mt-1">{error.message}</span>}
-          <div className="mt-2 flex flex-wrap space-x-2 space-y-2">
+
+          {/* selected options */}
+          <div className="mt-2 flex flex-wrap gap-2">
             {selectedTags.map((tag) => (
               <span
                 key={tag.value}
-                className="inline-flex items-center px-2 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium border border-[#00CCD0] text-[#00CCD0] bg-white rounded-full"
               >
                 {tag.label}
                 <button
                   type="button"
                   onClick={() => handleRemoveTag(tag.value)}
-                  className="ml-1 text-red-500 hover:text-red-700"
+                  className="ml-2 text-red-500 hover:text-red-700"
                   aria-label={`Remove ${tag.label}`}
                 >
-                  &times;
+                  X
                 </button>
               </span>
             ))}
