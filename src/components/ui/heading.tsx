@@ -34,7 +34,7 @@ const Heading: React.FC<Heading> = ({
         </div>
         <div>
           <Link
-            className="underline flex justify-center lg:justify-start mx-auto: text-accent font-semibold text-base"
+            className="underline flex  mx-auto: text-accent font-semibold text-base"
             href={route ? route : "/"}
           >
             {linkText}

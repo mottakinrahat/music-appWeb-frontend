@@ -64,7 +64,7 @@ const BannerContent = () => (
     </div>
     {/* Banner image part */}
     <div className="flex-1 max-w-3xl md:mt-48 lg:-mx-10 mt-20 relative lg:pt-24 xl:p-0 flex justify-end ">
-      <div className="bg-banner-gradient relative h-[15rem] w-[15rem] min-[380px]:h-[20rem] min-[380px]:w-[20rem] md:w-[30rem] lg:w-4/5 xl:h-full mt-auto rounded-t-md">
+      <div className="bg-banner-gradient relative h-[15rem] w-[15rem] min-[380px]:h-[20rem] min-[380px]:w-[20rem] md:w-[30rem] xl:h-full mt-auto rounded-t-md">
         <Image
           src={play}
           height={play.height}
