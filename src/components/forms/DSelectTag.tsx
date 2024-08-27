@@ -39,7 +39,7 @@ const DSelectTag = ({
   defaultValue = [],
   ...props
 }: DSelectProps) => {
-  const { control, setValue } = useFormContext();
+  const { control, setValue, clearErrors, getValues, trigger } = useFormContext();
   const [selectedTags, setSelectedTags] = useState<Option[]>(defaultValue);
   const [currentValue, setCurrentValue] = useState<string>("");
 
@@ -57,6 +57,8 @@ const DSelectTag = ({
       setSelectedTags(newTags);
       setValue(name, newTags);
       setCurrentValue("");
+      clearErrors(name); // Clear error when adding a valid tag
+      trigger(name); // Trigger validation to ensure errors are up-to-date
     }
   };
 
@@ -64,6 +66,8 @@ const DSelectTag = ({
     const updatedTags = selectedTags.filter((tag) => tag.value !== value);
     setSelectedTags(updatedTags);
     setValue(name, updatedTags);
+    clearErrors(name); // Clear error when removing a tag
+    trigger(name); // Trigger validation to ensure errors are up-to-date
   };
 
   const filteredOptions = options.filter((option) => !selectedTags.some((tag) => tag.value === option.value));
