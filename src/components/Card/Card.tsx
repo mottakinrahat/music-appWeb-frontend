@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import playBtn from "@/assets/icons/play_circle.png";
@@ -12,7 +13,7 @@ interface BaseCard {
   isFavourite?: boolean;
   rating?: number;
   album?: string;
-  musicRoute?: string;
+  musicId?: string;
   albumRouteLink?: string;
   freelancerType?: string;
   freelancerName?: string;
@@ -40,7 +41,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   freelancerType,
   freelancerName,
   imageUrl,
-  musicRoute,
+  musicId,
   rating,
   title,
   className,
@@ -48,6 +49,10 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   album,
   albumRouteLink,
 }) => {
+  const handleSetIdtoLocalStroage = () => {
+    localStorage.setItem("songId", musicId!);
+  };
+
   return (
     <div className={`rounded-lg max-w-md ${className ? className : ""}`}>
       {/* Image Container */}
@@ -69,8 +74,11 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
               className="rounded-lg "
             />
             {/* Overlay */}
-            <Link href={musicRoute ? musicRoute : "/"}>
-              <div className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+            <Link href={musicId ? `/music/${musicId}` : "/"}>
+              <div
+                onClick={handleSetIdtoLocalStroage}
+                className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+              >
                 {type !== "freelancer" && (
                   <Image
                     src={playBtn}

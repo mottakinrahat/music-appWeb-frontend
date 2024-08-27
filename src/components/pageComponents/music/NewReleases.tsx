@@ -27,7 +27,7 @@ const NewReleases = ({ tracks }: any) => {
           .concat(tracks, tracks, tracks)
           ?.map((music: any, idx: number) => (
             <Card
-              musicRoute={`/music/${music?._id}`}
+              musicId={`${music?._id}`}
               key={idx}
               imageUrl={
                 music.imageUrl

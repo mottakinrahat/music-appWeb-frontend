@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <Providers>
-      <html lang="en">
+      <html data-theme="light" lang="en">
         <body className={outfit.className}>{children}</body>
       </html>
     </Providers>
