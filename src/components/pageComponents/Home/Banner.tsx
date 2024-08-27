@@ -6,7 +6,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { Autoplay } from "swiper/modules";
 import { Button } from "@/components/ui/button";
 import OutlineButton from "@/components/ui/outlineButton";
 import Image from "next/image";

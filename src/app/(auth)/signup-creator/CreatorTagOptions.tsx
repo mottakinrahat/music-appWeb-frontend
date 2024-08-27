@@ -1,0 +1,30 @@
+export const expertiseOptions = [
+  { value: "musicProduction", label: "Music Production" },
+  { value: "soundEngineering", label: "Sound Engineering" },
+  { value: "mixingMastering", label: "Mixing and Mastering" },
+  { value: "songwriting", label: "Songwriting" },
+  { value: "composition", label: "Composition" },
+  { value: "musicTheory", label: "Music Theory" },
+  { value: "musicArrangement", label: "Music Arrangement" },
+  { value: "vocalPerformance", label: "Vocal Performance" },
+  { value: "instrumentalPerformance", label: "Instrumental Performance" },
+  { value: "liveSound", label: "Live Sound" },
+  { value: "musicLicensing", label: "Music Licensing" },
+  { value: "musicBusiness", label: "Music Business" },
+  { value: "musicEducation", label: "Music Education" },
+  { value: "musicTechnology", label: "Music Technology" },
+  { value: "djing", label: "DJing" },
+];
+
+export const dawOptions = [
+  { value: "abletonLive", label: "Ableton Live" },
+  { value: "logicPro", label: "Logic Pro" },
+  { value: "flStudio", label: "FL Studio" },
+  { value: "proTools", label: "Pro Tools" },
+  { value: "cubase", label: "Cubase" },
+  { value: "studioOne", label: "Studio One" },
+  { value: "reason", label: "Reason" },
+  { value: "garageBand", label: "GarageBand" },
+  { value: "reaper", label: "Reaper" },
+  { value: "audacity", label: "Audacity" },
+];

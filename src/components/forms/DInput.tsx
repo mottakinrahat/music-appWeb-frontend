@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { Label } from "../ui/label";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
+import { HiEye, HiEyeOff } from "react-icons/hi"; // Importing eye icons
 
 type DInputProps = {
   name: string;
@@ -29,6 +30,11 @@ const DInput = ({
   ...props
 }: DInputProps) => {
   const { control } = useFormContext();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <Controller
@@ -36,7 +42,7 @@ const DInput = ({
       defaultValue={defaultValue}
       name={name}
       render={({ field, fieldState: { error } }) => (
-        <div className={` w-full `}>
+        <div className="w-full relative">
           {label && (
             <Label htmlFor={name} className={cn(labelTextColor, "block mb-2 font-semibold text-lg w-full")}>
               {label}
@@ -48,11 +54,20 @@ const DInput = ({
             id={name}
             disabled={disabled}
             required={required}
-            type={type}
-            className={` ${
-              error ? "border-red-500" : "border-gray-300 w-full flex"
-            } ${className} focus-visible:shadow-none focus-visible:outline-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-accent`}
+            type={type === "password" && !showPassword ? "password" : "text"}
+            className={`${
+              error ? "border-red-500" : "border-gray-300"
+            } ${className} w-full flex focus-visible:shadow-none focus-visible:outline-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-accent`}
           />
+          {type === "password" && (
+            <button
+              type="button"
+              onClick={handleTogglePassword}
+              className="absolute inset-y-0 top-9 right-0 flex items-center px-3"
+            >
+              {showPassword ? <HiEye className="text-gray-500" /> : <HiEyeOff className="text-gray-500" />}
+            </button>
+          )}
           {error && <span className="text-red-500 text-sm mt-1">{error.message}</span>}
         </div>
       )}
