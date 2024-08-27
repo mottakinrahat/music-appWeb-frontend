@@ -47,8 +47,11 @@ export default function Features() {
         </h2>
         <div className="space-y-6">
           {features?.map((feature, idx) => (
-            <div key={idx} className="sm:flex items-center">
-              <div className="bg-[#FFF0F9] rounded-lg flex justify-center items-center w-12 h-12 mr-4">
+            <div
+              key={idx}
+              className="sm:flex items-center text-center min-[380px]:text-left"
+            >
+              <div className="bg-[#FFF0F9] rounded-lg flex mx-auto justify-center items-center w-12 h-12 min-[380px]:ml-0 min-[380px]:mx-4">
                 <Image
                   src={feature.icon}
                   width={feature.icon.width}

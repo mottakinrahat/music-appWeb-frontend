@@ -56,7 +56,7 @@ const FooterEnd = () => {
         </Link>
       </div>
       <div className="flex items-center max-md:justify-center max-md:w-full flex-wrap gap-6">
-        <div className="flex items-center flex-wrap gap-2">
+        <div className="flex items-center justify-center flex-wrap gap-2">
           <MdOutlineEmail className="text-xl mt-1" />
           <Link href={"mailto:ask.@soundstreaming.com"}>
             ask.@soundstreaming.com
