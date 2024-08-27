@@ -49,9 +49,9 @@ export default function Features() {
           {features?.map((feature, idx) => (
             <div
               key={idx}
-              className="sm:flex items-center text-center min-[380px]:text-left"
+              className="sm:flex items-center text-center sm:text-left"
             >
-              <div className="bg-[#FFF0F9] rounded-lg flex max-sm:mb-2 mx-auto justify-center items-center w-12 h-12 min-[380px]:ml-0 min-[380px]:mx-4">
+              <div className="bg-[#FFF0F9] rounded-lg flex max-sm:mb-2 mx-auto justify-center items-center w-12 h-12 sm:ml-0 sm:mx-4">
                 <Image
                   src={feature.icon}
                   width={feature.icon.width}

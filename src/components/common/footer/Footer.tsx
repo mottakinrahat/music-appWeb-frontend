@@ -9,10 +9,10 @@ const Footer: React.FC = () => {
   return (
     <div>
       <Container bgGray className=" text-textPrimary ">
-        <div className=" mx-auto flex flex-wrap">
+        <div className=" mx-auto flex max-md:justify-center flex-wrap">
           {/* First Section */}
-          <div className="w-full md:w-1/2 sm:py-4">
-            <div className="flex flex-col max-sm:items-center max-w-sm mb-4">
+          <div className="w-full md:w-1/2 sm:py-4 max-sm:flex justify-center">
+            <div className="flex flex-col max-sm:justify-center max-sm:items-center max-w-sm mb-4">
               <Image
                 src={logo} // Replace with actual logo path
                 alt="Logo"
