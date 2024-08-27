@@ -1,7 +1,7 @@
 import Heading from "@/components/ui/heading";
 import Container from "./Container";
 import Card from "@/components/Card/Card";
-// import { Url } from "url";
+import placeHolder from "@/assets/etc/png/song.jpg";
 
 interface SingleLineCardContainerInterFace {
   data: Array<any>;
@@ -44,7 +44,7 @@ const SingleLineMusicCardContainer: React.FC<
                 <Card
                   album={album ? music.album : ""}
                   key={idx}
-                  imageUrl={music.imageUrl}
+                  imageUrl={music.imageUrl ? music.imageUrl : placeHolder.src}
                   artistName={music.artistName}
                   title={music.title}
                   type={music}

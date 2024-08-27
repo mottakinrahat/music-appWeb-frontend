@@ -26,7 +26,7 @@ const EventCard: React.FC<EventCardInterface> = ({
       className={`rounded-lg w-full  max-w-md ${className ? className : ""}`}
     >
       {/* Image Container */}
-      <div className="relative w-fit  drop-shadow  mb-4">
+      <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (
           <div className="rounded-xl  relative w-full cursor-pointer overflow-hidden group">
             <div className="relative h-fit w-full">
@@ -44,7 +44,7 @@ const EventCard: React.FC<EventCardInterface> = ({
               <div className="absolute inset-0 bg-black flex w-full justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150"></div>
             </Link>
 
-            <div className="absolutew-10 h-10 sm:w-12 sm:h-12  flex justify-center items-center backdrop-blur-sm bg-white/10 rounded-md sm:rounded-lg top-2 right-2 sm:top-4 sm:right-4">
+            <div className="absolute w-10 h-10 sm:w-12 sm:h-12  flex justify-center items-center backdrop-blur-sm bg-white/10 rounded-md sm:rounded-lg top-2 right-2 sm:top-4 sm:right-4">
               <button
                 className="text-background text-xl"
                 aria-label="Mark as favorite"

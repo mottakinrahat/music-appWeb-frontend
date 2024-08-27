@@ -29,8 +29,15 @@ export function Chart({ data }: ChartInfc) {
   return (
     <Card className="border-0 p-0 -mx-10 shadow-none w-full">
       <CardContent className="border-0 p-0">
-        <ChartContainer config={chartConfig}>
-          <AreaChart data={data} margin={{ left: 12, right: 12 }}>
+        <ChartContainer
+          style={{ minHeight: 0, minWidth: 0 }}
+          config={chartConfig}
+        >
+          <AreaChart
+            data={data}
+            style={{ minHeight: 0, minWidth: 0 }}
+            margin={{ left: 12, right: 12 }}
+          >
             <CartesianGrid vertical={true} horizontal={false} />
 
             <XAxis

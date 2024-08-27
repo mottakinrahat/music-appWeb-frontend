@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import DownloadIcon from "../../assets/icons/download.svg";
-import { saveSong } from "@/utils/offlineDB";
+// import { saveSong } from "@/utils/offlineDB";
 
 interface DownloadButtonProps {
   songUrl: string;
@@ -18,7 +18,7 @@ const DownloadOffline: React.FC<DownloadButtonProps> = ({
     // Fetch and save the song to IndexedDB
     const response = await fetch(songUrl);
     const blob = await response.blob();
-    await saveSong(songName, blob);
+    // await saveSong(songName, blob);
 
     // Create a hidden link element for downloading
     const link = document.createElement("a");

@@ -4,15 +4,17 @@ import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlaye
 import Navbar from "@/components/common/navigation/Navbar";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import axios from "axios";
+import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 interface PlayerInterface {
   params?: {
     id: any;
   };
+  play: boolean;
 }
 
-const Player: React.FC<PlayerInterface> = ({ params }) => {
+const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
     null
@@ -49,6 +51,18 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     }
   }, [currentTrackIndex, tracks]);
 
+  const pathname = usePathname();
+  const [showPlayer, setShowPlayer] = useState(false);
+
+  useEffect(() => {
+    // Show the player only if the path matches `/music/:id`
+    if (pathname.startsWith("/music/")) {
+      setShowPlayer(true);
+    } else {
+      setShowPlayer(false);
+    }
+  }, [pathname]);
+
   const handlePrev = () => {
     if (currentTrackIndex !== null && currentTrackIndex > 0) {
       const newIndex = currentTrackIndex - 1;
@@ -73,32 +87,33 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     );
   }
 
-  // const handleAudioContextReady = (
-  //   audioContext: AudioContext,
-  //   audioElement: HTMLAudioElement
-  // ) => {
-  //   setAudioContext(audioContext);
-  //   setAudioElement(audioElement);
-  // };
+  const handleAudioContextReady = (
+    audioContext: AudioContext,
+    audioElement: HTMLAudioElement
+  ) => {
+    setAudioContext(audioContext);
+    setAudioElement(audioElement);
+  };
 
-  // const handleOpenEqualizer = () => {
-  //   setEqOpen(!eqOpen);
-  // };
+  const handleOpenEqualizer = () => {
+    setEqOpen(!eqOpen);
+  };
 
   return (
     <div
-    // className="flex flex-col h-screen overflow-hidden w-full"
-    // style={{
-    //   backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
-    //   backgroundRepeat: "no-repeat",
-    //   backgroundSize: "cover",
-    // }}
+      className="flex flex-col h-screen overflow-hidden w-full"
+      style={{
+        backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
     >
-      {/* <div className="absolute w-full h-screen bg-black opacity-10 z-10"></div>
+      <div className="absolute w-full h-screen bg-black opacity-10 z-10"></div>
       <div className="flex z-20 flex-grow relative">
-        <Navbar blur />
+        {showPlayer && <Navbar blur />}
         <div className="flex-1 transition-all">
           <AudioPlayer
+            play
             handleNext={handleNext}
             handlePrev={handlePrev}
             id={params?.id}
@@ -119,10 +134,10 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
             audioContext={audioContext}
             audioElement={audioElement}
           />
-        </div> *
-       </div> */}
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Player;
+export default MaximizePlayer;

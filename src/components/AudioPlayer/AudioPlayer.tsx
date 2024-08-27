@@ -28,6 +28,7 @@ import { Toaster } from "../ui/sonner";
 import Link from "next/link";
 import ShareCard from "../Card/ShareCard";
 import { useRouter } from "next/navigation";
+import MiniPlayer from "./MiniPlayer";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
@@ -37,10 +38,11 @@ interface AudioPlayerProps {
     audioElement: HTMLAudioElement
   ) => void;
   id?: any;
-  handleNext: any;
+  handleNext: () => void;
   currentSong?: any;
   handleOpenEqualizer: any;
-  handlePrev: any;
+  handlePrev: () => void;
+  play: boolean;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -50,11 +52,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   handleOpenEqualizer,
   handleNext,
   handlePrev,
+  play = true,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const [repeat, setRepeat] = useState<any>("repeat-all");
-  const [playing, setPlaying] = useState<boolean>(true);
+  const [playing, setPlaying] = useState<boolean>(play);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [played, setPlayed] = useState<number>(0);
@@ -364,6 +367,23 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         setOpen={setShare}
         shareUrl={`https://music-web-liangu.vercel.app//music/66c99c0a36fe71b995557d6b`}
       />
+      <div className="absolute top-0 w-full ">
+        <MiniPlayer
+          handleNext={handleNext}
+          handleNextTenSecond={handleNextTenSecond}
+          handlePlayPause={handlePlayPause}
+          handlePreviousTenSecond={handlePreviousTenSecond}
+          handlePrev={handlePrev}
+          playing={playing}
+          handleVolumeChange={handleVolumeChange}
+          album={currentSong.songAlbum.albumName}
+          artist={currentSong.songArtist}
+          artwork={currentSong.artwork}
+          handleMute={handleMute}
+          id={currentSong?._id}
+          title={currentSong.songName}
+        />
+      </div>
       <div
         className="w-full h-screen bg-cover bg-center"
         // style={{
@@ -460,7 +480,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             onEnded={handleEnded}
           />
 
-          <div className="w-full flex items-center">
+          <div className="w-full cursor-pointer py-1 flex items-center">
             <input
               type="range"
               step="0.01"

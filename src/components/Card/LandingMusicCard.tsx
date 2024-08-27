@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import playBtn from "@/assets/icons/play_circle.png";
-
+import placeHolder from "@/assets/etc/png/song.jpg";
 import Link from "next/link";
 
 interface LandingMusicCardInterface {
@@ -26,7 +26,7 @@ const LandingMusicCard = ({
         <div>
           <img
             // style={{ width: "auto", height: "auto" }}
-            src={artwork}
+            src={artwork ? artwork : placeHolder.src}
             alt="Album Art"
             // height={80}
             // width={80}

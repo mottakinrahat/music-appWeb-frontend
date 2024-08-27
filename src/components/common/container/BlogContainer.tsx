@@ -1,8 +1,7 @@
 import Heading from "@/components/ui/heading";
-import { Url } from "next/dist/shared/lib/router/router";
+
 import React from "react";
 import Container from "./Container";
-import ConcertsCard from "@/components/Card/ConcertsCard";
 import BlogCard from "@/components/Card/BlogCard";
 
 interface BlogContainerInterface {
