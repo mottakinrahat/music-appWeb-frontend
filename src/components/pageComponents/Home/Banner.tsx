@@ -49,10 +49,10 @@ const BannerContent = () => (
     {/* Banner Action */}
     <div className="2xl:ml-[3rem] flex-1 text-center xl:text-left max-w-[39rem] my-5 md:my-10 py-10 md:pt-20 xl:my-24">
       <h1 className="text-[2.1rem] sm:text-5xl leading-tight lg:text-[4rem] font-bold text-textSecondary lg:leading-[4.75rem]">
-        Revolutionize the way you
-        <span className="text-secondary inline-block">experience</span> music
+        Revolutionize the way you{" "}
+        <span className="text-secondary inline-block"> experience</span> music
       </h1>
-      <p className="mb-12 mt-8 text-textPrimary max-w-[38rem]">
+      <p className="mb-8 mt-6 sm:mb-12 sm:mt-8 text-textPrimary max-w-[38rem]">
         Discover a universe of sound that ignites your passions and fuels your
         creativity. Explore millions of songs, from chart-topping hits to
         underground gems, and lose yourself in a sonic adventure.
