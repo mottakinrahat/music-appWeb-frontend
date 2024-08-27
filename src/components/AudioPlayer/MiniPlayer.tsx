@@ -2,7 +2,7 @@
 import { usePathname } from "next/navigation";
 import PlayButtons from "./components/PlayButtons";
 import { useEffect, useState } from "react";
-import LandingMusicCard from "../Card/LandingMusicCard";
+import { FiMaximize2 } from "react-icons/fi";
 import Link from "next/link";
 import placeHolder from "@/assets/etc/png/song.jpg";
 
@@ -20,6 +20,7 @@ interface MiniPlayerProps {
   artwork: string;
   id: any;
   title: string;
+  volume: number;
 }
 
 const MiniPlayer = ({
@@ -36,6 +37,7 @@ const MiniPlayer = ({
   handleMute,
   id,
   title,
+  volume,
 }: MiniPlayerProps) => {
   const pathname = usePathname();
   const [showControl, setShowControl] = useState(true);
@@ -60,7 +62,7 @@ const MiniPlayer = ({
   if (!showControl)
     return (
       <div className="h-28 bg-white w-full ">
-        <div className="container h-full flex items-center  ">
+        <div className="container h-full justify-between flex items-center  ">
           <div>
             <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px]  ">
               <div className="w-full flex justify-between items-center">
@@ -103,6 +105,15 @@ const MiniPlayer = ({
               handlePrev={handlePrev}
               playing={playing}
             />
+          </div>
+
+          <div>
+            <Link
+              href={`/music/${id}`}
+              className="h-10 w-10 flex z-50 hover:text-gray-600 justify-center items-center cursor-pointer"
+            >
+              <FiMaximize2 />
+            </Link>
           </div>
         </div>
       </div>

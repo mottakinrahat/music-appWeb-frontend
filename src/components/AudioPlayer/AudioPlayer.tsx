@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { Toaster } from "../ui/sonner";
 import Link from "next/link";
 import ShareCard from "../Card/ShareCard";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import MiniPlayer from "./MiniPlayer";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
@@ -68,6 +68,18 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   // const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
   //   null
   // );
+
+  const pathname = usePathname();
+  const [showPlayer, setShowPlayer] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Show the player only if the path matches `/music/:id`
+    if (pathname.startsWith("/music/")) {
+      setShowPlayer(true);
+    } else {
+      setShowPlayer(false);
+    }
+  }, [pathname]);
 
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const [share, setShare] = useState<boolean>(false);
@@ -156,10 +168,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   // handle Mute
   const handleMute = () => {
     const getVolume = localStorage.getItem("volume");
-    if (volume > 0) {
+
+    if (parseFloat(getVolume!) > 0) {
+      localStorage.setItem("previousVolume", volume.toString());
+      localStorage.setItem("volume", (0).toString());
       setVolume(0);
     } else {
-      setVolume(getVolume ? parseFloat(getVolume) : 0.8);
+      const previousVolume = localStorage.getItem("previousVolume");
+      localStorage.setItem("volume", previousVolume!);
+
+      setVolume(parseFloat(previousVolume!));
     }
   };
 
@@ -382,16 +400,25 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           handleMute={handleMute}
           id={currentSong?._id}
           title={currentSong.songName}
+          volume={volume}
         />
       </div>
       <div
-        className="w-full h-screen bg-cover bg-center"
+        className={`${
+          !showPlayer ? "hidden" : "w-full h-screen  bg-cover bg-center"
+        } `}
         // style={{
         //   backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
         // }}
       >
         {/* Dropdown section */}
-        <div className="absolute p-4 xl:p-[120px] right-0 text-white">
+        <div
+          className={`${
+            !showPlayer
+              ? "hidden"
+              : "absolute p-4 xl:p-[120px] right-0 text-white"
+          } `}
+        >
           <DropDownBtn
             dropDownContent={threeDotContent}
             buttonContent={
