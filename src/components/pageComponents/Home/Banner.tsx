@@ -64,7 +64,7 @@ const BannerContent = () => (
     </div>
     {/* Banner image part */}
     <div className="flex-1 max-w-3xl md:mt-48 lg:-mx-10 mt-20 relative lg:pt-24 xl:p-0 flex justify-end ">
-      <div className="bg-banner-gradient relative h-[15rem] w-[15rem] min-[380px]:h-[20rem] min-[380px]:w-[20rem] md:w-[30rem] xl:h-full mt-auto rounded-t-md">
+      <div className="bg-banner-gradient relative h-[15rem] w-[15rem] min-[380px]:h-[20rem] min-[380px]:w-[20rem] md:w-[30rem] lg:w-4/5 xl:h-full mt-auto rounded-t-md">
         <Image
           src={play}
           height={play.height}
@@ -79,7 +79,7 @@ const BannerContent = () => (
           alt="Music"
           width={image.width}
           style={{ height: "auto", width: "75%", objectFit: "cover" }}
-          className="absolute max-sm:scale-110 xl:scale-110 bottom-0 xl:bottom-8 z-20 left-1/2 -translate-x-1/2"
+          className="absolute max-sm:scale-125 xl:scale-110 bottom-0 xl:bottom-8 z-20 left-1/2 -translate-x-1/2"
         />
       </div>
       <Image
@@ -88,7 +88,7 @@ const BannerContent = () => (
         alt="Music"
         width={music.width}
         style={{ width: "100%", height: "auto", objectFit: "cover" }}
-        className="absolute scale-[1.20] xl:left-10 bottom-0 2xl:bottom-10 "
+        className="absolute scale-[1.2] xl:left-10 bottom-0 2xl:bottom-10 "
       />
     </div>
   </>
