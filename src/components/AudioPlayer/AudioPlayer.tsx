@@ -96,7 +96,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (volume) {
       setRepeat(getRepeat);
     }
-  }, [currentSong, songData, speed, volume]);
+  }, [currentSong, repeat, songData, speed, volume]);
   // Main Song
   const {
     songName,
