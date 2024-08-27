@@ -45,13 +45,13 @@ export default function Features() {
         <h2 className="font-semibold text-3xl sm:text-5xl mb-12">
           Stream. Support. Discover. All in one place.
         </h2>
-        <div className="space-y-6">
+        <div className="space-y-10 sm:space-y-6">
           {features?.map((feature, idx) => (
             <div
               key={idx}
               className="sm:flex items-center text-center min-[380px]:text-left"
             >
-              <div className="bg-[#FFF0F9] rounded-lg flex mx-auto justify-center items-center w-12 h-12 min-[380px]:ml-0 min-[380px]:mx-4">
+              <div className="bg-[#FFF0F9] rounded-lg flex max-sm:mb-2 mx-auto justify-center items-center w-12 h-12 min-[380px]:ml-0 min-[380px]:mx-4">
                 <Image
                   src={feature.icon}
                   width={feature.icon.width}

@@ -12,16 +12,16 @@ const Footer: React.FC = () => {
         <div className=" mx-auto flex flex-wrap">
           {/* First Section */}
           <div className="w-full md:w-1/2 sm:py-4">
-            <div className=" max-w-sm mb-4">
+            <div className="flex flex-col max-sm:items-center max-w-sm mb-4">
               <Image
                 src={logo} // Replace with actual logo path
                 alt="Logo"
                 width={200}
                 height={200}
                 style={{ height: "auto", width: "150px", objectFit: "cover" }}
-                className="mb-4"
+                className="mb-4 max-sm:scale-75"
               />
-              <p className="text-textPrimary">
+              <p className="text-textPrimary max-sm:text-center">
                 Discover a universe of sound that ignites your passions and
                 fuels your creativity. Explore millions of songs, from
                 chart-topping hits to underground gems, and lose yourself in a
@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Second Section */}
-          <div className="w-full md:w-1/2 sm:p-4 flex flex-wrap">
+          <div className="w-full md:w-1/2 mt-5 sm:mt-0 max-sm:text-center sm:p-4 flex flex-wrap">
             <div className="w-1/2 mb-4">
               <ul className="space-y-2">
                 <li>
