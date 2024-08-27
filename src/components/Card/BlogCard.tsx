@@ -42,7 +42,7 @@ const BlogCard: React.FC<BlogCardInterface> = ({
               <div className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150"></div>
             </Link>
 
-            <div className="absolute w-12 h-12 flex justify-center items-center backdrop-blur-sm bg-white/10 rounded-lg top-6 right-6"></div>
+            {/* <div className="absolute w-12 h-12 flex justify-center items-center backdrop-blur-sm bg-white/10 rounded-lg top-6 right-6"></div> */}
           </div>
         ) : (
           <div className="h-full w-full bg-gray-200  flex items-center justify-center">

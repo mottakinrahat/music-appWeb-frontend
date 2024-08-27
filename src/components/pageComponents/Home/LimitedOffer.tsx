@@ -16,7 +16,7 @@ const LimitedOffer = () => {
         }}
         className="relative  w-full "
       >
-        <div className="w-full max-w-[1400] p-5 md:p-10 lg:p-0 flex text-white justify-center items-center overflow-y-hidden">
+        <div className="w-full max-w-[1400] py-16 px-4 lg:py-0 flex text-white md:justify-center items-center overflow-y-hidden">
           <div className="relative lg:block hidden">
             <Image
               alt={image1.src}

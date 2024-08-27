@@ -84,7 +84,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
               </div>
             </Link>
             {type !== "freelancer" && (
-              <div className="absolute w-12 h-12 flex justify-center items-center backdrop-blur-sm bg-white/10 rounded-lg top-4 right-4">
+              <div className="absolute w-10 h-10 sm:w-12 sm:h-12 flex justify-center items-center backdrop-blur-sm bg-white/10 rounded-md sm:rounded-lg top-2 right-2 sm:top-4 sm:right-4">
                 <button
                   className="text-background text-xl"
                   aria-label="Mark as favorite"
