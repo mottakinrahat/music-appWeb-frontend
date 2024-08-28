@@ -1,28 +1,112 @@
-import React from "react";
-import { FaVolumeDown, FaVolumeMute } from "react-icons/fa";
-import DownloadIcon from "../../assets/icons/download.svg";
-import SettingsIcon from "../../assets/icons/settings.svg";
-import QueueMusicIcon from "../../assets/icons/queue_music.svg";
-import { SpeakerXMarkIcon } from "@heroicons/react/24/outline";
-import { Switch } from "@/components/ui/switch";
-import { MuteIcon, VolumeIcon } from "@/utils/IconsSvg";
-import { DropDownBtn } from "@/components/MusicPlayer/DropDownBtn";
-const VolumeSettingDownRepeat = ({ volume, handleVolumeChange }: any) => {
-  const [eq, setEq] = React.useState(false);
+/* eslint-disable @next/next/no-img-element */
+"use client";
+import React, { useEffect, useState } from "react";
+
+import { IoSettingsOutline } from "react-icons/io5";
+
+import { LucideMinimize2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Volumn from "@/components/AudioPlayer/components/Volumn";
+
+import { DropDownBtn } from "@/components/AudioPlayer/components/DropDownBtn";
+import DownloadOffline from "./DownloadOffline";
+
+interface VolumeSettingDownRepeatProps {
+  volume: number;
+  handleVolumeChange: any;
+  handleMute: () => void;
+  songName: string;
+  songUrl: string;
+  audioRef: any;
+}
+
+const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
+  volume,
+  handleVolumeChange,
+  handleMute,
+  songName,
+  songUrl,
+  audioRef,
+}: any) => {
+  const router = useRouter();
+
+  const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
+  const [quality, setQuality] = useState<any>("high");
+  const [isEqOn, setEqOn] = useState(false);
+  useEffect(() => {
+    const eq = localStorage.getItem("isEqOn");
+    if (!eq) {
+      localStorage.setItem("isEqOn", JSON.stringify(!isEqOn));
+    }
+    if (eq) {
+      setEqOn(JSON.parse(eq!));
+    }
+    const playbackRate = localStorage.getItem("speed");
+    if (!playbackRate) {
+      localStorage.setItem("speed", "1");
+    }
+    if (playbackRate) {
+      const getPlayBackRate: number = parseFloat(playbackRate!);
+      setPlaybackSpeed(parseFloat(getPlayBackRate.toFixed(2)));
+    }
+  }, [isEqOn]);
+
+  // toggle quality
+  const toggleQuality = () => {
+    const newQuality =
+      quality === "high" ? "medium" : quality === "medium" ? "low" : "high";
+    setQuality(newQuality);
+    localStorage.setItem("quality", newQuality);
+
+    if (audioRef.current) {
+      audioRef.current.load();
+    }
+  };
+
+  // handle palyback speed
+  const handlePlaybackSpeed = () => {
+    const speedOptions = [1, 1.5, 2, 0.5, 0.75];
+    const nextIndex =
+      (speedOptions.indexOf(playbackSpeed) + 1) % speedOptions.length;
+    const newSpeed = speedOptions[nextIndex];
+    setPlaybackSpeed(newSpeed);
+    localStorage.setItem("speed", newSpeed.toString());
+
+    if (audioRef.current) {
+      audioRef.current.playbackRate = newSpeed;
+    }
+  };
+
+  const handleMinimize = () => {
+    router.back();
+  };
+
   const settingContent = (
     <>
       <ul className="flex flex-col gap-[16px] p-[16px]">
         <li className="flex justify-between items-center">
-          <span> Playback speed:</span> <span className="font-bold">0.25</span>
+          <span>169 BPM</span>
         </li>
         <li className="flex justify-between items-center">
-          Sound quality: <span className="font-bold">High</span>
+          <span> Playback speed:</span>{" "}
+          <span
+            onClick={() => handlePlaybackSpeed()}
+            className="font-semibold select-none cursor-pointer"
+          >
+            {playbackSpeed.toFixed(2)}
+          </span>
         </li>
         <li className="flex justify-between items-center">
-          EQ:{" "}
-          <span>
-            {" "}
-            <Switch onClick={() => setEq(!eq)} id="airplane-mode" />
+          Sound quality:{" "}
+          <span
+            onClick={toggleQuality}
+            className="font-semibold select-none cursor-pointer"
+          >
+            {quality === "high"
+              ? "High"
+              : quality === "medium"
+              ? "Medium"
+              : "Low"}
           </span>
         </li>
       </ul>
@@ -31,41 +115,36 @@ const VolumeSettingDownRepeat = ({ volume, handleVolumeChange }: any) => {
   return (
     <div>
       <div className="flex justify-center items-center gap-[24px]">
-        <div className="flex justify-end items-center ">
-          {volume === 0 ? (
-            <button className="text-white text-3xl mx-2 hover:text-gray-300">
-              {MuteIcon}
-            </button>
-          ) : (
-            <button className="text-white text-3xl mx-2 hover:text-gray-300">
-              {VolumeIcon}
-            </button>
-          )}
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={volume}
-            className="w-1/2 mx-2 accent-white"
-            onChange={handleVolumeChange}
+        <div className="max-md:hidden">
+          <Volumn
+            handleMute={handleMute}
+            handleVolumeChange={handleVolumeChange}
+            volume={volume}
           />
         </div>
-        <div>
+        {/* <div>
           <img src={DownloadIcon.src} alt="DownloadIcon" />
-        </div>
+        </div> */}
+        {/* Download button  */}
         <div>
+          <DownloadOffline songName={songName} songUrl={songUrl} />
+        </div>
+        <div className={"group"}>
           <DropDownBtn
             dropDownContent={settingContent}
             buttonContent={
               <>
-                <img src={SettingsIcon.src} alt="sdf" />
+                <IoSettingsOutline className="active:text-accent group-hover:text-accent hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
               </>
             }
           />
         </div>
-        <div>
-          <img src={QueueMusicIcon.src} alt="QueueMusicIcon" />
+        <div
+          className="text-white cursor-pointer active:text-accent group-hover:text-accent hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
+          onClick={handleMinimize}
+        >
+          {/* <img src={QueueMusicIcon.src} alt="QueueMusicIcon" /> */}
+          <LucideMinimize2 />
         </div>
       </div>
     </div>

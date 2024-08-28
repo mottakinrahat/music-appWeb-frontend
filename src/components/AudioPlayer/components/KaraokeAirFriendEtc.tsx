@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import micOnIcon from "../../assets/icons/mic_external_on.svg";
-import CurrentPlayingUsers from "../AudioPlayer/components/CurrentPlayingUsers";
+import micOnIcon from "@/assets/icons/mic_external_on.svg";
+import CurrentPlayingUsers from "./CurrentPlayingUsers";
 import MusicControls from "./MusicControls";
 
 const KaraokeAirFriendEtc = ({

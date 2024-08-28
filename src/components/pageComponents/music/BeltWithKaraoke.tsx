@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import bgImg from "@/assets/images/musicpagebg.png";
 import bgImg2 from "@/assets/etc/banner/Decoration.png";
@@ -31,7 +33,7 @@ const BeltWithKaraoke = () => {
     >
       <div className="container">
         <img
-          className="absolute w-[60%] -left-28 opacity-25 z-10 -top-[62%]"
+          className="absolute w-[48%] left-28 opacity-25 z-10 -top-[20%]"
           src={bgImg2.src}
         />
         <Heading

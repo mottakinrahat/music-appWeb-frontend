@@ -4,10 +4,8 @@ import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import placeHolder from "@/assets/etc/png/song.jpg";
 import LyricsIcon from "@/assets/icons/lyrics.svg";
 
-import KaraokeAirFriendEtc from "@/components/MusicPlayer/KaraokeAirFriendEtc";
-import VolumeSettingDownRepeat from "@/components/MusicPlayer/VolumeSettingDownRepeat";
 import { formatTime } from "@/utils/FormatTime";
-import { DropDownBtn } from "@/components/MusicPlayer/DropDownBtn";
+
 import {
   PlusCircleIcon,
   HeartIcon,
@@ -20,8 +18,8 @@ import {
 import AudioControls from "./components/AudioControls";
 import RepeatActionButton from "./components/RepeatActionButton";
 import PlayButtons from "./components/PlayButtons";
-import MusicControls from "../MusicPlayer/MusicControls";
-import Volumn from "../MusicPlayer/Volumn";
+import MusicControls from "./components/MusicControls";
+import Volumn from "./components/Volumn";
 import axios from "axios";
 import { toast } from "sonner";
 import { Toaster } from "../ui/sonner";
@@ -30,6 +28,9 @@ import ShareCard from "../Card/ShareCard";
 import { usePathname, useRouter } from "next/navigation";
 import MiniPlayer from "./MiniPlayer";
 import { Slider } from "../ui/slider";
+import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
+import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
+import { DropDownBtn } from "./components/DropDownBtn";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
