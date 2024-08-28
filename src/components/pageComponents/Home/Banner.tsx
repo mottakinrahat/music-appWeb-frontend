@@ -14,20 +14,21 @@ import play2 from "@/assets/etc/banner/music2.png";
 import music from "@/assets/etc/banner/Decoration.png";
 import image from "@/assets/etc/banner/Image.png";
 import image2 from "@/assets/etc/banner/man.png";
+import full from "@/assets/etc/banner/full.png";
 
 const Banner = () => {
   return (
-    <div className="mx-auto max-w-[1500px]">
-      <div className="max-w-[1500px] max-xl:mx-2 mx-auto overflow-visible">
+    <div className="mx-auto max-w-[1400px]">
+      <div className="max-w-[1400px] md:max-h-[59.3rem] lg:max-h-[75rem] xl:max-h-[33.9rem] max-xl:mx-2 xl:ml-28 mx-auto overflow-visible">
         <Swiper
           spaceBetween={50}
           slidesPerView={1}
           autoplay={{ delay: 3000, disableOnInteraction: false }}
           loop={true}
           // modules={[Autoplay]}
-          className=" max-lg:items-center w-full"
+          className="py-0 w-full"
         >
-          <SwiperSlide className="overflow-visible">
+          <SwiperSlide className="overflow-visible my-0">
             <div className="flex flex-col xl:flex-row max-xl:items-center w-full">
               <BannerContent />
             </div>
@@ -46,12 +47,12 @@ const Banner = () => {
 const BannerContent = () => (
   <>
     {/* Banner Action */}
-    <div className="2xl:ml-[3rem] flex-1 text-center xl:text-left max-w-[39rem] my-5 md:my-10 py-10 md:pt-20 xl:my-24">
-      <h1 className="text-[2.1rem] sm:text-5xl leading-tight lg:text-[4rem] font-bold text-textSecondary lg:leading-[4.75rem]">
+    <div className=" max-w-xl text-center xl:text-left my-5 py-10 ">
+      <h1 className="text-[2.1rem] sm:text-5xl leading-tight lg:text-[3.7rem] font-bold text-textSecondary lg:leading-[4.75rem]">
         Revolutionize the way you{" "}
         <span className="text-secondary inline-block"> experience</span> music
       </h1>
-      <p className="mb-8 mt-6 sm:mb-12 sm:mt-8 text-textPrimary max-w-[38rem]">
+      <p className="mb-8 mt-6 sm:mb-12 sm:mt-8 text-textPrimary">
         Discover a universe of sound that ignites your passions and fuels your
         creativity. Explore millions of songs, from chart-topping hits to
         underground gems, and lose yourself in a sonic adventure.
@@ -62,8 +63,8 @@ const BannerContent = () => (
       </div>
     </div>
     {/* Banner image part */}
-    <div className="flex-1 max-w-3xl md:mt-48 lg:-mx-10 mt-20 relative lg:pt-24 xl:p-0 flex justify-end ">
-      <div className="bg-banner-gradient relative h-[15rem] w-[15rem] min-[380px]:h-[20rem] min-[380px]:w-[20rem] md:w-[30rem] lg:w-4/5 xl:h-full mt-auto rounded-t-md">
+    <div className=" w-full lg:-mx-10 mt-20 relative max-xl:-my-10 xl:pt-24 pt-0 p-0 flex justify-end ">
+      {/* <div className="bg-banner-gradient relative h-[15rem] w-[15rem] min-[380px]:h-[20rem] min-[380px]:w-[20rem] md:w-[30rem] lg:w-[80%] xl:h-full mt-auto rounded-t-md">
         <Image
           src={play}
           height={play.height}
@@ -80,14 +81,14 @@ const BannerContent = () => (
           style={{ height: "auto", width: "75%", objectFit: "cover" }}
           className="absolute max-sm:scale-125 xl:scale-110 bottom-0 xl:bottom-8 z-20 left-1/2 -translate-x-1/2"
         />
-      </div>
+      </div> */}
       <Image
-        src={music}
-        height={music.height}
-        alt="Music"
-        width={music.width}
+        src={full}
+        height={full.height}
+        alt="full"
+        width={full.width}
         style={{ width: "100%", height: "auto", objectFit: "cover" }}
-        className="absolute scale-[1.2] xl:left-10 bottom-0 2xl:bottom-10 "
+        className="xl:absolute scale-1 -left-20 bottom-0  "
       />
     </div>
   </>
@@ -136,7 +137,7 @@ const BannerContent2 = () => (
         alt="Music"
         width={play2.width}
         style={{ width: "100%", height: "auto", objectFit: "cover" }}
-        className="absolute  xl:left-20 bottom-0 2xl:bottom-10 "
+        className="absolute   bottom-0 2xl:bottom-10 "
       />
     </div>
   </>
