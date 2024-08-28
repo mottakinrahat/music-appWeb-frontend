@@ -15,6 +15,7 @@ import music from "@/assets/etc/banner/Decoration.png";
 import image from "@/assets/etc/banner/Image.png";
 import image2 from "@/assets/etc/banner/man.png";
 import full from "@/assets/etc/banner/full.png";
+import full2 from "@/assets/etc/banner/full2.png";
 
 const Banner = () => {
   return (
@@ -96,24 +97,26 @@ const BannerContent = () => (
 const BannerContent2 = () => (
   <>
     {/* Banner Action */}
-    <div className="2xl:ml-[3rem] flex-1 text-center xl:text-left max-w-[39rem] my-5 md:my-10 py-10 md:pt-20 xl:my-24">
-      <h1 className="text-[2.1rem] sm:text-5xl leading-tight lg:text-[4rem] font-bold text-textSecondary lg:leading-[4.75rem]">
-        Revolutionize the way you
-        <span className="text-secondary inline-block">experience</span> music
-      </h1>
-      <p className="mb-12 mt-8 text-textPrimary max-w-[38rem]">
-        Discover a universe of sound that ignites your passions and fuels your
-        creativity. Explore millions of songs, from chart-topping hits to
-        underground gems, and lose yourself in a sonic adventure.
-      </p>
-      <div className="flex justify-center flex-wrap xl:justify-normal gap-6">
-        <Button>Join Now</Button>
-        <OutlineButton>Discover more</OutlineButton>
+    <>
+      {/* Banner Action */}
+      <div className=" max-w-xl text-center xl:text-left my-5 py-10 ">
+        <h1 className="text-[2.1rem] sm:text-5xl leading-tight lg:text-[3.7rem] font-bold text-textSecondary lg:leading-[4.75rem]">
+          Revolutionize the way you{" "}
+          <span className="text-secondary inline-block"> experience</span> music
+        </h1>
+        <p className="mb-8 mt-6 sm:mb-12 sm:mt-8 text-textPrimary">
+          Discover a universe of sound that ignites your passions and fuels your
+          creativity. Explore millions of songs, from chart-topping hits to
+          underground gems, and lose yourself in a sonic adventure.
+        </p>
+        <div className="flex justify-center flex-wrap xl:justify-normal gap-6">
+          <Button>Join Now</Button>
+          <OutlineButton>Discover more</OutlineButton>
+        </div>
       </div>
-    </div>
-    {/* Banner image part */}
-    <div className="flex-1 max-w-3xl md:mt-48 lg:-mx-10 mt-20 relative lg:pt-24 xl:p-0 flex justify-end ">
-      <div className="bg-banner-gradient relative h-[15rem] w-[15rem] min-[380px]:h-[20rem] min-[380px]:w-[20rem] md:w-[30rem] lg:w-4/5 xl:h-full mt-auto rounded-t-md">
+      {/* Banner image part */}
+      <div className=" w-full lg:-mx-10 mt-20 relative max-xl:-my-10 xl:pt-24 pt-0 p-0 flex justify-end ">
+        {/* <div className="bg-banner-gradient relative h-[15rem] w-[15rem] min-[380px]:h-[20rem] min-[380px]:w-[20rem] md:w-[30rem] lg:w-[80%] xl:h-full mt-auto rounded-t-md">
         <Image
           src={play}
           height={play.height}
@@ -123,23 +126,24 @@ const BannerContent2 = () => (
           className="mx-auto -my-4 sm:-my-6  md:-my-9"
         />
         <Image
-          src={image2}
-          height={image2.height}
+          src={image}
+          height={image.height}
           alt="Music"
-          width={image2.width}
+          width={image.width}
           style={{ height: "auto", width: "75%", objectFit: "cover" }}
           className="absolute max-sm:scale-125 xl:scale-110 bottom-0 xl:bottom-8 z-20 left-1/2 -translate-x-1/2"
         />
+      </div> */}
+        <Image
+          src={full2}
+          height={full2.height}
+          alt="full2"
+          width={full2.width}
+          style={{ width: "100%", height: "auto", objectFit: "cover" }}
+          className="xl:absolute scale-75 -left-20 -bottom-20  "
+        />
       </div>
-      <Image
-        src={play2}
-        height={play2.height}
-        alt="Music"
-        width={play2.width}
-        style={{ width: "100%", height: "auto", objectFit: "cover" }}
-        className="absolute   bottom-0 2xl:bottom-10 "
-      />
-    </div>
+    </>
   </>
 );
 
