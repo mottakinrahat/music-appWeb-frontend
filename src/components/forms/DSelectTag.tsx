@@ -39,7 +39,8 @@ const DSelectTag = ({
   defaultValue = [],
   ...props
 }: DSelectProps) => {
-  const { control, setValue, clearErrors, getValues, trigger } = useFormContext();
+  const { control, setValue, clearErrors, getValues, trigger } =
+    useFormContext();
   const [selectedTags, setSelectedTags] = useState<Option[]>(defaultValue);
   const [currentValue, setCurrentValue] = useState<string>("");
 
@@ -51,8 +52,13 @@ const DSelectTag = ({
   }, [defaultValue, name, setValue]);
 
   const handleAddTag = () => {
-    const selectedOption = options.find((option) => option.value === currentValue);
-    if (selectedOption && !selectedTags.some((tag) => tag.value === currentValue)) {
+    const selectedOption = options.find(
+      (option) => option.value === currentValue
+    );
+    if (
+      selectedOption &&
+      !selectedTags.some((tag) => tag.value === currentValue)
+    ) {
       const newTags = [...selectedTags, selectedOption];
       setSelectedTags(newTags);
       setValue(name, newTags);
@@ -70,8 +76,11 @@ const DSelectTag = ({
     trigger(name); // Trigger validation to ensure errors are up-to-date
   };
 
-  const filteredOptions = options.filter((option) => !selectedTags.some((tag) => tag.value === option.value));
-  const allOptionsSelected = options.length > 0 && selectedTags.length === options.length;
+  const filteredOptions = options.filter(
+    (option) => !selectedTags.some((tag) => tag.value === option.value)
+  );
+  const allOptionsSelected =
+    options.length > 0 && selectedTags.length === options.length;
 
   return (
     <Controller
@@ -93,8 +102,17 @@ const DSelectTag = ({
               {...props}
               disabled={allOptionsSelected}
             >
-              <SelectTrigger className={`w-full ${error ? "border-red-500" : "border-gray-300"}`} aria-label={label}>
-                <SelectValue placeholder={allOptionsSelected ? "All selected" : placeholder} />
+              <SelectTrigger
+                className={`w-full ${
+                  error ? "border-red-500" : "border-gray-300"
+                }`}
+                aria-label={label}
+              >
+                <SelectValue
+                  placeholder={
+                    allOptionsSelected ? "All selected" : placeholder
+                  }
+                />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -103,12 +121,14 @@ const DSelectTag = ({
                     <SelectItem
                       key={option.value}
                       value={option.value}
-                      disabled={selectedTags.some((tag) => tag.value === option.value)}
+                      disabled={selectedTags.some(
+                        (tag) => tag.value === option.value
+                      )}
                     >
                       <div className="flex items-center">
-                        {selectedTags.some((tag) => tag.value === option.value) && (
-                          <Check className="mr-2 h-4 w-4 text-primary" />
-                        )}
+                        {selectedTags.some(
+                          (tag) => tag.value === option.value
+                        ) && <Check className="mr-2 h-4 w-4 text-primary" />}
                         <span>{option.label}</span>
                       </div>
                     </SelectItem>
@@ -127,19 +147,21 @@ const DSelectTag = ({
               <GoPlus className="text-black" />
             </button>
           </div>
-          {error && <span className="text-red-500 text-sm mt-1">{error.message}</span>}
+          {error && (
+            <span className="text-red-500 text-sm mt-1">{error.message}</span>
+          )}
 
           <div className="mt-2 flex flex-wrap gap-2">
             {selectedTags.map((tag) => (
               <span
                 key={tag.value}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium border border-[#00CCD0] text-[#00CCD0] bg-white rounded-full"
+                className="inline-flex items-center px-3 py-2 transition text-sm font-medium border border-[#00CCD0] text-[#00CCD0] bg-white rounded-full"
               >
                 {tag.label}
                 <button
                   type="button"
                   onClick={() => handleRemoveTag(tag.value)}
-                  className="ml-2 text-red-500 hover:text-red-700"
+                  className="ml-2 text-red-500 transition hover:text-red-700"
                   aria-label={`Remove ${tag.label}`}
                 >
                   X

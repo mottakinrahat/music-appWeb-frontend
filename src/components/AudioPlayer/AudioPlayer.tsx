@@ -343,37 +343,37 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const threeDotContent = (
-    <div className="font-bold text-gray-600 select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
+    <div className="font-bold text-textSecondary select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
       <h2
         onClick={handleAddtoPlayList}
-        className="flex hover:text-black cursor-pointer justify-start items-center gap-2"
+        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
       >
         <PlusCircleIcon className="h-6 w-6" />
         <span>Add to playlist</span>
       </h2>
       <h2
         onClick={handleAddtoFavourite}
-        className="flex hover:text-black cursor-pointer justify-start items-center gap-2"
+        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
       >
         <HeartIcon className="h-6 w-6" />
         <span>Add to favorites</span>
       </h2>
       <h2
         onClick={() => setShare(!share)}
-        className="flex hover:text-black cursor-pointer justify-start items-center gap-2"
+        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
       >
         <ShareIcon className="h-6 w-6" />
         <span>Share</span>
       </h2>
-      <h2 className="flex hover:text-black cursor-pointer justify-start items-center gap-2">
+      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
         <CircleStackIcon className="h-6 w-6" />
         <span>Go album</span>
       </h2>
-      <h2 className="flex hover:text-black cursor-pointer justify-start items-center gap-2">
+      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
         <UserCircleIcon className="h-6 w-6" />
         <span>Go artist</span>
       </h2>
-      <h2 className="flex hover:text-black cursor-pointer justify-start items-center gap-2">
+      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
         <MusicalNoteIcon className="h-6 w-6" />
         <span>Song credit</span>
       </h2>

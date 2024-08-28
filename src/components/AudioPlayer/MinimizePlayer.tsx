@@ -7,9 +7,7 @@ import MaximizePlayer from "./MaximizePlayer";
 const MinimizePlayer = () => {
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(true);
-  const [playMusicById, setPlayMusicById] = useState(
-    "66c9c030a88974f63b01510b"
-  );
+  const [playMusicById, setPlayMusicById] = useState<string>();
   const [readyPlayer, setReadyPlayer] = useState(false);
 
   useEffect(() => {

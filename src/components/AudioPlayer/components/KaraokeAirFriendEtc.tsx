@@ -17,7 +17,7 @@ const KaraokeAirFriendEtc = ({
         {karaokeOn ? (
           <div className="flex gap-[8px]">
             <img src={micOnIcon.src} alt="micOnIcon" />
-            <h2>Karaoke mode (on)</h2>
+            <h2>Karaoke mode (On)</h2>
           </div>
         ) : (
           <div className="flex  items-center gap-[8px]">

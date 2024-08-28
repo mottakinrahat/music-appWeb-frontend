@@ -101,7 +101,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       setPlaying(true);
     }
   }, [currentTrackIndex, tracks]);
-
+  // show controls
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(false);
 
@@ -112,7 +112,10 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     } else {
       setShowPlayer(false);
     }
-  }, [pathname]);
+    if (showPlayer) {
+      setWidth(0);
+    }
+  }, [pathname, showPlayer]);
 
   const handlePrev = () => {
     if (currentTrackIndex !== null && currentTrackIndex > 0) {

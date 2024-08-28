@@ -18,7 +18,7 @@ const FooterEnd = () => {
           href="https://facebook.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="max-sm:m-2 text-[#4C4C4C] border-2 p-1 rounded-md bg-black/10 hover:text-[#6b6b6b]"
+          className="max-sm:m-2 text-textSecondary transition border-2 p-1 rounded-md bg-black/10 hover:text-textPrimary"
         >
           <FaFacebookF size={24} />
         </Link>
@@ -26,7 +26,7 @@ const FooterEnd = () => {
           href="https://instagram.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="max-sm:m-2 text-[#4C4C4C] border-2 p-1 rounded-md bg-black/10 hover:text-[#6b6b6b]"
+          className="max-sm:m-2 text-textSecondary transition border-2 p-1 rounded-md bg-black/10 hover:text-textPrimary"
         >
           <FaInstagram size={24} />
         </Link>
@@ -34,7 +34,7 @@ const FooterEnd = () => {
           href="https://linkedin.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="max-sm:m-2 text-[#4C4C4C] border-2 p-1 rounded-md bg-black/10 hover:text-[#6b6b6b]"
+          className="max-sm:m-2 text-textSecondary transition border-2 p-1 rounded-md bg-black/10 hover:text-textPrimary"
         >
           <FaLinkedinIn size={24} />
         </Link>
@@ -42,7 +42,7 @@ const FooterEnd = () => {
           href="https://twitter.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="max-sm:m-2 text-[#4C4C4C] border-2 p-1 rounded-md bg-black/10 hover:text-[#6b6b6b]"
+          className="max-sm:m-2 text-textSecondary transition border-2 p-1 rounded-md bg-black/10 hover:text-textPrimary"
         >
           <RiTwitterXFill size={24} />
         </Link>
@@ -50,7 +50,7 @@ const FooterEnd = () => {
           href="https://youtube.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="max-sm:m-2 text-[#4C4C4C] border-2 p-1 rounded-md bg-black/10 hover:text-[#6b6b6b]"
+          className="max-sm:m-2 text-textSecondary transition border-2 p-1 rounded-md bg-black/10 hover:text-textPrimary"
         >
           <FaYoutube size={24} />
         </Link>

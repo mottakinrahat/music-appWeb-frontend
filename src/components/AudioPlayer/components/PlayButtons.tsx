@@ -46,7 +46,7 @@ const PlayButtons = ({
         {showControl && (
           <button
             onClick={handlePreviousTenSecond}
-            className="text-white group text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
+            className="text-white group text-3xl mx-2 transition hover:text-gray-300 flex items-center gap-1"
           >
             <Image
               width={100}
@@ -63,8 +63,8 @@ const PlayButtons = ({
           onClick={handlePrev}
           className={` text-lg  ${
             showControl
-              ? "text-white hover:text-gray-300"
-              : "text-gray-600 hover:text-black"
+              ? "text-white transition hover:text-gray-300"
+              : "text-gray-600 transition hover:text-black"
           }`}
         >
           <MdOutlineSkipPrevious className="h-7 w-7" />
@@ -73,8 +73,8 @@ const PlayButtons = ({
           onClick={handlePlayPause}
           className={` text-lg  flex items-center justify-center mx-4  ${
             showControl
-              ? "text-white hover:text-gray-300"
-              : "text-gray-600 hover:text-black"
+              ? "text-white transition hover:text-gray-300"
+              : "text-gray-600 transition hover:text-black"
           }`}
         >
           {playing ? (
@@ -87,8 +87,8 @@ const PlayButtons = ({
           onClick={handleNext}
           className={` text-lg  ${
             showControl
-              ? "text-white hover:text-gray-300"
-              : "text-gray-600 hover:text-black"
+              ? "text-white transition hover:text-gray-300"
+              : "text-gray-600 transition hover:text-black"
           }`}
         >
           <MdOutlineSkipNext className="h-7 w-7" />
@@ -96,7 +96,7 @@ const PlayButtons = ({
         {showControl && (
           <button
             onClick={handleNextTenSecond}
-            className="text-white group text-3xl mx-2 hover:text-gray-300 flex items-center gap-1"
+            className="text-white group text-3xl mx-2 transition hover:text-gray-300 flex items-center gap-1"
           >
             <span className="text-[16px]">10s</span>{" "}
             <Image

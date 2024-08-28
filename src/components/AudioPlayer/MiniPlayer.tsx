@@ -111,7 +111,7 @@ const MiniPlayer = ({
           <div>
             <Link
               href={`/music/${id}`}
-              className="h-10 w-10 flex z-50 hover:text-gray-600 justify-center items-center cursor-pointer"
+              className="h-10 w-10 flex z-50 hover:text-textPrimary justify-center items-center cursor-pointer"
             >
               <FiMaximize2 />
             </Link>

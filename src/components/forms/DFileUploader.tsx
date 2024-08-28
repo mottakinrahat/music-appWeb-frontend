@@ -75,10 +75,16 @@ const DFileUploader = ({
     <Controller
       name={name}
       control={control}
-      render={({ field: { onChange, value, onBlur, ...field }, fieldState: { error } }) => (
+      render={({
+        field: { onChange, value, onBlur, ...field },
+        fieldState: { error },
+      }) => (
         <div className={`w-full ${className}`}>
           {label && (
-            <Label htmlFor={name} className={cn(labelTextColor, "block mb-2 text-lg w-full")}>
+            <Label
+              htmlFor={name}
+              className={cn(labelTextColor, "block mb-2 text-lg w-full")}
+            >
               {label}
             </Label>
           )}
@@ -95,17 +101,25 @@ const DFileUploader = ({
             onDragLeave={handleDragLeave}
           >
             {/* Display cloud upload image */}
-            <Image src={cloudUpoadImage} alt="cloud upload" width={50} height={50} />
+            <Image
+              src={cloudUpoadImage}
+              alt="cloud upload"
+              width={50}
+              height={50}
+            />
 
             <span className="text-center text-[#262626] font-normal mt-4">
-              Drag & Drop or <span className="underline">Upload your files</span>
+              Drag & Drop or{" "}
+              <span className="underline">Upload your files</span>
             </span>
             <Input
               {...field}
               type="file"
               accept={accept} // Accept only audio files
               multiple // Enable multiple file selection
-              onChange={(e) => onChange(Array.from((e.target as HTMLInputElement).files || []))}
+              onChange={(e) =>
+                onChange(Array.from((e.target as HTMLInputElement).files || []))
+              }
               className="hidden"
               id={name}
               disabled={disabled}
@@ -123,7 +137,9 @@ const DFileUploader = ({
                       onMouseDown={(e) => {
                         e.stopPropagation(); // Stop propagation of mouse down event
                         // Remove the file
-                        const updatedFiles = value.filter((_: any, i: any) => i !== index);
+                        const updatedFiles = value.filter(
+                          (_: any, i: any) => i !== index
+                        );
                         setValue(name, updatedFiles);
 
                         // Reset the file input if no files are left
@@ -131,7 +147,7 @@ const DFileUploader = ({
                           resetFileInput();
                         }
                       }}
-                      className="ml-2 text-red-500 hover:text-red-700"
+                      className="ml-2 text-red-500 transition hover:text-red-700"
                     >
                       <XCircle className="w-4 h-4" />
                     </button>
@@ -141,7 +157,9 @@ const DFileUploader = ({
             )}
           </label>
 
-          {error && <span className="text-red-500 text-sm mt-1">{error.message}</span>}
+          {error && (
+            <span className="text-red-500 text-sm mt-1">{error.message}</span>
+          )}
         </div>
       )}
     />

@@ -33,7 +33,7 @@ const DownloadOffline: React.FC<DownloadButtonProps> = ({
 
   return (
     <a onClick={handleSaveSong} href={songUrl} download={songName}>
-      <LucideDownload className="active:text-accent group-hover:text-accent hover:text-accent text-white focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
+      <LucideDownload className="active:text-accent group-hover:text-accent transition hover:text-accent text-white focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
     </a>
   );
 };

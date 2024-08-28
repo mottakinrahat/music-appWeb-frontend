@@ -22,28 +22,28 @@ export default function Volumn({
       {volume === 0 ? (
         <button
           onClick={handleMute}
-          className="text-white text-xl mx-2 hover:text-gray-300"
+          className="text-white text-xl mx-2 transition hover:text-gray-300"
         >
           <RxSpeakerOff />
         </button>
       ) : volume < 0.3 ? (
         <button
           onClick={handleMute}
-          className="text-white text-xl mx-2 hover:text-gray-300"
+          className="text-white text-xl mx-2 transition hover:text-gray-300"
         >
           <RxSpeakerQuiet />
         </button>
       ) : volume < 0.5 ? (
         <button
           onClick={handleMute}
-          className="text-white text-xl mx-2 hover:text-gray-300"
+          className="text-white text-xl mx-2 transition hover:text-gray-300"
         >
           <RxSpeakerModerate />
         </button>
       ) : (
         <button
           onClick={handleMute}
-          className="text-white text-xl mx-2 hover:text-gray-300"
+          className="text-white text-xl mx-2 transition hover:text-gray-300"
         >
           <RxSpeakerLoud />
         </button>
