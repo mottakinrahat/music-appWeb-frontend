@@ -7,7 +7,8 @@ interface PlansTabsProps {
   // Define your props here if needed
 }
 
-const PlansTabs: React.FC<PlansTabsProps> = ({}) => {
+const PlansTabs: React.FC<PlansTabsProps> = () => {
+
   return (
     <div className="mt-12 mb-12">
       <Tabs defaultValue="monthly" className="w-full">
