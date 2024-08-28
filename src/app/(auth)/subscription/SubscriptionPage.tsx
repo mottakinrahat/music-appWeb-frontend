@@ -11,7 +11,15 @@ const couponSchema = z.object({
 });
 
 const SubscriptionCard: React.FC = () => {
+  // state for selected plan
   const [selectedPlan, setSelectedPlan] = useState("monthly");
+  // state for coupon code
+  const [showCoupon, setShowCoupon] = useState(false);
+  // state for error message
+
+  const [errorMessage, setErrorMessage] = useState("Coupon is not valid");
+
+  // handle form submit
   const handleSubmit = (data: any) => {
     console.log(data);
   };
@@ -32,7 +40,7 @@ const SubscriptionCard: React.FC = () => {
           }`}
           onClick={() => setSelectedPlan("monthly")}
         >
-          <label className="flex items-center ">
+          <label className="flex items-center">
             <div className="px-1 py-1 border flex items-center justify-center rounded-md">
               <input
                 type="radio"
@@ -40,7 +48,7 @@ const SubscriptionCard: React.FC = () => {
                 value="monthly"
                 checked={selectedPlan === "monthly"}
                 onChange={() => setSelectedPlan("monthly")}
-                className="appearance-none w-4 h-4  border-gray-400 rounded-md checked:bg-black "
+                className="appearance-none w-4 h-4 border-gray-400 rounded-md checked:bg-black"
               />
             </div>
             <span className="ml-2">Monthly</span>
@@ -62,7 +70,7 @@ const SubscriptionCard: React.FC = () => {
                 value="yearly"
                 checked={selectedPlan === "yearly"}
                 onChange={() => setSelectedPlan("yearly")}
-                className="appearance-none w-4 h-4  border-gray-400 rounded-md checked:bg-black"
+                className="appearance-none w-4 h-4 border-gray-400 rounded-md checked:bg-black"
               />
             </div>
             <span className="ml-2">Yearly (Save 20%)</span>
@@ -73,17 +81,31 @@ const SubscriptionCard: React.FC = () => {
 
       <div className="py-6 mt-6 border-t border-b mb-6">
         <div className="mb-4">
-          <button className="text-black text-base font-normal leading-normal underline">+ Add coupon code</button>
+          <button
+            onClick={() => setShowCoupon((prev) => !prev)}
+            className="text-black text-base font-normal leading-normal underline"
+          >
+            {showCoupon ? "- Remove coupon code" : "+ Add coupon code"}
+          </button>
         </div>
 
-        <DForm onSubmit={handleSubmit} resolver={zodResolver(couponSchema)} className="mb-6 flex gap-6">
-          <DInput name="coupon" label="" defaultValue={""} placeholder="Apply cpupon" />
-          <Button variant="default" className="text-white text-base font-semibold leading-normal w-fit">
-            Apply
-          </Button>
+        {/* input form */}
+        <DForm
+          onSubmit={handleSubmit}
+          resolver={zodResolver(couponSchema)}
+          className={`mb-6 space-y-3  transition-opacity duration-300 ease-in-out ${showCoupon ? "opacity-100 " : "opacity-0 "}`}
+        >
+          <div className="flex gap-3 ">
+            <DInput name="coupon" label="" defaultValue={""} placeholder="Add coupon" className="flex-1 w-full" />
+
+            <Button type="submit" variant="default" className="text-white text-base font-semibold leading-normal w-fit">
+              Apply
+            </Button>
+          </div>
+          {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
         </DForm>
 
-        <div className="grid grid-cols-2">
+        <div className={`grid grid-cols-2 transition-all duration-300 ${showCoupon ? "" : "-mt-24"}`}>
           <div className="border-r border-[#E6E6E6] pt-4 pr-6">
             <div className="flex justify-between mb-2">
               <span className="text-black text-base font-normal leading-normal">Subtotal</span>
