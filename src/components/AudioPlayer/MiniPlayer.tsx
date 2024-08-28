@@ -9,6 +9,8 @@ import placeHolder from "@/assets/etc/png/song.jpg";
 import { GradientRange } from "../ui/slider";
 import { formatTime } from "@/utils/FormatTime";
 import Volumn from "./components/Volumn";
+import AirPlayButton from "./components/AirPlayButton";
+import PlayLIstIcon from "./components/PlayLIstIcon";
 
 interface MiniPlayerProps {
   handleNext: () => void;
@@ -72,7 +74,7 @@ const MiniPlayer = ({
 
   if (!showControl)
     return (
-      <div className="h-28 bg-white w-full ">
+      <div className="h-28 bg-[#E8E8E8] w-full ">
         <div className="container h-full justify-between flex items-center  ">
           <div>
             <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px]  ">
@@ -140,7 +142,7 @@ const MiniPlayer = ({
             </div>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex gap-6 items-center">
             <div>
               <Volumn
                 handleMute={handleMute}
@@ -148,6 +150,11 @@ const MiniPlayer = ({
                 volume={volume}
               />
             </div>
+
+            <PlayLIstIcon />
+
+            <AirPlayButton />
+
             <Link
               href={`/music/${id}`}
               className="h-10 w-10 flex z-50 hover:text-textPrimary justify-center items-center cursor-pointer"

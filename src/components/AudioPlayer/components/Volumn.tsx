@@ -1,5 +1,10 @@
 "use client";
-import { GradientRange, Slider } from "@/components/ui/slider";
+import {
+  GradientRange,
+  Slider,
+  VolumeRange,
+  VolumeRange2,
+} from "@/components/ui/slider";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {
@@ -37,7 +42,7 @@ export default function Volumn({
           onClick={handleMute}
           className={`${
             !showPlayer
-              ? "text-textPrimary hover:text-textSecondary"
+              ? "text-[#262626] font-bold"
               : "text-white hover:text-gray-300"
           } text-xl mx-2 transition `}
         >
@@ -48,7 +53,7 @@ export default function Volumn({
           onClick={handleMute}
           className={`${
             !showPlayer
-              ? "text-textPrimary hover:text-textSecondary"
+              ? "text-[#262626] font-bold"
               : "text-white hover:text-gray-300"
           } text-xl mx-2 transition `}
         >
@@ -59,7 +64,7 @@ export default function Volumn({
           onClick={handleMute}
           className={`${
             !showPlayer
-              ? "text-textPrimary hover:text-textSecondary"
+              ? "text-[#262626] font-bold"
               : "text-white hover:text-gray-300"
           } text-xl mx-2 transition `}
         >
@@ -70,7 +75,7 @@ export default function Volumn({
           onClick={handleMute}
           className={`${
             !showPlayer
-              ? "text-textPrimary hover:text-textSecondary"
+              ? "text-[#262626] font-bold"
               : "text-white hover:text-gray-300"
           } text-xl mx-2 transition `}
         >
@@ -79,7 +84,7 @@ export default function Volumn({
       )}
       {/* volume slider */}
       {showPlayer ? (
-        <Slider
+        <VolumeRange2
           defaultValue={[volume]}
           max={1}
           min={0}
@@ -89,7 +94,7 @@ export default function Volumn({
           className="w-20 mx-2 accent-white"
         />
       ) : (
-        <GradientRange
+        <VolumeRange
           defaultValue={[volume]}
           max={1}
           min={0}

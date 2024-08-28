@@ -129,7 +129,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
         <div>
           <DownloadOffline songName={songName} songUrl={songUrl} />
         </div>
-        <div className={"group"}>
+        <div className={"group flex justify-center"}>
           <DropDownBtn
             dropDownContent={settingContent}
             buttonContent={
