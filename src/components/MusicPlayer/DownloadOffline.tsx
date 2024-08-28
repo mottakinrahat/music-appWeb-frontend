@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import DownloadIcon from "../../assets/icons/download.svg";
+
+import { LucideDownload } from "lucide-react";
 // import { saveSong } from "@/utils/offlineDB";
 
 interface DownloadButtonProps {
@@ -32,7 +33,7 @@ const DownloadOffline: React.FC<DownloadButtonProps> = ({
 
   return (
     <a onClick={handleSaveSong} href={songUrl} download={songName}>
-      <img src={DownloadIcon.src} alt="DownloadIcon" />
+      <LucideDownload className="active:text-accent group-hover:text-accent hover:text-accent text-white focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
     </a>
   );
 };

@@ -167,7 +167,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
         <Chart data={data} />
       </div>
 
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: "0px" }}>
         <div className="flex justify-between">
           <h3 className="font-semibold">Equalizer</h3>
           <div
@@ -201,7 +201,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
                 key={index}
                 className="flex cursor-pointer justify-between w-[8rem] items-center"
               >
-                <button className="my-2">
+                <button className="my-[6px]">
                   {preset.charAt(0).toUpperCase() + preset.slice(1)}
                 </button>
                 {selectedPreset === preset && (
@@ -219,7 +219,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
                 key={index}
                 className="flex justify-between w-[8rem] items-center opacity-70"
               >
-                <button className="my-1" disabled>
+                <button className="my-[6px]" disabled>
                   {preset.charAt(0).toUpperCase() + preset.slice(1)}
                 </button>
                 {selectedPreset === preset && (

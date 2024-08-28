@@ -84,3 +84,32 @@
   background-image: linear-gradient(180deg, #01b0b3 0%, #01cdd0 100%);
   border-radius: 12px !important;
 }
+
+/* range  */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 30px;
+  width: 30px;
+  background: transparent;
+  background-image: url("/path-to-your-image/smile.png");
+  background-size: cover;
+  border-radius: 50%;
+  transition: 0.2s ease-in-out;
+  transform: rotateZ(var(--thumb-rotate, 0deg));
+}
+
+input[type="range"]:hover::-webkit-slider-thumb,
+input[type="range"]:hover::-moz-range-thumb {
+  box-shadow: 0 0 0 10px rgba(255, 85, 0, 0.1);
+}
+
+input[type="range"]:active::-webkit-slider-thumb,
+input[type="range"]:active::-moz-range-thumb {
+  box-shadow: 0 0 0 13px rgba(255, 85, 0, 0.2);
+}
+
+input[type="range"]:focus::-webkit-slider-thumb,
+input[type="range"]:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 13px rgba(255, 85, 0, 0.2);
+}

@@ -8,6 +8,8 @@ import { Switch } from "@/components/ui/switch";
 import { IoSettingsOutline } from "react-icons/io5";
 import Volumn from "./Volumn";
 import DownloadOffline from "./DownloadOffline";
+import { LucideMinimize2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface VolumeSettingDownRepeatProps {
   volume: number;
@@ -15,6 +17,7 @@ interface VolumeSettingDownRepeatProps {
   handleMute: () => void;
   songName: string;
   songUrl: string;
+  audioRef: any;
 }
 
 const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
@@ -23,7 +26,10 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   handleMute,
   songName,
   songUrl,
+  audioRef,
 }: any) => {
+  const router = useRouter();
+
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
   const [quality, setQuality] = useState<any>("high");
   const [isEqOn, setEqOn] = useState(false);
@@ -47,39 +53,32 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
 
   // toggle quality
   const toggleQuality = () => {
-    if (quality === "high") {
-      setQuality("medium");
-      localStorage.setItem("quality", "medium");
-    } else if (quality === "medium") {
-      setQuality("low");
-      localStorage.setItem("quality", "low");
-    } else if (quality === "low") {
-      setQuality("high");
-      localStorage.setItem("quality", "high");
+    const newQuality =
+      quality === "high" ? "medium" : quality === "medium" ? "low" : "high";
+    setQuality(newQuality);
+    localStorage.setItem("quality", newQuality);
+
+    if (audioRef.current) {
+      audioRef.current.load();
     }
   };
 
   // handle palyback speed
   const handlePlaybackSpeed = () => {
-    if (playbackSpeed === 1) {
-      setPlaybackSpeed(1.5);
-      localStorage.setItem("speed", "1.5");
-    } else if (playbackSpeed === 1.5) {
-      setPlaybackSpeed(2);
-      localStorage.setItem("speed", "2");
-    } else if (playbackSpeed === 2) {
-      setPlaybackSpeed(0.25);
-      localStorage.setItem("speed", "0.25");
-    } else if (playbackSpeed === 0.25) {
-      setPlaybackSpeed(0.5);
-      localStorage.setItem("speed", "0.5");
-    } else if (playbackSpeed === 0.75) {
-      setPlaybackSpeed(0.75);
-      localStorage.setItem("speed", "0.75");
-    } else {
-      setPlaybackSpeed(1);
-      localStorage.setItem("speed", "1");
+    const speedOptions = [1, 1.5, 2, 0.5, 0.75];
+    const nextIndex =
+      (speedOptions.indexOf(playbackSpeed) + 1) % speedOptions.length;
+    const newSpeed = speedOptions[nextIndex];
+    setPlaybackSpeed(newSpeed);
+    localStorage.setItem("speed", newSpeed.toString());
+
+    if (audioRef.current) {
+      audioRef.current.playbackRate = newSpeed;
     }
+  };
+
+  const handleMinimize = () => {
+    router.back();
   };
 
   const settingContent = (
@@ -140,8 +139,12 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
             }
           />
         </div>
-        <div>
-          <img src={QueueMusicIcon.src} alt="QueueMusicIcon" />
+        <div
+          className="text-white cursor-pointer active:text-accent group-hover:text-accent hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
+          onClick={handleMinimize}
+        >
+          {/* <img src={QueueMusicIcon.src} alt="QueueMusicIcon" /> */}
+          <LucideMinimize2 />
         </div>
       </div>
     </div>

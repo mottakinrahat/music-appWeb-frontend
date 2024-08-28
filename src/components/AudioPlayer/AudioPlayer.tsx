@@ -29,6 +29,7 @@ import Link from "next/link";
 import ShareCard from "../Card/ShareCard";
 import { usePathname, useRouter } from "next/navigation";
 import MiniPlayer from "./MiniPlayer";
+import { Slider } from "../ui/slider";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
@@ -223,8 +224,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
-  const handleSeek = (e: ChangeEvent<HTMLInputElement>) => {
-    const newTime = parseFloat(e.target.value);
+  const handleSeek = (value: number[]) => {
+    const newTime = value[0]; // Get the first (and only) value from the array
 
     if (audioRef.current) {
       audioRef.current.currentTime = newTime;
@@ -508,14 +509,23 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           />
 
           <div className="w-full cursor-pointer py-1 flex items-center">
-            <input
+            {/* <input
               type="range"
-              step="0.01"
-              className="w-full mx-2 accent-white"
               min="0"
               max={duration}
               value={currentTime}
               onChange={handleSeek}
+              className="w-full cursor-pointer outline-none rounded-full h-1 bg-gray-300"
+              style={{
+                background: `linear-gradient(to right, #000 0%, #ccc 0%)`,
+              }}
+            /> */}
+            <Slider
+              defaultValue={[currentTime]}
+              max={duration}
+              min={0}
+              value={[currentTime]}
+              onValueChange={handleSeek}
             />
           </div>
           <div className="w-full">
@@ -546,6 +556,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             <VolumeSettingDownRepeat
               songName={songName}
               songUrl={songLink}
+              audioRef={audioRef}
               volume={volume}
               handleVolumeChange={handleVolumeChange}
               handleMute={handleMute}

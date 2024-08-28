@@ -32,7 +32,9 @@ const MinimizePlayer = () => {
 
   return (
     <div
-      className={showPlayer ? "block" : "h-28 border-t min-w-0"}
+      className={`${
+        showPlayer ? "block h-[100vh]" : "h-28 border-t min-w-0"
+      } transition-all duration-300`}
       style={{ minHeight: 0, minWidth: 0 }}
     >
       <MaximizePlayer play params={{ id: playMusicById }} />
