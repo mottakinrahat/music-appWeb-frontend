@@ -32,7 +32,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
-      e.preventDefault();
+      // e.preventDefault();
 
       // Determine the starting X position and width
       const x =
@@ -166,6 +166,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       <div className="absolute w-full h-screen bg-black opacity-10 z-10"></div>

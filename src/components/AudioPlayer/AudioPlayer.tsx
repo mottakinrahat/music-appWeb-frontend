@@ -389,6 +389,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       />
       <div className="absolute top-0 w-full ">
         <MiniPlayer
+          currentTime={currentTime}
+          duration={duration}
+          handleSeek={handleSeek}
           handleNext={handleNext}
           handleNextTenSecond={handleNextTenSecond}
           handlePlayPause={handlePlayPause}
@@ -418,7 +421,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           className={`${
             !showPlayer
               ? "hidden"
-              : "absolute p-4 xl:p-[120px] right-0 text-white"
+              : "absolute p-4 xl:p-[120px] right-0 top-16 text-white"
           } `}
         >
           <DropDownBtn

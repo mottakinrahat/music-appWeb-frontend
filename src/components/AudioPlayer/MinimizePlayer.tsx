@@ -5,10 +5,10 @@ import React, { useEffect, useState } from "react";
 import MaximizePlayer from "./MaximizePlayer";
 
 const MinimizePlayer = () => {
-  const pathname = usePathname();
-  const [showPlayer, setShowPlayer] = useState(true);
   const [playMusicById, setPlayMusicById] = useState<string>();
   const [readyPlayer, setReadyPlayer] = useState(false);
+  const pathname = usePathname();
+  const [showPlayer, setShowPlayer] = useState(true);
 
   useEffect(() => {
     // Show the player only if the path matches `/music/:id`

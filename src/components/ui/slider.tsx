@@ -17,12 +17,32 @@ const Slider = React.forwardRef<
     )}
     {...props}
   >
-    <SliderPrimitive.Track className="relative h-1 w-full grow overflow-hidden bg-white/50">
+    <SliderPrimitive.Track className="relative h-1 cursor-pointer w-full grow overflow-hidden bg-white/50">
       <SliderPrimitive.Range className="absolute h-full bg-white" />
     </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="block h-5 w-5 rounded-full bg-white ring-offset-background transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50" />
+    <SliderPrimitive.Thumb className="block h-5 w-5 cursor-pointer rounded-full bg-white ring-offset-background transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50" />
   </SliderPrimitive.Root>
 ));
 Slider.displayName = SliderPrimitive.Root.displayName;
 
-export { Slider };
+const GradientRange = React.forwardRef<
+  React.ElementRef<typeof SliderPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <SliderPrimitive.Root
+    ref={ref}
+    className={cn(
+      "relative flex w-full touch-none select-none items-center",
+      className
+    )}
+    {...props}
+  >
+    <SliderPrimitive.Track className="relative h-1 cursor-pointer w-full grow overflow-hidden  bg-[#cccccc]">
+      <SliderPrimitive.Range className="absolute h-full bg-gradient-to-r from-[#8c8c8c] to-[#262626]" />
+    </SliderPrimitive.Track>
+    <SliderPrimitive.Thumb className="block h-5 w-5 cursor-pointer rounded-full bg-[#262626] ring-offset-background transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50" />
+  </SliderPrimitive.Root>
+));
+GradientRange.displayName = SliderPrimitive.Root.displayName;
+
+export { Slider, GradientRange };

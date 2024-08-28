@@ -69,8 +69,8 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
   useEffect(() => {
     const name = detectBrowser();
     setBrowserName(name);
-    requestDevices();
   }, []);
+
   const connectToDevice = async (device: BluetoothDevice) => {
     try {
       const server = await device.gatt?.connect();
@@ -90,12 +90,12 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
     <div className="min-h-40 max-w-xs border-0 bg-[#DBDAD9]">
       <h3 className="text-2xl font-semibold mb-1 px-4 py-3">Select a device</h3>
       <div className="bg-black/10 h-px w-full" />
-      {/* <button
+      <button
         onClick={requestDevices}
         className="px-4 hover:text-black/70 transition text-base py-2"
       >
         Scan for devices
-      </button> */}
+      </button>
       <div className="px-4 py-2 pt-4 space-y-2 font-semibold text-base">
         <div className="flex gap-2 items-center">
           <MdAirplay size={20} />
@@ -119,7 +119,6 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
         )}
       </div>
       <div className="px-4 py-2">
-        {/* {connectionStatus} */}
         <h1 className="font-semibold">Don{`'`}t see your Device?</h1>
         <p className="font-normal text-sm text-gray-700">
           Please make sure the device is turned on and you are on the same WiFi

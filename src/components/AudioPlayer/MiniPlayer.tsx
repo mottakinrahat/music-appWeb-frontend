@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { FiMaximize2 } from "react-icons/fi";
 import Link from "next/link";
 import placeHolder from "@/assets/etc/png/song.jpg";
+import { GradientRange } from "../ui/slider";
+import { formatTime } from "@/utils/FormatTime";
+import Volumn from "./components/Volumn";
 
 interface MiniPlayerProps {
   handleNext: () => void;
@@ -22,6 +25,9 @@ interface MiniPlayerProps {
   id: any;
   title: string;
   volume: number;
+  duration: number;
+  currentTime: number;
+  handleSeek: (value: number[]) => void;
 }
 
 const MiniPlayer = ({
@@ -39,10 +45,14 @@ const MiniPlayer = ({
   id,
   title,
   volume,
+  currentTime,
+  duration,
+
+  handleSeek,
 }: MiniPlayerProps) => {
+  const [artWork, setArtwork] = useState(artwork);
   const pathname = usePathname();
   const [showControl, setShowControl] = useState(true);
-  const [artWork, setArtwork] = useState(artwork);
   //   console.log(artwork);
 
   useEffect(() => {
@@ -98,17 +108,46 @@ const MiniPlayer = ({
             </div>
           </div>
           <div className="">
-            <PlayButtons
-              handleNext={handleNext}
-              handleNextTenSecond={handleNextTenSecond}
-              handlePlayPause={handlePlayPause}
-              handlePreviousTenSecond={handlePreviousTenSecond}
-              handlePrev={handlePrev}
-              playing={playing}
-            />
+            <div>
+              <PlayButtons
+                handleNext={handleNext}
+                handleNextTenSecond={handleNextTenSecond}
+                handlePlayPause={handlePlayPause}
+                handlePreviousTenSecond={handlePreviousTenSecond}
+                handlePrev={handlePrev}
+                playing={playing}
+              />
+            </div>
+            <div className="lg:absolute w-1/2 flex-col max-w-sm justify-center xl:-translate-y-6 max-lg:w-full flex top-[5.8rem] lg:left-1/2 lg:-translate-x-1/2 items-center">
+              <GradientRange
+                defaultValue={[currentTime]}
+                max={duration}
+                min={0}
+                value={[currentTime]}
+                onValueChange={handleSeek}
+                className="w-full max-w-sm"
+              />
+              <div className="w-full">
+                <div className="flex justify-between mt-1 gap-3 items-center font-semibold">
+                  <span className="text-textSecondary text-sm">
+                    {formatTime(currentTime)}
+                  </span>
+                  <span className="text-textSecondary text-sm">
+                    {formatTime(duration)}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div>
+          <div className="flex items-center">
+            <div>
+              <Volumn
+                handleMute={handleMute}
+                handleVolumeChange={handleVolumeChange}
+                volume={volume}
+              />
+            </div>
             <Link
               href={`/music/${id}`}
               className="h-10 w-10 flex z-50 hover:text-textPrimary justify-center items-center cursor-pointer"

@@ -41,7 +41,11 @@ const PlayButtons = ({
   }, [pathname]);
 
   return (
-    <div className="lg:absolute justify-center xl:-translate-y-6 max-lg:w-full flex lg:left-1/2 lg:-translate-x-1/2 items-center">
+    <div
+      className={`lg:absolute justify-center xl:-translate-y-6 ${
+        !showControl && "top-10"
+      } max-lg:w-full flex lg:left-1/2 lg:-translate-x-1/2 items-center`}
+    >
       <div className="flex justify-center items-center">
         {showControl && (
           <button
@@ -64,7 +68,7 @@ const PlayButtons = ({
           className={` text-lg  ${
             showControl
               ? "text-white transition hover:text-gray-300"
-              : "text-gray-600 transition hover:text-black"
+              : "text-[#828282] transition hover:text-textPrimary"
           }`}
         >
           <MdOutlineSkipPrevious className="h-7 w-7" />
@@ -74,7 +78,7 @@ const PlayButtons = ({
           className={` text-lg  flex items-center justify-center mx-4  ${
             showControl
               ? "text-white transition hover:text-gray-300"
-              : "text-gray-600 transition hover:text-black"
+              : "text-[#828282] transition hover:text-textPrimary"
           }`}
         >
           {playing ? (
@@ -88,7 +92,7 @@ const PlayButtons = ({
           className={` text-lg  ${
             showControl
               ? "text-white transition hover:text-gray-300"
-              : "text-gray-600 transition hover:text-black"
+              : "text-[#828282] transition hover:text-textPrimary"
           }`}
         >
           <MdOutlineSkipNext className="h-7 w-7" />
