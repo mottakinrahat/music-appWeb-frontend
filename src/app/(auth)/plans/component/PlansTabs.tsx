@@ -7,7 +7,7 @@ interface PlansTabsProps {
   // Define your props here if needed
 }
 
-const PlansTabs: React.FC<PlansTabsProps> = ({}) => {
+const PlansTabs: React.FC<PlansTabsProps> = () => {
   return (
     <div className="mt-12 mb-12">
       <Tabs defaultValue="monthly" className="w-full">
@@ -62,7 +62,7 @@ const PlansTabs: React.FC<PlansTabsProps> = ({}) => {
             <PlansCard
               billingCycle="year"
               features={["Ad-free streaming", "High-quality audio", "Offline downloads"]}
-              price={23.976}
+              price={95.904}
               title="Premium Tier"
               popular={true}
             />
@@ -75,7 +75,7 @@ const PlansTabs: React.FC<PlansTabsProps> = ({}) => {
                 "Discounts on sample packs",
                 "Freelancer services",
               ]}
-              price={76.7616}
+              price={163.118}
               title="Pro Tier"
             />
           </TabsContent>

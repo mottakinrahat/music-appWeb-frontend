@@ -1,4 +1,6 @@
+"use client";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { FaCheck } from "react-icons/fa6";
 
@@ -13,6 +15,15 @@ interface PlansCardProps {
 }
 
 const PlansCard: React.FC<PlansCardProps> = ({ features, saving, popular = false, title, price, billingCycle }) => {
+  // Function to handle the next page
+  const router = useRouter();
+  const nextPageData = { title, price, billingCycle };
+
+  const handleNextPage = () => {
+    const encodedData = encodeURIComponent(JSON.stringify(nextPageData));
+    router?.push(`/subscription?data=${encodedData}`);
+  };
+
   return (
     <div>
       <div className="grid grid-rows-[auto_1fr_auto] p-6 items-start gap-6 rounded-xl border border-[#E6E6E6] bg-[#F7F7F7] min-h-[482px] ">
@@ -46,7 +57,9 @@ const PlansCard: React.FC<PlansCardProps> = ({ features, saving, popular = false
         {/* Action button */}
         <div className="flex flex-col gap-4">
           {saving && <p>*Save up to {saving}% by paying yearly</p>}
-          <Button variant={"default"}>Select free tire</Button>
+          <Button onClick={handleNextPage} variant={"default"}>
+            Select free tire
+          </Button>
         </div>
       </div>
     </div>
