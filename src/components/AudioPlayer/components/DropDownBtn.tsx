@@ -24,7 +24,7 @@ export function DropDownBtn({ buttonContent, dropDownContent }: any) {
           {buttonContent}
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="max-w-md">
         {dropDownContent}
       </DropdownMenuContent>
     </DropdownMenu>
