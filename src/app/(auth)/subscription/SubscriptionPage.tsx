@@ -2,9 +2,12 @@
 import DForm from "@/components/forms/DForm";
 import DInput from "@/components/forms/DInput";
 import { Button } from "@/components/ui/button";
+import { calculateMonthlyPriceFromDiscountedYearlyPrice } from "@/utils/calculateMonthlyPriceFromDiscountedYearlyPrice";
+import { calculateYearlyPriceWithDiscount } from "@/utils/calculateYearlyPriceWithDiscount";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { set } from "react-hook-form";
 import { z } from "zod";
 
 // Schema for coupon validation
@@ -35,6 +38,19 @@ const SubscriptionCard: React.FC = () => {
   // State for error message
   const [errorMessage, setErrorMessage] = useState("Coupon is not valid");
 
+  const [price, setPrice] = useState<any>(null);
+
+  // calculate discount
+  const discountt = () => {
+    if (data?.title === "Premium Tier") {
+      return 0.2;
+    }
+    return 0.32;
+  };
+  const monthlyPrice = calculateMonthlyPriceFromDiscountedYearlyPrice(data?.price, discountt()).toFixed(2);
+
+  const yearlyPrice = calculateYearlyPriceWithDiscount(data?.price, discountt()).toFixed(2);
+
   useEffect(() => {
     const url = new URL(window.location.href);
     const queryData = url?.searchParams?.get("data");
@@ -43,11 +59,17 @@ const SubscriptionCard: React.FC = () => {
         const decodedData = JSON.parse(decodeURIComponent(queryData));
         setData(decodedData);
         setSelectedPlan(decodedData.billingCycle === "month" ? "monthly" : "year");
+        setPrice(decodedData?.price);
       } catch (error) {
         console.error("Failed to parse query data:", error);
       }
     }
   }, [router]);
+
+  // see if the subscription data is monthly or yearly
+
+  const isMonthly = data?.billingCycle === "month";
+  const isYearly = data?.billingCycle === "year";
 
   console.log(data);
 
@@ -55,6 +77,8 @@ const SubscriptionCard: React.FC = () => {
   const handleSubmit = (data: any) => {
     console.log(data);
   };
+
+  console.log(price);
 
   return (
     <div className="max-w-[588px] mx-auto rounded-lg p-6 bg-white">
@@ -74,6 +98,7 @@ const SubscriptionCard: React.FC = () => {
             if (selectedPlan !== "monthly") {
               setSelectedPlan("monthly");
             }
+            setPrice(data?.billingCycle === "month" ? data?.price : monthlyPrice);
           }}
         >
           <label className="flex items-center ">
@@ -85,12 +110,11 @@ const SubscriptionCard: React.FC = () => {
                 checked={selectedPlan === "monthly"}
                 onChange={() => setSelectedPlan("monthly")}
                 className="appearance-none w-4 h-4 border-gray-400 rounded-md checked:bg-black"
-                disabled={selectedPlan === "year"}
               />
             </div>
             <span className="ml-2">Monthly</span>
           </label>
-          <span>US ${data?.price || "0.00"}/month</span>
+          <span>US $ {isYearly ? monthlyPrice : Number(data?.price).toFixed(2)} /month</span>
         </div>
 
         <div
@@ -101,6 +125,7 @@ const SubscriptionCard: React.FC = () => {
             if (selectedPlan !== "year") {
               setSelectedPlan("year");
             }
+            setPrice(data?.billingCycle === "year" ? data?.price : yearlyPrice);
           }}
         >
           <label className="flex items-center">
@@ -112,12 +137,11 @@ const SubscriptionCard: React.FC = () => {
                 checked={selectedPlan === "year"}
                 onChange={() => setSelectedPlan("year")}
                 className="appearance-none w-4 h-4 border-gray-400 rounded-md checked:bg-black"
-                disabled={selectedPlan === "monthly"}
               />
             </div>
-            <span className="ml-2">Yearly (Save 20%)</span>
+            <span className="ml-2">Yearly (Save {data?.title === "Premium Tier" ? "20%" : "32%"})</span>
           </label>
-          <span>US ${data?.price || "0.00"}/year</span>
+          <span>US ${isMonthly ? yearlyPrice : Number(data?.price).toFixed(2)} /year</span>
         </div>
       </div>
 
@@ -152,11 +176,13 @@ const SubscriptionCard: React.FC = () => {
           <div className="border-r border-[#E6E6E6] pt-4 pr-6">
             <div className="flex justify-between mb-2">
               <span className="text-black text-base font-normal leading-normal">Subtotal</span>
-              <span className="text-black text-base font-semibold leading-normal">US ${data?.price || "0.00"}</span>
+              <span className="text-black text-base font-semibold leading-normal">
+                US ${Number(price).toFixed(2) || "0.00"}
+              </span>
             </div>
             <div className="flex justify-between mb-2">
               <span className="text-black text-base font-normal leading-normal">Taxes</span>
-              <span className="text-black text-base font-semibold leading-normal">US $0.59</span>
+              <span className="text-black text-base font-semibold leading-normal">US $0.00</span>
             </div>
             <div className="flex justify-between">
               <span className="text-black text-base font-normal leading-normal">Coupon</span>
@@ -165,7 +191,7 @@ const SubscriptionCard: React.FC = () => {
           </div>
           <div className="pl-6 flex items-start justify-end flex-col">
             <p className="text-black text-xl font-semibold leading-normal">Total</p>
-            <p className="text-black text-xl font-semibold leading-normal">US ${data?.price || "0.00"}</p>
+            <p className="text-black text-xl font-semibold leading-normal">US ${Number(price).toFixed(2) || "0.00"}</p>
           </div>
         </div>
       </div>
