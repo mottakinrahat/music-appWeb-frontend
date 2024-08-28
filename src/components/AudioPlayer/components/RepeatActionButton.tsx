@@ -9,6 +9,7 @@ import { LucideRepeat, LucideRepeat1, LucideRepeat2 } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { IoMdRepeat } from "react-icons/io";
+import { PiShuffle } from "react-icons/pi";
 
 // inrerface
 export interface RepeatActionButtonProps {
@@ -44,7 +45,7 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
                   ) : repeat === "repeat-all" ? (
                     <LucideRepeat />
                   ) : (
-                    <TbRepeatOff />
+                    <PiShuffle />
                   )}
                 </div>
               </TooltipTrigger>

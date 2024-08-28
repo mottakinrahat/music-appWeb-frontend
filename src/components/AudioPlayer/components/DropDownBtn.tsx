@@ -20,9 +20,9 @@ export function DropDownBtn({ buttonContent, dropDownContent }: any) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="link" className="text-white outline-none z-50">
+        <button className="text-white outline-none z-50">
           {buttonContent}
-        </Button>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         {dropDownContent}
