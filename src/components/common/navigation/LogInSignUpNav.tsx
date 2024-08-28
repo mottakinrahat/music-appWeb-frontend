@@ -3,21 +3,9 @@ import React from "react";
 import Logo from "../logo/Logo";
 import DForm from "@/components/forms/DForm";
 import { z } from "zod";
-import Image from "next/image";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 // Import flag images
-import usFlag from "@/assets/flags/united-states.png";
-import ukFlag from "@/assets/flags/united-kingdom.png";
-import ausFlag from "@/assets/flags/australia.png";
+
 import LanguageSelector from "./LanguageSelector";
 
 const navSchema = z.object({});

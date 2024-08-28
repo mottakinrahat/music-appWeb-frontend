@@ -29,7 +29,7 @@ const Banner = () => {
           // modules={[Autoplay]}
           className="py-0 w-full"
         >
-          <SwiperSlide className="overflow-visible my-0">
+          <SwiperSlide className="overflow-hidden my-0">
             <div className="flex flex-col xl:flex-row max-xl:items-center w-full">
               <BannerContent />
             </div>

@@ -5,7 +5,7 @@ import Navbar from "@/components/common/navigation/Navbar";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import axios from "axios";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 interface PlayerInterface {
   params?: {
@@ -19,13 +19,64 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
     null
   );
-  // const [repeat, setRepeat] = useState<boolean>(false);
   const [playing, setPlaying] = useState<boolean>(true);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
   );
-  const [eqOpen, setEqOpen] = useState(false);
+  const [eqOpen, setEqOpen] = useState(0);
   const [tracks, setTraks] = useState<any>([]);
+  const [width, setWidth] = useState(0); // Initial width
+  const resizingRef = useRef<HTMLDivElement | null>(null);
+  const [startX, setStartX] = useState<number>(0);
+  const [startWidth, setStartWidth] = useState<number>(0);
+
+  const startResizing = useCallback(
+    (e: MouseEvent | TouchEvent) => {
+      e.preventDefault();
+
+      // Determine the starting X position and width
+      const x =
+        e instanceof MouseEvent
+          ? e.clientX
+          : e instanceof TouchEvent
+          ? e.touches[0].clientX
+          : 0;
+      setStartX(x);
+      setStartWidth(width);
+
+      const onMouseMove = (e: MouseEvent | TouchEvent) => {
+        const x =
+          e instanceof MouseEvent
+            ? e.clientX
+            : e instanceof TouchEvent
+            ? e.touches[0].clientX
+            : 0;
+        const newWidth = Math.max(startWidth - (x - startX), 0); // Ensure minimum width
+        setWidth(newWidth);
+      };
+
+      const stopResizing = () => {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", stopResizing);
+        document.removeEventListener("touchmove", onMouseMove);
+        document.removeEventListener("touchend", stopResizing);
+      };
+
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", stopResizing);
+      document.addEventListener("touchmove", onMouseMove);
+      document.addEventListener("touchend", stopResizing);
+    },
+    [width, startX, startWidth]
+  );
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    startResizing(e as unknown as MouseEvent);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    startResizing(e as unknown as TouchEvent);
+  };
 
   useEffect(() => {
     axios
@@ -96,7 +147,13 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   };
 
   const handleOpenEqualizer = () => {
-    setEqOpen(!eqOpen);
+    if (width <= 0) {
+      setEqOpen(0);
+      setWidth(500);
+    } else {
+      setEqOpen(width);
+      setWidth(0);
+    }
   };
 
   return (
@@ -124,12 +181,19 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         </div>
 
         <div
-          className={` bg-white h-full mt-[96px] max-lg:absolute transition-all duration-500 ${
-            eqOpen
+          className={`bg-white relative h-full mt-[96px] max-lg:absolute transition-all duration-500 ${
+            eqOpen <= 0
               ? "max-w-3xl w-[400px] lg:w-[500px] right-0 bottom-0"
               : "w-0 -right-full bottom-0"
           }`}
+          style={{ width }}
+          ref={resizingRef}
         >
+          <div
+            className="absolute left-0 top-0 h-full w-2 bg-white z-[99999] cursor-ew-resize"
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
+          ></div>
           <AudioPlayerEqualizer
             audioContext={audioContext}
             audioElement={audioElement}

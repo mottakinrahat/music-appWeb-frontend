@@ -14,7 +14,7 @@ interface MiniPlayerProps {
   handlePlayPause: () => void;
   handlePrev: () => void;
   playing: boolean;
-  handleVolumeChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleVolumeChange: (value: number[]) => void;
   album: any;
   artist: string;
   handleMute: () => void;

@@ -22,7 +22,7 @@ import MusicControls from "./components/MusicControls";
 import Volumn from "./components/Volumn";
 import axios from "axios";
 import { toast } from "sonner";
-import { Toaster } from "../ui/sonner";
+// import { Toaster } from "../ui/sonner";
 import Link from "next/link";
 import ShareCard from "../Card/ShareCard";
 import { usePathname, useRouter } from "next/navigation";
@@ -158,8 +158,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   // devJibon
   // handle palyback Speed
 
-  const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value);
+  const handleVolumeChange = (value: number[]) => {
+    const newVolume = value[0];
     localStorage.setItem("volume", JSON.stringify(newVolume));
     const oldVolume = localStorage.getItem("volume");
     if (oldVolume) {

@@ -1,3 +1,4 @@
+import { Slider } from "@/components/ui/slider";
 import React from "react";
 import {
   RxSpeakerLoud,
@@ -9,7 +10,7 @@ import {
 interface VolumnFace {
   volume: number;
   handleMute: () => void;
-  handleVolumeChange: any;
+  handleVolumeChange: (value: number[]) => void;
 }
 export default function Volumn({
   handleMute,
@@ -47,14 +48,15 @@ export default function Volumn({
           <RxSpeakerLoud />
         </button>
       )}
-      <input
-        type="range"
-        min="0"
-        max="1"
-        step="0.01"
-        value={volume}
-        className="w-1/2 mx-2 accent-white"
-        onChange={handleVolumeChange}
+      {/* volume slider */}
+      <Slider
+        defaultValue={[volume]}
+        max={1}
+        min={0}
+        value={[volume]}
+        step={0.01}
+        onValueChange={handleVolumeChange}
+        className="w-20 mx-2 accent-white"
       />
     </div>
   );
