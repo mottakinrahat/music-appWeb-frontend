@@ -25,6 +25,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   );
   const [eqOpen, setEqOpen] = useState(0);
   const [tracks, setTraks] = useState<any>([]);
+  // resize ref
   const [width, setWidth] = useState(0); // Initial width
   const resizingRef = useRef<HTMLDivElement | null>(null);
   const [startX, setStartX] = useState<number>(0);
@@ -161,7 +162,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
   return (
     <div
-      className="flex flex-col h-screen overflow-hidden w-full"
+      className="flex flex-col select-none h-screen overflow-hidden w-full"
       style={{
         backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
         backgroundRepeat: "no-repeat",
