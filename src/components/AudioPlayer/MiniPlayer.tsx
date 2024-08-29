@@ -69,6 +69,10 @@ const MiniPlayer = ({
     }
   }, [pathname, artwork]);
 
+  const handleSetPathHistory = () => {
+    localStorage.setItem("pathHistory", pathname);
+  };
+
   if (!showControl)
     return (
       <div className="bg-[#E8E8E8] relative h-28 w-full ">
@@ -145,6 +149,7 @@ const MiniPlayer = ({
             <AirPlayButton />
             <Link
               href={`/music/${id}`}
+              onClick={handleSetPathHistory}
               className="h-10 w-10 flex z-50 hover:text-textPrimary justify-center items-center cursor-pointer"
             >
               <FiMaximize2 />

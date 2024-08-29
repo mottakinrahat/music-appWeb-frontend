@@ -78,7 +78,12 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   };
 
   const handleMinimize = () => {
-    router.back();
+    const pathHistory = localStorage.getItem("pathHistory");
+    if (pathHistory) {
+      router.replace(pathHistory);
+    } else {
+      router.replace("/");
+    }
   };
 
   const settingContent = (

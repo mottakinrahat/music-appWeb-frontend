@@ -6,7 +6,7 @@ import { MdAddCircleOutline } from "react-icons/md";
 import LandingMusicCard from "@/components/Card/LandingMusicCard";
 
 interface PlayListOpenProps {
-  tracks: any[];
+  tracks?: any[];
   playing: boolean;
   setPlaying: (value: boolean) => void;
 }
@@ -19,7 +19,7 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
   }, [tracks]);
 
   const handleRemoveFromPlaylist = (id: string) => {
-    const updatedTracks = tracks.filter((track) => track._id !== id);
+    const updatedTracks = tracks?.filter((track) => track._id !== id);
     setCurrentTracks(updatedTracks);
     console.log(`Removing song with id: ${id}`);
   };

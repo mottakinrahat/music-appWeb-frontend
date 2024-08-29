@@ -1,7 +1,7 @@
 import React from "react";
 
 interface PlayListProps {
-  handlePlayListOpen: () => void;
+  handlePlayListOpen?: () => void;
 }
 
 const PlayLIstIcon: React.FC<PlayListProps> = ({ handlePlayListOpen }) => {

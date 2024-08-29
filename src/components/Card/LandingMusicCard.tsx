@@ -35,14 +35,14 @@ const LandingMusicCard = ({
   const [currentId, setCurrenId] = useState("");
   const [play, setPlay] = useState(playing);
 
-  const currentSongId = localStorage.getItem("songId");
   useEffect(() => {
+    const currentSongId = localStorage.getItem("songId");
     if (!currentSongId) {
       localStorage.setItem("songId", id);
     } else {
       setCurrenId(currentSongId);
     }
-  }, [currentSongId, id]);
+  }, [currentId, id]);
 
   return (
     <div className="flex justify-between gap-4 py-2 items-center max-w-xl">

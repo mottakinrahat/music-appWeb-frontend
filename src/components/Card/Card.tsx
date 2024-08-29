@@ -5,6 +5,7 @@ import playBtn from "@/assets/icons/play_circle.png";
 import Link from "next/link";
 // import { IoHeartOutline } from "react-icons/io5";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
+import { usePathname } from "next/navigation";
 
 interface BaseCard {
   type: string;
@@ -49,8 +50,10 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   album,
   albumRouteLink,
 }) => {
+  const location = usePathname();
   const handleSetIdtoLocalStroage = () => {
     localStorage.setItem("songId", musicId!);
+    localStorage.setItem("pathHistory", location);
   };
 
   return (

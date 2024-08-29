@@ -1,6 +1,7 @@
 "use client";
 // components/Banner.tsx
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 
 // Import Swiper styles
 import "swiper/css";
@@ -9,11 +10,6 @@ import "swiper/css/navigation";
 import { Button } from "@/components/ui/button";
 import OutlineButton from "@/components/ui/outlineButton";
 import Image from "next/image";
-import play from "@/assets/etc/banner/Play.png";
-import play2 from "@/assets/etc/banner/music2.png";
-import music from "@/assets/etc/banner/Decoration.png";
-import image from "@/assets/etc/banner/Image.png";
-import image2 from "@/assets/etc/banner/man.png";
 import full from "@/assets/etc/banner/full.png";
 import full2 from "@/assets/etc/banner/full2.png";
 
@@ -26,7 +22,7 @@ const Banner = () => {
           slidesPerView={1}
           autoplay={{ delay: 3000, disableOnInteraction: false }}
           loop={true}
-          // modules={[Autoplay]}
+          modules={[Autoplay]}
           className="py-0 w-full"
         >
           <SwiperSlide className="overflow-hidden my-0">
