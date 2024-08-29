@@ -88,7 +88,12 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
 
   useEffect(() => {
     if (audioContext && audioElement && gainNodesRef.current.length === 0) {
-      const audioSource = audioContext.createMediaElementSource(audioElement);
+      let audioSource = (audioElement as any)._sourceNode;
+
+      if (!audioSource) {
+        audioSource = audioContext.createMediaElementSource(audioElement);
+        (audioElement as any)._sourceNode = audioSource;
+      }
 
       const filters = frequencies.map((frequency) => {
         const filter = audioContext.createBiquadFilter();

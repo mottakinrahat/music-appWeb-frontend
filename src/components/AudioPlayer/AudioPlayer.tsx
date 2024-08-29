@@ -45,6 +45,7 @@ interface AudioPlayerProps {
   handleOpenEqualizer: any;
   handlePrev: () => void;
   play: boolean;
+  handleOpenPlayList: () => void;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -54,7 +55,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   handleOpenEqualizer,
   handleNext,
   handlePrev,
-  play = true,
+  play,
+  handleOpenPlayList,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -295,6 +297,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       });
   };
 
+  // Three dot menu operations
+
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
     const userId = user?._id;
@@ -491,6 +495,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               toggleRepeat={toggleRepeat}
               src={LyricsIcon.src}
               repeat={repeat}
+              handlePlayListOpen={handleOpenPlayList}
             />
           </div>
 

@@ -60,7 +60,7 @@ export function Chart({ data }: ChartInfc) {
 
             <defs>
               <linearGradient id="frequency" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#00CCD0" stopOpacity={0.6} />
+                <stop offset="0%" stopColor="#00CCD0" stopOpacity={1} />
                 <stop offset="50%" stopColor="#00CCD0" stopOpacity={0.3} />
                 <stop offset="100%" stopColor="#00CCD0" stopOpacity={0.01} />
               </linearGradient>

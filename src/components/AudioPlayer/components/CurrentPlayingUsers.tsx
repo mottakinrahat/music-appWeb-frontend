@@ -5,15 +5,15 @@ const CurrentPlayingUsers = () => {
     <div>
       <div className="flex text-white items-center">
         <Avatar className="w-8 h-8 border-white border-2">
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src="https://cdn-icons-png.freepik.com/512/7718/7718888.png" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <Avatar className="w-8 h-8 -mx-4 border-white border-2">
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src="https://cdn-icons-png.freepik.com/512/7718/7718888.png" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <Avatar className="w-8 h-8 border-white border-2">
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src="https://cdn-icons-png.freepik.com/512/7718/7718888.png" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <p className="mx-2">
