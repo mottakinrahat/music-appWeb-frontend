@@ -22,7 +22,7 @@ export function DropDownBtn({ buttonContent, dropDownContent }: any) {
       <DropdownMenuTrigger asChild>
         <button className="text-white z-50">{buttonContent}</button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="max-w-md">
+      <DropdownMenuContent className="max-w-md w-full">
         {dropDownContent}
       </DropdownMenuContent>
     </DropdownMenu>

@@ -424,9 +424,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         className={`${
           !showPlayer ? "hidden" : "w-full h-screen  bg-cover bg-center"
         } `}
-        // style={{
-        //   backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
-        // }}
+       
       >
         {/* Dropdown section */}
         <div
@@ -528,17 +526,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           />
 
           <div className="w-full cursor-pointer py-1 flex items-center">
-            {/* <input
-              type="range"
-              min="0"
-              max={duration}
-              value={currentTime}
-              onChange={handleSeek}
-              className="w-full cursor-pointer outline-none rounded-full h-1 bg-gray-300"
-              style={{
-                background: `linear-gradient(to right, #000 0%, #ccc 0%)`,
-              }}
-            /> */}
             <Slider
               defaultValue={[currentTime]}
               max={duration}
