@@ -496,6 +496,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               src={LyricsIcon.src}
               repeat={repeat}
               handlePlayListOpen={handleOpenPlayList}
+              handleAddToFavorites={handleAddtoFavourite}
+              isfavorite={true}
             />
           </div>
 

@@ -227,6 +227,8 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     }
   };
 
+  console.log(listWidth);
+
   return (
     <div
       className="flex flex-col select-none h-screen overflow-hidden w-full"
@@ -272,6 +274,34 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             audioElement={audioElement}
           />
         </div>
+        {playlistOpen <= 0 && listWidth > 0 ? (
+          <div
+            onClick={() => {
+              handleOpenPlayList();
+            }}
+            className={`${
+              playlistOpen <= 0
+                ? "fixed transition-colors duration-1000 bg-gradient-to-t from-black/40 h-full w-full top-0"
+                : "bg-transparent"
+            } `}
+          ></div>
+        ) : (
+          ""
+        )}
+        {eqOpen <= 0 && width > 0 ? (
+          <div
+            onClick={() => {
+              handleOpenEqualizer();
+            }}
+            className={`${
+              eqOpen <= 0
+                ? "fixed transition-colors duration-1000 bg-gradient-to-t from-black/40 h-full w-full top-0"
+                : "bg-transparent"
+            } `}
+          ></div>
+        ) : (
+          ""
+        )}
         <div
           className={`bg-white relative h-full mt-[96px] max-lg:absolute transition-all duration-500 ${
             playlistOpen <= 0

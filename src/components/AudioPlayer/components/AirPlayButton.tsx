@@ -6,10 +6,29 @@ import { DropDownBtn } from "./DropDownBtn";
 import { Airplay } from "lucide-react";
 import { usePathname } from "next/navigation";
 
+// Define types for devices
+interface BluetoothDeviceType extends BluetoothDevice {
+  // Add additional properties if needed
+}
+
+interface WifiDeviceType {
+  name: string;
+  // Add additional properties if needed
+}
+
+// interface AirPlayButtonProps {
+//   handleScan: () => void;
+// }
+
 const AirPlayButton = () => {
-  const [devices, setDevices] = useState<BluetoothDevice[]>([]);
-  const [connectedDevice, setConnectedDevice] =
-    useState<BluetoothDevice | null>(null);
+  const [bluetoothDevices, setBluetoothDevices] = useState<
+    BluetoothDeviceType[]
+  >([]);
+  const [connectedBluetoothDevice, setConnectedBluetoothDevice] =
+    useState<BluetoothDeviceType | null>(null);
+  const [wifiDevices, setWifiDevices] = useState<WifiDeviceType[]>([]);
+  const [connectedWifiDevice, setConnectedWifiDevice] =
+    useState<WifiDeviceType | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<string>("");
   const [browserName, setBrowserName] = useState<string>("");
 
@@ -24,6 +43,7 @@ const AirPlayButton = () => {
       setShowPlayer(false);
     }
   }, [pathname]);
+
   useEffect(() => {
     const name = detectBrowser();
     setBrowserName(name);
@@ -57,13 +77,13 @@ const AirPlayButton = () => {
     }
   };
 
-  const requestDevices = async () => {
+  const requestBluetoothDevices = async () => {
     if (navigator.bluetooth) {
       try {
         const device = await navigator.bluetooth.requestDevice({
           filters: [{ services: ["battery_service"] }],
         });
-        setDevices([device]);
+        setBluetoothDevices([device as BluetoothDeviceType]);
         setConnectionStatus("Device selected: " + device.name);
       } catch (error) {
         console.error("Bluetooth device request failed:", error);
@@ -75,11 +95,11 @@ const AirPlayButton = () => {
     }
   };
 
-  const connectToDevice = async (device: BluetoothDevice) => {
+  const connectToBluetoothDevice = async (device: BluetoothDeviceType) => {
     try {
       const server = await device.gatt?.connect();
       if (server) {
-        setConnectedDevice(device);
+        setConnectedBluetoothDevice(device);
         setConnectionStatus("Connected to device: " + device.name);
       } else {
         setConnectionStatus("Failed to connect to GATT server");
@@ -90,42 +110,100 @@ const AirPlayButton = () => {
     }
   };
 
+  // Placeholder function for WiFi device discovery
+  const discoverWifiDevices = async () => {
+    try {
+      // Replace with actual WiFi discovery logic
+      const devices: WifiDeviceType[] = []; // Replace with actual WiFi device data
+      setWifiDevices(devices);
+      setConnectionStatus("WiFi devices discovered");
+    } catch (error) {
+      console.error("WiFi device discovery failed:", error);
+      setConnectionStatus("Failed to discover WiFi devices");
+    }
+  };
+
+  const connectToWifiDevice = async (device: WifiDeviceType) => {
+    try {
+      // Replace with actual WiFi connection logic
+      setConnectedWifiDevice(device);
+      setConnectionStatus("Connected to WiFi device: " + device.name);
+    } catch (error) {
+      console.error("Connection to WiFi device failed:", error);
+      setConnectionStatus("Failed to connect to WiFi device");
+    }
+  };
+
+  const handleScan = async () => {
+    await requestBluetoothDevices();
+    await discoverWifiDevices();
+  };
+
   const airplayControls = (
     <div className="min-h-40 max-w-xs border-0 bg-[#DBDAD9]">
       <h3 className="text-2xl font-semibold mb-1 px-4 py-3">Select a device</h3>
       <div className="bg-black/10 h-px w-full" />
-      <button
-        onClick={requestDevices}
+      {/* <button
+        onClick={requestBluetoothDevices}
         className="px-4 hover:text-black/70 transition text-base py-2"
       >
-        Scan for devices
+        Scan for Bluetooth devices
       </button>
+      <button
+        onClick={discoverWifiDevices}
+        className="px-4 hover:text-black/70 transition text-base py-2"
+      >
+        Scan for WiFi devices
+      </button> */}
       <div className="px-4 py-2 pt-4 space-y-2 font-semibold text-base">
         <div className="flex gap-2 items-center">
           <MdAirplay size={20} />
           Web player ({browserName})
         </div>
-        {devices.length > 0 ? (
-          <ul>
-            {devices.map((device, index) => (
-              <li
-                key={index}
-                className="py-2 cursor-pointer flex gap-2 items-center"
-                onClick={() => connectToDevice(device)}
-              >
-                <RiSignalTowerLine />
-                {device.name} {connectedDevice === device ? "(Connected)" : ""}
-              </li>
-            ))}
-          </ul>
+        {bluetoothDevices.length > 0 ? (
+          <div>
+            <h4 className="font-semibold">Bluetooth Devices</h4>
+            <ul>
+              {bluetoothDevices.map((device, index) => (
+                <li
+                  key={index}
+                  className="py-2 cursor-pointer flex gap-2 items-center"
+                  onClick={() => connectToBluetoothDevice(device)}
+                >
+                  <RiSignalTowerLine />
+                  {device.name}{" "}
+                  {connectedBluetoothDevice === device ? "(Connected)" : ""}
+                </li>
+              ))}
+            </ul>
+          </div>
         ) : (
           <p>No devices found.</p>
+        )}
+        {wifiDevices.length > 0 ? (
+          <div>
+            <ul>
+              {wifiDevices.map((device, index) => (
+                <li
+                  key={index}
+                  className="py-2 cursor-pointer flex gap-2 items-center"
+                  onClick={() => connectToWifiDevice(device)}
+                >
+                  <RiSignalTowerLine />
+                  {device.name}{" "}
+                  {connectedWifiDevice === device ? "(Connected)" : ""}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          ""
         )}
       </div>
       <div className="px-4 py-2">
         <h1 className="font-semibold">Don{`'`}t see your Device?</h1>
         <p className="font-normal text-sm text-gray-700">
-          Please make sure the device is turned on and you are on the same WiFi
+          Please make sure the device is turned on and you are on the same
           network.
         </p>
       </div>
@@ -135,6 +213,7 @@ const AirPlayButton = () => {
   return (
     <DropDownBtn
       dropDownContent={airplayControls}
+      onClick={handleScan}
       buttonContent={
         <Airplay
           className={`${
