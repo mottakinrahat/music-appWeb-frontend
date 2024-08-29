@@ -1,6 +1,6 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 import PlansCard from "./PlansCard";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/custom/CustomTabsForPlansPage";
 
 // Define the interface for the props
 interface PlansTabsProps {
