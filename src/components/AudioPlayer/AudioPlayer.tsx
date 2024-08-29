@@ -355,7 +355,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const threeDotContent = (
-    <div className="font-bold text-textSecondary select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
+    <div className="font-bold text-textSecondary w-52  select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
       <h2
         onClick={handleAddtoPlayList}
         className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
@@ -424,14 +424,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         className={`${
           !showPlayer ? "hidden" : "w-full h-screen  bg-cover bg-center"
         } `}
-       
       >
         {/* Dropdown section */}
         <div
           className={`${
             !showPlayer
               ? "hidden"
-              : "absolute p-4 xl:p-[120px] right-0 top-16 text-white"
+              : "absolute p-4 xl:py-16 xl:px-[120px] right-0 top-16 text-white"
           } `}
         >
           <DropDownBtn
@@ -568,14 +567,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               handleMute={handleMute}
             />
           </div>
-          <div className="md:hidden flex justify-between">
-            <Volumn
-              handleMute={handleMute}
-              handleVolumeChange={handleVolumeChange}
-              volume={volume}
-            />
+          {/* <div className="md:hidden flex justify-between">
             <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
