@@ -22,7 +22,7 @@ import MusicControls from "./components/MusicControls";
 import Volumn from "./components/Volumn";
 import axios from "axios";
 import { toast } from "sonner";
-import { Toaster } from "../ui/sonner";
+// import { Toaster } from "../ui/sonner";
 import Link from "next/link";
 import ShareCard from "../Card/ShareCard";
 import { usePathname, useRouter } from "next/navigation";
@@ -42,9 +42,11 @@ interface AudioPlayerProps {
   id?: any;
   handleNext: () => void;
   currentSong?: any;
-  handleOpenEqualizer: any;
+  handleOpenEqualizer: () => void;
   handlePrev: () => void;
   play: boolean;
+  handleOpenPlayList: () => void;
+  handleRandom: () => void;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -54,7 +56,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   handleOpenEqualizer,
   handleNext,
   handlePrev,
-  play = true,
+  play,
+  handleOpenPlayList,
+  handleRandom,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -158,8 +162,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   // devJibon
   // handle palyback Speed
 
-  const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value);
+  const handleVolumeChange = (value: number[]) => {
+    const newVolume = value[0];
     localStorage.setItem("volume", JSON.stringify(newVolume));
     const oldVolume = localStorage.getItem("volume");
     if (oldVolume) {
@@ -194,16 +198,22 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const handleEnded = () => {
-    const audioElement = audioRef.current;
+    if (repeat === "repeat-all") {
+      handleNext();
+    } else if (repeat === "repeat-one") {
+      const audioElement = audioRef.current;
 
-    if (audioElement) {
-      if (repeat) {
-        audioElement.currentTime = 0; // Restart the track
-        audioElement.play(); // Play the track again
-      } else {
-        // You can handle what happens when the track ends and repeat is not enabled (e.g., stop playback)
-        audioElement.pause(); // Pause the track
+      if (audioElement) {
+        if (repeat) {
+          audioElement.currentTime = 0; // Restart the track
+          audioElement.play(); // Play the track again
+        } else {
+          // You can handle what happens when the track ends and repeat is not enabled (e.g., stop playback)
+          audioElement.pause(); // Pause the track
+        }
       }
+    } else if (repeat === "repeat-off") {
+      handleRandom();
     }
   };
 
@@ -295,6 +305,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       });
   };
 
+  // Three dot menu operations
+
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
     const userId = user?._id;
@@ -343,37 +355,37 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const threeDotContent = (
-    <div className="font-bold text-gray-600 select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
+    <div className="font-bold text-textSecondary select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
       <h2
         onClick={handleAddtoPlayList}
-        className="flex hover:text-black cursor-pointer justify-start items-center gap-2"
+        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
       >
         <PlusCircleIcon className="h-6 w-6" />
         <span>Add to playlist</span>
       </h2>
       <h2
         onClick={handleAddtoFavourite}
-        className="flex hover:text-black cursor-pointer justify-start items-center gap-2"
+        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
       >
         <HeartIcon className="h-6 w-6" />
         <span>Add to favorites</span>
       </h2>
       <h2
         onClick={() => setShare(!share)}
-        className="flex hover:text-black cursor-pointer justify-start items-center gap-2"
+        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
       >
         <ShareIcon className="h-6 w-6" />
         <span>Share</span>
       </h2>
-      <h2 className="flex hover:text-black cursor-pointer justify-start items-center gap-2">
+      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
         <CircleStackIcon className="h-6 w-6" />
         <span>Go album</span>
       </h2>
-      <h2 className="flex hover:text-black cursor-pointer justify-start items-center gap-2">
+      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
         <UserCircleIcon className="h-6 w-6" />
         <span>Go artist</span>
       </h2>
-      <h2 className="flex hover:text-black cursor-pointer justify-start items-center gap-2">
+      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
         <MusicalNoteIcon className="h-6 w-6" />
         <span>Song credit</span>
       </h2>
@@ -389,6 +401,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       />
       <div className="absolute top-0 w-full ">
         <MiniPlayer
+          currentTime={currentTime}
+          duration={duration}
+          handleSeek={handleSeek}
           handleNext={handleNext}
           handleNextTenSecond={handleNextTenSecond}
           handlePlayPause={handlePlayPause}
@@ -418,7 +433,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           className={`${
             !showPlayer
               ? "hidden"
-              : "absolute p-4 xl:p-[120px] right-0 text-white"
+              : "absolute p-4 xl:p-[120px] right-0 top-16 text-white"
           } `}
         >
           <DropDownBtn
@@ -427,9 +442,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 24 24"
+                viewBox="0 0 20 20"
                 strokeWidth={1.5}
-                stroke="currentColor"
+                stroke="white"
                 className="size-6"
               >
                 <path
@@ -488,6 +503,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               toggleRepeat={toggleRepeat}
               src={LyricsIcon.src}
               repeat={repeat}
+              handlePlayListOpen={handleOpenPlayList}
+              handleAddToFavorites={handleAddtoFavourite}
+              isfavorite={true}
             />
           </div>
 

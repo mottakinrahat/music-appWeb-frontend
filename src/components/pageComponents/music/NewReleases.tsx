@@ -24,7 +24,8 @@ const NewReleases = ({ tracks }: any) => {
       </Heading>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 my-10">
         {tracks
-          .concat(tracks, tracks, tracks)
+          .concat(tracks, tracks)
+          .slice(0, 16)
           ?.map((music: any, idx: number) => (
             <Card
               musicId={`${music?._id}`}

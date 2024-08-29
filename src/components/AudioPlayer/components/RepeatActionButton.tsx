@@ -4,47 +4,58 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { TbRepeatOff } from "react-icons/tb";
-import { LucideRepeat, LucideRepeat1, LucideRepeat2 } from "lucide-react";
-import Image from "next/image";
+import { LucideRepeat, LucideRepeat1 } from "lucide-react";
 import React from "react";
-import { IoMdRepeat } from "react-icons/io";
+import { PiShuffle } from "react-icons/pi";
+import PlayLIstIcon from "./PlayLIstIcon";
+import { FaRegHeart } from "react-icons/fa6";
 
 // inrerface
 export interface RepeatActionButtonProps {
   toggleRepeat: any;
   src: string;
   repeat: "repeat-all" | "repeat-one" | "repeat-off";
+  handlePlayListOpen: () => void;
+  isfavorite: boolean;
+  handleAddToFavorites: () => void;
 }
 
 const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
   toggleRepeat,
   src,
   repeat,
+  handlePlayListOpen,
+  isfavorite,
+  handleAddToFavorites,
 }) => {
   return (
     <div>
-      <div className="text-white text-2xl mx-2 active:text-gray-300">
+      <div className="text-white text-2xl mx-2 ">
         <div className="flex justify-start items-center gap-[24px]">
+          <div>
+            {
+              <FaRegHeart
+                onClick={handleAddToFavorites}
+                className="cursor-pointer"
+              />
+            }
+          </div>
           <div className="hidden lg:block">
-            <Image
-              width={100}
-              height={100}
-              style={{ width: "auto", height: "auto" }}
-              src={src}
-              alt="LyricsIcon"
-            />
+            <PlayLIstIcon handlePlayListOpen={handlePlayListOpen} />
           </div>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <div onClick={toggleRepeat}>
+                <div
+                  className="active:text-gray-300 transition hover:text-accent"
+                  onClick={toggleRepeat}
+                >
                   {repeat === "repeat-one" ? (
                     <LucideRepeat1 />
                   ) : repeat === "repeat-all" ? (
                     <LucideRepeat />
                   ) : (
-                    <TbRepeatOff />
+                    <PiShuffle />
                   )}
                 </div>
               </TooltipTrigger>

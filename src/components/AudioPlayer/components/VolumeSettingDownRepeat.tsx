@@ -78,7 +78,12 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   };
 
   const handleMinimize = () => {
-    router.back();
+    const pathHistory = localStorage.getItem("pathHistory");
+    if (pathHistory) {
+      router.replace(pathHistory);
+    } else {
+      router.replace("/");
+    }
   };
 
   const settingContent = (
@@ -129,18 +134,18 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
         <div>
           <DownloadOffline songName={songName} songUrl={songUrl} />
         </div>
-        <div className={"group"}>
+        <div className={"group flex justify-center"}>
           <DropDownBtn
             dropDownContent={settingContent}
             buttonContent={
               <>
-                <IoSettingsOutline className="active:text-accent group-hover:text-accent hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
+                <IoSettingsOutline className="active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
               </>
             }
           />
         </div>
         <div
-          className="text-white cursor-pointer active:text-accent group-hover:text-accent hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
+          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
           onClick={handleMinimize}
         >
           {/* <img src={QueueMusicIcon.src} alt="QueueMusicIcon" /> */}

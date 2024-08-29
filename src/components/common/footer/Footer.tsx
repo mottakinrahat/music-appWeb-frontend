@@ -37,14 +37,14 @@ const Footer: React.FC = () => {
                 <li>
                   <Link
                     href="/home"
-                    className="text-textPrimary hover:text-textSecondary"
+                    className="text-textPrimary transition hover:text-textSecondary"
                   >
                     Home
                   </Link>
                 </li>
                 <li>
                   <Link
-                    className="text-textPrimary hover:text-textSecondary"
+                    className="text-textPrimary transition hover:text-textSecondary"
                     href="/music"
                   >
                     Music
@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
                 </li>
                 <li>
                   <Link
-                    className="text-textPrimary hover:text-textSecondary"
+                    className="text-textPrimary transition hover:text-textSecondary"
                     href="/sounds"
                   >
                     Sounds
@@ -60,7 +60,7 @@ const Footer: React.FC = () => {
                 </li>
                 <li>
                   <Link
-                    className="text-textPrimary hover:text-textSecondary"
+                    className="text-textPrimary transition hover:text-textSecondary"
                     href="/talents"
                   >
                     Talents
@@ -68,7 +68,7 @@ const Footer: React.FC = () => {
                 </li>
                 <li>
                   <Link
-                    className="text-textPrimary hover:text-textSecondary"
+                    className="text-textPrimary transition hover:text-textSecondary"
                     href="/vr-conserts"
                   >
                     VR Conserts
@@ -76,7 +76,7 @@ const Footer: React.FC = () => {
                 </li>
                 <li>
                   <Link
-                    className="text-textPrimary hover:text-textSecondary"
+                    className="text-textPrimary transition hover:text-textSecondary"
                     href="/blog"
                   >
                     Blog
@@ -89,7 +89,7 @@ const Footer: React.FC = () => {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    className="text-textPrimary hover:text-textSecondary"
+                    className="text-textPrimary transition hover:text-textSecondary"
                     href="/about"
                   >
                     About Us
@@ -97,7 +97,7 @@ const Footer: React.FC = () => {
                 </li>
                 <li>
                   <Link
-                    className="text-textPrimary hover:text-textSecondary"
+                    className="text-textPrimary transition hover:text-textSecondary"
                     href="/terms"
                   >
                     Terms & Conditions
@@ -105,7 +105,7 @@ const Footer: React.FC = () => {
                 </li>
                 <li>
                   <Link
-                    className="text-textPrimary hover:text-textSecondary"
+                    className="text-textPrimary transition hover:text-textSecondary"
                     href="/privacy-policy"
                   >
                     Privacy policy
@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
                 </li>
                 <li>
                   <Link
-                    className="text-textPrimary hover:text-textSecondary"
+                    className="text-textPrimary transition hover:text-textSecondary"
                     href="/cookie"
                   >
                     Cookie policy

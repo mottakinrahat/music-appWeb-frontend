@@ -88,7 +88,12 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
 
   useEffect(() => {
     if (audioContext && audioElement && gainNodesRef.current.length === 0) {
-      const audioSource = audioContext.createMediaElementSource(audioElement);
+      let audioSource = (audioElement as any)._sourceNode;
+
+      if (!audioSource) {
+        audioSource = audioContext.createMediaElementSource(audioElement);
+        (audioElement as any)._sourceNode = audioSource;
+      }
 
       const filters = frequencies.map((frequency) => {
         const filter = audioContext.createBiquadFilter();
@@ -157,7 +162,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
   }));
 
   return (
-    <div className="p-10 bg-white z-[9999] overflow-auto  md:w-[500px] w-[400px]">
+    <div className="p-10 bg-white relative z-[9999] overflow-auto  md:w-[500px] w-[400px]">
       <h3 className="text-3xl font-semibold mb-8">EQ Settings</h3>
       <div
         className={`transition-opacity duration-300 w-full ${

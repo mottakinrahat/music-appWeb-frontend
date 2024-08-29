@@ -1,15 +1,24 @@
+"use client";
 /* eslint-disable @next/next/no-img-element */
-import playBtn from "@/assets/icons/play_circle.png";
+
 import placeHolder from "@/assets/etc/png/song.jpg";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import { FaPause, FaPlay } from "react-icons/fa6"; // Import the cross icon
+import { RxCross2 } from "react-icons/rx";
+import CurrentPlayingUsers from "../AudioPlayer/components/CurrentPlayingUsers";
 
 interface LandingMusicCardInterface {
-  id: number;
+  id: any;
   title: string;
   artist: string;
   album: string;
   artwork: string;
   albumCard?: boolean;
+  playing?: boolean;
+  setPlaying?: (playing: boolean) => void;
+  handleRemoveFromPlaylist?: (id: any) => void;
 }
 
 const LandingMusicCard = ({
@@ -19,26 +28,37 @@ const LandingMusicCard = ({
   title,
   id,
   albumCard,
+  handleRemoveFromPlaylist,
+  playing,
+  setPlaying,
 }: LandingMusicCardInterface) => {
+  const [currentId, setCurrenId] = useState("");
+  const [play, setPlay] = useState(playing);
+
+  useEffect(() => {
+    const currentSongId = localStorage.getItem("songId");
+    if (!currentSongId) {
+      localStorage.setItem("songId", id);
+    } else {
+      setCurrenId(currentSongId);
+    }
+  }, [currentId, id]);
+
   return (
-    <div className="flex justify-between gap-4 py-2 items-center max-w-lg">
+    <div className="flex justify-between gap-4 py-2 items-center max-w-xl">
       <div className="flex items-center gap-3">
         <div>
           <img
-            // style={{ width: "auto", height: "auto" }}
             src={artwork ? artwork : placeHolder.src}
             alt="Album Art"
-            // height={80}
-            // width={80}
             className="w-16 h-16 aspect-square rounded-lg"
           />
         </div>
         <div>
-          <h2 className=" text-base md:text-2xl gap-2 font-semibold mb-1">
+          <h2 className="text-base md:text-2xl gap-2 font-semibold mb-1">
             {albumCard ? album : title}
           </h2>
-          <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
-            {/* <p>{artist}</p> */}
+          <div className="flex lg:items-center max-lg:flex-col flex-wrap">
             <div className="flex items-center gap-2">
               {!albumCard ? (
                 <p>
@@ -54,11 +74,47 @@ const LandingMusicCard = ({
           </div>
         </div>
       </div>
-      {!albumCard && (
-        <div>
-          <img className="cursor-pointer" src={playBtn.src} alt="" />
-        </div>
-      )}
+      <div className="flex items-center gap-2">
+        {!albumCard && (
+          <>
+            {playing && id === currentId ? (
+              <Button
+                onClick={() => {
+                  if (setPlaying) {
+                    setPlaying(!playing);
+                  }
+                }}
+                className="rounded-full w-11 h-11"
+              >
+                <FaPause className="text-3xl" />
+              </Button>
+            ) : (
+              <Link
+                href={`/music/${id}`}
+                onClick={() => localStorage.setItem("songId", id)}
+              >
+                <Button
+                  // Check if setPlaying is defined
+                  className="rounded-full w-11 h-11"
+                >
+                  <FaPlay className="text-3xl" />
+                </Button>
+              </Link>
+            )}
+          </>
+        )}
+        {handleRemoveFromPlaylist && (
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleRemoveFromPlaylist(id)} // Check if handleRemoveFromPlaylist is defined
+              className="rounded-full w-11 h-11"
+            >
+              <RxCross2 className="text-2xl" /> {/* Cross button */}
+            </button>
+            <CurrentPlayingUsers addFriends={false} className="text-black" />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
