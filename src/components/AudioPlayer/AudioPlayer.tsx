@@ -46,6 +46,7 @@ interface AudioPlayerProps {
   handlePrev: () => void;
   play: boolean;
   handleOpenPlayList: () => void;
+  handleRandom: () => void;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -57,6 +58,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   handlePrev,
   play,
   handleOpenPlayList,
+  handleRandom,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -196,16 +198,22 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const handleEnded = () => {
-    const audioElement = audioRef.current;
+    if (repeat === "repeat-all") {
+      handleNext();
+    } else if (repeat === "repeat-one") {
+      const audioElement = audioRef.current;
 
-    if (audioElement) {
-      if (repeat) {
-        audioElement.currentTime = 0; // Restart the track
-        audioElement.play(); // Play the track again
-      } else {
-        // You can handle what happens when the track ends and repeat is not enabled (e.g., stop playback)
-        audioElement.pause(); // Pause the track
+      if (audioElement) {
+        if (repeat) {
+          audioElement.currentTime = 0; // Restart the track
+          audioElement.play(); // Play the track again
+        } else {
+          // You can handle what happens when the track ends and repeat is not enabled (e.g., stop playback)
+          audioElement.pause(); // Pause the track
+        }
       }
+    } else if (repeat === "repeat-off") {
+      handleRandom();
     }
   };
 

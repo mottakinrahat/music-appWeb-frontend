@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { FaPause, FaPlay } from "react-icons/fa6"; // Import the cross icon
 import { RxCross2 } from "react-icons/rx";
+import CurrentPlayingUsers from "../AudioPlayer/components/CurrentPlayingUsers";
 
 interface LandingMusicCardInterface {
   id: any;
@@ -44,7 +45,7 @@ const LandingMusicCard = ({
   }, [currentSongId, id]);
 
   return (
-    <div className="flex justify-between gap-4 py-2 items-center max-w-lg">
+    <div className="flex justify-between gap-4 py-2 items-center max-w-xl">
       <div className="flex items-center gap-3">
         <div>
           <img
@@ -103,12 +104,15 @@ const LandingMusicCard = ({
           </>
         )}
         {handleRemoveFromPlaylist && (
-          <button
-            onClick={() => handleRemoveFromPlaylist(id)} // Check if handleRemoveFromPlaylist is defined
-            className="rounded-full w-11 h-11"
-          >
-            <RxCross2 className="text-2xl" /> {/* Cross button */}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleRemoveFromPlaylist(id)} // Check if handleRemoveFromPlaylist is defined
+              className="rounded-full w-11 h-11"
+            >
+              <RxCross2 className="text-2xl" /> {/* Cross button */}
+            </button>
+            <CurrentPlayingUsers addFriends={false} className="text-black" />
+          </div>
         )}
       </div>
     </div>

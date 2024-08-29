@@ -85,28 +85,17 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     startResizing(e as unknown as TouchEvent);
   };
 
-  // Play list Operations
   const resizingPlayList = useCallback(
     (e: MouseEvent | TouchEvent) => {
-      // e.preventDefault();
+      e.preventDefault();
 
       // Determine the starting X position and width
-      const x =
-        e instanceof MouseEvent
-          ? e.clientX
-          : e instanceof TouchEvent
-          ? e.touches[0].clientX
-          : 0;
+      const x = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
       setPlayListStartX(x);
       setPlayListWidth(listWidth);
 
       const onMouseMove2 = (e: MouseEvent | TouchEvent) => {
-        const x =
-          e instanceof MouseEvent
-            ? e.clientX
-            : e instanceof TouchEvent
-            ? e.touches[0].clientX
-            : 0;
+        const x = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
         const newWidth2 = Math.max(playListWidth - (x - playListStartX), 0); // Ensure minimum width
         setListWidth(newWidth2);
       };
@@ -129,11 +118,11 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const handleMouseDownPlayList = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    resizingPlayList(e as unknown as MouseEvent);
+    resizingPlayList(e.nativeEvent);
   };
 
   const handleTouchStartPlayList = (e: React.TouchEvent<HTMLDivElement>) => {
-    resizingPlayList(e as unknown as TouchEvent);
+    resizingPlayList(e.nativeEvent);
   };
 
   useEffect(() => {
@@ -175,22 +164,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     }
   }, [pathname, showPlayer]);
 
-  // useEffect(() => {
-  //   // Close equalizer if playlist is opened
-  //   if (listWidth >= 0) {
-  //     setEqOpen(0);
-  //     setWidth(0);
-  //   }
-  // }, [listWidth]);
-
-  // useEffect(() => {
-  //   // Close playlist if equalizer is opened
-  //   if (width >= 0) {
-  //     setPlaylistOpen(0);
-  //     setListWidth(0);
-  //   }
-  // }, [width]);
-
   const handlePrev = () => {
     if (currentTrackIndex !== null && currentTrackIndex > 0) {
       const newIndex = currentTrackIndex - 1;
@@ -202,6 +175,15 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const handleNext = () => {
     if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
       const newIndex = currentTrackIndex + 1;
+      setCurrentTrackIndex(newIndex);
+      setCurrentSong(tracks[newIndex]);
+    }
+  };
+
+  const handleRandom = () => {
+    if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
+      const newIndex =
+        currentTrackIndex + Math.floor(Math.random() * tracks.length - 1);
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
     }
@@ -237,16 +219,16 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     if (listWidth <= 0) {
       setPlaylistOpen(0);
 
-      setListWidth(600);
+      setListWidth(700);
     } else {
-      setPlaylistOpen(listWidth);
+      setPlaylistOpen(700);
       setListWidth(0);
     }
   };
-  console.log("playlistOpen", playlistOpen);
-  console.log("listWidth", listWidth);
-  console.log("eqOpen", eqOpen);
-  console.log("width", width);
+  // console.log("playlistOpen", playlistOpen);
+  // console.log("listWidth", listWidth);
+  // console.log("eqOpen", eqOpen);
+  // console.log("width", width);
 
   return (
     <div
@@ -271,6 +253,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             onAudioContextReady={handleAudioContextReady}
             handleOpenEqualizer={handleOpenEqualizer}
             handleOpenPlayList={handleOpenPlayList}
+            handleRandom={handleRandom}
           />
         </div>
         {eqOpen <= 0 && width > 0 ? (

@@ -37,10 +37,10 @@ const GradientRange = React.forwardRef<
     )}
     {...props}
   >
-    <SliderPrimitive.Track className="relative h-1 cursor-pointer w-full grow overflow-hidden  bg-[#cccccc]">
+    <SliderPrimitive.Track className="relative h-1 cursor-pointer transition w-full grow overflow-hidden  bg-[#cccccc]">
       <SliderPrimitive.Range className="absolute h-full bg-gradient-to-r from-[#8c8c8c] to-[#262626]" />
     </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="block h-5 w-5 cursor-pointer rounded-full bg-[#262626] ring-offset-background transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50" />
+    <SliderPrimitive.Thumb className="block h-5 w-5 cursor-pointer rounded-full bg-[#262626] ring-offset-background transition focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50" />
   </SliderPrimitive.Root>
 ));
 GradientRange.displayName = SliderPrimitive.Root.displayName;

@@ -1,14 +1,14 @@
 "use client";
-import React, { forwardRef, useEffect } from "react";
+import React, { forwardRef, useEffect, RefObject } from "react";
 
 interface AudioControlsProps {
   src: string;
   onTimeUpdate?: React.ChangeEventHandler<HTMLAudioElement>;
   autoPlay?: boolean;
-  onLoadedMetadata?: any;
-  onEnded?: any;
+  onLoadedMetadata?: React.ReactEventHandler<HTMLAudioElement>;
+  onEnded?: React.ReactEventHandler<HTMLAudioElement>;
   playbackRate?: number;
-  volume?: number;
+  volume?: number; // Volume should be between 0.0 and 1.0
 }
 
 const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
@@ -26,13 +26,19 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
   ) => {
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {
-        ref.current.playbackRate = playbackRate;
+        const audioElement = ref.current;
+        audioElement.playbackRate = playbackRate;
       }
     }, [playbackRate, ref]);
 
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {
-        ref.current.volume = volume;
+        const audioElement = ref.current;
+        const clampedVolume = Math.max(0, Math.min(volume, 1));
+        if (audioElement.volume !== clampedVolume) {
+          console.log(`Setting volume to ${clampedVolume}`);
+          audioElement.volume = clampedVolume;
+        }
       }
     }, [volume, ref]);
 
