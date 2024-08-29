@@ -558,7 +558,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               karaokeOn={karaokeOn}
               SetKaraokeOn={setKaraokeOn}
             />
-            <div className="md:hidden flex flex-col gap-4 justify-between">
+            <div className="flex flex-col gap-4 justify-between">
               <VolumeSettingDownRepeat
                 songName={songName}
                 songUrl={songLink}
@@ -567,12 +567,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 handleVolumeChange={handleVolumeChange}
                 handleMute={handleMute}
               />
-              <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
+              <div className="md:hidden">
+                <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
+              </div>
             </div>
           </div>
-          {/* <div className="md:hidden flex justify-between">
-            <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
-          </div> */}
         </div>
       </div>
     </div>
