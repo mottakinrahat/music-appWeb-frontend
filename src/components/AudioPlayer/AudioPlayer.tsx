@@ -42,7 +42,7 @@ interface AudioPlayerProps {
   id?: any;
   handleNext: () => void;
   currentSong?: any;
-  handleOpenEqualizer: any;
+  handleOpenEqualizer: () => void;
   handlePrev: () => void;
   play: boolean;
   handleOpenPlayList: () => void;
