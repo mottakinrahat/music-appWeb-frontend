@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import PlayButtons from "./components/PlayButtons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FiMaximize2 } from "react-icons/fi";
@@ -53,6 +53,7 @@ const MiniPlayer = ({
 }: MiniPlayerProps) => {
   const [artWork, setArtwork] = useState(artwork);
   const pathname = usePathname();
+  const router = useRouter();
   const [showControl, setShowControl] = useState(true);
 
   useEffect(() => {
@@ -75,10 +76,13 @@ const MiniPlayer = ({
 
   if (!showControl)
     return (
-      <div className="bg-[#E8E8E8] relative h-28 w-full ">
+      <div
+        onDoubleClick={() => router.replace(`/music/${id}`)}
+        className="bg-[#E8E8E8] relative h-24 sm:h-28 w-full "
+      >
         <div className="container h-full justify-between flex items-center">
           <div>
-            <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px]">
+            <div className="lg:flex hidden flex-col justify-end h-full gap-2 lg:gap-[24px]">
               <div className="w-full flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <img
@@ -116,14 +120,14 @@ const MiniPlayer = ({
               handlePrev={handlePrev}
               playing={playing}
             />
-            <div className="lg:absolute w-1/2 flex-col max-w-sm justify-center xl:-translate-y-6 max-lg:w-full flex top-[5.8rem] lg:left-1/2 lg:-translate-x-1/2 items-center">
+            <div className="absolute w-1/2 flex-col px-5 md:max-w-sm justify-center hidden [@media(min-width:320px)]:flex -translate-y-8 sm:-translate-y-6 max-lg:w-full  top-[5.8rem] left-1/2 -translate-x-1/2 items-center">
               <GradientRange
                 defaultValue={[currentTime]}
                 max={duration}
                 min={0}
                 value={[currentTime]}
                 onValueChange={handleSeek}
-                className="w-full max-w-sm"
+                className="w-full md:max-w-sm"
               />
               <div className="w-full">
                 <div className="flex justify-between mt-1 gap-3 items-center font-semibold">
@@ -137,16 +141,20 @@ const MiniPlayer = ({
               </div>
             </div>
           </div>
-          <div className="flex gap-6 items-center">
-            <div>
+          <div className="flex z-10  [@media(min-width:320px)]:gap-3 sm:gap-6 mb-10 items-center">
+            <div className="hidden">
               <Volumn
                 handleMute={handleMute}
                 handleVolumeChange={handleVolumeChange}
                 volume={volume}
               />
             </div>
-            <PlayLIstIcon />
-            <AirPlayButton />
+            <div>
+              <PlayLIstIcon />
+            </div>
+            <div className="hidden [@media(min-width:380px)]:flex items-center">
+              <AirPlayButton />
+            </div>
             <Link
               href={`/music/${id}`}
               onClick={handleSetPathHistory}

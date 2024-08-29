@@ -161,6 +161,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     }
     if (showPlayer) {
       setWidth(0);
+      setListWidth(0);
     }
   }, [pathname, showPlayer]);
 

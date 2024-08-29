@@ -12,7 +12,7 @@ interface MusicControlsFace {
 
 const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
   return (
-    <div className="flex justify-center gap-6 lg:gap-12">
+    <div className="flex justify-between items-center gap-6 lg:gap-12">
       <div>
         <div
           onClick={() => handleOpenEqualizer()}
@@ -21,7 +21,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
           <FiSliders width={24} height={24} />
         </div>
       </div>
-      <div>
+      <div className="flex items-center">
         <AirPlayButton />
       </div>
       <div>

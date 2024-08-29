@@ -137,6 +137,7 @@ const AirPlayButton = () => {
   const handleScan = async () => {
     await requestBluetoothDevices();
     await discoverWifiDevices();
+    console.log("scanning");
   };
 
   const airplayControls = (
