@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/drawer";
 import Logo from "../logo/Logo";
 import Routes from "./routes";
+import Link from "next/link";
 
 const ToggleMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,6 +53,11 @@ const ToggleMenu = () => {
               <span className="space-y-3 block mt-5">
                 <Routes />
               </span>
+              <div className="mt-3">
+                <Link href="/login">
+                  <div className="hover:font-semibold my">Login/Sign up</div>
+                </Link>
+              </div>
             </DrawerDescription>
           </DrawerHeader>
         </DrawerContent>
