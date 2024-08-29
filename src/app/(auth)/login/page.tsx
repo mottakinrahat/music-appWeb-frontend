@@ -51,7 +51,7 @@ const Login = () => {
         </p>
         {/* {/ email /} */}
         <DInput
-          defaultValue={"mailme.jibon@gmail.com"}
+          defaultValue={"ruhulamin@gmail.com"}
           labelTextColor="#262626"
           name="email"
           label="Email"
@@ -59,7 +59,7 @@ const Login = () => {
         />
         {/* {/ Password /} */}
         <DInput
-          defaultValue={"@1111aA2222"}
+          defaultValue={"@1111aA1111"}
           labelTextColor="#262626"
           name="password"
           label="Password"
