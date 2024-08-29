@@ -1,13 +1,12 @@
 "use client";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
-
+import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
 import Navbar from "@/components/common/navigation/Navbar";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import axios from "axios";
 import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Playlist from "./components/Playlist";
-import AudioPlayerEqualizer from "./components/AudioPlayerEqulizer";
 
 interface PlayerInterface {
   params?: {
@@ -28,27 +27,39 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [eqOpen, setEqOpen] = useState(0);
   const [playlistOpen, setPlaylistOpen] = useState(0);
   const [tracks, setTraks] = useState<any>([]);
-
   // resize ref
-  const [eqWidth, setEqWidth] = useState(0); // Initial width for equalizer
-  const [playlistWidth, setPlaylistWidth] = useState(0); // Initial width for playlist
-  const resizingEqRef = useRef<HTMLDivElement | null>(null);
-  const resizingPlaylistRef = useRef<HTMLDivElement | null>(null);
+  const [width, setWidth] = useState(0); // Initial width
+  const [listWidth, setListWidth] = useState(0); // Initial width
+  const resizingRef = useRef<HTMLDivElement | null>(null);
+  const resizingPlayListRef = useRef<HTMLDivElement | null>(null);
   const [startX, setStartX] = useState<number>(0);
-  const [startEqWidth, setStartEqWidth] = useState<number>(0);
-  const [startPlaylistWidth, setStartPlaylistWidth] = useState<number>(0);
+  const [playListStartX, setPlayListStartX] = useState<number>(0);
+  const [startWidth, setStartWidth] = useState<number>(0);
+  const [playListWidth, setPlayListWidth] = useState<number>(0);
 
-  // Equalizer resize logic
-  const startResizingEq = useCallback(
+  const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
-      const x = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
+      // e.preventDefault();
+
+      // Determine the starting X position and width
+      const x =
+        e instanceof MouseEvent
+          ? e.clientX
+          : e instanceof TouchEvent
+          ? e.touches[0].clientX
+          : 0;
       setStartX(x);
-      setStartEqWidth(eqWidth);
+      setStartWidth(width);
 
       const onMouseMove = (e: MouseEvent | TouchEvent) => {
-        const x = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
-        const newWidth = Math.max(startEqWidth - (x - startX), 0); // Ensure minimum width
-        setEqWidth(newWidth);
+        const x =
+          e instanceof MouseEvent
+            ? e.clientX
+            : e instanceof TouchEvent
+            ? e.touches[0].clientX
+            : 0;
+        const newWidth = Math.max(startWidth - (x - startX), 0); // Ensure minimum width
+        setWidth(newWidth);
       };
 
       const stopResizing = () => {
@@ -63,30 +74,41 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       document.addEventListener("touchmove", onMouseMove);
       document.addEventListener("touchend", stopResizing);
     },
-    [eqWidth, startX, startEqWidth]
+    [width, startX, startWidth]
   );
 
-  const handleMouseDownEq = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    startResizingEq(e as unknown as MouseEvent);
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    startResizing(e as unknown as MouseEvent);
   };
 
-  const handleTouchStartEq = (e: React.TouchEvent<HTMLDivElement>) => {
-    startResizingEq(e as unknown as TouchEvent);
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    startResizing(e as unknown as TouchEvent);
   };
 
-  // Playlist resize logic
-  const startResizingPlaylist = useCallback(
+  // Play list Operations
+  const resizingPlayList = useCallback(
     (e: MouseEvent | TouchEvent) => {
-      const x = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
-      setStartX(x);
-      setStartPlaylistWidth(playlistWidth);
+      // e.preventDefault();
+
+      // Determine the starting X position and width
+      const x =
+        e instanceof MouseEvent
+          ? e.clientX
+          : e instanceof TouchEvent
+          ? e.touches[0].clientX
+          : 0;
+      setPlayListStartX(x);
+      setPlayListWidth(listWidth);
 
       const onMouseMove = (e: MouseEvent | TouchEvent) => {
-        const x = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
-        const newWidth = Math.max(startPlaylistWidth - (x - startX), 0); // Ensure minimum width
-        setPlaylistWidth(newWidth);
+        const x =
+          e instanceof MouseEvent
+            ? e.clientX
+            : e instanceof TouchEvent
+            ? e.touches[0].clientX
+            : 0;
+        const newWidth = Math.max(playListWidth - (x - playListStartX), 0); // Ensure minimum width
+        setListWidth(newWidth);
       };
 
       const stopResizing = () => {
@@ -101,17 +123,17 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       document.addEventListener("touchmove", onMouseMove);
       document.addEventListener("touchend", stopResizing);
     },
-    [playlistWidth, startX, startPlaylistWidth]
+    [listWidth, playListWidth, playListStartX]
   );
 
-  const handleMouseDownPlaylist = (
+  const handleMouseDownPlayList = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    startResizingPlaylist(e as unknown as MouseEvent);
+    resizingPlayList(e as unknown as MouseEvent);
   };
 
-  const handleTouchStartPlaylist = (e: React.TouchEvent<HTMLDivElement>) => {
-    startResizingPlaylist(e as unknown as TouchEvent);
+  const handleTouchStartPlayList = (e: React.TouchEvent<HTMLDivElement>) => {
+    resizingPlayList(e as unknown as TouchEvent);
   };
 
   useEffect(() => {
@@ -137,20 +159,19 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       setPlaying(true);
     }
   }, [currentTrackIndex, tracks]);
-
   // show controls
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(false);
 
   useEffect(() => {
+    // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
     } else {
       setShowPlayer(false);
     }
     if (showPlayer) {
-      setEqWidth(0);
-      setPlaylistWidth(0);
+      setWidth(0);
     }
   }, [pathname, showPlayer]);
 
@@ -187,24 +208,22 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   };
 
   const handleOpenEqualizer = () => {
-    if (eqWidth <= 0) {
+    if (width <= 0) {
       setEqOpen(0);
-      setEqWidth(500);
-      setPlaylistWidth(0); // Close playlist when opening equalizer
+      setWidth(500);
     } else {
-      setEqOpen(eqWidth);
-      setEqWidth(0);
+      setEqOpen(width);
+      setWidth(0);
     }
   };
-
-  const handleOpenPlaylist = () => {
-    if (playlistWidth <= 0) {
+  // PlayListOperations
+  const handleOpenPlayList = () => {
+    if (listWidth <= 0) {
       setPlaylistOpen(0);
-      setPlaylistWidth(500);
-      setEqWidth(0); // Close equalizer when opening playlist
+      setListWidth(500);
     } else {
-      setPlaylistOpen(playlistWidth);
-      setPlaylistWidth(0);
+      setPlaylistOpen(listWidth);
+      setListWidth(0);
     }
   };
 
@@ -230,53 +249,44 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             currentSong={currentSong}
             onAudioContextReady={handleAudioContextReady}
             handleOpenEqualizer={handleOpenEqualizer}
-            handleOpenPlayList={handleOpenPlaylist}
+            handleOpenPlayList={handleOpenPlayList}
           />
         </div>
 
         <div
-          className={`bg-white relative h-full z-50 mt-[96px] max-lg:absolute transition-all duration-500 ${
-            eqWidth <= 0
+          className={`bg-white relative h-full mt-[96px] max-lg:absolute transition-all duration-500 ${
+            eqOpen <= 0
               ? "max-w-3xl w-[400px] lg:w-[500px] right-0 bottom-0"
-              : "w-0"
+              : "w-0 -right-full bottom-0"
           }`}
-          ref={resizingEqRef}
-          style={{ width: eqWidth }}
+          style={{ width }}
+          ref={resizingRef}
         >
-          {eqWidth > 0 && (
-            <>
-              <AudioPlayerEqualizer
-                audioContext={audioContext}
-                audioElement={audioElement}
-              />
-              <div
-                className="absolute left-0 top-0 h-full w-2.5 cursor-col-resize"
-                onMouseDown={handleMouseDownEq}
-                onTouchStart={handleTouchStartEq}
-              />
-            </>
-          )}
+          <div
+            className="absolute left-0 top-0 h-full w-2 bg-white z-[99999] cursor-ew-resize"
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
+          ></div>
+          <AudioPlayerEqualizer
+            audioContext={audioContext}
+            audioElement={audioElement}
+          />
         </div>
-
         <div
-          className={`bg-white relative z-50 h-full mt-[96px] max-lg:absolute transition-all duration-500 ${
-            playlistWidth <= 0
+          className={`bg-white relative h-full mt-[96px] max-lg:absolute transition-all duration-500 ${
+            playlistOpen <= 0
               ? "max-w-3xl w-[400px] lg:w-[500px] right-0 bottom-0"
-              : "w-0"
+              : "w-0 -right-full bottom-0"
           }`}
-          ref={resizingPlaylistRef}
-          style={{ width: playlistWidth }}
+          style={{ width: listWidth }}
+          ref={resizingPlayListRef}
         >
-          {playlistWidth > 0 && (
-            <>
-              <Playlist tracks={tracks} />
-              <div
-                className="absolute left-0 top-0 h-full w-2.5 cursor-col-resize"
-                onMouseDown={handleMouseDownPlaylist}
-                onTouchStart={handleTouchStartPlaylist}
-              />
-            </>
-          )}
+          <div
+            className="absolute left-0 top-0 h-full w-2 bg-white z-[99999] cursor-ew-resize"
+            onMouseDown={handleMouseDownPlayList}
+            onTouchStart={handleTouchStartPlayList}
+          ></div>
+          <Playlist tracks={tracks} />
         </div>
       </div>
     </div>
