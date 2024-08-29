@@ -430,7 +430,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           className={`${
             !showPlayer
               ? "hidden"
-              : "absolute p-4 xl:py-16 xl:px-[120px] right-0 top-16 text-white"
+              : "absolute p-4 lg:py-20 xl:px-[120px] right-0 top-16 text-white"
           } `}
         >
           <DropDownBtn
@@ -453,9 +453,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           />
         </div>
-        <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4  xl:px-[120px]">
-          <div className="w-full flex justify-between items-center px-4 md:mb-4">
-            <div className="text-white flex items-center gap-2">
+        <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4   xl:px-[120px]">
+          <div className="w-full flex justify-between items-center">
+            <div className="text-white flex mb-4 items-center gap-4">
               <img
                 // style={{ width: "auto", height: "auto" }}
                 src={artwork ? artwork : placeHolder.src}
@@ -465,7 +465,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 className="w-10 h-10 md:h-16 md:w-16 rounded-lg object-cover"
               />
               <div>
-                <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1">
+                <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl">
                   {songName}
                 </h2>
                 <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
@@ -524,7 +524,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             onEnded={handleEnded}
           />
 
-          <div className="w-full cursor-pointer py-1 flex items-center">
+          <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
             <Slider
               defaultValue={[currentTime]}
               max={duration}
@@ -534,7 +534,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             />
           </div>
           <div className="w-full">
-            <div className="flex justify-between gap-3 items-center px-3">
+            <div className="flex justify-between gap-3 mb-14 lg:mb-0 items-center ">
               <span className="text-white text-sm">
                 {formatTime(currentTime)}
               </span>

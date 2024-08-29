@@ -12,20 +12,24 @@ interface MusicControlsFace {
 
 const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
   return (
-    <div className="flex justify-between items-center gap-6 lg:gap-12">
+    <div className="flex justify-between items-center gap-2 lg:gap-4">
       <div>
         <div
           onClick={() => handleOpenEqualizer()}
           className="cursor-pointer text-xl select-none text-white"
         >
-          <FiSliders width={24} height={24} />
+          <FiSliders
+            width={24}
+            height={24}
+            className="hover:text-accent transition text-2xl cursor-pointer"
+          />
         </div>
       </div>
       <div className="flex items-center">
         <AirPlayButton />
       </div>
       <div>
-        <MdDevices className="text-white text-2xl" />
+        <MdDevices className="text-white hover:text-accent transition text-2xl cursor-pointer" />
       </div>
     </div>
   );

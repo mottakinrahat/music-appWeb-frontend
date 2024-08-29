@@ -20,7 +20,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
     null
   );
-  const [playing, setPlaying] = useState<boolean>(true);
+  const [playing, setPlaying] = useState<boolean>(play);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
   );

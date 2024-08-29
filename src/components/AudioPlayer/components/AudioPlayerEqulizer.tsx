@@ -177,7 +177,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
           <h3 className="font-semibold">Equalizer</h3>
           <div
             onClick={toggleSwitch}
-            className={`w-10 h-6 flex items-center rounded-full duration-300 p-1 cursor-pointer ${
+            className={`w-10 h-6 flex items-center rounded-full duration-300 p-1 cursor-pointer mb-6 ${
               isOn ? "bg-accent" : "bg-gray-300"
             }`}
           >

@@ -78,7 +78,7 @@ const MiniPlayer = ({
     return (
       <div
         onDoubleClick={() => router.replace(`/music/${id}`)}
-        className="bg-[#E8E8E8] relative h-24 sm:h-28 w-full "
+        className="bg-[#E8E8E8] relative h-24 sm:h-28 w-full"
       >
         <div className="container h-full justify-between flex items-center">
           <div>
@@ -120,7 +120,7 @@ const MiniPlayer = ({
               handlePrev={handlePrev}
               playing={playing}
             />
-            <div className="absolute w-1/2 flex-col px-5 md:max-w-sm justify-center hidden [@media(min-width:320px)]:flex -translate-y-8 sm:-translate-y-6 max-lg:w-full  top-[5.8rem] left-1/2 -translate-x-1/2 items-center">
+            <div className="absolute w-1/2 flex-col px-5 md:max-w-sm justify-center flex -translate-y-8 sm:-translate-y-6 max-lg:w-full  top-[5.8rem] left-1/2 -translate-x-1/2 items-center">
               <GradientRange
                 defaultValue={[currentTime]}
                 max={duration}
@@ -141,8 +141,8 @@ const MiniPlayer = ({
               </div>
             </div>
           </div>
-          <div className="flex z-10  [@media(min-width:320px)]:gap-3 sm:gap-6 mb-10 items-center">
-            <div className="hidden">
+          <div className="flex z-10  [@media(min-width:320px)]:gap-3  [@media(min-width:640px)]:gap-6 mb-10 md:mb-0 items-center">
+            <div className="hidden md:flex">
               <Volumn
                 handleMute={handleMute}
                 handleVolumeChange={handleVolumeChange}

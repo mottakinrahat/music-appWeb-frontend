@@ -43,7 +43,9 @@ const PlayButtons = ({
   return (
     <div
       className={`absolute justify-center -translate-y-6  ${
-        !showControl ? "top-8 sm:top-10 absolute " : "lg:-translate-y-12"
+        !showControl
+          ? "top-8 sm:top-10 absolute "
+          : "-translate-y-16 lg:-translate-y-12"
       } max-lg:w-full flex left-1/2 -translate-x-1/2 items-center`}
     >
       <div className="flex justify-center items-center">

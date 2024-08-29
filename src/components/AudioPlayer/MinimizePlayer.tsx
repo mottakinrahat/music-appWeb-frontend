@@ -16,6 +16,25 @@ const MinimizePlayer = () => {
   const [startY, setStartY] = useState<number>(0);
   const [startHeight, setStartHeight] = useState<number>(0);
 
+  useEffect(() => {
+    // Function to update the height based on window width
+    const updateHeight = () => {
+      if (window.innerWidth < 768) {
+        setHeight(6);
+      } else {
+        setHeight(7);
+      }
+    };
+
+    // Initial check
+    updateHeight();
+
+    window.addEventListener("resize", updateHeight);
+
+    // Cleanup the event listener on component unmount
+    return () => window.removeEventListener("resize", updateHeight);
+  }, [pathname]);
+
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
       // Determine the starting Y position and height
@@ -110,7 +129,7 @@ const MinimizePlayer = () => {
       <div
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
-        className="absolute w-full h-2 z-50 top-0 bg-transparent cursor-ns-resize"
+        className="absolute w-full h-4 z-50 top-0 bg-transparent cursor-ns-resize"
       ></div>
       <MaximizePlayer play={play} params={{ id: playMusicById }} />
     </div>

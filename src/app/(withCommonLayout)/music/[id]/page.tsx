@@ -18,7 +18,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     null
   );
   // const [repeat, setRepeat] = useState<boolean>(false);
-  const [playing, setPlaying] = useState<boolean>(true);
+  const [playing, setPlaying] = useState<boolean>(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
   );
@@ -49,21 +49,21 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     }
   }, [currentTrackIndex, tracks]);
 
-  const handlePrev = () => {
-    if (currentTrackIndex !== null && currentTrackIndex > 0) {
-      const newIndex = currentTrackIndex - 1;
-      setCurrentTrackIndex(newIndex);
-      setCurrentSong(tracks[newIndex]);
-    }
-  };
+  // const handlePrev = () => {
+  //   if (currentTrackIndex !== null && currentTrackIndex > 0) {
+  //     const newIndex = currentTrackIndex - 1;
+  //     setCurrentTrackIndex(newIndex);
+  //     setCurrentSong(tracks[newIndex]);
+  //   }
+  // };
 
-  const handleNext = () => {
-    if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
-      const newIndex = currentTrackIndex + 1;
-      setCurrentTrackIndex(newIndex);
-      setCurrentSong(tracks[newIndex]);
-    }
-  };
+  // const handleNext = () => {
+  //   if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
+  //     const newIndex = currentTrackIndex + 1;
+  //     setCurrentTrackIndex(newIndex);
+  //     setCurrentSong(tracks[newIndex]);
+  //   }
+  // };
 
   if (!currentSong) {
     return (
