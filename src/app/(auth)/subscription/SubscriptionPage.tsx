@@ -29,7 +29,7 @@ const couponSchema = z.object({
 
 const SubscriptionCard: React.FC = () => {
   const router = useRouter();
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<any>(null);
   console.log(data);
   // State for selected plan
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
@@ -114,7 +114,7 @@ const SubscriptionCard: React.FC = () => {
             </div>
             <span className="ml-2">Monthly</span>
           </label>
-          <span>US $ {isYearly ? monthlyPrice : Number(data?.price).toFixed(2)} /month</span>
+          <span>US $ {data ? (isYearly ? monthlyPrice : Number(data?.price).toFixed(2)) : "0.00"} /month</span>
         </div>
 
         <div
@@ -141,7 +141,7 @@ const SubscriptionCard: React.FC = () => {
             </div>
             <span className="ml-2">Yearly (Save {data?.title === "Premium Tier" ? "20%" : "32%"})</span>
           </label>
-          <span>US ${isMonthly ? yearlyPrice : Number(data?.price).toFixed(2)} /year</span>
+          <span>US ${data ? (isMonthly ? yearlyPrice : Number(data?.price).toFixed(2)) : "0.00"} /year</span>
         </div>
       </div>
 
@@ -195,7 +195,7 @@ const SubscriptionCard: React.FC = () => {
           </div>
         </div>
       </div>
-      <Button variant="default" className="w-full text-white text-base font-semibold leading-normal">
+      <Button disabled={!data} variant="default" className="w-full text-white text-base font-semibold leading-normal">
         Proceed to payment
       </Button>
     </div>
