@@ -156,6 +156,12 @@ const CheckoutCardComponent: React.FC<CheckoutCardComponentProp> = () => {
                 secure.
               </p>
             </div>
+
+            {/* Token purchase */}
+
+            <Button variant="default" className="w-full mb-6 text-white text-base font-semibold leading-normal">
+              Purchase with token
+            </Button>
           </TabsContent>
         </div>
       </Tabs>
