@@ -136,7 +136,7 @@ const AirPlayButton = () => {
     <div className="min-h-40 max-w-xs border-0 bg-[#DBDAD9]">
       <div className="flex items-center justify-between">
         <h3 className="text-2xl font-semibold mb-1 px-4 py-3">Select a device</h3>
-        <p className="text-2xl mr-2">Scan</p>
+        <p className="text-xl mr-2 cursor-pointer">Scan</p>
       </div>
       <div className="bg-black/10 h-px w-full" />
       <div className="px-4 py-2 pt-4 space-y-2 font-semibold text-base">
