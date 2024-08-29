@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import DInput from "@/components/forms/DInput";
 import { Button } from "@/components/ui/button";
+import { MdErrorOutline } from "react-icons/md";
 
 const checkoutCardShcema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -131,9 +132,31 @@ const CheckoutCardComponent: React.FC<CheckoutCardComponentProp> = () => {
                   Confirm
                 </Button>
               </div>
+              <p className="mb-6 text-[#4C4C4C] text-base font-normal leading-[140%]">
+                By clicking &quot;Confirm&quot; above, you acknowledge that you have read and you agree to our General
+                <span className="text-[#262626] text-base font-semibold leading-[140%]"> Terms and Conditions</span> and
+                have read and acknowledge the{" "}
+                <span className="text-[#262626] text-base font-semibold leading-[140%]">Privacy policy</span>. and{" "}
+                <span className="text-[#262626] text-base font-semibold leading-[140%]">Subscription arrangement</span>.
+              </p>
             </DForm>
           </TabsContent>
-          <TabsContent value="token">token</TabsContent>
+
+          {/* Token section */}
+
+          <TabsContent value="token">
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-[#262626] text-xl font-semibold leading-normal">You have 30 token</p>
+              <p className="text-[#00CCD0] text-base font-normal leading-normal underline">Purchase token</p>
+            </div>
+            <div className="flex gap-2 mb-6">
+              <MdErrorOutline className="h-6 w-6" />
+              <p className="text-[#4C4C4C] text-base font-normal leading-[140%] max-w-[356px]">
+                With tokenized payments, acquiring the perfect soundtrack for your project is faster, easier, and more
+                secure.
+              </p>
+            </div>
+          </TabsContent>
         </div>
       </Tabs>
     </div>
