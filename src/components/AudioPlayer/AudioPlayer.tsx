@@ -70,18 +70,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [volume, setVolume] = useState<number>(0.8);
   const [playbackSpeed, setPlaybackSpeed] = useState<any>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
-  const [userData, setUserData] = useState<any>(null);
+
+  // const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
+  //   null
+  // );
+
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
-  const [currentSong, setCurrentSong] = useState<any>(songData);
-  const [share, setShare] = useState<boolean>(false);
-
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setUserData(JSON.parse(user));
-    }
-  }, []);
 
   useEffect(() => {
     // Show the player only if the path matches `/music/:id`
@@ -91,6 +86,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setShowPlayer(false);
     }
   }, [pathname]);
+
+  const [currentSong, setCurrentSong] = useState<any>(songData);
+  const [share, setShare] = useState<boolean>(false);
 
   const speed = localStorage.getItem("speed");
   useEffect(() => {
@@ -149,11 +147,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
   }, [onAudioContextReady]);
 
-  const userId = userData?._id;
-  const playListData = {
-    id: songId,
-    userId: userId,
-  };
+  // console.log(volume);
+  // console.log(currentSong);
 
   const handlePlayPause = () => {
     if (playing) {
@@ -312,52 +307,50 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   // Three dot menu operations
 
-  const isFavourite = currentSong.favUsers.includes(userId);
-
   const handleAddtoFavourite = async () => {
+    const user = JSON.parse(localStorage?.getItem("user")!);
+    const userId = user?._id;
+    const playListData = {
+      id: songId,
+      userId: userId,
+    };
     if (!userId) {
-      toast.warning("Please login first!");
-    } else {
-      await axios
-        .put(
-          `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
-          playListData
-        )
-        .then((res) => {
-          if (res.data)
-            toast.success(
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <img
-                  src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
-                  alt={songName}
-                  style={{
-                    width: "40px", // Adjust the size as needed
-                    height: "40px",
-                    borderRadius: "8px",
-                    marginRight: "8px",
-                  }}
-                />
-                <div>
-                  {isFavourite ? (
-                    <div style={{ fontWeight: "bold" }}>
-                      Favorites Remove Successfully
-                    </div>
-                  ) : (
-                    <div style={{ fontWeight: "bold" }}>
-                      Favorites Added Successfully
-                    </div>
-                  )}
-                  <div>{`${songName}, ${songAlbum?.albumName}`}</div>
-                </div>
-              </div>
-            );
-        })
-        .catch((err) => {
-          if (err) {
-            toast.error("Failed add to favourite list");
-          }
-        });
+      toast("please login first!");
     }
+    toast("Please wait, adding to favorites... ", {
+      duration: 1000,
+    });
+    await axios
+      .put(
+        `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
+        playListData
+      )
+      .then((res) => {
+        if (res.data)
+          toast(
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
+                alt={songName}
+                style={{
+                  width: "40px", // Adjust the size as needed
+                  height: "40px",
+                  borderRadius: "8px",
+                  marginRight: "8px",
+                }}
+              />
+              <div>
+                <div style={{ fontWeight: "bold" }}>Favorites Added</div>
+                <div>{`${songName}, ${songAlbum?.albumName}`}</div>
+              </div>
+            </div>
+          );
+      })
+      .catch((err) => {
+        if (err) {
+          toast.error("Failed add to favourite list");
+        }
+      });
   };
 
   const threeDotContent = (
