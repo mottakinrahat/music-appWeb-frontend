@@ -20,7 +20,7 @@ export function DropDownBtn({ buttonContent, dropDownContent, onClick }: any) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button onClick={onClick} className="text-white z-50">
+        <button disabled onClick={onClick} className="text-white z-50">
           {buttonContent}
         </button>
       </DropdownMenuTrigger>
