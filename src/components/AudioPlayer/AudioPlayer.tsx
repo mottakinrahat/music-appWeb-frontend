@@ -47,6 +47,7 @@ interface AudioPlayerProps {
   play: boolean;
   handleOpenPlayList: () => void;
   handleRandom: () => void;
+  setCurrentSong: (value: any) => void;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -59,6 +60,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   play,
   handleOpenPlayList,
   handleRandom,
+  setCurrentSong: setCurrectSong,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -75,13 +77,18 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const [share, setShare] = useState<boolean>(false);
+  const userId = userData?._id;
+  const [favorite, setFavorite] = useState<boolean>(false);
 
   useEffect(() => {
+    const isFavourite = currentSong.favUsers.includes(userId);
+    setFavorite(isFavourite);
+
     const user = localStorage.getItem("user");
     if (user) {
       setUserData(JSON.parse(user));
     }
-  }, []);
+  }, [currentSong.favUsers, userId]);
 
   useEffect(() => {
     // Show the player only if the path matches `/music/:id`
@@ -121,6 +128,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   }, [currentSong, repeat, songData, speed, volume]);
   // Main Song
+
   const {
     songName,
     songLink,
@@ -149,7 +157,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
   }, [onAudioContextReady]);
 
-  const userId = userData?._id;
   const playListData = {
     id: songId,
     userId: userId,
@@ -312,9 +319,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   // Three dot menu operations
 
-  const isFavourite = currentSong.favUsers.includes(userId);
-
   const handleAddtoFavourite = async () => {
+    // Create a new song object with updated properties
+    const updatedSong = { ...currentSong /* any updates here if needed */ };
+
+    // Update the state with the new song object
+    setCurrectSong(updatedSong);
+
     if (!userId) {
       toast.warning("Please login first!");
     } else {
@@ -324,7 +335,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           playListData
         )
         .then((res) => {
-          
+          setFavorite((prev: boolean) => !prev);
           toast.success(
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
@@ -338,9 +349,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 }}
               />
               <div>
-                {isFavourite ? (
+                {favorite ? (
                   <div style={{ fontWeight: "bold" }}>
-                    Favorites Remove Successfully
+                    Favorites Removed Successfully
                   </div>
                 ) : (
                   <div style={{ fontWeight: "bold" }}>
@@ -354,7 +365,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         })
         .catch((err) => {
           if (err) {
-            toast.error("Failed add to favourite list");
+            toast.error("Failed to add to favourite list");
           }
         });
     }
@@ -508,7 +519,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               repeat={repeat}
               handlePlayListOpen={handleOpenPlayList}
               handleAddToFavorites={handleAddtoFavourite}
-              isfavorite={true}
+              isfavorite={favorite}
             />
           </div>
 

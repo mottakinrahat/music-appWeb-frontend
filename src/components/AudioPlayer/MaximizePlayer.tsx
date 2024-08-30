@@ -254,6 +254,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             handleNext={handleNext}
             handlePrev={handlePrev}
             id={params?.id}
+            setCurrentSong={setCurrentSong}
             currentSong={currentSong}
             onAudioContextReady={handleAudioContextReady}
             handleOpenEqualizer={handleOpenEqualizer}

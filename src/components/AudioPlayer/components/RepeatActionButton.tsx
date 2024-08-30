@@ -8,7 +8,7 @@ import { LucideRepeat, LucideRepeat1 } from "lucide-react";
 import React from "react";
 import { PiShuffle } from "react-icons/pi";
 import PlayLIstIcon from "./PlayLIstIcon";
-import { FaRegHeart } from "react-icons/fa6";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
 
 // inrerface
 export interface RepeatActionButtonProps {
@@ -32,13 +32,8 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
     <div>
       <div className="text-white text-2xl mx-2 ">
         <div className="flex justify-start items-center gap-[24px]">
-          <div>
-            {
-              <FaRegHeart
-                onClick={handleAddToFavorites}
-                className="cursor-pointer"
-              />
-            }
+          <div onClick={handleAddToFavorites} className="cursor-pointer">
+            {isfavorite ? <FaHeart /> : <FaRegHeart />}
           </div>
           <div className="hidden lg:block">
             <PlayLIstIcon handlePlayListOpen={handlePlayListOpen} />
