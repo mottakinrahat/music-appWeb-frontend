@@ -315,19 +315,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       userId: userId,
     };
     if (!userId) {
-      toast("please login first!");
-    }
-    toast("Please wait, adding to favorites... ", {
-      duration: 1000,
-    });
-    await axios
-      .put(
-        `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
-        playListData
-      )
-      .then((res) => {
-        if (res.data)
-          toast(
+      toast.warning("Please login first!");
+    } else {
+      await axios
+        .put(
+          `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
+          playListData
+        )
+        .then((res) => {
+          
+          toast.success(
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
                 src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
@@ -340,17 +337,26 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 }}
               />
               <div>
-                <div style={{ fontWeight: "bold" }}>Favorites Added</div>
+                {isFavourite ? (
+                  <div style={{ fontWeight: "bold" }}>
+                    Favorites Remove Successfully
+                  </div>
+                ) : (
+                  <div style={{ fontWeight: "bold" }}>
+                    Favorites Added Successfully
+                  </div>
+                )}
                 <div>{`${songName}, ${songAlbum?.albumName}`}</div>
               </div>
             </div>
           );
-      })
-      .catch((err) => {
-        if (err) {
-          toast.error("Failed add to favourite list");
-        }
-      });
+        })
+        .catch((err) => {
+          if (err) {
+            toast.error("Failed add to favourite list");
+          }
+        });
+    }
   };
 
   const threeDotContent = (

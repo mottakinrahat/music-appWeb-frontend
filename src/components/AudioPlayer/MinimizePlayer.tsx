@@ -9,7 +9,6 @@ const MinimizePlayer = () => {
   const [readyPlayer, setReadyPlayer] = useState(false);
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(true);
-  const [showControl, setShowControl] = useState(true);
   const [play, setPlay] = useState(true);
   const [height, setHeight] = useState(7); // Initial height
   const resizingRef = useRef<HTMLDivElement | null>(null);

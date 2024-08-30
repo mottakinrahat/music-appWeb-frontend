@@ -243,7 +243,11 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     >
       <div className="absolute w-full h-screen bg-black opacity-10 z-10"></div>
       <div className="flex z-20 flex-grow relative">
-        {showPlayer && <Navbar blur />}
+        {showPlayer && (
+          <div className="">
+            <Navbar blur />
+          </div>
+        )}
         <div className="flex-1 transition-all">
           <AudioPlayer
             play={playing}
