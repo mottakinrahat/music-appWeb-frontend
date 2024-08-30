@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { FaPause, FaPlay } from "react-icons/fa6"; // Import the cross icon
 import { RxCross2 } from "react-icons/rx";
 import CurrentPlayingUsers from "../AudioPlayer/components/CurrentPlayingUsers";
+import useLocalSongData from "@/hooks/useLocalSongData";
 
 interface LandingMusicCardInterface {
   id: any;
@@ -36,13 +37,19 @@ const LandingMusicCard = ({
   const [play, setPlay] = useState(playing);
 
   useEffect(() => {
-    const currentSongId = localStorage.getItem("songId");
-    if (!currentSongId) {
-      localStorage.setItem("songId", id);
+    const currentSongDataFromLocalStroage = JSON.parse(
+      localStorage.getItem("songData")!
+    );
+    if (!currentSongDataFromLocalStroage) {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: true, id: id ? id : null })
+      );
     } else {
-      setCurrenId(currentSongId);
+      setCurrenId(currentSongDataFromLocalStroage.id);
     }
   }, [currentId, id]);
+  // useLocalSongData({play: true, id: id ? id : null});
 
   return (
     <div className="flex justify-between gap-4 py-2 items-center max-w-xl">
@@ -91,7 +98,12 @@ const LandingMusicCard = ({
             ) : (
               <Link
                 href={`/music/${id}`}
-                onClick={() => localStorage.setItem("songId", id)}
+                onClick={() =>
+                  localStorage.setItem(
+                    "songData",
+                    JSON.stringify({ play: true, id: id ? id : null })
+                  )
+                }
               >
                 <Button
                   // Check if setPlaying is defined

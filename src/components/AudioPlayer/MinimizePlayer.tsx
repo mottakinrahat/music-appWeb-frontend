@@ -3,13 +3,14 @@
 import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import MaximizePlayer from "./MaximizePlayer";
+import useLocalSongData from "@/hooks/useLocalSongData";
 
 const MinimizePlayer = () => {
   const [playMusicById, setPlayMusicById] = useState<string>();
   const [readyPlayer, setReadyPlayer] = useState(false);
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(true);
-  const [play, setPlay] = useState(true);
+  // const [play, setPlay] = useState(true);
   const [height, setHeight] = useState(7); // Initial height
   const resizingRef = useRef<HTMLDivElement | null>(null);
   const [startY, setStartY] = useState<number>(0);
@@ -80,12 +81,15 @@ const MinimizePlayer = () => {
     startResizing(e as unknown as TouchEvent);
   };
 
+  const isPlay = useLocalSongData();
+  const play = isPlay?.play;
+
   useEffect(() => {
-    if (showPlayer === false) {
-      setPlay(false);
-    } else {
-      setPlay(true);
-    }
+    // if (showPlayer === false) {
+    //   setPlay(false);
+    // } else {
+    //   setPlay(true);
+    // }
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
@@ -93,9 +97,11 @@ const MinimizePlayer = () => {
     } else {
       setShowPlayer(false);
     }
-    const getPriviousSongId = localStorage.getItem("songId");
-    if (getPriviousSongId && getPriviousSongId !== "") {
-      setPlayMusicById(getPriviousSongId);
+    const getSongDataFromLocalStroage = JSON.parse(
+      localStorage.getItem("songData")!
+    );
+    if (getSongDataFromLocalStroage && getSongDataFromLocalStroage !== null) {
+      setPlayMusicById(getSongDataFromLocalStroage.id);
       setReadyPlayer(true);
     } else {
       setReadyPlayer(false);
@@ -130,7 +136,7 @@ const MinimizePlayer = () => {
         onTouchStart={handleTouchStart}
         className="absolute w-full h-4 z-50 top-0 bg-transparent cursor-ns-resize"
       ></div>
-      <MaximizePlayer play={play} params={{ id: playMusicById }} />
+      <MaximizePlayer play={play!} params={{ id: playMusicById }} />
     </div>
   );
 };

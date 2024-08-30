@@ -4,9 +4,10 @@ import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlaye
 import Navbar from "@/components/common/navigation/Navbar";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import axios from "axios";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Playlist from "./components/Playlist";
+import useLocalSongData from "@/hooks/useLocalSongData";
 
 interface PlayerInterface {
   params?: {
@@ -20,7 +21,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
     null
   );
-  const [playing, setPlaying] = useState<boolean>(play);
+  const [playing, setPlaying] = useState<boolean>(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
   );
@@ -36,6 +37,9 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [playListStartX, setPlayListStartX] = useState<number>(0);
   const [startWidth, setStartWidth] = useState<number>(0);
   const [playListWidth, setPlayListWidth] = useState<number>(0);
+
+  //  Router
+  const router = useRouter();
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
@@ -143,11 +147,14 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     setCurrentSong(tracks[initialTrackIndex]);
   }, [params?.id, tracks]);
 
+  const songData = useLocalSongData();
   useEffect(() => {
-    if (currentTrackIndex !== null) {
+    if (currentTrackIndex !== null && songData?.play === true) {
       setPlaying(true);
+    } else {
+      setPlaying(false);
     }
-  }, [currentTrackIndex, tracks]);
+  }, [currentSong, currentTrackIndex, songData?.play]);
   // show controls
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(false);
@@ -173,6 +180,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     }
   };
 
+  // Handles next track
   const handleNext = () => {
     if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
       const newIndex = currentTrackIndex + 1;
@@ -180,7 +188,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       setCurrentSong(tracks[newIndex]);
     }
   };
-
   const handleRandom = () => {
     if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
       const newIndex =
@@ -189,6 +196,17 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       setCurrentSong(tracks[newIndex]);
     }
   };
+
+  // Sync localStorage and routing with currentSong updates
+  useEffect(() => {
+    if (currentSong) {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: true, id: currentSong._id })
+      );
+      router.replace(`/music/${currentSong._id}`);
+    }
+  }, [currentSong, router]);
 
   if (!currentSong) {
     return (

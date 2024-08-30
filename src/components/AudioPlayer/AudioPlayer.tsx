@@ -19,7 +19,7 @@ import AudioControls from "./components/AudioControls";
 import RepeatActionButton from "./components/RepeatActionButton";
 import PlayButtons from "./components/PlayButtons";
 import MusicControls from "./components/MusicControls";
-import Volumn from "./components/Volumn";
+// import Volumn from "./components/Volumn";
 import axios from "axios";
 import { toast } from "sonner";
 // import { Toaster } from "../ui/sonner";
@@ -32,6 +32,7 @@ import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
 import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
 import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
+import useLocalSongData from "@/hooks/useLocalSongData";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
@@ -163,15 +164,25 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   }, [onAudioContextReady]);
 
   const playListData = {
-    id: songId,
+    id: songData,
     userId: userId,
   };
+
+  const isSongPlaying = useLocalSongData();
 
   const handlePlayPause = () => {
     if (playing) {
       audioRef.current?.pause();
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: false, id: songId })
+      );
     } else {
       audioRef.current?.play();
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: true, id: songId })
+      );
     }
     setPlaying(!playing);
   };
@@ -213,24 +224,23 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleDuration = (duration: number) => {
     setDuration(duration);
   };
-const handleEnded = () => {
-  let currentRepeat: RepeatShuffleProps["repeat"] = repeat;
-  const audioElement = audioRef.current;
+  const handleEnded = () => {
+    let currentRepeat: RepeatShuffleProps["repeat"] = repeat;
+    const audioElement = audioRef.current;
 
-  if (currentRepeat === "repeat-all") {
-    handleNext();
-  } else if (currentRepeat === "repeat-one") {
-
-    if (audioElement) {
-      audioElement.currentTime = 0; // Restart the track
-      audioElement.play(); // Play the track again
+    if (currentRepeat === "repeat-all") {
+      handleNext();
+    } else if (currentRepeat === "repeat-one") {
+      if (audioElement) {
+        audioElement.currentTime = 0; // Restart the track
+        audioElement.play(); // Play the track again
+      }
+    } else if (currentRepeat === "repeat-off") {
+      handleRandom();
+    } else if (currentRepeat === "shuffle") {
+      handleRandom(); // Assuming shuffle mode should also trigger a random track
     }
-  } else if (currentRepeat === "repeat-off") {
-    handleRandom();
-  } else if (currentRepeat === "shuffle") {
-    handleRandom(); // Assuming shuffle mode should also trigger a random track
-  }
-};
+  };
 
   const handlePreviousTenSecond = () => {
     if (audioRef.current) {
@@ -279,7 +289,7 @@ const handleEnded = () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
     const userId = user?._id;
     const playListData = {
-      id: songId,
+      id: songData,
       userId: userId,
     };
     if (!userId) {
@@ -291,7 +301,7 @@ const handleEnded = () => {
     });
     await axios
       .put(
-        `https://music-app-web.vercel.app/api/v1/songs/play-list/${songId}/${userId}`,
+        `https://music-app-web.vercel.app/api/v1/songs/play-list/${songData}/${userId}`,
         playListData
       )
       .then((res) => {
@@ -336,7 +346,7 @@ const handleEnded = () => {
     } else {
       await axios
         .put(
-          `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
+          `https://music-app-web.vercel.app/api/v1/favourite/${songData}/${userId}`,
           playListData
         )
         .then((res) => {
