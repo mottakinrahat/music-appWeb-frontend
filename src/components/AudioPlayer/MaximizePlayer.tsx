@@ -204,7 +204,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         "songData",
         JSON.stringify({ play: true, id: currentSong._id })
       );
-      router.replace(`/music/${currentSong._id}`);
+      // router.replace(`/music/${currentSong._id}`);
     }
   }, [currentSong, router]);
 
@@ -225,15 +225,25 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   };
 
   const handleOpenEqualizer = () => {
+    console.log("Handle open equalizer triggered");
+    console.log("Current width:", width);
+
     if (width <= 0) {
-      if (window.innerWidth < 768) {
-        setWidth(400);
-      } else if (window.innerWidth < 480) {
+      const screenWidth = window.innerWidth;
+      console.log("Screen width:", screenWidth);
+
+      if (screenWidth < 480) {
+        console.log("Setting width to 300");
         setWidth(300);
+      } else if (screenWidth < 768) {
+        console.log("Setting width to 400");
+        setWidth(400);
       } else {
+        console.log("Setting width to 500");
         setWidth(500);
-        setEqOpen(0);
       }
+    } else {
+      setWidth(0);
     }
   };
   // PlayListOperations
@@ -290,7 +300,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             }}
             className={`${
               eqOpen <= 0
-                ? "fixed transition-colors duration-1000 bg-gradient-to-t from-black/40 h-full w-full top-0"
+                ? "fixed transition-colors duration-1000  bg-gradient-to-t from-black/40 h-full w-full top-0"
                 : "bg-transparent"
             } `}
           ></div>
@@ -300,7 +310,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
         {eqOpen >= 0 && listWidth <= 0 && (
           <div
-            className={`bg-white relative h-full mt-[96px]  max-lg:absolute transition-all duration-500 ${
+            className={`bg-white relative h-full mt-[96px] max-lg:absolute transition-all duration-500 ${
               eqOpen <= 0 ? " right-0 bottom-0" : "w-0 -right-full bottom-0"
             }`}
             style={{ width }}
