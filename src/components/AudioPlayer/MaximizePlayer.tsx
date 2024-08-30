@@ -226,11 +226,14 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
   const handleOpenEqualizer = () => {
     if (width <= 0) {
-      setEqOpen(0);
-      setWidth(500);
-    } else {
-      setEqOpen(width);
-      setWidth(0);
+      if (window.innerWidth < 768) {
+        setWidth(400);
+      } else if (window.innerWidth < 480) {
+        setWidth(300);
+      } else {
+        setWidth(500);
+        setEqOpen(0);
+      }
     }
   };
   // PlayListOperations
@@ -298,9 +301,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         {eqOpen >= 0 && listWidth <= 0 && (
           <div
             className={`bg-white relative h-full mt-[96px]  max-lg:absolute transition-all duration-500 ${
-              eqOpen <= 0
-                ? "max-w-3xl w-[400px] lg:w-[500px] right-0 bottom-0"
-                : "w-0 -right-full bottom-0"
+              eqOpen <= 0 ? " right-0 bottom-0" : "w-0 -right-full bottom-0"
             }`}
             style={{ width }}
             ref={resizingRef}
