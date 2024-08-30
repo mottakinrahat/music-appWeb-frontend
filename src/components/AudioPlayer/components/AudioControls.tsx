@@ -36,7 +36,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
         const audioElement = ref.current;
         const clampedVolume = Math.max(0, Math.min(volume, 1));
         if (audioElement.volume !== clampedVolume) {
-          console.log(`Setting volume to ${clampedVolume}`);
+          // console.log(`Setting volume to ${clampedVolume}`);
           audioElement.volume = clampedVolume;
         }
       }

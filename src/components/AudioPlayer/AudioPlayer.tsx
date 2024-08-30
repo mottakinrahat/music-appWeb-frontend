@@ -31,6 +31,7 @@ import { Slider } from "../ui/slider";
 import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
 import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
+import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
@@ -64,7 +65,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const [repeat, setRepeat] = useState<any>("repeat-all");
+  const [repeat, setRepeat] =
+    useState<RepeatShuffleProps["repeat"]>("repeat-all");
   const [playing, setPlaying] = useState<boolean>(play);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
@@ -81,6 +83,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [favorite, setFavorite] = useState<boolean>(false);
 
   useEffect(() => {
+    const savedRepeat = localStorage.getItem(
+      "repeat"
+    ) as RepeatShuffleProps["repeat"];
+    if (savedRepeat) {
+      setRepeat(savedRepeat);
+    }
     const isFavourite = currentSong.favUsers.includes(userId);
     setFavorite(isFavourite);
 
@@ -122,9 +130,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     const getRepeat = localStorage.getItem("repeat");
     if (!getRepeat) {
       localStorage.setItem("repeat", repeat);
-    }
-    if (volume) {
-      setRepeat(getRepeat);
     }
   }, [currentSong, repeat, songData, speed, volume]);
   // Main Song
@@ -208,26 +213,24 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleDuration = (duration: number) => {
     setDuration(duration);
   };
+const handleEnded = () => {
+  let currentRepeat: RepeatShuffleProps["repeat"] = repeat;
+  const audioElement = audioRef.current;
 
-  const handleEnded = () => {
-    if (repeat === "repeat-all") {
-      handleNext();
-    } else if (repeat === "repeat-one") {
-      const audioElement = audioRef.current;
+  if (currentRepeat === "repeat-all") {
+    handleNext();
+  } else if (currentRepeat === "repeat-one") {
 
-      if (audioElement) {
-        if (repeat) {
-          audioElement.currentTime = 0; // Restart the track
-          audioElement.play(); // Play the track again
-        } else {
-          // You can handle what happens when the track ends and repeat is not enabled (e.g., stop playback)
-          audioElement.pause(); // Pause the track
-        }
-      }
-    } else if (repeat === "repeat-off") {
-      handleRandom();
+    if (audioElement) {
+      audioElement.currentTime = 0; // Restart the track
+      audioElement.play(); // Play the track again
     }
-  };
+  } else if (currentRepeat === "repeat-off") {
+    handleRandom();
+  } else if (currentRepeat === "shuffle") {
+    handleRandom(); // Assuming shuffle mode should also trigger a random track
+  }
+};
 
   const handlePreviousTenSecond = () => {
     if (audioRef.current) {
@@ -257,16 +260,18 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
   //  repeat toggle
   const toggleRepeat = () => {
+    let newRepeat: RepeatShuffleProps["repeat"];
     if (repeat === "repeat-all") {
-      setRepeat("repeat-one");
-      localStorage.setItem("repeat", "repeat-one");
+      newRepeat = "repeat-one";
     } else if (repeat === "repeat-one") {
-      setRepeat("repeat-off");
-      localStorage.setItem("repeat", "repeat-off");
+      newRepeat = "repeat-off";
     } else if (repeat === "repeat-off") {
-      setRepeat("repeat-all");
-      localStorage.setItem("repeat", "repeat-all");
+      newRepeat = "shuffle";
+    } else {
+      newRepeat = "repeat-all";
     }
+    setRepeat(newRepeat);
+    localStorage.setItem("repeat", newRepeat);
   };
 
   // handle playlist add
@@ -418,6 +423,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       />
       <div className="absolute top-0 w-full ">
         <MiniPlayer
+          repeat={repeat}
+          toggleRepeat={toggleRepeat}
           currentTime={currentTime}
           duration={duration}
           handleSeek={handleSeek}

@@ -11,6 +11,9 @@ import { formatTime } from "@/utils/FormatTime";
 import Volumn from "./components/Volumn";
 import AirPlayButton from "./components/AirPlayButton";
 import PlayLIstIcon from "./components/PlayLIstIcon";
+import RepeatShuffleButton, {
+  RepeatShuffleProps,
+} from "./components/ReapetShuffleButton";
 
 interface MiniPlayerProps {
   handleNext: () => void;
@@ -30,6 +33,8 @@ interface MiniPlayerProps {
   duration: number;
   currentTime: number;
   handleSeek: (value: number[]) => void;
+  repeat: RepeatShuffleProps["repeat"];
+  toggleRepeat: RepeatShuffleProps["toggleRepeat"];
 }
 
 const MiniPlayer = ({
@@ -50,6 +55,8 @@ const MiniPlayer = ({
   currentTime,
   duration,
   handleSeek,
+  repeat,
+  toggleRepeat,
 }: MiniPlayerProps) => {
   const [artWork, setArtwork] = useState(artwork);
   const pathname = usePathname();
@@ -80,7 +87,7 @@ const MiniPlayer = ({
         onDoubleClick={() => router.replace(`/music/${id}`)}
         className="bg-[#E8E8E8] relative h-24 sm:h-28 w-full"
       >
-        <div className="container h-full justify-between flex items-center">
+        <div className="h-full px-4 justify-between flex items-center">
           <div>
             <div className="lg:flex hidden flex-col justify-end h-full gap-2 lg:gap-[24px]">
               <div className="w-full flex justify-between items-center">
@@ -120,7 +127,7 @@ const MiniPlayer = ({
               handlePrev={handlePrev}
               playing={playing}
             />
-            <div className="absolute w-1/2 flex-col px-5 md:max-w-sm justify-center flex -translate-y-8 sm:-translate-y-6 max-lg:w-full  top-[5.8rem] left-1/2 -translate-x-1/2 items-center">
+            <div className="absolute w-1/2 flex-col px-5 md:max-w-sm justify-center flex -translate-y-8 sm:-translate-y-7 mb-2 max-lg:w-full  top-[5.8rem] left-1/2 -translate-x-1/2 items-center">
               <GradientRange
                 defaultValue={[currentTime]}
                 max={duration}
@@ -130,7 +137,7 @@ const MiniPlayer = ({
                 className="w-full md:max-w-sm"
               />
               <div className="w-full">
-                <div className="flex justify-between mt-1 gap-3 items-center font-semibold">
+                <div className="flex justify-between mt-2 gap-3 items-center font-semibold">
                   <span className="text-textSecondary text-sm">
                     {formatTime(currentTime)}
                   </span>
@@ -150,7 +157,11 @@ const MiniPlayer = ({
               />
             </div>
             <div>
-              <PlayLIstIcon />
+              {/* <PlayLIstIcon /> */}
+              <RepeatShuffleButton
+                repeat={repeat}
+                toggleRepeat={toggleRepeat}
+              />
             </div>
             <div className="hidden [@media(min-width:380px)]:flex items-center">
               <AirPlayButton />
