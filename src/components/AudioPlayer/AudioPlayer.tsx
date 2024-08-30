@@ -324,33 +324,33 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           playListData
         )
         .then((res) => {
-          if (res.data)
-            toast.success(
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <img
-                  src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
-                  alt={songName}
-                  style={{
-                    width: "40px", // Adjust the size as needed
-                    height: "40px",
-                    borderRadius: "8px",
-                    marginRight: "8px",
-                  }}
-                />
-                <div>
-                  {isFavourite ? (
-                    <div style={{ fontWeight: "bold" }}>
-                      Favorites Remove Successfully
-                    </div>
-                  ) : (
-                    <div style={{ fontWeight: "bold" }}>
-                      Favorites Added Successfully
-                    </div>
-                  )}
-                  <div>{`${songName}, ${songAlbum?.albumName}`}</div>
-                </div>
+          
+          toast.success(
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
+                alt={songName}
+                style={{
+                  width: "40px", // Adjust the size as needed
+                  height: "40px",
+                  borderRadius: "8px",
+                  marginRight: "8px",
+                }}
+              />
+              <div>
+                {isFavourite ? (
+                  <div style={{ fontWeight: "bold" }}>
+                    Favorites Remove Successfully
+                  </div>
+                ) : (
+                  <div style={{ fontWeight: "bold" }}>
+                    Favorites Added Successfully
+                  </div>
+                )}
+                <div>{`${songName}, ${songAlbum?.albumName}`}</div>
               </div>
-            );
+            </div>
+          );
         })
         .catch((err) => {
           if (err) {
