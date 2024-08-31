@@ -252,7 +252,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     // }
     if (listWidth <= 0) {
       if (screenWidth < 480) {
-        setListWidth(300);
+        setListWidth(290);
       } else if (screenWidth < 768) {
         setListWidth(400);
       } else {
