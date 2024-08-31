@@ -283,15 +283,14 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       className="flex flex-col select-none h-screen overflow-hidden w-full bg-cover bg-center transition-background-image duration-1000"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
       {/* Your content here */}
+      <div className="absolute w-full h-screen bg-black opacity-30"></div>
 
-      <div className="absolute w-full h-screen bg-black opacity-10 z-10"></div>
       <div className="flex z-10 flex-grow relative">
         {showPlayer && (
           <div className="">
