@@ -37,10 +37,10 @@ const PlayOfflineSong: React.FC<PlayOfflineSongProps> = ({ params }) => {
       navigator.serviceWorker
         .register("/service-worker.js")
         .then((registration) => {
-          console.log(
-            "Service Worker registered with scope:",
-            registration.scope
-          );
+          // console.log(
+          //   "Service Worker registered with scope:",
+          //   registration.scope
+          // );
         })
         .catch((error) => {
           console.error("Service Worker registration failed:", error);
@@ -49,7 +49,7 @@ const PlayOfflineSong: React.FC<PlayOfflineSongProps> = ({ params }) => {
   }
 
   const songId = params?.songId;
-  console.log("Received songId:", songId);
+  // console.log("Received songId:", songId);
 
   useEffect(() => {
     const id = typeof songId === "string" ? parseInt(songId, 10) : songId;
@@ -61,7 +61,7 @@ const PlayOfflineSong: React.FC<PlayOfflineSongProps> = ({ params }) => {
 
     const fetchSong = async () => {
       const song = await retrieveSongFromIndexedDB(id);
-      console.log("Fetched song from IndexedDB:", song);
+      // console.log("Fetched song from IndexedDB:", song);
       if (song) {
         setAudioUrl(song.url);
         setSongName(song.name);

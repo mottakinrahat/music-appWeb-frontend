@@ -45,7 +45,6 @@ const SignupPage: React.FC = () => {
 
     try {
       const res = await register(rest).unwrap();
-      console.log(res);
       if (res.success) {
         toast.success("Account created successfully");
         router.push("/plans");

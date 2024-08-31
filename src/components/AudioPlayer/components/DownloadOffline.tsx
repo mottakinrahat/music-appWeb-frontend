@@ -42,7 +42,7 @@ const saveSongToIndexedDB = async (songUrl: string, songName: string) => {
       return; // Exit the function if the song already exists
     }
 
-    console.log(`Fetching song from URL: ${songUrl}`);
+    // console.log(`Fetching song from URL: ${songUrl}`);
     const response = await fetch(songUrl);
 
     if (!response.ok) {
@@ -50,7 +50,7 @@ const saveSongToIndexedDB = async (songUrl: string, songName: string) => {
     }
 
     const blob = await response.blob(); // Convert the response to a Blob object
-    console.log(`Blob received with size: ${blob.size} bytes`);
+    // console.log(`Blob received with size: ${blob.size} bytes`);
 
     const db = await initDB();
     // Save the song Blob to IndexedDB

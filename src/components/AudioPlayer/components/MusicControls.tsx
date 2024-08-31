@@ -74,7 +74,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
         const title = file.name; // Use the file name as the title
         await saveFileToIndexedDB(base64Data, title);
         toast.success("Song Import Successfully");
-        console.log("File saved to IndexedDB");
+        // console.log("File saved to IndexedDB");
       };
       reader.readAsDataURL(file);
       setShowModal(false);

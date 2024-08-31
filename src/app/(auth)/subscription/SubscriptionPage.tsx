@@ -30,7 +30,6 @@ const couponSchema = z.object({
 const SubscriptionCard: React.FC = () => {
   const router = useRouter();
   const [data, setData] = useState<any>(null);
-  console.log(data);
   // State for selected plan
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   // State for coupon code
@@ -71,14 +70,12 @@ const SubscriptionCard: React.FC = () => {
   const isMonthly = data?.billingCycle === "month";
   const isYearly = data?.billingCycle === "year";
 
-  console.log(data);
 
   // Handle form submit
   const handleSubmit = (data: any) => {
     console.log(data);
   };
 
-  console.log(price);
 
   return (
     <div className="max-w-[588px] mx-auto rounded-lg p-6 bg-white">

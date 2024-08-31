@@ -65,7 +65,7 @@ const productsApi = baseApi.injectEndpoints({
     // crate products products
     updateProductStatus: build.mutation({
       query: ({ status, id }: { status: any; id: string }) => {
-        console.log({ id, status,},"from redux" );
+        // console.log({ id, status,},"from redux" );
         return {
           url: `/products/${id}/status`,
           method: "PUT",

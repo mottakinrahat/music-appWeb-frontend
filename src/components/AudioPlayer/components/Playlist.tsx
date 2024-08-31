@@ -21,9 +21,9 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
   const handleRemoveFromPlaylist = (id: string) => {
     const updatedTracks = tracks?.filter((track) => track._id !== id);
     setCurrentTracks(updatedTracks);
-    console.log(`Removing song with id: ${id}`);
+    // console.log(`Removing song with id: ${id}`);
   };
-  console.log(tracks);
+  // console.log(tracks);
   return (
     <div className="p-2 min-w-0 bg-white  overflow-hidden lg:p-6 xl:p-8">
       {/* play list */}
