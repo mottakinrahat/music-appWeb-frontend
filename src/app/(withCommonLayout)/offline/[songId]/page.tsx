@@ -1,27 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { openDB } from "idb";
-
-// Function to initialize IndexedDB
-const initDB = async () => {
-  const db = await openDB("OfflineDB", 6, {
-    upgrade(db) {
-      if (!db.objectStoreNames.contains("offlineSongs")) {
-        db.createObjectStore("offlineSongs", {
-          keyPath: "id",
-          autoIncrement: true,
-        });
-      }
-    },
-  });
-  return db;
-};
+import { initDB } from "@/utils/initDB";
 
 // Function to retrieve a song Blob from IndexedDB
 const retrieveSongFromIndexedDB = async (id: string | number) => {
   try {
-    const db = await initDB();
+    const db = await initDB("OfflineDB", 6, "offlineSongs");
     const song = await db.get("offlineSongs", id);
 
     if (song && song.data) {
@@ -46,6 +31,22 @@ const PlayOfflineSong: React.FC<PlayOfflineSongProps> = ({ params }) => {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [songName, setSongName] = useState<string | null>(null);
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine); // Track online status
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("/service-worker.js")
+        .then((registration) => {
+          console.log(
+            "Service Worker registered with scope:",
+            registration.scope
+          );
+        })
+        .catch((error) => {
+          console.error("Service Worker registration failed:", error);
+        });
+    });
+  }
 
   const songId = params?.songId;
   console.log("Received songId:", songId);

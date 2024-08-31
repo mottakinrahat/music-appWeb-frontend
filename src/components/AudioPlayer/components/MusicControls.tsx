@@ -6,7 +6,7 @@ import { FaUpload } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { TbDeviceIpadX } from "react-icons/tb";
 import AirPlayButton from "./AirPlayButton";
-import { openDB } from "idb";
+import { initDB } from "@/utils/initDB";
 
 interface MusicControlsFace {
   handleOpenEqualizer: () => void;
@@ -17,22 +17,10 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
   const [hasSong, setHasSong] = useState(false);
   const [songTitle, setSongTitle] = useState<string | null>(null);
 
-  // Function to open IndexedDB database
-  const initDB = async () => {
-    const db = await openDB("MusicDB", 1, {
-      upgrade(db) {
-        if (!db.objectStoreNames.contains("songs")) {
-          db.createObjectStore("songs", { keyPath: "id", autoIncrement: true });
-        }
-      },
-    });
-    return db;
-  };
-
   // Save file to IndexedDB
   const saveFileToIndexedDB = async (fileData: string, title: string) => {
     await deleteExistingSongFromIndexedDB(); // Delete old song
-    const db = await initDB();
+    const db = await initDB("MusicDB", 1, "songs");
     await db.put("songs", { id: 1, fileData, title }); // Save new song with title
     setHasSong(true);
     setSongTitle(title);
@@ -40,7 +28,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
 
   // Delete existing song from IndexedDB
   const deleteExistingSongFromIndexedDB = async () => {
-    const db = await initDB();
+    const db = await initDB("MusicDB", 1, "songs");
     const tx = db.transaction("songs", "readwrite");
     const store = tx.objectStore("songs");
     const allSongs = await store.getAll();
@@ -54,7 +42,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
 
   // Retrieve file from IndexedDB
   const retrieveFileFromIndexedDB = async () => {
-    const db = await initDB();
+    const db = await initDB("MusicDB", 1, "songs");
     const song = await db.get("songs", 1);
     if (song) {
       setHasSong(true);

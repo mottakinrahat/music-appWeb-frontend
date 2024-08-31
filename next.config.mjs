@@ -4,7 +4,19 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "res.cloudinary.com", // Specify the exact hostname
+        hostname: "res.cloudinary.com",
+      },
+      {
+        protocol: "https",
+        hostname: "resize.indiatvnews.com",
+      },
+      {
+        protocol: "https",
+        hostname: "static.abplive.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.shutterstock.com",
       },
     ],
   },
