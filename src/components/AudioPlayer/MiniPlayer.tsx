@@ -10,7 +10,7 @@ import { GradientRange } from "../ui/slider";
 import { formatTime } from "@/utils/FormatTime";
 import Volumn from "./components/Volumn";
 import AirPlayButton from "./components/AirPlayButton";
-import PlayLIstIcon from "./components/PlayLIstIcon";
+import ShowLyricsIcon from "./components/PlayLIstIcon";
 import RepeatShuffleButton, {
   RepeatShuffleProps,
 } from "./components/ReapetShuffleButton";

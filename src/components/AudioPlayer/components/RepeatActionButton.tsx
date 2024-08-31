@@ -1,5 +1,5 @@
 import React from "react";
-import PlayLIstIcon from "./PlayLIstIcon";
+import ShowLyricsIcon from "./PlayLIstIcon";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import ReapetShuffleButton from "./ReapetShuffleButton";
 
@@ -8,7 +8,7 @@ export interface RepeatActionButtonProps {
   toggleRepeat: any;
   src: string;
   repeat: "repeat-all" | "repeat-one" | "repeat-off" | "shuffle";
-  handlePlayListOpen: () => void;
+  handleOpenLyrics: () => void;
   isfavorite: boolean;
   handleAddToFavorites: () => void;
 }
@@ -17,12 +17,12 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
   toggleRepeat,
   src,
   repeat,
-  handlePlayListOpen,
+  handleOpenLyrics,
   isfavorite,
   handleAddToFavorites,
 }) => {
   return (
-    <div> 
+    <div>
       <div className="text-white text-2xl mx-2 ">
         <div className="flex justify-start items-center gap-[24px]">
           <div
@@ -32,7 +32,7 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
             {isfavorite ? <FaHeart /> : <FaRegHeart />}
           </div>
           <div className="hidden lg:block">
-            <PlayLIstIcon handlePlayListOpen={handlePlayListOpen} />
+            <ShowLyricsIcon handleOpenLyrics={handleOpenLyrics} />
           </div>
           <ReapetShuffleButton repeat={repeat} toggleRepeat={toggleRepeat} />
           {/* <TooltipProvider>

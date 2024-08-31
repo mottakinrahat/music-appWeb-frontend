@@ -185,6 +185,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setPlaying(!playing);
   };
 
+  // Handle Open lyrics
+
+  const handleOpenLyrics = () => {
+    alert("Open lyrics");
+  };
   // const isSongPlaying = useLocalSongData();
   // const dispatch: AppDispatch = useDispatch();
 
@@ -571,7 +576,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               toggleRepeat={toggleRepeat}
               src={LyricsIcon.src}
               repeat={repeat}
-              handlePlayListOpen={handleOpenPlayList}
+              handleOpenLyrics={handleOpenLyrics}
               handleAddToFavorites={handleAddtoFavourite}
               isfavorite={favorite}
             />
