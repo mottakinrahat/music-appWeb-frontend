@@ -10,6 +10,8 @@ import ToastCard from "@/components/Card/ToastCard";
 import { Toaster } from "@/components/ui/sonner";
 import { MdOutlineCancel } from "react-icons/md";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface NavInterface {
   blur?: boolean; // blur the background image? default is false.
@@ -17,6 +19,10 @@ interface NavInterface {
 
 const Navbar = ({ blur = false }: NavInterface) => {
   const [user, setUser] = useState(null);
+
+  const musicData = useSelector((state: RootState) => state.musicData);
+
+  console.log("musicdata ", musicData);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -86,11 +92,7 @@ const Navbar = ({ blur = false }: NavInterface) => {
           <Logo />
         </div>
         <div>
-          <ul
-            className={`flex gap-10 ${
-              blur ? "text-white z-40" : "text-base"
-            } max-lg:hidden`}
-          >
+          <ul className={`flex gap-10 ${blur ? "text-white z-40" : "text-base"} max-lg:hidden`}>
             <Routes />
           </ul>
         </div>

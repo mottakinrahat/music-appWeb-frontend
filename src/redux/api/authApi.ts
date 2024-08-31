@@ -17,7 +17,7 @@ const authApi = baseApi.injectEndpoints({
       query: (data: any) => {
         console.log(data, "redux");
         return {
-          url: `/users`,
+          url: `/signup/user`,
           method: "POST",
           body: data,
         };
