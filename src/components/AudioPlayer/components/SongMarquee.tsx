@@ -21,7 +21,7 @@ const SongMarquee = ({
   }, [songName]);
 
   return (
-    <h1
+    <div
       className={` ${
         className && className
       } z-10 text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl`}
@@ -48,7 +48,7 @@ const SongMarquee = ({
           </Marquee>
         </span>
       </div>
-    </h1>
+    </div>
   );
 };
 

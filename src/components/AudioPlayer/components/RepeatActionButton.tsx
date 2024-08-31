@@ -22,7 +22,7 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
   handleAddToFavorites,
 }) => {
   return (
-    <div>
+    <div> 
       <div className="text-white text-2xl mx-2 ">
         <div className="flex justify-start items-center gap-[24px]">
           <div
