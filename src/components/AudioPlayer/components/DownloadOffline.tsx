@@ -1,6 +1,7 @@
-import React from "react";
-import { LucideDownload } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { LucideDownload, LucideCheckCircle } from "lucide-react"; // Import an additional icon
 import { openDB } from "idb";
+import { toast } from "sonner";
 
 // Function to initialize IndexedDB
 const initDB = async () => {
@@ -37,7 +38,7 @@ const saveSongToIndexedDB = async (songUrl: string, songName: string) => {
     const songExists = await checkIfSongExists(songName);
 
     if (songExists) {
-      console.log(`Song "${songName}" already exists in IndexedDB.`);
+      toast.warning(`${songName} already exists in offline download.`);
       return; // Exit the function if the song already exists
     }
 
@@ -54,7 +55,7 @@ const saveSongToIndexedDB = async (songUrl: string, songName: string) => {
     const db = await initDB();
     // Save the song Blob to IndexedDB
     await db.put("offlineSongs", { name: songName, data: blob });
-    console.log(`Song "${songName}" saved successfully.`);
+    toast.success(`${songName} downloaded successfully.`);
   } catch (error) {
     console.error("Failed to save the song:", error);
   }
@@ -69,9 +70,24 @@ const DownloadOffline: React.FC<DownloadButtonProps> = ({
   songUrl,
   songName,
 }) => {
+  const [isDownloaded, setIsDownloaded] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkDownloadStatus = async () => {
+      const songExists = await checkIfSongExists(songName);
+      setIsDownloaded(songExists);
+    };
+
+    checkDownloadStatus();
+  }, [songName]);
+
   const handleDownload = () => {
-    // Call function to save song data to IndexedDB
-    saveSongToIndexedDB(songUrl, songName);
+    if (isDownloaded) {
+      // Show a toast if the song is already downloaded
+      toast.warning(`${songName} already exists in offline download.`);
+    } else {
+      saveSongToIndexedDB(songUrl, songName).then(() => setIsDownloaded(true));
+    }
   };
 
   return (
@@ -81,7 +97,11 @@ const DownloadOffline: React.FC<DownloadButtonProps> = ({
       role="button"
       aria-label={`Download ${songName}`}
     >
-      <LucideDownload className="active:text-accent group-hover:text-accent transition hover:text-accent text-white focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
+      {isDownloaded ? (
+        <LucideCheckCircle className="text-white text-2xl" /> // Show check icon if downloaded
+      ) : (
+        <LucideDownload className="active:text-accent group-hover:text-accent transition hover:text-accent text-white focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
+      )}
     </a>
   );
 };
