@@ -19,10 +19,9 @@ const initDB = async () => {
 };
 
 // Function to retrieve a song Blob from IndexedDB
-const retrieveSongFromIndexedDB = async (id: number) => {
+const retrieveSongFromIndexedDB = async (id: string | number) => {
   try {
     const db = await initDB();
-    console.log(db);
     const song = await db.get("offlineSongs", id);
 
     if (song && song.data) {
@@ -37,13 +36,32 @@ const retrieveSongFromIndexedDB = async (id: number) => {
   }
 };
 
-const PlayOfflineSong: React.FC<{ songId: number }> = ({ songId = 6 }) => {
+interface PlayOfflineSongProps {
+  params: {
+    songId: number | string;
+  };
+}
+
+const PlayOfflineSong: React.FC<PlayOfflineSongProps> = ({ params }) => {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [songName, setSongName] = useState<string | null>(null);
 
+  // Extract and log the songId
+  const songId = params?.songId;
+  console.log("Received songId:", songId);
+
   useEffect(() => {
+    // Convert songId to a number if it's a string
+    const id = typeof songId === "string" ? parseInt(songId, 10) : songId;
+
+    if (!id) {
+      console.error("Invalid song ID.");
+      return;
+    }
+
     const fetchSong = async () => {
-      const song = await retrieveSongFromIndexedDB(songId);
+      const song = await retrieveSongFromIndexedDB(id); // Use dynamic ID here
+      console.log("Fetched song from IndexedDB:", song);
       if (song) {
         setAudioUrl(song.url);
         setSongName(song.name);

@@ -4,24 +4,45 @@ import { openDB } from "idb";
 
 // Function to initialize IndexedDB
 const initDB = async () => {
-  const db = await openDB("OfflineDB", 1, {
+  const db = await openDB("OfflineDB", 6, {
     upgrade(db) {
-      db.createObjectStore("offlineSongs", {
-        keyPath: "id",
-        autoIncrement: true,
-      });
+      if (!db.objectStoreNames.contains("offlineSongs")) {
+        db.createObjectStore("offlineSongs", {
+          keyPath: "id",
+          autoIncrement: true,
+        });
+      }
     },
   });
   return db;
 };
 
+// Function to check if a song already exists in IndexedDB
+const checkIfSongExists = async (songName: string) => {
+  const db = await initDB();
+  const tx = db.transaction("offlineSongs", "readonly");
+  const store = tx.objectStore("offlineSongs");
+
+  const allSongs = await store.getAll(); // Get all songs from IndexedDB
+
+  // Check if the song with the given name already exists
+  const existingSong = allSongs.find((song) => song.name === songName);
+
+  return !!existingSong; // Returns true if the song exists, false otherwise
+};
+
 // Function to save the song data to IndexedDB
 const saveSongToIndexedDB = async (songUrl: string, songName: string) => {
   try {
+    const songExists = await checkIfSongExists(songName);
+
+    if (songExists) {
+      console.log(`Song "${songName}" already exists in IndexedDB.`);
+      return; // Exit the function if the song already exists
+    }
+
     console.log(`Fetching song from URL: ${songUrl}`);
     const response = await fetch(songUrl);
-
-    console.log(response);
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
