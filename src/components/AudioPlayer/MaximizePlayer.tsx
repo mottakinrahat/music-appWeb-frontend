@@ -209,6 +209,19 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       // router.replace(`/music/${currentSong._id}`);
     }
   }, [currentSong, router]);
+  const [backgroundImage, setBackgroundImage] = useState(
+    "https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png"
+  );
+
+  useEffect(() => {
+    if (currentSong?.artwork && currentSong?.artwork !== "") {
+      setBackgroundImage(currentSong.artwork);
+    } else {
+      setBackgroundImage(
+        "https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png"
+      );
+    }
+  }, [currentSong?.artwork]);
 
   if (!currentSong) {
     return (
@@ -239,6 +252,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     } else {
       setWidth(0);
     }
+    setListWidth(0);
   };
   // PlayListOperations
   const handleOpenPlayList = () => {
@@ -261,25 +275,24 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     } else {
       setListWidth(0);
     }
+    setWidth(0);
   };
-  console.log(currentSong);
 
   return (
     <div
-      className="flex flex-col select-none h-screen overflow-hidden w-full"
+      className="flex flex-col select-none h-screen overflow-hidden w-full bg-cover bg-center transition-background-image duration-1000"
       style={{
-        backgroundImage: `url(${
-          currentSong?.artwork !== "" && currentSong?.artWork
-            ? currentSong?.artwork
-            : "https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png"
-        })`,
+        backgroundImage: `url(${backgroundImage})`,
+
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
+      {/* Your content here */}
+
       <div className="absolute w-full h-screen bg-black opacity-10 z-10"></div>
-      <div className="flex z-20 flex-grow relative">
+      <div className="flex z-10 flex-grow relative">
         {showPlayer && (
           <div className="">
             <Navbar blur />
@@ -299,44 +312,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             handleRandom={handleRandom}
           />
         </div>
-        {eqOpen <= 0 && width > 0 && listWidth <= 0 ? (
-          <div
-            onClick={() => {
-              handleOpenEqualizer();
-            }}
-            className={`${
-              eqOpen <= 0
-                ? "fixed transition-colors duration-1000  bg-gradient-to-t from-black/40 h-full w-full top-0"
-                : "bg-transparent"
-            } `}
-          ></div>
-        ) : (
-          ""
-        )}
-
-        {eqOpen <= 0 && width > 0 ? (
-          <div
-            className={`bg-white relative h-full mt-[96px] max-lg:absolute transition-all duration-500 ${
-              eqOpen <= 0 ? " right-0 bottom-0" : "w-0 -right-full bottom-0"
-            }`}
-            style={{ width }}
-            ref={resizingRef}
-          >
-            {eqOpen <= 0 && (
-              <div
-                className="absolute left-0 top-0 h-full w-2 bg-white z-[99999] cursor-ew-resize"
-                onMouseDown={handleMouseDown}
-                onTouchStart={handleTouchStart}
-              ></div>
-            )}
-            <AudioPlayerEqualizer
-              audioContext={audioContext}
-              audioElement={audioElement}
-            />
-          </div>
-        ) : (
-          ""
-        )}
 
         {playlistOpen <= 0 && listWidth > 0 ? (
           <div
@@ -351,7 +326,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
           ""
         )}
         <div
-          className={`bg-white 2xl:relative h-full  mt-[96px] absolute transition-all duration-500 ${
+          className={`bg-white 2xl:relative h-full mt-[96px] top-[-2rem] md:top-[-1rem] lg:top-0  absolute transition-all duration-500 ${
             playlistOpen <= 0
               ? "max-w-3xl w-[400px] lg:w-[500px] right-0 bottom-0"
               : "w-0 -right-full bottom-0"
@@ -367,6 +342,40 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             ></div>
           )}
           <Playlist setPlaying={setPlaying} playing={playing} tracks={tracks} />
+        </div>
+        {eqOpen <= 0 && width > 0 && listWidth <= 0 ? (
+          <div
+            onClick={() => {
+              handleOpenEqualizer();
+            }}
+            className={`${
+              eqOpen <= 0
+                ? "fixed transition-colors duration-1000  bg-gradient-to-t from-black/40 h-full w-full top-0"
+                : "bg-transparent"
+            } `}
+          ></div>
+        ) : (
+          ""
+        )}
+
+        <div
+          className={`bg-white 2xl:relative h-full mt-[96px] top-[-2rem] md:top-[-1rem] lg:top-0  absolute transition-all duration-500 ${
+            eqOpen <= 0 ? " right-0 bottom-0" : "w-0 -right-full bottom-0"
+          }`}
+          style={{ width }}
+          ref={resizingRef}
+        >
+          {eqOpen <= 0 && (
+            <div
+              className="absolute left-0 top-0 h-full w-2 bg-white z-[999] cursor-ew-resize"
+              onMouseDown={handleMouseDown}
+              onTouchStart={handleTouchStart}
+            ></div>
+          )}
+          <AudioPlayerEqualizer
+            audioContext={audioContext}
+            audioElement={audioElement}
+          />
         </div>
       </div>
     </div>

@@ -82,7 +82,7 @@ const Navbar = ({ blur = false }: NavInterface) => {
           blur ? "md:p-10 p-4  xl:px-[120px]" : "container"
         } w-full flex justify-between flex-wrap items-center`}
       >
-        <div>
+        <div className="">
           <Logo />
         </div>
         <div>

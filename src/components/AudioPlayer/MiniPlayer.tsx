@@ -131,14 +131,14 @@ const MiniPlayer = ({
               handlePrev={handlePrev}
               playing={playing}
             />
-            <div className="absolute w-1/2 flex-col px-5 md:max-w-sm justify-center flex -translate-y-8 sm:-translate-y-7 mb-2 max-lg:w-full  top-[5.8rem] left-1/2 -translate-x-1/2 items-center">
+            <div className="absolute w-1/2 flex-col px-5 md:max-w-sm lg:max-w-lg justify-center flex -translate-y-8 sm:-translate-y-7 mb-2 max-lg:w-full  top-[5.8rem] left-1/2 -translate-x-1/2 items-center">
               <GradientRange
                 defaultValue={[currentTime]}
                 max={duration}
                 min={0}
                 value={[currentTime]}
                 onValueChange={handleSeek}
-                className="w-full md:max-w-sm"
+                className="w-full md:max-w-sm lg:max-w-lg"
               />
               <div className="w-full">
                 <div className="flex justify-between mt-2 gap-3 items-center font-semibold">
