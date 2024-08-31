@@ -70,34 +70,19 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     useState<RepeatShuffleProps["repeat"]>("repeat-all");
   const [playing, setPlaying] = useState<boolean>(play);
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [favorite, setFavorite] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
   const [played, setPlayed] = useState<number>(0);
   const [volume, setVolume] = useState<number>(0.8);
   const [playbackSpeed, setPlaybackSpeed] = useState<any>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
-  const [userData, setUserData] = useState<any>(null);
+
+  // const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
+  //   null
+  // );
+
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
-  const [currentSong, setCurrentSong] = useState<any>(songData);
-  const [share, setShare] = useState<boolean>(false);
-  const userId = userData?._id;
-  const [favorite, setFavorite] = useState<boolean>(false);
-
-  useEffect(() => {
-    const savedRepeat = localStorage.getItem(
-      "repeat"
-    ) as RepeatShuffleProps["repeat"];
-    if (savedRepeat) {
-      setRepeat(savedRepeat);
-    }
-    const isFavourite = currentSong.favUsers.includes(userId);
-    setFavorite(isFavourite);
-
-    const user = localStorage.getItem("user");
-    if (user) {
-      setUserData(JSON.parse(user));
-    }
-  }, [currentSong.favUsers, userId]);
 
   useEffect(() => {
     // Show the player only if the path matches `/music/:id`
@@ -107,6 +92,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setShowPlayer(false);
     }
   }, [pathname]);
+
+  const [currentSong, setCurrentSong] = useState<any>(songData);
+  const [share, setShare] = useState<boolean>(false);
 
   const speed = localStorage.getItem("speed");
   useEffect(() => {
@@ -163,10 +151,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
   }, [onAudioContextReady]);
 
-  const playListData = {
-    id: songData,
-    userId: userId,
-  };
+  // console.log(volume);
+  // console.log(currentSong);
 
   const isSongPlaying = useLocalSongData();
 
@@ -335,12 +321,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   // Three dot menu operations
 
   const handleAddtoFavourite = async () => {
-    // Create a new song object with updated properties
-    const updatedSong = { ...currentSong /* any updates here if needed */ };
-
-    // Update the state with the new song object
-    setCurrectSong(updatedSong);
-
+    const user = JSON.parse(localStorage?.getItem("user")!);
+    const userId = user?._id;
+    const playListData = {
+      id: songId,
+      userId: userId,
+    };
     if (!userId) {
       toast.warning("Please login first!");
     } else {
