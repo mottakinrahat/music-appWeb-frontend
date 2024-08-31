@@ -83,7 +83,6 @@ const DownloadOffline: React.FC<DownloadButtonProps> = ({
 
   const handleDownload = () => {
     if (isDownloaded) {
-      // Show a toast if the song is already downloaded
       toast.warning(`${songName} already exists in offline download.`);
     } else {
       saveSongToIndexedDB(songUrl, songName).then(() => setIsDownloaded(true));
@@ -98,7 +97,7 @@ const DownloadOffline: React.FC<DownloadButtonProps> = ({
       aria-label={`Download ${songName}`}
     >
       {isDownloaded ? (
-        <LucideCheckCircle className="text-white text-2xl" /> // Show check icon if downloaded
+        <LucideCheckCircle className="text-white text-2xl" />
       ) : (
         <LucideDownload className="active:text-accent group-hover:text-accent transition hover:text-accent text-white focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
       )}

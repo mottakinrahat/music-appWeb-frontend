@@ -1,6 +1,5 @@
 "use client";
 import DForm from "@/components/forms/DForm";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DInput from "@/components/forms/DInput";
 import SocialLogin from "@/components/common/socialLogin/SocialLogin";
@@ -9,32 +8,34 @@ import { Button } from "@/components/ui/button";
 import { FaFacebook } from "react-icons/fa6";
 import { FaApple } from "react-icons/fa";
 import DCheckbox from "@/components/forms/DCheckbox";
-import axios from "axios";
 import { loginSchema } from "./loginSchema";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useLoginMutation } from "@/redux/api/authApi";
+import { toast, Toaster } from "sonner";
 
 const Login = () => {
+  const [login, { isLoading, error }] = useLoginMutation();
   const router = useRouter();
   const defaultValues = {};
   const handleLogin = async (e: any) => {
     const formData = e;
-    console.log(formData);
-
-    axios
-      .post("https://music-app-web.vercel.app/api/v1/auth/login", e, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        const user = res?.data?.data?.user;
-        localStorage.setItem("token", res.data.data?.token);
-        localStorage.setItem("user", JSON.stringify(user));
-        router.push("/");
-      });
+    try {
+      const res = await login(formData).unwrap();
+      const user = res?.data?.user;
+      localStorage.setItem("token", res.data.data?.token);
+      localStorage.setItem("user", JSON.stringify(user));
+      toast.success("Login successful");
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+      toast.error("Your email or password is incorrect");
+    }
   };
 
   return (
     <div className=" flex items-center  max-w-xl mx-auto flex-col justify-center p-4">
+      <Toaster position="bottom-center" />
       <DForm
         resolver={zodResolver(loginSchema)}
         className="flex flex-col gap-5 w-full"
@@ -51,7 +52,7 @@ const Login = () => {
         </p>
         {/* {/ email /} */}
         <DInput
-          defaultValue={"ruhulamin@gmail.com"}
+          defaultValue={"testuser@gmail.com"}
           labelTextColor="#262626"
           name="email"
           label="Email"
@@ -67,10 +68,7 @@ const Login = () => {
           type="password"
         />
         {/* {/ submit Button /} */}
-        <Button
-          type="submit"
-          className="text-white hover:bg-accent hover:text-white bg-accent rounded-md "
-        >
+        <Button type="submit" className="text-white hover:bg-accent hover:text-white bg-accent rounded-md ">
           Log in
         </Button>
 
@@ -106,16 +104,12 @@ const Login = () => {
               <p>Remember Password</p>
             </div>
             <div>
-              <p className="underline text-accent cursor-pointer">
-                Forgot Password
-              </p>
+              <p className="underline text-accent cursor-pointer">Forgot Password</p>
             </div>
           </div>
           <p className="text-[#4C4C4C]">
-            By clicking &quot;Log in&quot; above, you acknowledge that you have
-            read and you agree to our General{" "}
-            <span className="font-semibold">Terms and Conditions</span> and have
-            read and acknowledge the{" "}
+            By clicking &quot;Log in&quot; above, you acknowledge that you have read and you agree to our General{" "}
+            <span className="font-semibold">Terms and Conditions</span> and have read and acknowledge the{" "}
             <span className="font-semibold">Privacy policy.</span>
           </p>
         </div>

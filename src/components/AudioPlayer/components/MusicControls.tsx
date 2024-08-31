@@ -1,11 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { FiSliders } from "react-icons/fi";
 import { MdDevices } from "react-icons/md";
 import { FaUpload } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { TbDeviceIpadX } from "react-icons/tb";
 import AirPlayButton from "./AirPlayButton";
+import { openDB } from "idb";
+import { clearMusicData, setMusicData } from "@/redux/slice/musicDataSlice";
+import { RootState } from "@/redux/store";
 import { initDB } from "@/utils/initDB";
 
 interface MusicControlsFace {
@@ -14,16 +18,16 @@ interface MusicControlsFace {
 
 const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
   const [showModal, setShowModal] = useState(false);
-  const [hasSong, setHasSong] = useState(false);
-  const [songTitle, setSongTitle] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const musicData = useSelector((state: RootState) => state.musicData);
 
   // Save file to IndexedDB
   const saveFileToIndexedDB = async (fileData: string, title: string) => {
     await deleteExistingSongFromIndexedDB(); // Delete old song
     const db = await initDB("MusicDB", 1, "songs");
-    await db.put("songs", { id: 1, fileData, title }); // Save new song with title
-    setHasSong(true);
-    setSongTitle(title);
+    const id = 1; // Simplification for this example
+    await db.put("songs", { id, fileData, title }); // Save new song with title
+    dispatch(setMusicData({ id: id.toString(), fileData, title })); // Dispatch Redux action
   };
 
   // Delete existing song from IndexedDB
@@ -36,23 +40,27 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
       await store.delete(song.id);
     });
     await tx.done;
-    setHasSong(false); // Update state when song is deleted
-    setSongTitle(null); // Clear song title
+    dispatch(clearMusicData()); // Dispatch Redux action to clear music data
   };
 
   // Retrieve file from IndexedDB
-  const retrieveFileFromIndexedDB = async () => {
-    const db = await initDB("MusicDB", 1, "songs");
-    const song = await db.get("songs", 1);
-    if (song) {
-      setHasSong(true);
-      setSongTitle(song.title);
-    }
-  };
 
   useEffect(() => {
+    const retrieveFileFromIndexedDB = async () => {
+      const db = await initDB("MusicDB", 1, "songs");
+      const song = await db.get("songs", 1);
+      if (song) {
+        dispatch(
+          setMusicData({
+            id: song.id.toString(),
+            fileData: song.fileData,
+            title: song.title,
+          })
+        ); // Update Redux state
+      }
+    };
     retrieveFileFromIndexedDB(); // Retrieve song data on component mount
-  }, []);
+  }, [dispatch]);
 
   const handleFileSelect = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -88,8 +96,9 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
         <div className="flex items-center">
           <AirPlayButton />
         </div>
+
         <div>
-          {hasSong ? (
+          {musicData.title ? (
             <TbDeviceIpadX
               onClick={handleDeleteSong}
               className="text-white hover:text-accent transition text-2xl cursor-pointer"
