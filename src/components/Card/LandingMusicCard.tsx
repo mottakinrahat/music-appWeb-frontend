@@ -58,15 +58,19 @@ const LandingMusicCard = ({
           <img
             src={artwork ? artwork : placeHolder.src}
             alt="Album Art"
-            className="w-16 h-16 aspect-square rounded-lg"
+            className="w-16 h-16 object-cover aspect-square rounded-lg"
           />
         </div>
         <div>
           <h2 className="text-base md:text-2xl gap-2 font-semibold mb-1">
-            {albumCard ? album : title}
+            {albumCard
+              ? album
+              : title.length > 16
+              ? `${title.slice(0, 16)}...`
+              : title}
           </h2>
           <div className="flex lg:items-center max-lg:flex-col flex-wrap">
-            <div className="flex items-center gap-2">
+            <div className="flex  text-xs sm:text-sm items-center gap-2">
               {!albumCard ? (
                 <p>
                   Album:{" "}
@@ -119,11 +123,14 @@ const LandingMusicCard = ({
           <div className="flex gap-2">
             <button
               onClick={() => handleRemoveFromPlaylist(id)} // Check if handleRemoveFromPlaylist is defined
-              className="rounded-full w-11 h-11"
+              className="rounded-full w-8 h-8 md:w-11 md:h-11"
             >
               <RxCross2 className="text-2xl" /> {/* Cross button */}
             </button>
-            <CurrentPlayingUsers addFriends={false} className="text-black" />
+            <CurrentPlayingUsers
+              addFriends={false}
+              className="text-black hidden md:flex"
+            />
           </div>
         )}
       </div>

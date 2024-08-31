@@ -10,6 +10,10 @@ import Volumn from "@/components/AudioPlayer/components/Volumn";
 
 import { DropDownBtn } from "@/components/AudioPlayer/components/DropDownBtn";
 import DownloadOffline from "./DownloadOffline";
+import { useDispatch } from "react-redux";
+import { handleMinimize } from "@/redux/slice/musicAsyncTunk";
+import { AppDispatch } from "@/redux/store";
+import { PiPlaylistBold } from "react-icons/pi";
 
 interface VolumeSettingDownRepeatProps {
   volume: number;
@@ -19,6 +23,7 @@ interface VolumeSettingDownRepeatProps {
   songUrl: string;
   audioRef: any;
   bpm: number;
+  handleOpenPlayList: () => void;
 }
 
 const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
@@ -29,6 +34,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   songUrl,
   audioRef,
   bpm,
+  handleOpenPlayList,
 }: any) => {
   const router = useRouter();
 
@@ -79,15 +85,11 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
     }
   };
 
-  const handleMinimize = () => {
-    const pathHistory = localStorage.getItem("pathHistory");
-    if (pathHistory) {
-      router.replace(pathHistory);
-    } else {
-      router.replace("/");
-    }
-  };
+  const dispatch: AppDispatch = useDispatch();
 
+  const onMinimize = () => {
+    dispatch(handleMinimize({ router: router }));
+  };
   const settingContent = (
     <>
       <ul className="flex flex-col gap-[16px] p-[16px]">
@@ -148,10 +150,17 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
         </div>
         <div
           className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
-          onClick={handleMinimize}
+          onClick={onMinimize}
         >
           {/* <img src={QueueMusicIcon.src} alt="QueueMusicIcon" /> */}
           <LucideMinimize2 />
+        </div>
+        <div
+          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
+          onClick={handleOpenPlayList}
+        >
+          {/* <img src={QueueMusicIcon.src} alt="QueueMusicIcon" /> */}
+          <PiPlaylistBold />
         </div>
       </div>
     </div>
