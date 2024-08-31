@@ -1,20 +1,13 @@
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { LucideRepeat, LucideRepeat1 } from "lucide-react";
 import React from "react";
-import { PiShuffle } from "react-icons/pi";
 import PlayLIstIcon from "./PlayLIstIcon";
-import { FaRegHeart } from "react-icons/fa6";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
+import ReapetShuffleButton from "./ReapetShuffleButton";
 
 // inrerface
 export interface RepeatActionButtonProps {
   toggleRepeat: any;
   src: string;
-  repeat: "repeat-all" | "repeat-one" | "repeat-off";
+  repeat: "repeat-all" | "repeat-one" | "repeat-off" | "shuffle";
   handlePlayListOpen: () => void;
   isfavorite: boolean;
   handleAddToFavorites: () => void;
@@ -32,18 +25,17 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
     <div>
       <div className="text-white text-2xl mx-2 ">
         <div className="flex justify-start items-center gap-[24px]">
-          <div>
-            {
-              <FaRegHeart
-                onClick={handleAddToFavorites}
-                className="cursor-pointer"
-              />
-            }
+          <div
+            onClick={handleAddToFavorites}
+            className="cursor-pointer transition text-white hover:text-accent"
+          >
+            {isfavorite ? <FaHeart /> : <FaRegHeart />}
           </div>
           <div className="hidden lg:block">
             <PlayLIstIcon handlePlayListOpen={handlePlayListOpen} />
           </div>
-          <TooltipProvider>
+          <ReapetShuffleButton repeat={repeat} toggleRepeat={toggleRepeat} />
+          {/* <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
                 <div
@@ -69,7 +61,7 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
                 }`}</p>
               </TooltipContent>
             </Tooltip>
-          </TooltipProvider>
+          </TooltipProvider> */}
         </div>
       </div>
     </div>

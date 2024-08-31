@@ -1,8 +1,6 @@
 "use client";
-import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
-import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
-import Navbar from "@/components/common/navigation/Navbar";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
+import useLocalSongData from "@/hooks/useLocalSongData";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -18,7 +16,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     null
   );
   // const [repeat, setRepeat] = useState<boolean>(false);
-  const [playing, setPlaying] = useState<boolean>(true);
+  const [playing, setPlaying] = useState<boolean>(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
   );
@@ -43,27 +41,31 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     setCurrentSong(tracks[initialTrackIndex]);
   }, [params?.id, tracks]);
 
+  // Changing Play state
+  const songData = useLocalSongData();
   useEffect(() => {
-    if (currentTrackIndex !== null) {
+    if (currentTrackIndex !== null && songData?.play === true) {
       setPlaying(true);
+    } else {
+      setPlaying(false);
     }
-  }, [currentTrackIndex, tracks]);
+  }, [currentSong, currentTrackIndex, songData?.play]);
 
-  const handlePrev = () => {
-    if (currentTrackIndex !== null && currentTrackIndex > 0) {
-      const newIndex = currentTrackIndex - 1;
-      setCurrentTrackIndex(newIndex);
-      setCurrentSong(tracks[newIndex]);
-    }
-  };
+  // const handlePrev = () => {
+  //   if (currentTrackIndex !== null && currentTrackIndex > 0) {
+  //     const newIndex = currentTrackIndex - 1;
+  //     setCurrentTrackIndex(newIndex);
+  //     setCurrentSong(tracks[newIndex]);
+  //   }
+  // };
 
-  const handleNext = () => {
-    if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
-      const newIndex = currentTrackIndex + 1;
-      setCurrentTrackIndex(newIndex);
-      setCurrentSong(tracks[newIndex]);
-    }
-  };
+  // const handleNext = () => {
+  //   if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
+  //     const newIndex = currentTrackIndex + 1;
+  //     setCurrentTrackIndex(newIndex);
+  //     setCurrentSong(tracks[newIndex]);
+  //   }
+  // };
 
   if (!currentSong) {
     return (

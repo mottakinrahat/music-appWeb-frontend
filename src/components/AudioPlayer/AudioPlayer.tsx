@@ -19,7 +19,7 @@ import AudioControls from "./components/AudioControls";
 import RepeatActionButton from "./components/RepeatActionButton";
 import PlayButtons from "./components/PlayButtons";
 import MusicControls from "./components/MusicControls";
-import Volumn from "./components/Volumn";
+// import Volumn from "./components/Volumn";
 import axios from "axios";
 import { toast } from "sonner";
 // import { Toaster } from "../ui/sonner";
@@ -31,6 +31,10 @@ import { Slider } from "../ui/slider";
 import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
 import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
+import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
+import useLocalSongData from "@/hooks/useLocalSongData";
+import Marquee from "react-fast-marquee";
+import SongMarquee from "./components/SongMarquee";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
@@ -47,6 +51,7 @@ interface AudioPlayerProps {
   play: boolean;
   handleOpenPlayList: () => void;
   handleRandom: () => void;
+  setCurrentSong: (value: any) => void;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -59,12 +64,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   play,
   handleOpenPlayList,
   handleRandom,
+  setCurrentSong: setCurrectSong,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const [repeat, setRepeat] = useState<any>("repeat-all");
+  const [repeat, setRepeat] =
+    useState<RepeatShuffleProps["repeat"]>("repeat-all");
   const [playing, setPlaying] = useState<boolean>(play);
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [favorite, setFavorite] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
   const [played, setPlayed] = useState<number>(0);
   const [volume, setVolume] = useState<number>(0.8);
@@ -114,11 +122,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (!getRepeat) {
       localStorage.setItem("repeat", repeat);
     }
-    if (volume) {
-      setRepeat(getRepeat);
-    }
   }, [currentSong, repeat, songData, speed, volume]);
   // Main Song
+
   const {
     songName,
     songLink,
@@ -150,11 +156,21 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   // console.log(volume);
   // console.log(currentSong);
 
+  const isSongPlaying = useLocalSongData();
+
   const handlePlayPause = () => {
     if (playing) {
       audioRef.current?.pause();
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: false, id: songId })
+      );
     } else {
       audioRef.current?.play();
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: true, id: songId })
+      );
     }
     setPlaying(!playing);
   };
@@ -196,24 +212,21 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleDuration = (duration: number) => {
     setDuration(duration);
   };
-
   const handleEnded = () => {
-    if (repeat === "repeat-all") {
-      handleNext();
-    } else if (repeat === "repeat-one") {
-      const audioElement = audioRef.current;
+    let currentRepeat: RepeatShuffleProps["repeat"] = repeat;
+    const audioElement = audioRef.current;
 
+    if (currentRepeat === "repeat-all") {
+      handleNext();
+    } else if (currentRepeat === "repeat-one") {
       if (audioElement) {
-        if (repeat) {
-          audioElement.currentTime = 0; // Restart the track
-          audioElement.play(); // Play the track again
-        } else {
-          // You can handle what happens when the track ends and repeat is not enabled (e.g., stop playback)
-          audioElement.pause(); // Pause the track
-        }
+        audioElement.currentTime = 0; // Restart the track
+        audioElement.play(); // Play the track again
       }
-    } else if (repeat === "repeat-off") {
+    } else if (currentRepeat === "repeat-off") {
       handleRandom();
+    } else if (currentRepeat === "shuffle") {
+      handleRandom(); // Assuming shuffle mode should also trigger a random track
     }
   };
 
@@ -245,16 +258,18 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
   //  repeat toggle
   const toggleRepeat = () => {
+    let newRepeat: RepeatShuffleProps["repeat"];
     if (repeat === "repeat-all") {
-      setRepeat("repeat-one");
-      localStorage.setItem("repeat", "repeat-one");
+      newRepeat = "repeat-one";
     } else if (repeat === "repeat-one") {
-      setRepeat("repeat-off");
-      localStorage.setItem("repeat", "repeat-off");
+      newRepeat = "repeat-off";
     } else if (repeat === "repeat-off") {
-      setRepeat("repeat-all");
-      localStorage.setItem("repeat", "repeat-all");
+      newRepeat = "shuffle";
+    } else {
+      newRepeat = "repeat-all";
     }
+    setRepeat(newRepeat);
+    localStorage.setItem("repeat", newRepeat);
   };
 
   // handle playlist add
@@ -265,6 +280,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       id: songId,
       userId: userId,
     };
+
     if (!userId) {
       toast("please login first");
       router.push("/login");
@@ -315,20 +331,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       userId: userId,
     };
     if (!userId) {
-      toast("please login first");
-      router.push("/login");
-    }
-    toast("Please wait, adding to favorites... ", {
-      duration: 1000,
-    });
-    await axios
-      .put(
-        `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
-        playListData
-      )
-      .then((res) => {
-        if (res.data)
-          toast(
+      toast.warning("Please login first!");
+    } else {
+      await axios
+        .put(
+          `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
+          playListData
+        )
+        .then((res) => {
+          setFavorite((prev: boolean) => !prev);
+          toast.success(
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
                 src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
@@ -341,21 +353,30 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 }}
               />
               <div>
-                <div style={{ fontWeight: "bold" }}>Favorites Added</div>
+                {favorite ? (
+                  <div style={{ fontWeight: "bold" }}>
+                    Favorites Removed Successfully
+                  </div>
+                ) : (
+                  <div style={{ fontWeight: "bold" }}>
+                    Favorites Added Successfully
+                  </div>
+                )}
                 <div>{`${songName}, ${songAlbum?.albumName}`}</div>
               </div>
             </div>
           );
-      })
-      .catch((err) => {
-        if (err) {
-          toast.error("Failed to add to playlist");
-        }
-      });
+        })
+        .catch((err) => {
+          if (err) {
+            toast.error("Failed to add to favourite list");
+          }
+        });
+    }
   };
 
   const threeDotContent = (
-    <div className="font-bold text-textSecondary select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
+    <div className="font-bold text-textSecondary w-52  select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
       <h2
         onClick={handleAddtoPlayList}
         className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
@@ -401,6 +422,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       />
       <div className="absolute top-0 w-full ">
         <MiniPlayer
+          repeat={repeat}
+          toggleRepeat={toggleRepeat}
           currentTime={currentTime}
           duration={duration}
           handleSeek={handleSeek}
@@ -424,16 +447,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         className={`${
           !showPlayer ? "hidden" : "w-full h-screen  bg-cover bg-center"
         } `}
-        // style={{
-        //   backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
-        // }}
       >
         {/* Dropdown section */}
         <div
           className={`${
             !showPlayer
               ? "hidden"
-              : "absolute p-4 xl:p-[120px] right-0 top-16 text-white"
+              : "absolute p-4 lg:px-8 lg:py-20 2xl:px-[120px] right-0 top-16 text-white"
           } `}
         >
           <DropDownBtn
@@ -456,9 +476,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           />
         </div>
-        <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4  xl:px-[120px]">
-          <div className="w-full flex justify-between items-center px-4 md:mb-4">
-            <div className="text-white flex items-center gap-2">
+        <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4   2xl:px-[120px]">
+          <div className="w-full flex justify-between items-center">
+            <div className="text-white flex mb-4 items-center gap-4">
               <img
                 // style={{ width: "auto", height: "auto" }}
                 src={artwork ? artwork : placeHolder.src}
@@ -468,9 +488,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 className="w-10 h-10 md:h-16 md:w-16 rounded-lg object-cover"
               />
               <div>
-                <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1">
-                  {songName}
-                </h2>
+                <div className="relative max-w-[220px] overflow-hidden">
+                  <SongMarquee songName={songName}></SongMarquee>
+                </div>
                 <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
                   <p>{songArtist}</p>
                   <div className="flex items-center max-md:hidden gap-2">
@@ -486,7 +506,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               </div>
             </div>
 
-            <div className="hidden xl:block">
+            <div className="hidden xl:block mt-10">
               <PlayButtons
                 handleNext={handleNext}
                 handleNextTenSecond={handleNextTenSecond}
@@ -505,7 +525,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               repeat={repeat}
               handlePlayListOpen={handleOpenPlayList}
               handleAddToFavorites={handleAddtoFavourite}
-              isfavorite={true}
+              isfavorite={favorite}
             />
           </div>
 
@@ -527,18 +547,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             onEnded={handleEnded}
           />
 
-          <div className="w-full cursor-pointer py-1 flex items-center">
-            {/* <input
-              type="range"
-              min="0"
-              max={duration}
-              value={currentTime}
-              onChange={handleSeek}
-              className="w-full cursor-pointer outline-none rounded-full h-1 bg-gray-300"
-              style={{
-                background: `linear-gradient(to right, #000 0%, #ccc 0%)`,
-              }}
-            /> */}
+          <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
             <Slider
               defaultValue={[currentTime]}
               max={duration}
@@ -548,7 +557,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             />
           </div>
           <div className="w-full">
-            <div className="flex justify-between gap-3 items-center px-3">
+            <div className="flex justify-between gap-3 mb-14 lg:mb-0 items-center ">
               <span className="text-white text-sm">
                 {formatTime(currentTime)}
               </span>
@@ -572,22 +581,19 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               karaokeOn={karaokeOn}
               SetKaraokeOn={setKaraokeOn}
             />
-            <VolumeSettingDownRepeat
-              songName={songName}
-              songUrl={songLink}
-              audioRef={audioRef}
-              volume={volume}
-              handleVolumeChange={handleVolumeChange}
-              handleMute={handleMute}
-            />
-          </div>
-          <div className="md:hidden flex justify-between">
-            <Volumn
-              handleMute={handleMute}
-              handleVolumeChange={handleVolumeChange}
-              volume={volume}
-            />
-            <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
+            <div className="flex flex-col gap-4 justify-between">
+              <VolumeSettingDownRepeat
+                songName={songName}
+                songUrl={songLink}
+                audioRef={audioRef}
+                volume={volume}
+                handleVolumeChange={handleVolumeChange}
+                handleMute={handleMute}
+              />
+              <div className="md:hidden">
+                <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
+              </div>
+            </div>
           </div>
         </div>
       </div>

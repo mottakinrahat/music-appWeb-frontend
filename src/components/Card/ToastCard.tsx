@@ -13,7 +13,7 @@ const ToastCard = ({
   title,
   message,
   icon,
-  duration = 3000,
+  duration = 2000,
 }: ToastCardProps) => {
   toast(
     <div className="flex items-center space-x-3">

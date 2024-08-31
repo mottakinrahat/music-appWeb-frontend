@@ -4,9 +4,10 @@ import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlaye
 import Navbar from "@/components/common/navigation/Navbar";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import axios from "axios";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Playlist from "./components/Playlist";
+import useLocalSongData from "@/hooks/useLocalSongData";
 
 interface PlayerInterface {
   params?: {
@@ -20,7 +21,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
     null
   );
-  const [playing, setPlaying] = useState<boolean>(true);
+  const [playing, setPlaying] = useState<boolean>(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
   );
@@ -36,6 +37,9 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [playListStartX, setPlayListStartX] = useState<number>(0);
   const [startWidth, setStartWidth] = useState<number>(0);
   const [playListWidth, setPlayListWidth] = useState<number>(0);
+
+  //  Router
+  const router = useRouter();
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
@@ -143,11 +147,14 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     setCurrentSong(tracks[initialTrackIndex]);
   }, [params?.id, tracks]);
 
+  const songData = useLocalSongData();
   useEffect(() => {
-    if (currentTrackIndex !== null) {
+    if (currentTrackIndex !== null && songData?.play === true) {
       setPlaying(true);
+    } else {
+      setPlaying(false);
     }
-  }, [currentTrackIndex, tracks]);
+  }, [currentSong, currentTrackIndex, songData?.play]);
   // show controls
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(false);
@@ -161,6 +168,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     }
     if (showPlayer) {
       setWidth(0);
+      setListWidth(0);
     }
   }, [pathname, showPlayer]);
 
@@ -172,6 +180,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     }
   };
 
+  // Handles next track
   const handleNext = () => {
     if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
       const newIndex = currentTrackIndex + 1;
@@ -179,7 +188,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       setCurrentSong(tracks[newIndex]);
     }
   };
-
   const handleRandom = () => {
     if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
       const newIndex =
@@ -188,6 +196,17 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       setCurrentSong(tracks[newIndex]);
     }
   };
+
+  // Sync localStorage and routing with currentSong updates
+  useEffect(() => {
+    if (currentSong) {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: true, id: currentSong._id })
+      );
+      // router.replace(`/music/${currentSong._id}`);
+    }
+  }, [currentSong, router]);
 
   if (!currentSong) {
     return (
@@ -206,11 +225,24 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   };
 
   const handleOpenEqualizer = () => {
+    console.log("Handle open equalizer triggered");
+    console.log("Current width:", width);
+
     if (width <= 0) {
-      setEqOpen(0);
-      setWidth(500);
+      const screenWidth = window.innerWidth;
+      console.log("Screen width:", screenWidth);
+
+      if (screenWidth < 480) {
+        console.log("Setting width to 300");
+        setWidth(300);
+      } else if (screenWidth < 768) {
+        console.log("Setting width to 400");
+        setWidth(400);
+      } else {
+        console.log("Setting width to 500");
+        setWidth(500);
+      }
     } else {
-      setEqOpen(width);
       setWidth(0);
     }
   };
@@ -242,13 +274,18 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     >
       <div className="absolute w-full h-screen bg-black opacity-10 z-10"></div>
       <div className="flex z-20 flex-grow relative">
-        {showPlayer && <Navbar blur />}
+        {showPlayer && (
+          <div className="">
+            <Navbar blur />
+          </div>
+        )}
         <div className="flex-1 transition-all">
           <AudioPlayer
             play={playing}
             handleNext={handleNext}
             handlePrev={handlePrev}
             id={params?.id}
+            setCurrentSong={setCurrentSong}
             currentSong={currentSong}
             onAudioContextReady={handleAudioContextReady}
             handleOpenEqualizer={handleOpenEqualizer}
@@ -263,7 +300,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             }}
             className={`${
               eqOpen <= 0
-                ? "fixed transition-colors duration-1000 bg-gradient-to-t from-black/40 h-full w-full top-0"
+                ? "fixed transition-colors duration-1000  bg-gradient-to-t from-black/40 h-full w-full top-0"
                 : "bg-transparent"
             } `}
           ></div>
@@ -273,10 +310,8 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
         {eqOpen >= 0 && listWidth <= 0 && (
           <div
-            className={`bg-white relative h-full mt-[96px]  max-lg:absolute transition-all duration-500 ${
-              eqOpen <= 0
-                ? "max-w-3xl w-[400px] lg:w-[500px] right-0 bottom-0"
-                : "w-0 -right-full bottom-0"
+            className={`bg-white relative h-full mt-[96px] max-lg:absolute transition-all duration-500 ${
+              eqOpen <= 0 ? " right-0 bottom-0" : "w-0 -right-full bottom-0"
             }`}
             style={{ width }}
             ref={resizingRef}

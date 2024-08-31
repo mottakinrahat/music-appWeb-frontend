@@ -92,7 +92,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
         <li className="flex justify-between items-center">
           <span>169 BPM</span>
         </li>
-        <li className="flex justify-between items-center">
+        <li className="flex justify-between gap-4 md:gap-10 items-center">
           <span> Playback speed:</span>{" "}
           <span
             onClick={() => handlePlaybackSpeed()}

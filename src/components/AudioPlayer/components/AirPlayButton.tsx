@@ -17,10 +17,14 @@ interface WifiDeviceType {
 }
 
 const AirPlayButton = () => {
-  const [bluetoothDevices, setBluetoothDevices] = useState<BluetoothDeviceType[]>([]);
-  const [connectedBluetoothDevice, setConnectedBluetoothDevice] = useState<BluetoothDeviceType | null>(null);
+  const [bluetoothDevices, setBluetoothDevices] = useState<
+    BluetoothDeviceType[]
+  >([]);
+  const [connectedBluetoothDevice, setConnectedBluetoothDevice] =
+    useState<BluetoothDeviceType | null>(null);
   const [wifiDevices, setWifiDevices] = useState<WifiDeviceType[]>([]);
-  const [connectedWifiDevice, setConnectedWifiDevice] = useState<WifiDeviceType | null>(null);
+  const [connectedWifiDevice, setConnectedWifiDevice] =
+    useState<WifiDeviceType | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<string>("");
   const [browserName, setBrowserName] = useState<string>("");
 
@@ -130,13 +134,16 @@ const AirPlayButton = () => {
     console.log("Scanning for devices...");
     await requestBluetoothDevices();
     await discoverWifiDevices();
+    // console.log("scanning");
   };
 
   const airplayControls = (
     <div className="min-h-40 max-w-xs border-0 bg-[#DBDAD9]">
       <div className="flex items-center justify-between">
-        <h3 className="text-2xl font-semibold mb-1 px-4 py-3">Select a device</h3>
-        <p className="text-xl mr-2 cursor-pointer">Scan</p>
+        <h3 className="text-2xl font-semibold mb-1 px-4 py-3">
+          Select a device
+        </h3>
+        <p className="text-lg mr-2 cursor-pointer">Scan</p>
       </div>
       <div className="bg-black/10 h-px w-full" />
       <div className="px-4 py-2 pt-4 space-y-2 font-semibold text-base">
@@ -155,7 +162,8 @@ const AirPlayButton = () => {
                   onClick={() => connectToBluetoothDevice(device)}
                 >
                   <RiSignalTowerLine />
-                  {device.name} {connectedBluetoothDevice === device ? "(Connected)" : ""}
+                  {device.name}{" "}
+                  {connectedBluetoothDevice === device ? "(Connected)" : ""}
                 </li>
               ))}
             </ul>
@@ -173,7 +181,8 @@ const AirPlayButton = () => {
                   onClick={() => connectToWifiDevice(device)}
                 >
                   <RiSignalTowerLine />
-                  {device.name} {connectedWifiDevice === device ? "(Connected)" : ""}
+                  {device.name}{" "}
+                  {connectedWifiDevice === device ? "(Connected)" : ""}
                 </li>
               ))}
             </ul>
@@ -185,7 +194,8 @@ const AirPlayButton = () => {
       <div className="px-4 py-2">
         <h1 className="font-semibold">Don{`'`}t see your Device?</h1>
         <p className="font-normal text-sm text-gray-700">
-          Please make sure the device is turned on and you are on the same network.
+          Please make sure the device is turned on and you are on the same
+          network.
         </p>
       </div>
     </div>
@@ -198,8 +208,10 @@ const AirPlayButton = () => {
         buttonContent={
           <Airplay
             className={`${
-              showPlayer ? "text-white hover:text-accent" : "text-textPrimary hover:text-textSecondary transition"
-            }   transition`}
+              showPlayer
+                ? "text-white hover:text-accent"
+                : "text-textPrimary hover:text-textSecondary transition"
+            } my-auto inline-block transition`}
           />
         }
       />

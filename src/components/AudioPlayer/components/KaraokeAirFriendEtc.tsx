@@ -9,7 +9,7 @@ const KaraokeAirFriendEtc = ({
   handleOpenEqualizer,
 }: any) => {
   return (
-    <div className="flex items-center gap-3 ">
+    <div className="flex flex-wrap items-center gap-3 ">
       <div
         className="text-white cursor-pointer"
         onClick={() => SetKaraokeOn(!karaokeOn)}
@@ -29,7 +29,7 @@ const KaraokeAirFriendEtc = ({
       <div>
         <CurrentPlayingUsers addFriends />
       </div>
-      <div className="max-md:hidden">
+      <div className="max-md:hidden ">
         <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
       </div>
     </div>

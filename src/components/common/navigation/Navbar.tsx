@@ -73,7 +73,7 @@ const Navbar = ({ blur = false }: NavInterface) => {
   return (
     <nav
       className={`${
-        blur ? "bg-white/10 fixed  z-50 w-full text-white" : "bg-navigation"
+        blur ? "bg-white/10 fixed  z-[9999] w-full text-white" : "bg-navigation"
       } h-16 md:h-20 lg:h-24 flex items-center`}
     >
       <Toaster position="bottom-center" />
@@ -106,7 +106,7 @@ const Navbar = ({ blur = false }: NavInterface) => {
           )}
         </div>
         <div className="lg:hidden">
-          <ToggleMenu />
+          <ToggleMenu blur={blur} />
         </div>
       </div>
 

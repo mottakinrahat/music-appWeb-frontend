@@ -12,7 +12,7 @@ import {
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
-export function DropDownBtn({ buttonContent, dropDownContent }: any) {
+export function DropDownBtn({ buttonContent, dropDownContent, onClick }: any) {
   const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true);
   const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false);
   const [showPanel, setShowPanel] = React.useState<Checked>(false);
@@ -20,9 +20,11 @@ export function DropDownBtn({ buttonContent, dropDownContent }: any) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="text-white z-50">{buttonContent}</button>
+        <button onClick={onClick} className="text-white z-50">
+          {buttonContent}
+        </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="max-w-md">
+      <DropdownMenuContent className="max-w-md w-full">
         {dropDownContent}
       </DropdownMenuContent>
     </DropdownMenu>

@@ -52,7 +52,10 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
 }) => {
   const location = usePathname();
   const handleSetIdtoLocalStroage = () => {
-    localStorage.setItem("songId", musicId!);
+    localStorage.setItem(
+      "songData",
+      JSON.stringify({ play: true, id: musicId })
+    );
     localStorage.setItem("pathHistory", location);
   };
 
