@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { FiSliders } from "react-icons/fi";
 import { MdDevices } from "react-icons/md";
 import { FaUpload } from "react-icons/fa";
@@ -7,6 +8,8 @@ import { IoMdClose } from "react-icons/io";
 import { TbDeviceIpadX } from "react-icons/tb";
 import AirPlayButton from "./AirPlayButton";
 import { openDB } from "idb";
+import { clearMusicData, setMusicData } from "@/redux/slice/musicDataSlice";
+import { RootState } from "@/redux/store";
 
 interface MusicControlsFace {
   handleOpenEqualizer: () => void;
@@ -14,8 +17,8 @@ interface MusicControlsFace {
 
 const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
   const [showModal, setShowModal] = useState(false);
-  const [hasSong, setHasSong] = useState(false);
-  const [songTitle, setSongTitle] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const musicData = useSelector((state: RootState) => state.musicData);
 
   // Function to open IndexedDB database
   const initDB = async () => {
@@ -33,9 +36,9 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
   const saveFileToIndexedDB = async (fileData: string, title: string) => {
     await deleteExistingSongFromIndexedDB(); // Delete old song
     const db = await initDB();
-    await db.put("songs", { id: 1, fileData, title }); // Save new song with title
-    setHasSong(true);
-    setSongTitle(title);
+    const id = 1; // Simplification for this example
+    await db.put("songs", { id, fileData, title }); // Save new song with title
+    dispatch(setMusicData({ id: id.toString(), fileData, title })); // Dispatch Redux action
   };
 
   // Delete existing song from IndexedDB
@@ -48,27 +51,23 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
       await store.delete(song.id);
     });
     await tx.done;
-    setHasSong(false); // Update state when song is deleted
-    setSongTitle(null); // Clear song title
+    dispatch(clearMusicData()); // Dispatch Redux action to clear music data
   };
 
   // Retrieve file from IndexedDB
-  const retrieveFileFromIndexedDB = async () => {
-    const db = await initDB();
-    const song = await db.get("songs", 1);
-    if (song) {
-      setHasSong(true);
-      setSongTitle(song.title);
-    }
-  };
 
   useEffect(() => {
+    const retrieveFileFromIndexedDB = async () => {
+      const db = await initDB();
+      const song = await db.get("songs", 1);
+      if (song) {
+        dispatch(setMusicData({ id: song.id.toString(), fileData: song.fileData, title: song.title })); // Update Redux state
+      }
+    };
     retrieveFileFromIndexedDB(); // Retrieve song data on component mount
-  }, []);
+  }, [dispatch]);
 
-  const handleFileSelect = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -91,17 +90,15 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
     <>
       {/* Controls Component */}
       <div className="flex justify-between items-center gap-2 lg:gap-4">
-        <div
-          onClick={handleOpenEqualizer}
-          className="cursor-pointer text-xl select-none text-white"
-        >
+        <div onClick={handleOpenEqualizer} className="cursor-pointer text-xl select-none text-white">
           <FiSliders className="hover:text-accent transition text-2xl cursor-pointer" />
         </div>
         <div className="flex items-center">
           <AirPlayButton />
         </div>
+
         <div>
-          {hasSong ? (
+          {musicData.title ? (
             <TbDeviceIpadX
               onClick={handleDeleteSong}
               className="text-white hover:text-accent transition text-2xl cursor-pointer"
@@ -124,22 +121,13 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
               onClick={() => setShowModal(false)}
               className="absolute top-2 right-2 text-2xl text-gray-600 cursor-pointer hover:text-gray-800"
             />
-            <h2 className="text-lg md:text-xl font-semibold mb-4 text-center">
-              Import File
-            </h2>
+            <h2 className="text-lg md:text-xl font-semibold mb-4 text-center">Import File</h2>
             <div className="flex items-center justify-center mb-4">
               {/* Input with Accent Border */}
               <label className="flex flex-col items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-lg tracking-wide uppercase border-2 border-transparent hover:border-blue-500 transition-colors cursor-pointer">
                 <FaUpload className="text-2xl mb-2" />
-                <span className="text-sm md:text-base leading-normal">
-                  Select a file
-                </span>
-                <input
-                  type="file"
-                  accept="audio/*"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
+                <span className="text-sm md:text-base leading-normal">Select a file</span>
+                <input type="file" accept="audio/*" onChange={handleFileSelect} className="hidden" />
               </label>
             </div>
           </div>
