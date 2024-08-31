@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { toast, Toaster } from "sonner";
 import { z } from "zod";
 
 const signupSchema = z
@@ -46,15 +47,26 @@ const SignupPage: React.FC = () => {
       const res = await register(rest).unwrap();
       console.log(res);
       if (res.success) {
+        toast.success("Account created successfully");
         router.push("/plans");
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: unknown) {
+      // Type assertion for the error object
+      const errorData = (error as { data?: { message?: string } })?.data;
+
+      // Check if errorData and errorMessage are defined before using them
+      if (errorData?.message) {
+        const errorMessage = errorData.message.toUpperCase();
+        toast.error(errorMessage);
+      } else {
+        toast.error("An unknown error occurred.");
+      }
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col max-w-xl mx-auto items-center justify-center">
+      <Toaster position="bottom-center" />
       <DForm
         resolver={zodResolver(signupSchema)}
         className="flex flex-col gap-5 w-full p-4"
