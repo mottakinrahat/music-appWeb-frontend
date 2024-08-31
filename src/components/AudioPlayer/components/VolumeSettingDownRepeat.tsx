@@ -13,6 +13,7 @@ import DownloadOffline from "./DownloadOffline";
 import { useDispatch } from "react-redux";
 import { handleMinimize } from "@/redux/slice/musicAsyncTunk";
 import { AppDispatch } from "@/redux/store";
+import { PiPlaylistBold } from "react-icons/pi";
 
 interface VolumeSettingDownRepeatProps {
   volume: number;
@@ -22,6 +23,7 @@ interface VolumeSettingDownRepeatProps {
   songUrl: string;
   audioRef: any;
   bpm: number;
+  handleOpenPlayList: () => void;
 }
 
 const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
@@ -32,6 +34,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   songUrl,
   audioRef,
   bpm,
+  handleOpenPlayList,
 }: any) => {
   const router = useRouter();
 
@@ -154,10 +157,10 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
         </div>
         <div
           className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
-          // onClick={}
+          onClick={handleOpenPlayList}
         >
           {/* <img src={QueueMusicIcon.src} alt="QueueMusicIcon" /> */}
-          <LucideMinimize2 />
+          <PiPlaylistBold />
         </div>
       </div>
     </div>

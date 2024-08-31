@@ -28,8 +28,6 @@ import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
 import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
 import { openDB } from "idb";
-import defaultImage from "@/assets/etc/png/song.jpg";
-import Image from "next/image";
 import useLocalSongData from "@/hooks/useLocalSongData";
 import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
 import SongMarquee from "./components/SongMarquee";
@@ -168,6 +166,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   // console.log(currentSong);
 
   const isSongPlaying = useLocalSongData();
+  // console.log(isSongPlaying);
 
   const handlePlayPause = () => {
     if (playing) {
@@ -185,6 +184,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
     setPlaying(!playing);
   };
+
+  // const isSongPlaying = useLocalSongData();
+  // const dispatch: AppDispatch = useDispatch();
+
+  // const onPlayPause = () => {
+  //   dispatch(handlePlayPause({ audioRef, songId }));
+  // };
 
   // devJibon
   // handle palyback Speed
@@ -223,7 +229,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleDuration = (duration: number) => {
     setDuration(duration);
   };
-  const handleEnded = () => {
+
+  // const dispatch: AppDispatch = useDispatch();
+  const handleEnd = () => {
     let currentRepeat: RepeatShuffleProps["repeat"] = repeat;
     const audioElement = audioRef.current;
 
@@ -239,6 +247,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     } else if (currentRepeat === "shuffle") {
       handleRandom(); // Assuming shuffle mode should also trigger a random track
     }
+    // dispatch(handleEnded({ audioRef, handleNext, handleRandom }));
   };
 
   const handlePreviousTenSecond = () => {
@@ -583,7 +592,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             onLoadedMetadata={() => {
               setDuration(audioRef.current?.duration || 0);
             }}
-            onEnded={handleEnded}
+            onEnded={handleEnd}
           />
 
           <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
@@ -626,6 +635,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 songName={songName}
                 songUrl={songLink}
                 audioRef={audioRef}
+                handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}
                 handleMute={handleMute}

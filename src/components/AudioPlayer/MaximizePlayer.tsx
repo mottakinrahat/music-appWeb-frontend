@@ -243,27 +243,22 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   // PlayListOperations
   const handleOpenPlayList = () => {
     // if (listWidth <= 0) {
-    //   if (screenWidth < 480) {
-    //     setListWidth(300);
-    //     setPlaylistOpen(0);
-    //   } else if (screenWidth < 768) {
-    //     setPlaylistOpen(400);
-    //     setListWidth(400);
-    //     setListWidth(0);
-    //   } else {
-    //     setPlaylistOpen(700);
-    //     setListWidth(0);
-    //   }
-    // } else {
     //   setPlaylistOpen(0);
+
+    //   setListWidth(700);
+    // } else {
+    //   setPlaylistOpen(700);
     //   setListWidth(0);
     // }
     if (listWidth <= 0) {
-      setPlaylistOpen(0);
-
-      setListWidth(700);
+      if (screenWidth < 480) {
+        setListWidth(300);
+      } else if (screenWidth < 768) {
+        setListWidth(400);
+      } else {
+        setListWidth(700);
+      }
     } else {
-      setPlaylistOpen(700);
       setListWidth(0);
     }
   };
