@@ -18,6 +18,7 @@ interface VolumeSettingDownRepeatProps {
   songName: string;
   songUrl: string;
   audioRef: any;
+  bpm: number;
 }
 
 const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
@@ -27,6 +28,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   songName,
   songUrl,
   audioRef,
+  bpm,
 }: any) => {
   const router = useRouter();
 
@@ -90,7 +92,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
     <>
       <ul className="flex flex-col gap-[16px] p-[16px]">
         <li className="flex justify-between items-center">
-          <span>169 BPM</span>
+          <span>{bpm} BPM</span>
         </li>
         <li className="flex justify-between gap-4 md:gap-10 items-center">
           <span> Playback speed:</span>{" "}

@@ -30,6 +30,9 @@ import { DropDownBtn } from "./components/DropDownBtn";
 import { openDB } from "idb";
 import defaultImage from "@/assets/etc/png/song.jpg";
 import Image from "next/image";
+import useLocalSongData from "@/hooks/useLocalSongData";
+import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
+import SongMarquee from "./components/SongMarquee";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -71,6 +74,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [volume, setVolume] = useState<number>(0.8);
   const [playbackSpeed, setPlaybackSpeed] = useState<any>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
+  const [userData, setUserData] = useState<any>();
 
   // const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
   //   null
@@ -81,7 +85,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const [share, setShare] = useState<boolean>(false);
   const userId = userData?._id;
-  const [favorite, setFavorite] = useState<boolean>(false);
   const [hasSong, setHasSong] = useState<boolean>(false);
   const [idbSong, setIdbSong] = useState<any>(null);
 
@@ -103,9 +106,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setShowPlayer(false);
     }
   }, [pathname]);
-
-  const [currentSong, setCurrentSong] = useState<any>(songData);
-  const [share, setShare] = useState<boolean>(false);
 
   const speed = localStorage.getItem("speed");
   useEffect(() => {
@@ -136,6 +136,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const {
     songName,
+    bpm,
     songLink,
     artwork,
     songArtist,
@@ -292,7 +293,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
 
     if (!userId) {
-      toast("please login first");
+      toast.warning("please login first");
       router.push("/login");
     }
     toast("Please wait, adding to playlist... ", {
@@ -305,7 +306,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       )
       .then((res) => {
         if (res.data)
-          toast(
+          toast.success(
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
                 src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
@@ -385,6 +386,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
+  // console.log(currentSong);
+
   const threeDotContent = (
     <div className="font-bold text-textSecondary w-52  select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
       <h2
@@ -436,17 +439,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   // Retrieve file from IndexedDB
-  const retrieveFileFromIndexedDB = async () => {
-    const db = await initDB();
-    const song = await db.get("songs", 1);
-    if (song) {
-      setHasSong(true);
-      setIdbSong(song);
-    }
-  };
 
   useEffect(() => {
-    retrieveFileFromIndexedDB(); // Retrieve audio data on component mount
+    const retrieveFileFromIndexedDB = async () => {
+      const db = await initDB();
+      const song = await db.get("songs", 1);
+      if (song) {
+        setHasSong(true);
+        setIdbSong(song);
+      }
+    };
+    retrieveFileFromIndexedDB();
   }, []);
 
   return (
@@ -458,6 +461,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       />
       <div className="absolute top-0 w-full ">
         <MiniPlayer
+          repeat={repeat}
+          toggleRepeat={toggleRepeat}
           currentTime={currentTime}
           duration={duration}
           handleSeek={handleSeek}
@@ -523,7 +528,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               />
               <div>
                 <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl">
-                  {songName}
+                  <SongMarquee songName={songName} className="text-white" />
                 </h2>
                 <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
                   <p>{songArtist}</p>
@@ -551,90 +556,87 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               />
             </div>
 
-                {/* repeat button component */}
+            {/* repeat button component */}
 
-                <RepeatActionButton
-                  toggleRepeat={toggleRepeat}
-                  src={LyricsIcon.src}
-                  repeat={repeat}
-                  handlePlayListOpen={handleOpenPlayList}
-                  handleAddToFavorites={handleAddtoFavourite}
-                  isfavorite={favorite}
-                />
-              </div>
+            <RepeatActionButton
+              toggleRepeat={toggleRepeat}
+              src={LyricsIcon.src}
+              repeat={repeat}
+              handlePlayListOpen={handleOpenPlayList}
+              handleAddToFavorites={handleAddtoFavourite}
+              isfavorite={favorite}
+            />
+          </div>
 
-              <AudioControls
+          <AudioControls
+            volume={volume}
+            ref={audioRef}
+            src={songLink}
+            playbackRate={playbackSpeed}
+            onTimeUpdate={() => {
+              const currentTime = audioRef.current?.currentTime || 0;
+              const duration = audioRef.current?.duration || 0;
+              handleProgress(currentTime, duration);
+              setCurrentTime(currentTime);
+            }}
+            autoPlay={playing}
+            onLoadedMetadata={() => {
+              setDuration(audioRef.current?.duration || 0);
+            }}
+            onEnded={handleEnded}
+          />
+
+          <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
+            <Slider
+              defaultValue={[currentTime]}
+              max={duration}
+              min={0}
+              value={[currentTime]}
+              onValueChange={handleSeek}
+            />
+          </div>
+          <div className="w-full">
+            <div className="flex justify-between gap-3 mb-14 lg:mb-0 items-center ">
+              <span className="text-white text-sm">
+                {formatTime(currentTime)}
+              </span>
+              <span className="text-white text-sm">{formatTime(duration)}</span>
+            </div>
+          </div>
+          <div className="flex w-full xl:hidden">
+            <PlayButtons
+              handleNext={handleNext}
+              handleNextTenSecond={handleNextTenSecond}
+              handlePlayPause={handlePlayPause}
+              handlePreviousTenSecond={handlePreviousTenSecond}
+              handlePrev={handlePrev}
+              playing={playing}
+            />
+          </div>
+
+          <div className="flex justify-between items-center">
+            <KaraokeAirFriendEtc
+              handleOpenEqualizer={handleOpenEqualizer}
+              karaokeOn={karaokeOn}
+              SetKaraokeOn={setKaraokeOn}
+            />
+            <div className="flex flex-col gap-4 justify-between">
+              <VolumeSettingDownRepeat
+                bpm={bpm}
+                songName={songName}
+                songUrl={songLink}
+                audioRef={audioRef}
                 volume={volume}
-                ref={audioRef}
-                src={songLink}
-                playbackRate={playbackSpeed}
-                onTimeUpdate={() => {
-                  const currentTime = audioRef.current?.currentTime || 0;
-                  const duration = audioRef.current?.duration || 0;
-                  handleProgress(currentTime, duration);
-                  setCurrentTime(currentTime);
-                }}
-                autoPlay={playing}
-                onLoadedMetadata={() => {
-                  setDuration(audioRef.current?.duration || 0);
-                }}
-                onEnded={handleEnded}
+                handleVolumeChange={handleVolumeChange}
+                handleMute={handleMute}
               />
-
-              <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
-                <Slider
-                  defaultValue={[currentTime]}
-                  max={duration}
-                  min={0}
-                  value={[currentTime]}
-                  onValueChange={handleSeek}
-                />
-              </div>
-              <div className="w-full">
-                <div className="flex justify-between gap-3 mb-14 lg:mb-0 items-center ">
-                  <span className="text-white text-sm">
-                    {formatTime(currentTime)}
-                  </span>
-                  <span className="text-white text-sm">
-                    {formatTime(duration)}
-                  </span>
-                </div>
-              </div>
-              <div className="flex w-full xl:hidden">
-                <PlayButtons
-                  handleNext={handleNext}
-                  handleNextTenSecond={handleNextTenSecond}
-                  handlePlayPause={handlePlayPause}
-                  handlePreviousTenSecond={handlePreviousTenSecond}
-                  handlePrev={handlePrev}
-                  playing={playing}
-                />
-              </div>
-
-              <div className="flex justify-between items-center">
-                <KaraokeAirFriendEtc
-                  handleOpenEqualizer={handleOpenEqualizer}
-                  karaokeOn={karaokeOn}
-                  SetKaraokeOn={setKaraokeOn}
-                />
-                <div className="flex flex-col gap-4 justify-between">
-                  <VolumeSettingDownRepeat
-                    songName={songName}
-                    songUrl={songLink}
-                    audioRef={audioRef}
-                    volume={volume}
-                    handleVolumeChange={handleVolumeChange}
-                    handleMute={handleMute}
-                  />
-                  <div className="md:hidden">
-                    <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
-                  </div>
-                </div>
+              <div className="md:hidden">
+                <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
               </div>
             </div>
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
