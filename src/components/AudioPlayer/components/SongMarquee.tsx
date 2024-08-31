@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import Marquee from "react-fast-marquee"; // Correct import for react-fast-marquee
 
-const SongMarquee = ({ songName }: { songName: string }) => {
+const SongMarquee = ({
+  songName,
+  className,
+}: {
+  songName: string;
+  className: string;
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const [shouldMarquee, setShouldMarquee] = useState<boolean>(false);
@@ -15,12 +21,15 @@ const SongMarquee = ({ songName }: { songName: string }) => {
   }, [songName]);
 
   return (
-    <h1 className=" z-10 text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl">
-      <div className="relative max-w-xs overflow-hidden">
+    <div
+      className={` ${
+        className && className
+      } z-10 text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl`}
+    >
+      <div className="relative max-w-[220px] overflow-hidden">
         <span
           ref={textRef}
           style={{
-            color: "white",
             display: "inline-block",
             WebkitMaskImage:
               "-webkit-gradient(linear, left top, right top, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)))",
@@ -39,7 +48,7 @@ const SongMarquee = ({ songName }: { songName: string }) => {
           </Marquee>
         </span>
       </div>
-    </h1>
+    </div>
   );
 };
 

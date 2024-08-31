@@ -100,7 +100,10 @@ const MiniPlayer = ({
                   />
                   <div>
                     <h2 className="text-base md:text-xl gap-2 font-semibold mb-1">
-                      <SongMarquee songName={title}></SongMarquee>
+                      <SongMarquee
+                        className="text-black"
+                        songName={title}
+                      ></SongMarquee>
                     </h2>
                     <div className="flex lg:items-center max-lg:flex-col flex-wrap">
                       <p>{artist}</p>

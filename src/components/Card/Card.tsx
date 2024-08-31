@@ -118,12 +118,20 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
       {/* Card Content */}
       <div className="">
         {title && (
-          <h2 className="text-xl lg:text-2xl font-semibold mb-2">{title}</h2>
+          <Link href={musicId ? `/music/${musicId}` : "/"} className="">
+            <h2 className="text-xl lg:text-2xl text-textPrimary hover:text-textSecondary cursor-pointer font-semibold mb-2">
+              {title.length > 22 ? `${title.slice(0, 22)}...` : title}
+            </h2>
+          </Link>
         )}
-        {artistName && <p className="text-sm text-gray-600">{artistName}</p>}
+        {artistName && (
+          <p className="text-sm text-textPrimary hover:text-textSecondary">
+            {artistName}
+          </p>
+        )}
 
         {album && (
-          <p className="text-sm text-gray-600 ">
+          <p className="text-sm text-textPrimary hover:text-textSecondary ">
             Album:{" "}
             <Link
               href={albumRouteLink ? albumRouteLink : "/"}
