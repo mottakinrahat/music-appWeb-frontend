@@ -1,15 +1,18 @@
 // store/musicSlice.ts
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { AppDispatch, RootState } from "../store"; // Adjust based on your store setup
+import { Router } from "next/router";
 
-interface MusicState {
+export interface MusicState {
   id: string | null;
-  listWidth: number; // Add listWidth to state
+  pathHistory: string | null;
 }
 
 const initialState: MusicState = {
   id: null,
-  listWidth: 0, // Initialize listWidth
+  pathHistory: null,
 };
+
 
 const musicSlice = createSlice({
   name: "music",
@@ -18,11 +21,14 @@ const musicSlice = createSlice({
     setId(state, action: PayloadAction<string | null>) {
       state.id = action.payload;
     },
-    setListWidth(state, action: PayloadAction<number>) {
-      state.listWidth = action.payload; // Handle listWidth updates
+    setPathHistory(state, action: PayloadAction<string | null>) {
+      state.pathHistory = action.payload;
+    },
+    clearPathHistory(state) {
+      state.pathHistory = null;
     },
   },
 });
 
-export const { setId, setListWidth } = musicSlice.actions;
+export const { setId, setPathHistory, clearPathHistory } = musicSlice.actions;
 export default musicSlice.reducer;

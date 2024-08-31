@@ -6,8 +6,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
 
 interface ChartInfc {
