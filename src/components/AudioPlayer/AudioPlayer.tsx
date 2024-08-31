@@ -33,6 +33,8 @@ import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
 import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
 import useLocalSongData from "@/hooks/useLocalSongData";
+import Marquee from "react-fast-marquee";
+import SongMarquee from "./components/SongMarquee";
 
 // import { tracks } from "@/app/(withCommonLayout)/music/page";
 
@@ -275,9 +277,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     const user = JSON.parse(localStorage?.getItem("user")!);
     const userId = user?._id;
     const playListData = {
-      id: songData,
+      id: songId,
       userId: userId,
     };
+
     if (!userId) {
       toast("please login first");
       router.push("/login");
@@ -287,7 +290,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     });
     await axios
       .put(
-        `https://music-app-web.vercel.app/api/v1/songs/play-list/${songData}/${userId}`,
+        `https://music-app-web.vercel.app/api/v1/songs/play-list/${songId}/${userId}`,
         playListData
       )
       .then((res) => {
@@ -332,7 +335,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     } else {
       await axios
         .put(
-          `https://music-app-web.vercel.app/api/v1/favourite/${songData}/${userId}`,
+          `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
           playListData
         )
         .then((res) => {
@@ -450,7 +453,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           className={`${
             !showPlayer
               ? "hidden"
-              : "absolute p-4 lg:py-20 xl:px-[120px] right-0 top-16 text-white"
+              : "absolute p-4 lg:px-8 lg:py-20 2xl:px-[120px] right-0 top-16 text-white"
           } `}
         >
           <DropDownBtn
@@ -473,7 +476,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           />
         </div>
-        <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4   xl:px-[120px]">
+        <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4   2xl:px-[120px]">
           <div className="w-full flex justify-between items-center">
             <div className="text-white flex mb-4 items-center gap-4">
               <img
@@ -485,9 +488,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 className="w-10 h-10 md:h-16 md:w-16 rounded-lg object-cover"
               />
               <div>
-                <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl">
-                  {songName}
-                </h2>
+                <div className="relative max-w-[220px] overflow-hidden">
+                  <SongMarquee songName={songName}></SongMarquee>
+                </div>
                 <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
                   <p>{songArtist}</p>
                   <div className="flex items-center max-md:hidden gap-2">
@@ -503,7 +506,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               </div>
             </div>
 
-            <div className="hidden xl:block">
+            <div className="hidden xl:block mt-10">
               <PlayButtons
                 handleNext={handleNext}
                 handleNextTenSecond={handleNextTenSecond}
