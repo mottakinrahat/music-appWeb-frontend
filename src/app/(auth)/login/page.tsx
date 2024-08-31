@@ -12,8 +12,7 @@ import { loginSchema } from "./loginSchema";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLoginMutation } from "@/redux/api/authApi";
-import { Toast } from "@/components/ui/toast";
-import { toast } from "@/hooks/use-toast";
+import { toast, Toaster } from "sonner";
 
 const Login = () => {
   const [login, { isLoading, error }] = useLoginMutation();
@@ -26,15 +25,17 @@ const Login = () => {
       const user = res?.data?.user;
       localStorage.setItem("token", res.data.data?.token);
       localStorage.setItem("user", JSON.stringify(user));
-      
+      toast.success("Login successful");
       router.push("/");
     } catch (error) {
       console.log(error);
+      toast.error("Your email or password is incorrect");
     }
   };
 
   return (
     <div className=" flex items-center  max-w-xl mx-auto flex-col justify-center p-4">
+      <Toaster position="bottom-center" />
       <DForm
         resolver={zodResolver(loginSchema)}
         className="flex flex-col gap-5 w-full"
