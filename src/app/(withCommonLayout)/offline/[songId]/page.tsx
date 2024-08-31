@@ -45,13 +45,12 @@ interface PlayOfflineSongProps {
 const PlayOfflineSong: React.FC<PlayOfflineSongProps> = ({ params }) => {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [songName, setSongName] = useState<string | null>(null);
+  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine); // Track online status
 
-  // Extract and log the songId
   const songId = params?.songId;
   console.log("Received songId:", songId);
 
   useEffect(() => {
-    // Convert songId to a number if it's a string
     const id = typeof songId === "string" ? parseInt(songId, 10) : songId;
 
     if (!id) {
@@ -60,7 +59,7 @@ const PlayOfflineSong: React.FC<PlayOfflineSongProps> = ({ params }) => {
     }
 
     const fetchSong = async () => {
-      const song = await retrieveSongFromIndexedDB(id); // Use dynamic ID here
+      const song = await retrieveSongFromIndexedDB(id);
       console.log("Fetched song from IndexedDB:", song);
       if (song) {
         setAudioUrl(song.url);
@@ -71,8 +70,24 @@ const PlayOfflineSong: React.FC<PlayOfflineSongProps> = ({ params }) => {
     fetchSong();
   }, [songId]);
 
+  // Update online/offline status
+  useEffect(() => {
+    const updateOnlineStatus = () => {
+      setIsOnline(navigator.onLine);
+    };
+
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
+  }, []);
+
   return (
     <div>
+      <p>Status: {isOnline ? "Online" : "Offline"}</p>
       {audioUrl ? (
         <>
           <audio controls>
