@@ -23,11 +23,11 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
     setCurrentTracks(updatedTracks);
     console.log(`Removing song with id: ${id}`);
   };
-
+  console.log(tracks);
   return (
-    <div className="p-8">
+    <div className="p-2 xl:p-6 2xl:p-8">
       {/* play list */}
-      <div className="flex justify-between">
+      <div className="flex  justify-between">
         <h2 className="text-3xl font-semibold">Next Queue</h2>
         <CurrentPlayingUsers addFriends={false} className="text-black" />
       </div>
@@ -39,21 +39,23 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
       <div className="font-semibold mt-6 mb-10 text-accent text-center">
         Song credit
       </div>
-      <div>
-        {currentTracks?.map((track: any, idx) => (
-          <div key={idx} className="gap-2 w-full items-center mb-4">
-            <LandingMusicCard
-              album={track?.songAlbum.albumName}
-              artist={track?.songArtist}
-              artwork={track?.artwork}
-              id={track?._id}
-              title={track?.songName}
-              playing={playing}
-              setPlaying={() => setPlaying(playing)}
-              handleRemoveFromPlaylist={handleRemoveFromPlaylist}
-            />
-          </div>
-        ))}
+      <div className="">
+        <div className="overflow-y-scroll">
+          {currentTracks?.map((track: any, idx) => (
+            <div key={idx} className="gap-2 w-full items-center mb-4">
+              <LandingMusicCard
+                album={track?.songAlbum.albumName}
+                artist={track?.songArtist}
+                artwork={track?.artwork}
+                id={track?._id}
+                title={track?.songName}
+                playing={playing}
+                setPlaying={() => setPlaying(playing)}
+                handleRemoveFromPlaylist={handleRemoveFromPlaylist}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -58,12 +58,16 @@ const LandingMusicCard = ({
           <img
             src={artwork ? artwork : placeHolder.src}
             alt="Album Art"
-            className="w-16 h-16 aspect-square rounded-lg"
+            className="w-16 h-16 object-cover aspect-square rounded-lg"
           />
         </div>
         <div>
           <h2 className="text-base md:text-2xl gap-2 font-semibold mb-1">
-            {albumCard ? album : title}
+            {albumCard
+              ? album
+              : title.length > 16
+              ? `${title.slice(0, 16)}...`
+              : title}
           </h2>
           <div className="flex lg:items-center max-lg:flex-col flex-wrap">
             <div className="flex items-center gap-2">

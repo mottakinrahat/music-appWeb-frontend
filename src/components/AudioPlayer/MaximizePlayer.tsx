@@ -343,7 +343,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         )}
 
         <div
-          className={`bg-white relative h-full mt-[96px] max-lg:absolute transition-all duration-500 ${
+          className={`bg-white relative h-full  mt-[96px] max-lg:absolute transition-all duration-500 ${
             playlistOpen <= 0
               ? "max-w-3xl w-[400px] lg:w-[500px] right-0 bottom-0"
               : "w-0 -right-full bottom-0"
@@ -352,7 +352,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
           ref={resizingPlayListRef}
         >
           <div
-            className="absolute left-0 top-0 h-full w-2 bg-white z-[99999] cursor-ew-resize"
+            className="absolute left-0 top-0 h-full  w-2 bg-white z-[99999] cursor-ew-resize"
             onMouseDown={handleMouseDownPlayList}
             onTouchStart={handleTouchStartPlayList}
           ></div>

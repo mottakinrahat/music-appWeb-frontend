@@ -545,7 +545,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               </div>
             </div>
 
-            <div className="hidden xl:block">
+            <div className="hidden xl:mt-5 xl:block">
               <PlayButtons
                 handleNext={handleNext}
                 handleNextTenSecond={handleNextTenSecond}
