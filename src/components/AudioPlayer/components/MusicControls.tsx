@@ -11,6 +11,7 @@ import { openDB } from "idb";
 import { clearMusicData, setMusicData } from "@/redux/slice/musicDataSlice";
 import { RootState } from "@/redux/store";
 import { initDB } from "@/utils/initDB";
+import { toast } from "sonner";
 
 interface MusicControlsFace {
   handleOpenEqualizer: () => void;
@@ -72,6 +73,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
         const base64Data = reader.result as string;
         const title = file.name; // Use the file name as the title
         await saveFileToIndexedDB(base64Data, title);
+        toast.success("Song Import Successfully");
         console.log("File saved to IndexedDB");
       };
       reader.readAsDataURL(file);
@@ -81,6 +83,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
 
   const handleDeleteSong = async () => {
     await deleteExistingSongFromIndexedDB();
+    toast.success("Song Remove Successfully from Imported Song");
   };
 
   return (
