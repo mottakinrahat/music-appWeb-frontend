@@ -3,9 +3,7 @@
 import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import placeHolder from "@/assets/etc/png/song.jpg";
 import LyricsIcon from "@/assets/icons/lyrics.svg";
-
 import { formatTime } from "@/utils/FormatTime";
-
 import {
   PlusCircleIcon,
   HeartIcon,
@@ -14,7 +12,6 @@ import {
   UserCircleIcon,
   MusicalNoteIcon,
 } from "@heroicons/react/24/outline";
-
 import AudioControls from "./components/AudioControls";
 import RepeatActionButton from "./components/RepeatActionButton";
 import PlayButtons from "./components/PlayButtons";
@@ -22,7 +19,6 @@ import MusicControls from "./components/MusicControls";
 // import Volumn from "./components/Volumn";
 import axios from "axios";
 import { toast } from "sonner";
-// import { Toaster } from "../ui/sonner";
 import Link from "next/link";
 import ShareCard from "../Card/ShareCard";
 import { usePathname, useRouter } from "next/navigation";
@@ -31,12 +27,9 @@ import { Slider } from "../ui/slider";
 import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
 import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
-import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
-import useLocalSongData from "@/hooks/useLocalSongData";
-import Marquee from "react-fast-marquee";
-import SongMarquee from "./components/SongMarquee";
-
-// import { tracks } from "@/app/(withCommonLayout)/music/page";
+import { openDB } from "idb";
+import defaultImage from "@/assets/etc/png/song.jpg";
+import Image from "next/image";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -85,6 +78,22 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
+  const [currentSong, setCurrentSong] = useState<any>(songData);
+  const [share, setShare] = useState<boolean>(false);
+  const userId = userData?._id;
+  const [favorite, setFavorite] = useState<boolean>(false);
+  const [hasSong, setHasSong] = useState<boolean>(false);
+  const [idbSong, setIdbSong] = useState<any>(null);
+
+  useEffect(() => {
+    const isFavourite = currentSong.favUsers.includes(userId);
+    setFavorite(isFavourite);
+
+    const user = localStorage.getItem("user");
+    if (user) {
+      setUserData(JSON.parse(user));
+    }
+  }, [currentSong.favUsers, userId]);
 
   useEffect(() => {
     // Show the player only if the path matches `/music/:id`
@@ -134,6 +143,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     _id: songId,
   } = currentSong;
   const router = useRouter();
+
   useEffect(() => {
     const handleInteraction = () => {
       if (!audioContextRef.current) {
@@ -413,6 +423,32 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     </div>
   );
 
+  // Function to open IndexedDB database
+  const initDB = async () => {
+    const db = await openDB("MusicDB", 1, {
+      upgrade(db) {
+        if (!db.objectStoreNames.contains("songs")) {
+          db.createObjectStore("songs", { keyPath: "id", autoIncrement: true });
+        }
+      },
+    });
+    return db;
+  };
+
+  // Retrieve file from IndexedDB
+  const retrieveFileFromIndexedDB = async () => {
+    const db = await initDB();
+    const song = await db.get("songs", 1);
+    if (song) {
+      setHasSong(true);
+      setIdbSong(song);
+    }
+  };
+
+  useEffect(() => {
+    retrieveFileFromIndexedDB(); // Retrieve audio data on component mount
+  }, []);
+
   return (
     <div className="audio-controls relative">
       <ShareCard
@@ -422,8 +458,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       />
       <div className="absolute top-0 w-full ">
         <MiniPlayer
-          repeat={repeat}
-          toggleRepeat={toggleRepeat}
           currentTime={currentTime}
           duration={duration}
           handleSeek={handleSeek}
@@ -453,7 +487,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           className={`${
             !showPlayer
               ? "hidden"
-              : "absolute p-4 lg:px-8 lg:py-20 2xl:px-[120px] right-0 top-16 text-white"
+              : "absolute p-4 lg:py-20 xl:px-[120px] right-0 top-16 text-white"
           } `}
         >
           <DropDownBtn
@@ -476,7 +510,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           />
         </div>
-        <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4   2xl:px-[120px]">
+        <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4   xl:px-[120px]">
           <div className="w-full flex justify-between items-center">
             <div className="text-white flex mb-4 items-center gap-4">
               <img
@@ -488,9 +522,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 className="w-10 h-10 md:h-16 md:w-16 rounded-lg object-cover"
               />
               <div>
-                <div className="relative max-w-[220px] overflow-hidden">
-                  <SongMarquee songName={songName}></SongMarquee>
-                </div>
+                <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl">
+                  {songName}
+                </h2>
                 <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
                   <p>{songArtist}</p>
                   <div className="flex items-center max-md:hidden gap-2">
@@ -506,7 +540,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               </div>
             </div>
 
-            <div className="hidden xl:block mt-10">
+            <div className="hidden xl:block">
               <PlayButtons
                 handleNext={handleNext}
                 handleNextTenSecond={handleNextTenSecond}
@@ -517,86 +551,90 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               />
             </div>
 
-            {/* repeat button component */}
+                {/* repeat button component */}
 
-            <RepeatActionButton
-              toggleRepeat={toggleRepeat}
-              src={LyricsIcon.src}
-              repeat={repeat}
-              handlePlayListOpen={handleOpenPlayList}
-              handleAddToFavorites={handleAddtoFavourite}
-              isfavorite={favorite}
-            />
-          </div>
+                <RepeatActionButton
+                  toggleRepeat={toggleRepeat}
+                  src={LyricsIcon.src}
+                  repeat={repeat}
+                  handlePlayListOpen={handleOpenPlayList}
+                  handleAddToFavorites={handleAddtoFavourite}
+                  isfavorite={favorite}
+                />
+              </div>
 
-          <AudioControls
-            volume={volume}
-            ref={audioRef}
-            src={songLink}
-            playbackRate={playbackSpeed}
-            onTimeUpdate={() => {
-              const currentTime = audioRef.current?.currentTime || 0;
-              const duration = audioRef.current?.duration || 0;
-              handleProgress(currentTime, duration);
-              setCurrentTime(currentTime);
-            }}
-            autoPlay={playing}
-            onLoadedMetadata={() => {
-              setDuration(audioRef.current?.duration || 0);
-            }}
-            onEnded={handleEnded}
-          />
-
-          <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
-            <Slider
-              defaultValue={[currentTime]}
-              max={duration}
-              min={0}
-              value={[currentTime]}
-              onValueChange={handleSeek}
-            />
-          </div>
-          <div className="w-full">
-            <div className="flex justify-between gap-3 mb-14 lg:mb-0 items-center ">
-              <span className="text-white text-sm">
-                {formatTime(currentTime)}
-              </span>
-              <span className="text-white text-sm">{formatTime(duration)}</span>
-            </div>
-          </div>
-          <div className="flex w-full xl:hidden">
-            <PlayButtons
-              handleNext={handleNext}
-              handleNextTenSecond={handleNextTenSecond}
-              handlePlayPause={handlePlayPause}
-              handlePreviousTenSecond={handlePreviousTenSecond}
-              handlePrev={handlePrev}
-              playing={playing}
-            />
-          </div>
-
-          <div className="flex justify-between items-center">
-            <KaraokeAirFriendEtc
-              handleOpenEqualizer={handleOpenEqualizer}
-              karaokeOn={karaokeOn}
-              SetKaraokeOn={setKaraokeOn}
-            />
-            <div className="flex flex-col gap-4 justify-between">
-              <VolumeSettingDownRepeat
-                songName={songName}
-                songUrl={songLink}
-                audioRef={audioRef}
+              <AudioControls
                 volume={volume}
-                handleVolumeChange={handleVolumeChange}
-                handleMute={handleMute}
+                ref={audioRef}
+                src={songLink}
+                playbackRate={playbackSpeed}
+                onTimeUpdate={() => {
+                  const currentTime = audioRef.current?.currentTime || 0;
+                  const duration = audioRef.current?.duration || 0;
+                  handleProgress(currentTime, duration);
+                  setCurrentTime(currentTime);
+                }}
+                autoPlay={playing}
+                onLoadedMetadata={() => {
+                  setDuration(audioRef.current?.duration || 0);
+                }}
+                onEnded={handleEnded}
               />
-              <div className="md:hidden">
-                <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
+
+              <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
+                <Slider
+                  defaultValue={[currentTime]}
+                  max={duration}
+                  min={0}
+                  value={[currentTime]}
+                  onValueChange={handleSeek}
+                />
+              </div>
+              <div className="w-full">
+                <div className="flex justify-between gap-3 mb-14 lg:mb-0 items-center ">
+                  <span className="text-white text-sm">
+                    {formatTime(currentTime)}
+                  </span>
+                  <span className="text-white text-sm">
+                    {formatTime(duration)}
+                  </span>
+                </div>
+              </div>
+              <div className="flex w-full xl:hidden">
+                <PlayButtons
+                  handleNext={handleNext}
+                  handleNextTenSecond={handleNextTenSecond}
+                  handlePlayPause={handlePlayPause}
+                  handlePreviousTenSecond={handlePreviousTenSecond}
+                  handlePrev={handlePrev}
+                  playing={playing}
+                />
+              </div>
+
+              <div className="flex justify-between items-center">
+                <KaraokeAirFriendEtc
+                  handleOpenEqualizer={handleOpenEqualizer}
+                  karaokeOn={karaokeOn}
+                  SetKaraokeOn={setKaraokeOn}
+                />
+                <div className="flex flex-col gap-4 justify-between">
+                  <VolumeSettingDownRepeat
+                    songName={songName}
+                    songUrl={songLink}
+                    audioRef={audioRef}
+                    volume={volume}
+                    handleVolumeChange={handleVolumeChange}
+                    handleMute={handleMute}
+                  />
+                  <div className="md:hidden">
+                    <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };
