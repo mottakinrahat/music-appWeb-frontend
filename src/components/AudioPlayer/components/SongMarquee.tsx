@@ -1,17 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import Marquee from "react-fast-marquee"; // Correct import for react-fast-marquee
 
-const SongMarquee = ({
-  songName,
-  className,
-}: {
-  songName: string;
-  className: string;
-}) => {
+const SongMarquee = ({ songName, className }: { songName: string; className: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const [shouldMarquee, setShouldMarquee] = useState<boolean>(false);
+  const [direction, setDirection] = useState<"left" | "right">("left");
 
+  const handleCycleComplete = () => {
+    setDirection((prevDirection) => (prevDirection === "left" ? "right" : "left"));
+  };
   useEffect(() => {
     if (containerRef.current && textRef.current) {
       const containerWidth = containerRef.current.offsetWidth;
@@ -21,20 +19,14 @@ const SongMarquee = ({
   }, [songName]);
 
   return (
-    <div
-      className={` ${
-        className && className
-      } z-10 text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl`}
-    >
+    <div className={` ${className && className} z-10 text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl`}>
       <div className="relative max-w-[220px] overflow-hidden">
         <span
           ref={textRef}
           style={{
             display: "inline-block",
-            WebkitMaskImage:
-              "-webkit-gradient(linear, left top, right top, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)))",
-            maskImage:
-              "linear-gradient(to right, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%)",
+            WebkitMaskImage: "-webkit-gradient(linear, left top, right top, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)))",
+            maskImage: "linear-gradient(to right, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%)",
           }}
         >
           <Marquee
@@ -43,8 +35,11 @@ const SongMarquee = ({
             delay={5}
             pauseOnHover={true}
             gradient={false}
+            loop={0}
+            direction={direction}
+            onCycleComplete={handleCycleComplete}
           >
-            <span ref={textRef}>{songName}</span>
+            <span>{songName}</span>
           </Marquee>
         </span>
       </div>

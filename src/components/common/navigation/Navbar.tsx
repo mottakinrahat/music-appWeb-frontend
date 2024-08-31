@@ -22,8 +22,6 @@ const Navbar = ({ blur = false }: NavInterface) => {
 
   const musicData = useSelector((state: RootState) => state.musicData);
 
-  console.log("musicdata ", musicData);
-
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
