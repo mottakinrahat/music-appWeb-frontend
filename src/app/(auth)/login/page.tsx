@@ -1,6 +1,5 @@
 "use client";
 import DForm from "@/components/forms/DForm";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DInput from "@/components/forms/DInput";
 import SocialLogin from "@/components/common/socialLogin/SocialLogin";
@@ -9,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { FaFacebook } from "react-icons/fa6";
 import { FaApple } from "react-icons/fa";
 import DCheckbox from "@/components/forms/DCheckbox";
-import axios from "axios";
 import { loginSchema } from "./loginSchema";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -23,7 +21,6 @@ const Login = () => {
     const formData = e;
     try {
       const res = await login(formData).unwrap();
-      console.log(res);
       const user = res?.data?.user;
       localStorage.setItem("token", res.data.data?.token);
       localStorage.setItem("user", JSON.stringify(user));
