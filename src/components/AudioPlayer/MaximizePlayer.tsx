@@ -289,8 +289,8 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       }}
     >
       {/* Your content here */}
-      <div className="absolute w-full h-screen bg-black opacity-30"></div>
 
+      <div className="absolute w-full h-screen bg-black opacity-40 "></div>
       <div className="flex z-10 flex-grow relative">
         {showPlayer && (
           <div className="">
