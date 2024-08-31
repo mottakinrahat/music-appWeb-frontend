@@ -25,9 +25,9 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
   };
   console.log(tracks);
   return (
-    <div className="p-2 lg:p-6 xl:p-8">
+    <div className="p-2 min-w-0 bg-white  overflow-hidden lg:p-6 xl:p-8">
       {/* play list */}
-      <div className="flex  justify-between">
+      <div className="flex justify-between">
         <h2 className="text-3xl font-semibold">Next Queue</h2>
         <CurrentPlayingUsers addFriends={false} className="text-black" />
       </div>

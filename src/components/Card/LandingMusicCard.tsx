@@ -70,7 +70,7 @@ const LandingMusicCard = ({
               : title}
           </h2>
           <div className="flex lg:items-center max-lg:flex-col flex-wrap">
-            <div className="flex items-center gap-2">
+            <div className="flex  text-xs sm:text-sm items-center gap-2">
               {!albumCard ? (
                 <p>
                   Album:{" "}
@@ -123,11 +123,14 @@ const LandingMusicCard = ({
           <div className="flex gap-2">
             <button
               onClick={() => handleRemoveFromPlaylist(id)} // Check if handleRemoveFromPlaylist is defined
-              className="rounded-full w-11 h-11"
+              className="rounded-full w-8 h-8 md:w-11 md:h-11"
             >
               <RxCross2 className="text-2xl" /> {/* Cross button */}
             </button>
-            <CurrentPlayingUsers addFriends={false} className="text-black" />
+            <CurrentPlayingUsers
+              addFriends={false}
+              className="text-black hidden md:flex"
+            />
           </div>
         )}
       </div>
