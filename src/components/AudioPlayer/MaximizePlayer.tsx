@@ -262,12 +262,17 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       setListWidth(0);
     }
   };
+  console.log(currentSong);
 
   return (
     <div
       className="flex flex-col select-none h-screen overflow-hidden w-full"
       style={{
-        backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
+        backgroundImage: `url(${
+          currentSong?.artwork !== "" && currentSong?.artWork
+            ? currentSong?.artwork
+            : "https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png"
+        })`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center",
