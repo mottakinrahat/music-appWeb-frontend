@@ -12,6 +12,8 @@ import { loginSchema } from "./loginSchema";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLoginMutation } from "@/redux/api/authApi";
+import { Toast } from "@/components/ui/toast";
+import { toast } from "@/hooks/use-toast";
 
 const Login = () => {
   const [login, { isLoading, error }] = useLoginMutation();
@@ -24,6 +26,7 @@ const Login = () => {
       const user = res?.data?.user;
       localStorage.setItem("token", res.data.data?.token);
       localStorage.setItem("user", JSON.stringify(user));
+      
       router.push("/");
     } catch (error) {
       console.log(error);
