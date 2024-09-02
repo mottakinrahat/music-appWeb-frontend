@@ -28,8 +28,8 @@ export default function RootLayout({
           <meta name="theme-color" content="#ffffff" />
         </Head>
         <body className={outfit.className}>
-          <Toaster position="bottom-center" />
           {children}
+          <Toaster position="bottom-center" />
         </body>
       </html>
     </Providers>

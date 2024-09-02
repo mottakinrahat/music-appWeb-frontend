@@ -9,7 +9,7 @@ const OfflineNotification = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isOnline) {
+    if (isOnline) {
       toast.error(
         <div>
           <p>You are offline. </p>
@@ -21,7 +21,7 @@ const OfflineNotification = () => {
           </button>
         </div>,
         {
-          duration: Infinity, // Keep the notification visible until the user interacts
+          duration: 10000, // Keep the notification visible until the user interacts
           style: {
             backgroundColor: "#fffff", // Red background color
             color: "#00000", // White text color
