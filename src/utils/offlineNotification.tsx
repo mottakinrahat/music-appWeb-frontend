@@ -9,7 +9,7 @@ const OfflineNotification = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (isOnline) {
+    if (!isOnline) {
       toast.error(
         <div>
           <p>You are offline. </p>
