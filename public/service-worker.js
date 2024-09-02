@@ -1,10 +1,9 @@
 const CACHE_NAME = "offline-cache";
-const OFFLINE_URL = "/offline"; // Define your offline fallback page
 
 // Assets to cache
 const ASSETS_TO_CACHE = [
   "/",
-  OFFLINE_URL,
+  "/offline",
   // Add other assets like JS, CSS, and images
 ];
 

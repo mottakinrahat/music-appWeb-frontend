@@ -3,6 +3,7 @@ import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import Providers from "@/lib/Providers";
 import Head from "next/head";
+import { Toaster } from "sonner";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -26,7 +27,10 @@ export default function RootLayout({
           <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico" />
           <meta name="theme-color" content="#ffffff" />
         </Head>
-        <body className={outfit.className}>{children}</body>
+        <body className={outfit.className}>
+          <Toaster position="bottom-center" />
+          {children}
+        </body>
       </html>
     </Providers>
   );
