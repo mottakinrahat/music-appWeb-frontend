@@ -31,6 +31,9 @@ import { openDB } from "idb";
 import useLocalSongData from "@/hooks/useLocalSongData";
 import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
 import SongMarquee from "./components/SongMarquee";
+import { useDispatch, useSelector } from "react-redux";
+import { pauseSong, playSong } from "@/redux/slice/music/musicActionSlice";
+import { RootState } from "@/redux/store";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -64,7 +67,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const audioContextRef = useRef<AudioContext | null>(null);
   const [repeat, setRepeat] =
     useState<RepeatShuffleProps["repeat"]>("repeat-all");
-  const [playing, setPlaying] = useState<boolean>(play);
+  // const [playing, setPlaying] = useState<boolean>(play);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [favorite, setFavorite] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
@@ -168,21 +171,33 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const isSongPlaying = useLocalSongData();
   // console.log(isSongPlaying);
 
+  // const handlePlayPause = () => {
+  //   if (playing) {
+  //     audioRef.current?.pause();
+  //     localStorage.setItem(
+  //       "songData",
+  //       JSON.stringify({ play: false, id: songId })
+  //     );
+  //   } else {
+  //     audioRef.current?.play();
+  //     localStorage.setItem(
+  //       "songData",
+  //       JSON.stringify({ play: true, id: songId })
+  //     );
+  //   }
+  //   setPlaying(!playing);
+  // };
+  const dispatch = useDispatch();
+  const playing = useSelector((state: RootState) => state.player.playing);
+
   const handlePlayPause = () => {
     if (playing) {
       audioRef.current?.pause();
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: false, id: songId })
-      );
+      dispatch(pauseSong());
     } else {
       audioRef.current?.play();
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: true, id: songId })
-      );
+      dispatch(playSong(songId));
     }
-    setPlaying(!playing);
   };
 
   // Handle Open lyrics

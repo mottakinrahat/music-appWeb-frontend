@@ -1,7 +1,7 @@
 // store/thunks.ts
 // store/thunks.ts
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppDispatch, RootState } from "../store";
+import { AppDispatch, RootState } from "../../store";
 import { clearPathHistory } from "./musicSlice";
 
 export const handleMinimize = createAsyncThunk<

@@ -11,7 +11,7 @@ import Volumn from "@/components/AudioPlayer/components/Volumn";
 import { DropDownBtn } from "@/components/AudioPlayer/components/DropDownBtn";
 import DownloadOffline from "./DownloadOffline";
 import { useDispatch } from "react-redux";
-import { handleMinimize } from "@/redux/slice/musicAsyncTunk";
+import { handleMinimize } from "@/redux/slice/music/musicAsyncTunk";
 import { AppDispatch } from "@/redux/store";
 import { PiPlaylistBold } from "react-icons/pi";
 
