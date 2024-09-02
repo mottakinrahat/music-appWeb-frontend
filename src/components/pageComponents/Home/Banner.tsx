@@ -1,8 +1,6 @@
 "use client";
-// components/Banner.tsx
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
@@ -22,23 +20,28 @@ interface BannerContentProps {
 
 const bannerOneHeading = (
   <h1 className="text-[2.1rem] sm:text-5xl leading-tight lg:text-[3.7rem] font-bold text-textSecondary lg:leading-[4.75rem]">
-    Revolutionize the way you <span className="text-secondary inline-block"> experience</span> music
+    Revolutionize the way you{" "}
+    <span className="text-secondary inline-block"> experience</span> music
   </h1>
 );
 
 const bannerOneContent = (
   <p className="mb-8 mt-6 sm:mb-12 sm:mt-8 text-textPrimary">
-    Discover a universe of sound that ignites your passions and fuels your creativity. Explore millions of songs, from
-    chart-topping hits to underground gems, and lose yourself in a sonic adventure.
+    Discover a universe of sound that ignites your passions and fuels your
+    creativity. Explore millions of songs, from chart-topping hits to
+    underground gems, and lose yourself in a sonic adventure.
   </p>
 );
 const bannerTwoHeading = (
   <h1 className="text-[2.1rem] sm:text-5xl leading-tight lg:text-[3.7rem] font-bold text-textSecondary lg:leading-[4.75rem]">
-    Go Beyond Streaming, Start <span className="text-secondary inline-block"> Earning!</span>
+    Go Beyond Streaming, Start{" "}
+    <span className="text-secondary inline-block"> Earning!</span>
   </h1>
 );
 const bannerTwoContent = (
-  <p className="mb-8 mt-6 sm:mb-12 sm:mt-8 text-textPrimary">By musicians, for musicians, we know what matters!</p>
+  <p className="mb-8 mt-6 sm:mb-12 sm:mt-8 text-textPrimary">
+    By musicians, for musicians, we know what matters!
+  </p>
 );
 
 const Banner = () => {
@@ -55,12 +58,20 @@ const Banner = () => {
         >
           <SwiperSlide className="overflow-visible my-0">
             <div className="flex flex-col xl:flex-row max-xl:items-center w-full">
-              <BannerContent heading={bannerOneHeading} content={bannerOneContent} image={full} />
+              <BannerContent
+                heading={bannerOneHeading}
+                content={bannerOneContent}
+                image={full}
+              />
             </div>
           </SwiperSlide>
           <SwiperSlide>
             <div className="flex flex-col xl:flex-row max-xl:items-center w-full">
-              <BannerContent heading={bannerTwoHeading} content={bannerTwoContent} image={full2} />
+              <BannerContent
+                heading={bannerTwoHeading}
+                content={bannerTwoContent}
+                image={full2}
+              />
             </div>
           </SwiperSlide>
         </Swiper>
@@ -69,7 +80,11 @@ const Banner = () => {
   );
 };
 
-const BannerContent: React.FC<BannerContentProps> = ({ image, content, heading }) => (
+const BannerContent: React.FC<BannerContentProps> = ({
+  image,
+  content,
+  heading,
+}) => (
   <>
     {/* Banner Action */}
     <div className=" max-w-xl text-center xl:text-left my-5 py-10 ">
