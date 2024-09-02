@@ -8,6 +8,8 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Playlist from "./components/Playlist";
 import useLocalSongData from "@/hooks/useLocalSongData";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface PlayerInterface {
   params?: {
@@ -40,9 +42,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
   //  Router
   const router = useRouter();
-
-
-  
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
@@ -177,20 +176,52 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     }
   }, [pathname, showPlayer]);
 
+  const repeat = useSelector((state: RootState) => state.player.repeat);
+
   const handlePrev = () => {
     if (currentTrackIndex !== null && currentTrackIndex > 0) {
-      const newIndex = currentTrackIndex - 1;
-      setCurrentTrackIndex(newIndex);
-      setCurrentSong(tracks[newIndex]);
+      if (repeat === "repeat-all") {
+        const newIndex = currentTrackIndex - 1;
+        setCurrentTrackIndex(newIndex);
+        setCurrentSong(tracks[newIndex]);
+      } else if (repeat === "repeat-one") {
+        const newIndex = currentTrackIndex - 1;
+        setCurrentTrackIndex(newIndex);
+        setCurrentSong(tracks[newIndex]);
+      } else if (repeat === "repeat-off") {
+        const newIndex = currentTrackIndex - 1;
+        setCurrentTrackIndex(newIndex);
+        setCurrentSong(tracks[newIndex]);
+      } else if (repeat === "shuffle") {
+        const newIndex =
+          currentTrackIndex + Math.floor(Math.random() * tracks.length - 1);
+        setCurrentTrackIndex(newIndex);
+        setCurrentSong(tracks[newIndex]);
+      }
     }
   };
 
   // Handles next track
   const handleNext = () => {
-    if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
-      const newIndex = currentTrackIndex + 1;
-      setCurrentTrackIndex(newIndex);
-      setCurrentSong(tracks[newIndex]);
+    if (currentTrackIndex !== null && currentTrackIndex > tracks.length - 1) {
+      if (repeat === "repeat-all") {
+        const newIndex = currentTrackIndex + 1;
+        setCurrentTrackIndex(newIndex);
+        setCurrentSong(tracks[newIndex]);
+      } else if (repeat === "repeat-one") {
+        const newIndex = currentTrackIndex + 1;
+        setCurrentTrackIndex(newIndex);
+        setCurrentSong(tracks[newIndex]);
+      } else if (repeat === "repeat-off") {
+        const newIndex = currentTrackIndex + 1;
+        setCurrentTrackIndex(newIndex);
+        setCurrentSong(tracks[newIndex]);
+      } else if (repeat === "shuffle") {
+        const newIndex =
+          currentTrackIndex + Math.floor(Math.random() * tracks.length + 1);
+        setCurrentTrackIndex(newIndex);
+        setCurrentSong(tracks[newIndex]);
+      }
     }
   };
   const handleRandom = () => {
