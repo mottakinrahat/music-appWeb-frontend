@@ -93,8 +93,10 @@ const MinimizePlayer = () => {
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
+      document.body.classList.add("hide-scrollbar");
       setHeight(7);
     } else {
+      document.body.classList.remove("hide-scrollbar");
       setShowPlayer(false);
     }
     const getSongDataFromLocalStroage = JSON.parse(
@@ -114,8 +116,11 @@ const MinimizePlayer = () => {
       document.removeEventListener("mouseup", () => {});
       document.removeEventListener("touchmove", () => {});
       document.removeEventListener("touchend", () => {});
+      document.body.classList.remove("hide-scrollbar");
     };
   }, [pathname, showPlayer]);
+
+  
 
   if (!readyPlayer) return <></>;
 
@@ -123,7 +128,7 @@ const MinimizePlayer = () => {
     <div
       className={`${
         showPlayer ? "block h-[100vh]" : "border-t min-w-0"
-      } transition-all duration-300 relative`}
+      } transition-all duration-300 relative overflow-hidden`}
       style={{
         minHeight: 0,
         minWidth: 0,
@@ -134,7 +139,7 @@ const MinimizePlayer = () => {
       <div
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
-        className="absolute w-full h-4 z-50 top-0 bg-transparent cursor-ns-resize"
+        className="absolute w-full overflow-hidden h-4 z-50 top-0 bg-transparent cursor-ns-resize"
       ></div>
       <MaximizePlayer play={play!} params={{ id: playMusicById }} />
     </div>

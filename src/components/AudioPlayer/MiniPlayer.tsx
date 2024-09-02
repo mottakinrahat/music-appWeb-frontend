@@ -36,6 +36,7 @@ interface MiniPlayerProps {
   handleSeek: (value: number[]) => void;
   repeat: RepeatShuffleProps["repeat"];
   toggleRepeat: RepeatShuffleProps["toggleRepeat"];
+  currentSong: any[];
 }
 
 const MiniPlayer = ({
@@ -58,11 +59,13 @@ const MiniPlayer = ({
   handleSeek,
   repeat,
   toggleRepeat,
+  currentSong,
 }: MiniPlayerProps) => {
   const [artWork, setArtwork] = useState(artwork);
   const pathname = usePathname();
   const router = useRouter();
   const [showControl, setShowControl] = useState(true);
+  console.log(currentSong);
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
@@ -138,7 +141,7 @@ const MiniPlayer = ({
                 min={0}
                 value={[currentTime]}
                 onValueChange={handleSeek}
-                className="w-full md:max-w-sm lg:max-w-lg"
+                className="w-full md:max-w-xs lg:max-w-sm xl:max-w-lg"
               />
               <div className="w-full">
                 <div className="flex justify-between mt-2 gap-3 items-center font-semibold">

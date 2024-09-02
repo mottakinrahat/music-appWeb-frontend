@@ -490,6 +490,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       />
       <div className="absolute top-0 w-full ">
         <MiniPlayer
+          currentSong={currentSong}
           repeat={repeat}
           toggleRepeat={toggleRepeat}
           currentTime={currentTime}
@@ -513,7 +514,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       </div>
       <div
         className={`${
-          !showPlayer ? "hidden" : "w-full h-screen  bg-cover bg-center"
+          !showPlayer
+            ? "hidden"
+            : "w-full h-screen  bg-cover overflow-hidden bg-center"
         } `}
       >
         {/* Dropdown section */}
