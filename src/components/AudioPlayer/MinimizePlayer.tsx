@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import MaximizePlayer from "./MaximizePlayer";
 import useLocalSongData from "@/hooks/useLocalSongData";
+import { useDispatch } from "react-redux";
+import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 
 const MinimizePlayer = () => {
   const [playMusicById, setPlayMusicById] = useState<string>();
@@ -15,6 +17,7 @@ const MinimizePlayer = () => {
   const resizingRef = useRef<HTMLDivElement | null>(null);
   const [startY, setStartY] = useState<number>(0);
   const [startHeight, setStartHeight] = useState<number>(0);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Function to update the height based on window width
@@ -34,6 +37,7 @@ const MinimizePlayer = () => {
     // Cleanup the event listener on component unmount
     return () => window.removeEventListener("resize", updateHeight);
   }, [pathname]);
+  
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
@@ -75,10 +79,12 @@ const MinimizePlayer = () => {
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     startResizing(e as unknown as MouseEvent);
+    dispatch(pauseSong());
   };
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     startResizing(e as unknown as TouchEvent);
+    dispatch(pauseSong());
   };
 
   const isPlay = useLocalSongData();
@@ -109,6 +115,12 @@ const MinimizePlayer = () => {
       setReadyPlayer(false);
     }
 
+    if (window) {
+      window.onload = () => {
+        setReadyPlayer(false);
+      };
+    }
+
     // Clean up event listeners on unmount
     return () => {
       // Ensure cleanup only if functions are defined
@@ -119,8 +131,6 @@ const MinimizePlayer = () => {
       document.body.classList.remove("hide-scrollbar");
     };
   }, [pathname, showPlayer]);
-
-  
 
   if (!readyPlayer) return <></>;
 

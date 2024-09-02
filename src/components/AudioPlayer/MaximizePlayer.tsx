@@ -41,6 +41,9 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   //  Router
   const router = useRouter();
 
+
+  
+
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
       // e.preventDefault();

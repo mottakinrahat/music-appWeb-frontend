@@ -12,6 +12,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { usePathname } from "next/navigation";
 
 interface NavInterface {
   blur?: boolean; // blur the background image? default is false.
@@ -21,6 +22,7 @@ const Navbar = ({ blur = false }: NavInterface) => {
   const [user, setUser] = useState(null);
 
   const musicData = useSelector((state: RootState) => state.musicData);
+  const musicPath = usePathname();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -90,7 +92,11 @@ const Navbar = ({ blur = false }: NavInterface) => {
           <Logo />
         </div>
         <div>
-          <ul className={`flex gap-10 ${blur ? "text-white z-40" : "text-base"} max-lg:hidden`}>
+          <ul
+            className={`flex gap-10 ${
+              blur ? "text-white z-40" : "text-base"
+            } max-lg:hidden`}
+          >
             <Routes />
           </ul>
         </div>

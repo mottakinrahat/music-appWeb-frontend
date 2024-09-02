@@ -16,7 +16,7 @@ export interface RepeatActionButtonProps {
 const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
   toggleRepeat,
   src,
-  repeat,
+  // repeat,
   handleOpenLyrics,
   isfavorite,
   handleAddToFavorites,
@@ -34,7 +34,7 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
           <div className="hidden lg:block">
             <ShowLyricsIcon handleOpenLyrics={handleOpenLyrics} />
           </div>
-          <ReapetShuffleButton repeat={repeat} toggleRepeat={toggleRepeat} />
+          <ReapetShuffleButton />
           {/* <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>

@@ -10,10 +10,8 @@ import { GradientRange } from "../ui/slider";
 import { formatTime } from "@/utils/FormatTime";
 import Volumn from "./components/Volumn";
 import AirPlayButton from "./components/AirPlayButton";
-import ShowLyricsIcon from "./components/PlayLIstIcon";
-import RepeatShuffleButton, {
-  RepeatShuffleProps,
-} from "./components/ReapetShuffleButton";
+// import ShowLyricsIcon from "./components/PlayLIstIcon";
+import RepeatShuffleButton from "./components/ReapetShuffleButton";
 import SongMarquee from "./components/SongMarquee";
 
 interface MiniPlayerProps {
@@ -34,9 +32,9 @@ interface MiniPlayerProps {
   duration: number;
   currentTime: number;
   handleSeek: (value: number[]) => void;
-  repeat: RepeatShuffleProps["repeat"];
-  toggleRepeat: RepeatShuffleProps["toggleRepeat"];
-  currentSong: any[];
+  // repeat: RepeatShuffleProps["repeat"];
+  // toggleRepeat: RepeatShuffleProps["toggleRepeat"];
+  // currentSong: any[];
 }
 
 const MiniPlayer = ({
@@ -57,15 +55,15 @@ const MiniPlayer = ({
   currentTime,
   duration,
   handleSeek,
-  repeat,
-  toggleRepeat,
-  currentSong,
-}: MiniPlayerProps) => {
+}: // repeat,
+// toggleRepeat,
+// currentSong,
+MiniPlayerProps) => {
   const [artWork, setArtwork] = useState(artwork);
   const pathname = usePathname();
   const router = useRouter();
   const [showControl, setShowControl] = useState(true);
-  console.log(currentSong);
+  // console.log(currentSong);
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
@@ -166,8 +164,8 @@ const MiniPlayer = ({
             <div>
               {/* <PlayLIstIcon /> */}
               <RepeatShuffleButton
-                repeat={repeat}
-                toggleRepeat={toggleRepeat}
+              // repeat={repeat}
+              // toggleRepeat={toggleRepeat}
               />
             </div>
             <div className="hidden [@media(min-width:380px)]:flex items-center">

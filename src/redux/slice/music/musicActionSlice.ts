@@ -1,13 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface PlayerState {
+export interface PlayerState {
   playing: boolean;
   songId: string | null;
+  repeat: "repeat-all" | "repeat-one" | "repeat-off" | "shuffle";
+  audioElement: HTMLAudioElement | null | any;
 }
 
 const initialState: PlayerState = {
   playing: false,
   songId: null,
+  repeat: "repeat-all", // Default repeat mode
+  audioElement: null,
 };
 
 const playerSlice = createSlice({
@@ -17,22 +21,30 @@ const playerSlice = createSlice({
     playSong: (state, action: PayloadAction<string>) => {
       state.playing = true;
       state.songId = action.payload;
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: true, id: action.payload })
-      );
     },
     pauseSong: (state) => {
       state.playing = false;
-      if (state.songId) {
-        localStorage.setItem(
-          "songData",
-          JSON.stringify({ play: false, id: state.songId })
-        );
+    },
+    toggleRepeat: (state) => {
+      if (state.repeat === "repeat-all") {
+        state.repeat = "repeat-one";
+      } else if (state.repeat === "repeat-one") {
+        state.repeat = "repeat-off";
+      } else if (state.repeat === "repeat-off") {
+        state.repeat = "shuffle";
+      } else {
+        state.repeat = "repeat-all";
       }
+    },
+    setAudioElement: (
+      state,
+      action: PayloadAction<HTMLAudioElement | null>
+    ) => {
+      state.audioElement = action.payload;
     },
   },
 });
 
-export const { playSong, pauseSong } = playerSlice.actions;
+export const { playSong, pauseSong, toggleRepeat, setAudioElement } =
+  playerSlice.actions;
 export default playerSlice.reducer;
