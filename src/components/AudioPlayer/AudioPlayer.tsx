@@ -19,6 +19,14 @@ import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
 import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
 import SongMarquee from "./components/SongMarquee";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  pauseSong,
+  PlayerState,
+  playSong,
+  toggleRepeat,
+} from "@/redux/slice/music/musicActionSlice";
+import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
 
 interface AudioPlayerProps {
@@ -49,9 +57,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const [repeat, setRepeat] =
-    useState<RepeatShuffleProps["repeat"]>("repeat-all");
-  const [playing, setPlaying] = useState<boolean>(play);
+
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [favorite, setFavorite] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
@@ -64,6 +70,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const userId = userData?._id;
+  const [repeats, setRepeat] = useState<any>();
+  const router = useRouter();
 
   useEffect(() => {
     const isFavourite = currentSong.favUsers.includes(userId);
@@ -83,6 +91,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setShowPlayer(false);
     }
   }, [pathname]);
+
+  const dispatch = useDispatch();
+
+  // Seclectors
+  const playing = useSelector((state: RootState) => state.player.playing);
+  const repeat = useSelector((state: RootState) => state.player.repeat);
 
   const speed = localStorage.getItem("speed");
   useEffect(() => {
@@ -140,22 +154,107 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
   }, [onAudioContextReady]);
 
-  const handlePlayPause = () => {
-    if (playing) {
-      audioRef.current?.pause();
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: false, id: songId })
-      );
+  const repeatStateIndex = (repeatState: PlayerState["repeat"]) => {
+    switch (repeatState) {
+      case "repeat-all":
+        return 0;
+      case "repeat-one":
+        return 1;
+      case "repeat-off":
+        return 2;
+      case "shuffle":
+        return 3;
+      default:
+        return 0;
+    }
+  };
+  useEffect(() => {
+    // Load initial state from localStorage
+    // const storedRepeat = localStorage.getItem(
+    //   "repeat"
+    // ) as PlayerState["repeat"];
+    // if (!storedRepeat) {
+    //   localStorage.setItem("repeat", "repeat-all");
+    // } else {
+    //   dispatch(toggleRepeat());
+    // }
+
+    const storedRepeat = localStorage.getItem(
+      "repeat"
+    ) as PlayerState["repeat"];
+    if (!storedRepeat) {
+      localStorage.setItem("repeat", "repeat-all");
+      dispatch({ type: "player/toggleRepeat" });
     } else {
-      audioRef.current?.play();
+      if (storedRepeat !== "repeat-all") {
+        for (let i = 0; i < repeatStateIndex(storedRepeat); i++) {
+          dispatch({ type: "player/toggleRepeat" });
+        }
+      }
+    }
+    const storedSongData = localStorage.getItem("songData");
+    if (storedSongData) {
+      const { play, id } = JSON.parse(storedSongData);
+      if (play) {
+        dispatch(playSong(id));
+      } else {
+        dispatch(pauseSong());
+      }
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    // Save state to localStorage whenever it changes
+    if (playing && songId) {
       localStorage.setItem(
         "songData",
         JSON.stringify({ play: true, id: songId })
       );
+    } else if (!playing && songId) {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: false, id: songId })
+      );
     }
-    setPlaying(!playing);
+
+    localStorage.setItem("repeat", repeat); // Save repeat mode
+  }, [playing, songId, repeat]);
+
+  // handle play pause song
+  const handlePlayPause = async () => {
+    try {
+      if (playing) {
+        // Pause the song
+        dispatch(pauseSong());
+
+        // Save play state to localStorage
+        localStorage.setItem(
+          "songData",
+          JSON.stringify({ play: false, id: songId })
+        );
+      } else {
+        // Play the song
+        const audioElement = document.querySelector(
+          "audio"
+        ) as HTMLAudioElement;
+        if (audioElement) {
+          await audioElement.play(); // Try to play the audio element
+        }
+
+        dispatch(playSong(songId));
+
+        // Save play state to localStorage
+        localStorage.setItem(
+          "songData",
+          JSON.stringify({ play: true, id: songId })
+        );
+      }
+    } catch (error) {
+      console.error("Playback failed:", error);
+    }
   };
+
+  // Handle Open lyrics
 
   const handleOpenLyrics = () => {
     alert("Open lyrics");
@@ -193,19 +292,18 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const handleEnd = () => {
-    let currentRepeat: RepeatShuffleProps["repeat"] = repeat;
     const audioElement = audioRef.current;
 
-    if (currentRepeat === "repeat-all") {
+    if (repeat === "repeat-all") {
       handleNext();
-    } else if (currentRepeat === "repeat-one") {
+    } else if (repeat === "repeat-one") {
       if (audioElement) {
         audioElement.currentTime = 0; // Restart the track
         audioElement.play(); // Play the track again
       }
-    } else if (currentRepeat === "repeat-off") {
+    } else if (repeat === "repeat-off") {
       handleRandom();
-    } else if (currentRepeat === "shuffle") {
+    } else if (repeat === "shuffle") {
       handleRandom(); // Assuming shuffle mode should also trigger a random track
     }
     // dispatch(handleEnded({ audioRef, handleNext, handleRandom }));
@@ -239,7 +337,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const toggleRepeat = () => {
-    let newRepeat: RepeatShuffleProps["repeat"];
+    let newRepeat;
     if (repeat === "repeat-all") {
       newRepeat = "repeat-one";
     } else if (repeat === "repeat-one") {
@@ -252,6 +350,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setRepeat(newRepeat);
     localStorage.setItem("repeat", newRepeat);
   };
+
+  // Three dot menu operations
 
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
@@ -311,8 +411,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     <div className="audio-controls relative">
       <div className="absolute top-0 w-full ">
         <MiniPlayer
-          repeat={repeat}
-          toggleRepeat={toggleRepeat}
+          // currentSong={currentSong}
+          // repeat={repeat}
+          // toggleRepeat={handleToggleRepeat}
           currentTime={currentTime}
           duration={duration}
           handleSeek={handleSeek}
@@ -334,7 +435,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       </div>
       <div
         className={`${
-          !showPlayer ? "hidden" : "w-full h-screen  bg-cover bg-center"
+          !showPlayer
+            ? "hidden"
+            : "w-full h-screen  bg-cover overflow-hidden bg-center"
         } `}
       >
         {/* Dropdown section */}

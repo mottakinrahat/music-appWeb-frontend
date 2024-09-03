@@ -8,7 +8,10 @@ import { IoMdClose } from "react-icons/io";
 import { TbDeviceIpadX } from "react-icons/tb";
 import AirPlayButton from "./AirPlayButton";
 import { openDB } from "idb";
-import { clearMusicData, setMusicData } from "@/redux/slice/musicDataSlice";
+import {
+  clearMusicData,
+  setMusicData,
+} from "@/redux/slice/music/musicDataSlice";
 import { RootState } from "@/redux/store";
 import { initDB } from "@/utils/initDB";
 import { toast } from "sonner";

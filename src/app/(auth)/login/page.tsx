@@ -23,8 +23,10 @@ const Login = () => {
     try {
       const res = await login(formData).unwrap();
       const user = res?.data?.user;
+
       localStorage.setItem("token", res.data.data?.token);
       localStorage.setItem("user", JSON.stringify(user));
+
       toast.success("Login successful");
       router.push("/");
     } catch (error) {
@@ -67,7 +69,10 @@ const Login = () => {
           type="password"
         />
         {/* {/ submit Button /} */}
-        <Button type="submit" className="text-white hover:bg-accent hover:text-white bg-accent rounded-md ">
+        <Button
+          type="submit"
+          className="text-white hover:bg-accent hover:text-white bg-accent rounded-md "
+        >
           Log in
         </Button>
 
@@ -103,12 +108,16 @@ const Login = () => {
               <p>Remember Password</p>
             </div>
             <div>
-              <p className="underline text-accent cursor-pointer">Forgot Password</p>
+              <p className="underline text-accent cursor-pointer">
+                Forgot Password
+              </p>
             </div>
           </div>
           <p className="text-[#4C4C4C]">
-            By clicking &quot;Log in&quot; above, you acknowledge that you have read and you agree to our General{" "}
-            <span className="font-semibold">Terms and Conditions</span> and have read and acknowledge the{" "}
+            By clicking &quot;Log in&quot; above, you acknowledge that you have
+            read and you agree to our General{" "}
+            <span className="font-semibold">Terms and Conditions</span> and have
+            read and acknowledge the{" "}
             <span className="font-semibold">Privacy policy.</span>
           </p>
         </div>

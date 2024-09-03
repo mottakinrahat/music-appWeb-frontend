@@ -36,8 +36,6 @@ const ThreeDotContent: React.FC<SongPropsType> = ({ currentSong }) => {
 
   const { songName, artwork, songAlbum, _id: songId } = currentSong;
 
-  console.log(currentSong);
-
   // handle playlist add
   const handleAddtoPlayList = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);

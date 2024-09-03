@@ -6,6 +6,8 @@ import Link from "next/link";
 // import { IoHeartOutline } from "react-icons/io5";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { playSong } from "@/redux/slice/music/musicActionSlice";
 
 interface BaseCard {
   type: string;
@@ -51,12 +53,14 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   albumRouteLink,
 }) => {
   const location = usePathname();
+  const dispatch = useDispatch();
   const handleSetIdtoLocalStroage = () => {
     localStorage.setItem(
       "songData",
       JSON.stringify({ play: true, id: musicId })
     );
     localStorage.setItem("pathHistory", location);
+    dispatch(playSong(musicId!));
   };
 
   return (

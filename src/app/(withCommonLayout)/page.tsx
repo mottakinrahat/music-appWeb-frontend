@@ -11,8 +11,6 @@ import Soponsors from "@/components/pageComponents/Home/Soponsors";
 import TopList from "@/components/pageComponents/Home/TopList";
 import VRConcerts from "@/components/pageComponents/Home/VRConcerts";
 import WhoAreUse from "@/components/pageComponents/Home/WhoAreUse";
-import Footer from "@/components/common/footer/Footer";
-import Navbar from "@/components/common/navigation/Navbar";
 // import { useEffect, useState } from "react";
 // import { Coming_Soon } from "next/font/google";
 // import Link from "next/link";
@@ -20,7 +18,6 @@ import Navbar from "@/components/common/navigation/Navbar";
 export default function Home() {
   return (
     <div className="">
-      <Navbar />
       <Banner />
       <Soponsors />
       <WhoAreUse />
@@ -34,10 +31,6 @@ export default function Home() {
       <VRConcerts />
       <Blogs />
       <Features />
-      <Footer />
-      {/* <Link href="/music">
-        <button>Goto music Page</button>
-      </Link> */}
     </div>
   );
 }

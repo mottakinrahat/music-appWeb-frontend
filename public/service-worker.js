@@ -11,7 +11,22 @@ const ASSETS_TO_CACHE = [
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      return Promise.all(
+        ASSETS_TO_CACHE.map((url) =>
+          fetch(url)
+            .then((response) => {
+              if (response.ok) {
+                return cache.put(url, response);
+              }
+              // If the response is not OK, just skip this asset
+              return Promise.resolve();
+            })
+            .catch(() => {
+              // If the fetch fails, just skip this asset
+              return Promise.resolve();
+            })
+        )
+      );
     })
   );
 });
