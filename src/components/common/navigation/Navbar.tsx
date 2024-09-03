@@ -82,7 +82,6 @@ const Navbar = ({ blur = false }: NavInterface) => {
         blur ? "bg-white/10 fixed  z-[9999] w-full text-white" : "bg-navigation"
       } h-16 md:h-20 lg:h-24 flex items-center`}
     >
-      <Toaster position="bottom-center" />
       <div
         className={`${
           blur ? "md:p-10 p-4  xl:px-[120px]" : "container"
