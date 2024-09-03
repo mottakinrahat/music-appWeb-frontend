@@ -179,49 +179,45 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const repeat = useSelector((state: RootState) => state.player.repeat);
 
   const handlePrev = () => {
-    if (currentTrackIndex !== null && currentTrackIndex > 0) {
-      if (repeat === "repeat-all") {
-        const newIndex = currentTrackIndex - 1;
-        setCurrentTrackIndex(newIndex);
-        setCurrentSong(tracks[newIndex]);
-      } else if (repeat === "repeat-one") {
-        const newIndex = currentTrackIndex - 1;
-        setCurrentTrackIndex(newIndex);
-        setCurrentSong(tracks[newIndex]);
-      } else if (repeat === "repeat-off") {
-        const newIndex = currentTrackIndex - 1;
-        setCurrentTrackIndex(newIndex);
-        setCurrentSong(tracks[newIndex]);
-      } else if (repeat === "shuffle") {
-        const newIndex =
-          currentTrackIndex + Math.floor(Math.random() * tracks.length - 1);
-        setCurrentTrackIndex(newIndex);
-        setCurrentSong(tracks[newIndex]);
+    if (currentTrackIndex !== null) {
+      let newIndex = currentTrackIndex - 1;
+
+      if (newIndex < 0) {
+        if (repeat === "repeat-all") {
+          newIndex = tracks.length - 1;
+        } else if (repeat === "repeat-off") {
+          return; // Stop if no repeat is set and we are at the first track.
+        }
       }
+
+      if (repeat === "shuffle") {
+        newIndex = Math.floor(Math.random() * tracks.length);
+      }
+
+      setCurrentTrackIndex(newIndex);
+      setCurrentSong(tracks[newIndex]);
     }
   };
 
   // Handles next track
   const handleNext = () => {
-    if (currentTrackIndex !== null && currentTrackIndex > tracks.length - 1) {
-      if (repeat === "repeat-all") {
-        const newIndex = currentTrackIndex + 1;
-        setCurrentTrackIndex(newIndex);
-        setCurrentSong(tracks[newIndex]);
-      } else if (repeat === "repeat-one") {
-        const newIndex = currentTrackIndex + 1;
-        setCurrentTrackIndex(newIndex);
-        setCurrentSong(tracks[newIndex]);
-      } else if (repeat === "repeat-off") {
-        const newIndex = currentTrackIndex + 1;
-        setCurrentTrackIndex(newIndex);
-        setCurrentSong(tracks[newIndex]);
-      } else if (repeat === "shuffle") {
-        const newIndex =
-          currentTrackIndex + Math.floor(Math.random() * tracks.length + 1);
-        setCurrentTrackIndex(newIndex);
-        setCurrentSong(tracks[newIndex]);
+    if (currentTrackIndex !== null) {
+      let newIndex = currentTrackIndex + 1;
+
+      if (newIndex >= tracks.length) {
+        if (repeat === "repeat-all") {
+          newIndex = 0;
+        } else if (repeat === "repeat-off") {
+          return; // Stop if no repeat is set and we are at the last track.
+        }
       }
+
+      if (repeat === "shuffle") {
+        newIndex = Math.floor(Math.random() * tracks.length);
+      }
+
+      setCurrentTrackIndex(newIndex);
+      setCurrentSong(tracks[newIndex]);
     }
   };
   const handleRandom = () => {
