@@ -10,6 +10,9 @@ import Playlist from "./components/Playlist";
 import useLocalSongData from "@/hooks/useLocalSongData";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { parseBuffer } from "music-metadata";
+import { detectBPM } from "@/utils/bpmdetection";
+import Loading from "@/app/(withCommonLayout)/music/loading";
 
 interface PlayerInterface {
   params?: {
@@ -41,6 +44,9 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [playListWidth, setPlayListWidth] = useState<number>(0);
 
   const importedSong = useSelector((state: RootState) => state.musicData);
+  const [bpm, setBpm] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   //  Router
   const router = useRouter();
@@ -143,7 +149,35 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
   const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
 
+  // if (!currentSong?.songLink) return <Loading />;
   useEffect(() => {
+    const fetchBPM = async () => {
+      try {
+        const url = currentSong.songLink;
+
+        const detectedBPM = await detectBPM(url);
+        if (detectedBPM === null) {
+          setError(
+            "Unable to detect BPM. Please check the audio file and detection logic."
+          );
+        } else {
+          setBpm(detectedBPM);
+        }
+      } catch (error) {
+        console.error("Error fetching or processing audio:", error);
+        setError("Failed to detect BPM");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBPM();
+  }, [currentSong]);
+
+  // console.log(bpm);
+
+  useEffect(() => {
+    // const blobData = new Blob(currentSong.songLink);
     const initialTrackIndex = tracks?.findIndex(
       (track: any) => track?._id === params?.id
     );
@@ -324,8 +358,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         backgroundPosition: "center",
       }}
     >
-      {/* Your content here */}
-
+      {/* Your content here */};
       <div className="absolute w-full h-screen bg-black opacity-40 "></div>
       <div className="flex z-10 flex-grow relative">
         {showPlayer && (
@@ -335,6 +368,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         )}
         <div className="flex-1 transition-all">
           <AudioPlayer
+            audioContext={audioContext!}
             play={playing}
             handleNext={handleNext}
             handlePrev={handlePrev}
@@ -345,6 +379,9 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             handleOpenEqualizer={handleOpenEqualizer}
             handleOpenPlayList={handleOpenPlayList}
             handleRandom={handleRandom}
+            bpm={bpm!}
+            // error={error}
+            loading={loading}
           />
         </div>
 

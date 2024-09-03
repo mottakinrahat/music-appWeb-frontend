@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, DragEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FiSliders } from "react-icons/fi";
 import { MdDevices } from "react-icons/md";
@@ -7,7 +7,6 @@ import { FaUpload } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { TbDeviceIpadX } from "react-icons/tb";
 import AirPlayButton from "./AirPlayButton";
-import { openDB } from "idb";
 import {
   clearMusicData,
   setMusicData,
@@ -20,8 +19,10 @@ interface MusicControlsFace {
   handleOpenEqualizer: () => void;
 }
 
+
 const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
   const [showModal, setShowModal] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const dispatch = useDispatch();
   const musicData = useSelector((state: RootState) => state.musicData);
 
@@ -48,7 +49,6 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
   };
 
   // Retrieve file from IndexedDB
-
   useEffect(() => {
     const retrieveFileFromIndexedDB = async () => {
       const db = await initDB("MusicDB", 1, "songs");
@@ -66,28 +66,40 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
     retrieveFileFromIndexedDB(); // Retrieve song data on component mount
   }, [dispatch]);
 
-  const handleFileSelect = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const base64Data = reader.result as string;
-        const title = file.name; // Use the file name as the title
-        await saveFileToIndexedDB(base64Data, title);
-        toast.success("Song Import Successfully");
-        // console.log("File saved to IndexedDB");
-      };
-      reader.readAsDataURL(file);
+  const handleFileSelect = async (file: File) => {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const base64Data = reader.result as string;
+      const title = file.name; // Use the file name as the title
+      await saveFileToIndexedDB(base64Data, title);
+      toast.success("Song Imported Successfully");
       setShowModal(false);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileDrop = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setDragging(false);
+    if (event.dataTransfer.files.length > 0) {
+      handleFileSelect(event.dataTransfer.files[0]);
     }
+  };
+
+  const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setDragging(true);
+  };
+
+  const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setDragging(false);
   };
 
   const handleDeleteSong = async () => {
     await deleteExistingSongFromIndexedDB();
     dispatch(clearMusicData());
-    toast.success("Song Remove Successfully from Imported Song");
+    toast.success("Song Removed Successfully from Imported Songs");
   };
 
   return (
@@ -122,26 +134,40 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
       {/* File Import Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 px-4">
-          <div className="relative bg-white p-4 md:p-6 rounded-lg shadow-lg w-full max-w-sm md:max-w-md">
+          <div
+            className={`relative bg-white p-4 md:p-6 rounded-lg shadow-lg w-full max-w-sm md:max-w-md ${
+              dragging ? "border-4 border-dashed border-accent" : ""
+            }`}
+            onDrop={handleFileDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+          >
             {/* Close Icon */}
             <IoMdClose
               onClick={() => setShowModal(false)}
               className="absolute top-2 right-2 text-2xl text-gray-600 cursor-pointer hover:text-gray-800"
             />
             <h2 className="text-lg md:text-xl font-semibold mb-4 text-center">
-              Import File
+              Import Audio
             </h2>
             <div className="flex items-center justify-center mb-4">
               {/* Input with Accent Border */}
-              <label className="flex flex-col items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-lg tracking-wide uppercase border-2 border-transparent hover:border-blue-500 transition-colors cursor-pointer">
+              <label
+                htmlFor="importAudio"
+                className="flex flex-col items-center w-full px-4 py-10 border-dashed text-black hover:text-textPrimary border-accent rounded-lg shadow-lg tracking-wide uppercase border-2 hover:border-secondary transition-colors cursor-pointer"
+              >
                 <FaUpload className="text-2xl mb-2" />
                 <span className="text-sm md:text-base leading-normal">
                   Select a file
                 </span>
+                {/* Hidden file input */}
                 <input
                   type="file"
+                  id="importAudio"
                   accept="audio/*"
-                  onChange={handleFileSelect}
+                  onChange={(e) =>
+                    e.target.files && handleFileSelect(e.target.files[0])
+                  }
                   className="hidden"
                 />
               </label>

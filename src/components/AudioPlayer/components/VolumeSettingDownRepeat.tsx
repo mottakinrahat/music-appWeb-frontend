@@ -23,6 +23,7 @@ interface VolumeSettingDownRepeatProps {
   songUrl: string;
   audioRef: any;
   bpm: number;
+  bpmLoading: boolean;
   handleOpenPlayList: () => void;
 }
 
@@ -34,6 +35,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   songUrl,
   audioRef,
   bpm,
+  bpmLoading,
   handleOpenPlayList,
 }: any) => {
   const router = useRouter();

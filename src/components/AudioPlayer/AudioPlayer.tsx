@@ -41,6 +41,9 @@ interface AudioPlayerProps {
   handleOpenPlayList: () => void;
   handleRandom: () => void;
   setCurrentSong: (value: any) => void;
+  audioContext: AudioContext;
+  bpm: number;
+  loading: boolean;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
@@ -52,6 +55,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   play,
   handleOpenPlayList,
   handleRandom,
+  audioContext,
+  bpm,
+  loading,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -125,7 +131,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const {
     songName,
-    bpm,
+    
     songLink,
     artwork,
     songArtist,
@@ -371,7 +377,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           toast.success(
             <div style={{ display: "flex", alignItems: "center" }}>
               <Image
-                
                 src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
                 alt={songName}
                 width={60}
@@ -413,6 +418,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     handleAddtoFavourite,
     favorite,
   });
+
+
 
   return (
     <div className="audio-controls relative">
@@ -478,6 +485,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <div className="w-full flex justify-between items-center">
             <div className="text-white flex mb-4 items-center gap-4">
               <Image
+                priority
                 src={
                   importedSong.fileData
                     ? placeHolder.src
@@ -547,6 +555,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           </div>
 
           <AudioControls
+            // audioContext={audioContext}
             volume={volume}
             ref={audioRef}
             src={importedSong.fileData ? importedSong.fileData : songLink}
@@ -601,6 +610,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             <div className="flex flex-col gap-4 justify-between">
               <VolumeSettingDownRepeat
                 bpm={bpm}
+                bpmLoading={loading}
                 songName={songName}
                 songUrl={songLink}
                 audioRef={audioRef}
