@@ -17,6 +17,7 @@ const SongMarquee = ({ songName, className }: { songName: string; className: str
       setShouldMarquee(textWidth > containerWidth);
     }
   }, [songName]);
+  
 
   return (
     <div className={` ${className && className} z-10 text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl`}>
