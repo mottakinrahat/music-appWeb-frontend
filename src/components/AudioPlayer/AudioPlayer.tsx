@@ -11,7 +11,6 @@ import MusicControls from "./components/MusicControls";
 import axios from "axios";
 import { toast } from "sonner";
 import Link from "next/link";
-import ShareCard from "../Card/ShareCard";
 import { usePathname, useRouter } from "next/navigation";
 import MiniPlayer from "./MiniPlayer";
 import { Slider } from "../ui/slider";
@@ -69,11 +68,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [playbackSpeed, setPlaybackSpeed] = useState<any>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
   const [userData, setUserData] = useState<any>();
-
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
   const [currentSong, setCurrentSong] = useState<any>(songData);
-  const [share, setShare] = useState<boolean>(false);
   const userId = userData?._id;
   const [repeats, setRepeat] = useState<any>();
   const router = useRouter();
@@ -296,7 +293,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setPlayed(playedPercentage);
   };
 
-  // const dispatch: AppDispatch = useDispatch();
   const handleEnd = () => {
     const audioElement = audioRef.current;
 
@@ -341,7 +337,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setCurrentTime(newTime);
     }
   };
-  //  repeat toggle
+
   const toggleRepeat = () => {
     let newRepeat;
     if (repeat === "repeat-all") {
@@ -415,11 +411,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className="audio-controls relative">
-      <ShareCard
-        open={share}
-        setOpen={setShare}
-        shareUrl={`https://music-web-liangu.vercel.app//music/66c99c0a36fe71b995557d6b`}
-      />
       <div className="absolute top-0 w-full ">
         <MiniPlayer
           // currentSong={currentSong}
