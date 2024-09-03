@@ -70,9 +70,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
-  // const [repeat, setRepeat] =
-  //   useState<RepeatShuffleProps["repeat"]>("repeat-all");
-  // const [playing, setPlaying] = useState<boolean>(play);
+
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [favorite, setFavorite] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
