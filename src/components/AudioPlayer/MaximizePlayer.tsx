@@ -367,7 +367,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
           style={{ width: listWidth }}
           ref={resizingPlayListRef}
         >
-          {playlistOpen <= 0 && (
+          {playlistOpen <= 0 && listWidth <= 0 && (
             <div
               className="absolute left-0 top-0 h-full  w-2 bg-white z-[99999] cursor-ew-resize"
               onMouseDown={handleMouseDownPlayList}

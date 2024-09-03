@@ -100,10 +100,10 @@ const MinimizePlayer = () => {
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
-      document.body.classList.add("hide-scrollbar");
+      // document.body.classList.add("hide-scrollbar");
       setHeight(7);
     } else {
-      document.body.classList.remove("hide-scrollbar");
+      // document.body.classList.remove("hide-scrollbar");
       setShowPlayer(false);
     }
     const getSongDataFromLocalStroage = JSON.parse(
@@ -118,7 +118,7 @@ const MinimizePlayer = () => {
 
     if (window) {
       window.onload = () => {
-        setHeight(0);
+        setReadyPlayer(false);
       };
     }
 
@@ -129,7 +129,7 @@ const MinimizePlayer = () => {
       document.removeEventListener("mouseup", () => {});
       document.removeEventListener("touchmove", () => {});
       document.removeEventListener("touchend", () => {});
-      document.body.classList.remove("hide-scrollbar");
+      // document.body.classList.remove("hide-scrollbar");
     };
   }, [pathname, showPlayer]);
 
