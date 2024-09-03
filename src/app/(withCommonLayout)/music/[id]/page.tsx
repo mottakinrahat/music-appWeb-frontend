@@ -63,6 +63,21 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     }
   }, [pathname]);
 
+  // useEffect(() => {
+  //   // Show the player only if the path matches `/music/:id`
+  //   if (pathname.startsWith("/music/")) {
+  //     const songData = localStorage.getItem("songData");
+  //     if (songData != null && songData) {
+  //       return;
+  //     } else {
+  //       localStorage.setItem(
+  //         "songData",
+  //         JSON.stringify({ play: true, id: params?.id })
+  //       );
+  //     }
+  //   }
+  // }, [pathname]);
+
   // const handlePrev = () => {
   //   if (currentTrackIndex !== null && currentTrackIndex > 0) {
   //     const newIndex = currentTrackIndex - 1;
