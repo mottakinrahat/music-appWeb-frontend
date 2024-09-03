@@ -102,6 +102,13 @@ const MinimizePlayer = () => {
       setShowPlayer(true);
       // document.body.classList.add("hide-scrollbar");
       setHeight(7);
+    } else if (pathname.startsWith("/offline")) {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ id: null, play: false })
+      );
+      setHeight(0);
+      setShowPlayer(false);
     } else {
       // document.body.classList.remove("hide-scrollbar");
       setShowPlayer(false);

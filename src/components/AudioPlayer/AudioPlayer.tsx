@@ -609,6 +609,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             />
             <div className="flex flex-col gap-4 justify-between">
               <VolumeSettingDownRepeat
+                artwork={artwork}
+                songArtist={songArtist}
+                songAlbum={songAlbum}
+                songId={songId}
                 bpm={bpm}
                 bpmLoading={loading}
                 songName={songName}

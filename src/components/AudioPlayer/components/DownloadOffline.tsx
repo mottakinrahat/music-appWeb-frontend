@@ -33,7 +33,13 @@ const checkIfSongExists = async (songName: string) => {
 };
 
 // Function to save the song data to IndexedDB
-const saveSongToIndexedDB = async (songUrl: string, songName: string) => {
+const saveSongToIndexedDB = async (
+  songUrl: string,
+  songName: string,
+  artwork: string,
+  songAlbum: string,
+  songArtist: string
+) => {
   try {
     const songExists = await checkIfSongExists(songName);
 
@@ -54,7 +60,13 @@ const saveSongToIndexedDB = async (songUrl: string, songName: string) => {
 
     const db = await initDB();
     // Save the song Blob to IndexedDB
-    await db.put("offlineSongs", { name: songName, data: blob });
+    await db.put("offlineSongs", {
+      name: songName,
+      data: blob,
+      artwork,
+      songAlbum,
+      songArtist,
+    });
     toast.success(`${songName} downloaded successfully.`);
   } catch (error) {
     console.error("Failed to save the song:", error);
@@ -64,11 +76,18 @@ const saveSongToIndexedDB = async (songUrl: string, songName: string) => {
 interface DownloadButtonProps {
   songUrl: string;
   songName: string;
+  artwork: string;
+  songId: number;
+  songAlbum: string;
+  songArtist: string;
 }
 
 const DownloadOffline: React.FC<DownloadButtonProps> = ({
   songUrl,
   songName,
+  artwork,
+  songAlbum,
+  songArtist,
 }) => {
   const [isDownloaded, setIsDownloaded] = useState<boolean>(false);
 
@@ -85,7 +104,13 @@ const DownloadOffline: React.FC<DownloadButtonProps> = ({
     if (isDownloaded) {
       toast.warning(`${songName} already exists in offline download.`);
     } else {
-      saveSongToIndexedDB(songUrl, songName).then(() => setIsDownloaded(true));
+      saveSongToIndexedDB(
+        songUrl,
+        songName,
+        artwork,
+        songAlbum,
+        songArtist
+      ).then(() => setIsDownloaded(true));
     }
   };
 

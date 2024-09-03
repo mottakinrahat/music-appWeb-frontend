@@ -5,8 +5,8 @@ const SongMarquee = ({
   songName,
   className,
 }: {
-  songName: string;
-  className: string;
+  songName: string | null;
+  className?: string;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);

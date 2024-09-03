@@ -203,7 +203,8 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
-    } else {
+    }
+     else {
       setShowPlayer(false);
     }
     if (showPlayer) {
