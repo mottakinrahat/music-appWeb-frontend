@@ -68,7 +68,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const userId = userData?._id;
-  const [repeats, setRepeat] = useState<any>();
+  // const [repeats, setRepeat] = useState<any>();
 
   useEffect(() => {
     const isFavourite = currentSong.favUsers.includes(userId);
@@ -94,6 +94,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   // Seclectors
   const playing = useSelector((state: RootState) => state.player.playing);
   const repeat = useSelector((state: RootState) => state.player.repeat);
+  const importedSong = useSelector((state: RootState) => state.musicData);
 
   const speed = localStorage.getItem("speed");
   useEffect(() => {
@@ -247,7 +248,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         );
       }
     } catch (error) {
-      console.error("Playback failed:", error);
+      // console.error("Playback failed:", error);
     }
   };
 
@@ -344,7 +345,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     } else {
       newRepeat = "repeat-all";
     }
-    setRepeat(newRepeat);
+    // setRepeat(newRepeat);
     localStorage.setItem("repeat", newRepeat);
   };
 
@@ -372,11 +373,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               <Image
                 src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
                 alt={songName}
-                width={40}
-                height={40}
+                width={60}
+                height={60}
+                priority
                 style={{
                   borderRadius: "8px",
                   marginRight: "8px",
+                  objectFit: "cover",
+                  width: "50px",
+                  height: "50px",
                 }}
               />
               <div>
@@ -472,30 +477,49 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <div className="w-full flex justify-between items-center">
             <div className="text-white flex mb-4 items-center gap-4">
               <Image
-                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
+                src={
+                  importedSong.fileData
+                    ? placeHolder.src
+                    : artwork
+                    ? artwork
+                    : placeHolder.src
+                } // Replace this with the image URL
                 alt={songName}
                 width={40}
                 height={40}
                 style={{
                   borderRadius: "8px",
                   marginRight: "8px",
+                  height: "auto",
+                  width: "auto",
                 }}
               />
               <div>
                 <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl">
-                  <SongMarquee songName={songName} className="text-white" />
+                  <SongMarquee
+                    songName={
+                      importedSong.fileData ? importedSong.title : songName
+                    }
+                    className="text-white"
+                  />
                 </h2>
                 <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
-                  <p>{songArtist}</p>
-                  <div className="flex items-center max-md:hidden gap-2">
-                    <div className="size-2 bg-white rounded-full ml-2"></div>
-                    <p>
-                      Album:{" "}
-                      <Link href={"#"} className="underline">
-                        {songAlbum.albumName}
-                      </Link>
-                    </p>
-                  </div>
+                  {importedSong.fileData ? (
+                    <p>Imported from device.</p>
+                  ) : (
+                    <>
+                      <p>{songArtist}</p>
+                      <div className="flex items-center max-md:hidden gap-2">
+                        <div className="size-2 bg-white rounded-full ml-2"></div>
+                        <p>
+                          Album:{" "}
+                          <Link href={"#"} className="underline">
+                            {songAlbum.albumName}
+                          </Link>
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -524,7 +548,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <AudioControls
             volume={volume}
             ref={audioRef}
-            src={songLink}
+            src={importedSong.fileData ? importedSong.fileData : songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={() => {
               const currentTime = audioRef.current?.currentTime || 0;

@@ -40,6 +40,8 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [startWidth, setStartWidth] = useState<number>(0);
   const [playListWidth, setPlayListWidth] = useState<number>(0);
 
+  const importedSong = useSelector((state: RootState) => state.musicData);
+
   //  Router
   const router = useRouter();
 
@@ -244,14 +246,18 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   );
 
   useEffect(() => {
-    if (currentSong?.artwork && currentSong?.artwork !== "") {
+    if (
+      currentSong?.artwork &&
+      currentSong?.artwork !== "" &&
+      importedSong.fileData === null
+    ) {
       setBackgroundImage(currentSong.artwork);
     } else {
       setBackgroundImage(
         "https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png"
       );
     }
-  }, [currentSong?.artwork]);
+  }, [currentSong?.artwork, importedSong.fileData]);
 
   if (!currentSong) {
     return (
