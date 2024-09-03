@@ -1,5 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-"use client";
+// eslint-disable @next/entx / no - img - element / "use client";
 import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import placeHolder from "@/assets/etc/png/song.jpg";
 import LyricsIcon from "@/assets/icons/lyrics.svg";
@@ -17,20 +16,22 @@ import { Slider } from "../ui/slider";
 import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
 import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
-import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
 import SongMarquee from "./components/SongMarquee";
 import { useDispatch, useSelector } from "react-redux";
 import {
   pauseSong,
   PlayerState,
   playSong,
-  toggleRepeat,
 } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
+import Image from "next/image";
 
 interface AudioPlayerProps {
-  onAudioContextReady: (audioContext: AudioContext, audioElement: HTMLAudioElement) => void;
+  onAudioContextReady: (
+    audioContext: AudioContext,
+    audioElement: HTMLAudioElement
+  ) => void;
   id?: any;
   handleNext: () => void;
   currentSong?: any;
@@ -54,8 +55,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const [repeat, setRepeat] = useState<RepeatShuffleProps["repeat"]>("repeat-all");
-  const [playing, setPlaying] = useState<boolean>(play);
+
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [favorite, setFavorite] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
@@ -122,12 +122,21 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   }, [currentSong, repeat, songData, speed, volume]);
   // Main Song
 
-  const { songName, bpm, songLink, artwork, songArtist, songAlbum, _id: songId } = currentSong;
+  const {
+    songName,
+    bpm,
+    songLink,
+    artwork,
+    songArtist,
+    songAlbum,
+    _id: songId,
+  } = currentSong;
 
   useEffect(() => {
     const handleInteraction = () => {
       if (!audioContextRef.current) {
-        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const audioContext = new (window.AudioContext ||
+          (window as any).webkitAudioContext)();
         audioContextRef.current = audioContext;
         onAudioContextReady(audioContext, audioRef.current as HTMLAudioElement);
       } else if (audioContextRef.current.state === "suspended") {
@@ -142,15 +151,104 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
   }, [onAudioContextReady]);
 
-  const handlePlayPause = () => {
-    if (playing) {
-      audioRef.current?.pause();
-      localStorage.setItem("songData", JSON.stringify({ play: false, id: songId }));
-    } else {
-      audioRef.current?.play();
-      localStorage.setItem("songData", JSON.stringify({ play: true, id: songId }));
+  const repeatStateIndex = (repeatState: PlayerState["repeat"]) => {
+    switch (repeatState) {
+      case "repeat-all":
+        return 0;
+      case "repeat-one":
+        return 1;
+      case "repeat-off":
+        return 2;
+      case "shuffle":
+        return 3;
+      default:
+        return 0;
     }
-    setPlaying(!playing);
+  };
+  useEffect(() => {
+    // Load initial state from localStorage
+    // const storedRepeat = localStorage.getItem(
+    //   "repeat"
+    // ) as PlayerState["repeat"];
+    // if (!storedRepeat) {
+    //   localStorage.setItem("repeat", "repeat-all");
+    // } else {
+    //   dispatch(toggleRepeat());
+    // }
+
+    const storedRepeat = localStorage.getItem(
+      "repeat"
+    ) as PlayerState["repeat"];
+    if (!storedRepeat) {
+      localStorage.setItem("repeat", "repeat-all");
+      dispatch({ type: "player/toggleRepeat" });
+    } else {
+      if (storedRepeat !== "repeat-all") {
+        for (let i = 0; i < repeatStateIndex(storedRepeat); i++) {
+          dispatch({ type: "player/toggleRepeat" });
+        }
+      }
+    }
+    const storedSongData = localStorage.getItem("songData");
+    if (storedSongData) {
+      const { play, id } = JSON.parse(storedSongData);
+      if (play) {
+        dispatch(playSong(id));
+      } else {
+        dispatch(pauseSong());
+      }
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    // Save state to localStorage whenever it changes
+    if (playing && songId) {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: true, id: songId })
+      );
+    } else if (!playing && songId) {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: false, id: songId })
+      );
+    }
+
+    localStorage.setItem("repeat", repeat); // Save repeat mode
+  }, [playing, songId, repeat]);
+
+  // handle play pause song
+  const handlePlayPause = async () => {
+    try {
+      if (playing) {
+        // Pause the song
+        dispatch(pauseSong());
+
+        // Save play state to localStorage
+        localStorage.setItem(
+          "songData",
+          JSON.stringify({ play: false, id: songId })
+        );
+      } else {
+        // Play the song
+        const audioElement = document.querySelector(
+          "audio"
+        ) as HTMLAudioElement;
+        if (audioElement) {
+          await audioElement.play(); // Try to play the audio element
+        }
+
+        dispatch(playSong(songId));
+
+        // Save play state to localStorage
+        localStorage.setItem(
+          "songData",
+          JSON.stringify({ play: true, id: songId })
+        );
+      }
+    } catch (error) {
+      console.error("Playback failed:", error);
+    }
   };
 
   // Handle Open lyrics
@@ -210,13 +308,19 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const handlePreviousTenSecond = () => {
     if (audioRef.current) {
-      audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 10, 0);
+      audioRef.current.currentTime = Math.max(
+        audioRef.current.currentTime - 10,
+        0
+      );
     }
   };
 
   const handleNextTenSecond = () => {
     if (audioRef.current) {
-      audioRef.current.currentTime = Math.min(audioRef.current.currentTime + 10, duration);
+      audioRef.current.currentTime = Math.min(
+        audioRef.current.currentTime + 10,
+        duration
+      );
     }
   };
 
@@ -244,7 +348,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     localStorage.setItem("repeat", newRepeat);
   };
 
-  // handle add to favorate
+  // Three dot menu operations
 
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
@@ -257,26 +361,33 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       toast.warning("Please login first!");
     } else {
       await axios
-        .put(`https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`, playListData)
+        .put(
+          `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
+          playListData
+        )
         .then((res) => {
           setFavorite((prev: boolean) => !prev);
           toast.success(
             <div style={{ display: "flex", alignItems: "center" }}>
-              <img
+              <Image
                 src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
                 alt={songName}
+                width={40}
+                height={40}
                 style={{
-                  width: "40px", // Adjust the size as needed
-                  height: "40px",
                   borderRadius: "8px",
                   marginRight: "8px",
                 }}
               />
               <div>
                 {favorite ? (
-                  <div style={{ fontWeight: "bold" }}>Favorites Removed Successfully</div>
+                  <div style={{ fontWeight: "bold" }}>
+                    Favorites Removed Successfully
+                  </div>
                 ) : (
-                  <div style={{ fontWeight: "bold" }}>Favorites Added Successfully</div>
+                  <div style={{ fontWeight: "bold" }}>
+                    Favorites Added Successfully
+                  </div>
                 )}
                 <div>{`${songName}, ${songAlbum?.albumName}`}</div>
               </div>
@@ -291,7 +402,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
-  const threeDotContent = ThreeDotContent({ currentSong, handleAddtoFavourite, favorite });
+  const threeDotContent = ThreeDotContent({
+    currentSong,
+    handleAddtoFavourite,
+    favorite,
+  });
 
   return (
     <div className="audio-controls relative">
@@ -319,9 +434,20 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           volume={volume}
         />
       </div>
-      <div className={`${!showPlayer ? "hidden" : "w-full h-screen  bg-cover bg-center"} `}>
-        {/* Dropdown section */}
-        <div className={`${!showPlayer ? "hidden" : "absolute p-4 lg:py-20 xl:px-[120px] right-0 top-16 text-white"} `}>
+      <div
+        className={`${
+          !showPlayer
+            ? "hidden"
+            : "w-full h-screen  bg-cover overflow-hidden bg-center"
+        } `}
+      >
+        <div
+          className={`${
+            !showPlayer
+              ? "hidden"
+              : "absolute p-4 lg:py-20 xl:px-[120px] right-0 top-16 text-white"
+          } `}
+        >
           <DropDownBtn
             dropDownContent={threeDotContent}
             buttonContent={
@@ -345,10 +471,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4   xl:px-[120px]">
           <div className="w-full flex justify-between items-center">
             <div className="text-white flex mb-4 items-center gap-4">
-              <img
-                src={artwork ? artwork : placeHolder.src}
-                alt="Album Art"
-                className="w-10 h-10 md:h-16 md:w-16 rounded-lg object-cover"
+              <Image
+                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
+                alt={songName}
+                width={40}
+                height={40}
+                style={{
+                  borderRadius: "8px",
+                  marginRight: "8px",
+                }}
               />
               <div>
                 <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl">
@@ -419,7 +550,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           </div>
           <div className="w-full">
             <div className="flex justify-between gap-3 mb-14 lg:mb-0 items-center ">
-              <span className="text-white text-sm">{formatTime(currentTime)}</span>
+              <span className="text-white text-sm">
+                {formatTime(currentTime)}
+              </span>
               <span className="text-white text-sm">{formatTime(duration)}</span>
             </div>
           </div>
