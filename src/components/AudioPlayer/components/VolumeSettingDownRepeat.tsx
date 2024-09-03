@@ -24,9 +24,17 @@ interface VolumeSettingDownRepeatProps {
   audioRef: any;
   bpm: number;
   handleOpenPlayList: () => void;
+  artwork: string;
+  songArtist: string;
+  songAlbum: string;
+  songId: number;
 }
 
 const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
+  artwork,
+  songArtist,
+  songAlbum,
+  songId,
   volume,
   handleVolumeChange,
   handleMute,
@@ -136,7 +144,14 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
         </div> */}
         {/* Download button  */}
         <div>
-          <DownloadOffline songName={songName} songUrl={songUrl} />
+          <DownloadOffline
+            songName={songName}
+            songUrl={songUrl}
+            artwork={artwork}
+            songArtist={songArtist}
+            songAlbum={songAlbum}
+            songId={songId}
+          />
         </div>
         <div className={"group flex justify-center"}>
           <DropDownBtn
