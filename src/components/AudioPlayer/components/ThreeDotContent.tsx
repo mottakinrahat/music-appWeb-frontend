@@ -13,6 +13,7 @@ import axios from "axios";
 import Image from "next/image";
 import placeHolder from "@/assets/etc/png/song.jpg";
 import { useRouter } from "next/navigation";
+import ShareCard from "@/components/Card/ShareCard";
 
 interface SongType {
   songName: string;
@@ -140,6 +141,11 @@ const ThreeDotContent: React.FC<SongPropsType> = ({ currentSong }) => {
 
   return (
     <div className="font-bold text-textSecondary w-52  select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
+      <ShareCard
+        open={share}
+        setOpen={setShare}
+        shareUrl={`https://music-web-liangu.vercel.app//music/66c99c0a36fe71b995557d6b`}
+      />
       <h2
         onClick={handleAddtoPlayList}
         className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
