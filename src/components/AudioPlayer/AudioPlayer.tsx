@@ -71,7 +71,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const userId = userData?._id;
   const [repeats, setRepeat] = useState<any>();
-  const router = useRouter();
 
   useEffect(() => {
     const isFavourite = currentSong.favUsers.includes(userId);
