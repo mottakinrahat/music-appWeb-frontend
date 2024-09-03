@@ -6,11 +6,12 @@ import Link from "next/link";
 // import { IoHeartOutline } from "react-icons/io5";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { playSong } from "@/redux/slice/music/musicActionSlice";
 import { toast } from "sonner";
 import { clearMusicData } from "@/redux/slice/music/musicDataSlice";
 import { initDB } from "@/utils/initDB";
+import { RootState } from "@/redux/store";
 
 interface BaseCard {
   type: string;
@@ -57,6 +58,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
 }) => {
   const location = usePathname();
   const dispatch = useDispatch();
+  const importedSong = useSelector((state: RootState) => state.musicData);
 
   const deleteExistingSongFromIndexedDB = async () => {
     const db = await initDB("MusicDB", 1, "songs");
@@ -72,7 +74,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   const handleDeleteSong = async () => {
     await deleteExistingSongFromIndexedDB();
     dispatch(clearMusicData());
-    toast.success("Song Remove Successfully from Imported Song");
+    toast.success("Imported song removed.");
   };
 
   const handleSetIdtoLocalStroage = () => {
@@ -82,7 +84,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
     );
     localStorage.setItem("pathHistory", location);
     dispatch(playSong(musicId!));
-    handleDeleteSong();
+    if (importedSong.fileData) handleDeleteSong();
   };
 
   return (

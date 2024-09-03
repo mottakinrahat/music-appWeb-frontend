@@ -1,7 +1,8 @@
 "use client";
+import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import React, { forwardRef, useEffect, RefObject } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 interface AudioControlsProps {
   src: string;
@@ -26,18 +27,26 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     },
     ref
   ) => {
+    const dispatch = useDispatch();
     const playing = useSelector((state: RootState) => state.player.playing);
+
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {
         const audioElement = ref.current;
         audioElement.playbackRate = playbackRate;
+
         if (playing) {
-          audioElement?.play();
+          audioElement?.play().catch((err) => {
+            if (err) {
+              audioElement?.pause();
+              dispatch(pauseSong());
+            }
+          });
         } else if (!playing) {
           audioElement?.pause();
         }
       }
-    }, [playbackRate, ref, playing]);
+    }, [playbackRate, ref, playing, dispatch]);
 
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {

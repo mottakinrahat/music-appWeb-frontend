@@ -371,6 +371,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           toast.success(
             <div style={{ display: "flex", alignItems: "center" }}>
               <Image
+                
                 src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
                 alt={songName}
                 width={60}
