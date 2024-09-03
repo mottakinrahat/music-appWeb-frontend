@@ -83,6 +83,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
 
   const handleDeleteSong = async () => {
     await deleteExistingSongFromIndexedDB();
+    dispatch(clearMusicData());
     toast.success("Song Remove Successfully from Imported Song");
   };
 
