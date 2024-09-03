@@ -4,23 +4,13 @@ import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import placeHolder from "@/assets/etc/png/song.jpg";
 import LyricsIcon from "@/assets/icons/lyrics.svg";
 import { formatTime } from "@/utils/FormatTime";
-import {
-  PlusCircleIcon,
-  HeartIcon,
-  ShareIcon,
-  CircleStackIcon,
-  UserCircleIcon,
-  MusicalNoteIcon,
-} from "@heroicons/react/24/outline";
 import AudioControls from "./components/AudioControls";
 import RepeatActionButton from "./components/RepeatActionButton";
 import PlayButtons from "./components/PlayButtons";
 import MusicControls from "./components/MusicControls";
-// import Volumn from "./components/Volumn";
 import axios from "axios";
 import { toast } from "sonner";
 import Link from "next/link";
-import ShareCard from "../Card/ShareCard";
 import { usePathname, useRouter } from "next/navigation";
 import MiniPlayer from "./MiniPlayer";
 import { Slider } from "../ui/slider";
@@ -28,9 +18,9 @@ import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
 import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
 import { openDB } from "idb";
-import useLocalSongData from "@/hooks/useLocalSongData";
 import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
 import SongMarquee from "./components/SongMarquee";
+import ThreeDotContent from "./components/ThreeDotContent";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -50,7 +40,6 @@ interface AudioPlayerProps {
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
   onAudioContextReady,
-  id,
   currentSong: songData,
   handleOpenEqualizer,
   handleNext,
@@ -58,7 +47,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   play,
   handleOpenPlayList,
   handleRandom,
-  setCurrentSong: setCurrectSong,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -73,18 +61,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [playbackSpeed, setPlaybackSpeed] = useState<any>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
   const [userData, setUserData] = useState<any>();
-
-  // const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
-  //   null
-  // );
-
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
   const [currentSong, setCurrentSong] = useState<any>(songData);
-  const [share, setShare] = useState<boolean>(false);
   const userId = userData?._id;
-  const [hasSong, setHasSong] = useState<boolean>(false);
-  const [idbSong, setIdbSong] = useState<any>(null);
 
   useEffect(() => {
     const isFavourite = currentSong.favUsers.includes(userId);
@@ -141,7 +121,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     songAlbum,
     _id: songId,
   } = currentSong;
-  const router = useRouter();
 
   useEffect(() => {
     const handleInteraction = () => {
@@ -162,12 +141,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
   }, [onAudioContextReady]);
 
-  // console.log(volume);
-  // console.log(currentSong);
-
-  const isSongPlaying = useLocalSongData();
-  // console.log(isSongPlaying);
-
   const handlePlayPause = () => {
     if (playing) {
       audioRef.current?.pause();
@@ -185,20 +158,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setPlaying(!playing);
   };
 
-  // Handle Open lyrics
-
   const handleOpenLyrics = () => {
     alert("Open lyrics");
   };
-  // const isSongPlaying = useLocalSongData();
-  // const dispatch: AppDispatch = useDispatch();
-
-  // const onPlayPause = () => {
-  //   dispatch(handlePlayPause({ audioRef, songId }));
-  // };
-
-  // devJibon
-  // handle palyback Speed
 
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
@@ -231,11 +193,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setPlayed(playedPercentage);
   };
 
-  const handleDuration = (duration: number) => {
-    setDuration(duration);
-  };
-
-  // const dispatch: AppDispatch = useDispatch();
   const handleEnd = () => {
     let currentRepeat: RepeatShuffleProps["repeat"] = repeat;
     const audioElement = audioRef.current;
@@ -281,7 +238,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setCurrentTime(newTime);
     }
   };
-  //  repeat toggle
+
   const toggleRepeat = () => {
     let newRepeat: RepeatShuffleProps["repeat"];
     if (repeat === "repeat-all") {
@@ -296,57 +253,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setRepeat(newRepeat);
     localStorage.setItem("repeat", newRepeat);
   };
-
-  // handle playlist add
-  const handleAddtoPlayList = async () => {
-    const user = JSON.parse(localStorage?.getItem("user")!);
-    const userId = user?._id;
-    const playListData = {
-      id: songId,
-      userId: userId,
-    };
-
-    if (!userId) {
-      toast.warning("please login first");
-      router.push("/login");
-    }
-    toast("Please wait, adding to playlist... ", {
-      duration: 1000,
-    });
-    await axios
-      .put(
-        `https://music-app-web.vercel.app/api/v1/songs/play-list/${songId}/${userId}`,
-        playListData
-      )
-      .then((res) => {
-        if (res.data)
-          toast.success(
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <img
-                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
-                alt={songName}
-                style={{
-                  width: "40px", // Adjust the size as needed
-                  height: "40px",
-                  borderRadius: "8px",
-                  marginRight: "8px",
-                }}
-              />
-              <div>
-                <div style={{ fontWeight: "bold" }}>Playlist Added</div>
-                <div>{`${songName}, ${songAlbum?.albumName}`}</div>
-              </div>
-            </div>
-          );
-      })
-      .catch((err) => {
-        if (err) {
-          toast.error("Failed to add to playlist");
-        }
-      });
-  };
-
-  // Three dot menu operations
 
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
@@ -400,79 +306,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
-  // console.log(currentSong);
-
-  const threeDotContent = (
-    <div className="font-bold text-textSecondary w-52  select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
-      <h2
-        onClick={handleAddtoPlayList}
-        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
-      >
-        <PlusCircleIcon className="h-6 w-6" />
-        <span>Add to playlist</span>
-      </h2>
-      <h2
-        onClick={handleAddtoFavourite}
-        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
-      >
-        <HeartIcon className="h-6 w-6" />
-        <span>Add to favorites</span>
-      </h2>
-      <h2
-        onClick={() => setShare(!share)}
-        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
-      >
-        <ShareIcon className="h-6 w-6" />
-        <span>Share</span>
-      </h2>
-      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
-        <CircleStackIcon className="h-6 w-6" />
-        <span>Go album</span>
-      </h2>
-      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
-        <UserCircleIcon className="h-6 w-6" />
-        <span>Go artist</span>
-      </h2>
-      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
-        <MusicalNoteIcon className="h-6 w-6" />
-        <span>Song credit</span>
-      </h2>
-    </div>
-  );
-
-  // Function to open IndexedDB database
-  const initDB = async () => {
-    const db = await openDB("MusicDB", 1, {
-      upgrade(db) {
-        if (!db.objectStoreNames.contains("songs")) {
-          db.createObjectStore("songs", { keyPath: "id", autoIncrement: true });
-        }
-      },
-    });
-    return db;
-  };
-
-  // Retrieve file from IndexedDB
-
-  useEffect(() => {
-    const retrieveFileFromIndexedDB = async () => {
-      const db = await initDB();
-      const song = await db.get("songs", 1);
-      if (song) {
-        setHasSong(true);
-        setIdbSong(song);
-      }
-    };
-    retrieveFileFromIndexedDB();
-  }, []);
+  const threeDotContent = ThreeDotContent({ currentSong });
 
   return (
     <div className="audio-controls relative">
-      <ShareCard
-        open={share}
-        setOpen={setShare}
-        shareUrl={`https://music-web-liangu.vercel.app//music/66c99c0a36fe71b995557d6b`}
-      />
       <div className="absolute top-0 w-full ">
         <MiniPlayer
           repeat={repeat}
@@ -533,11 +370,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <div className="w-full flex justify-between items-center">
             <div className="text-white flex mb-4 items-center gap-4">
               <img
-                // style={{ width: "auto", height: "auto" }}
                 src={artwork ? artwork : placeHolder.src}
                 alt="Album Art"
-                // height={80}
-                // width={80}
                 className="w-10 h-10 md:h-16 md:w-16 rounded-lg object-cover"
               />
               <div>
@@ -569,8 +403,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 playing={playing}
               />
             </div>
-
-            {/* repeat button component */}
 
             <RepeatActionButton
               toggleRepeat={toggleRepeat}
