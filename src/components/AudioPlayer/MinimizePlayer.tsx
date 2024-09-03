@@ -19,15 +19,24 @@ const MinimizePlayer = () => {
   const [startHeight, setStartHeight] = useState<number>(0);
   const dispatch = useDispatch();
 
+  const miniPlayerOpen = JSON.parse(localStorage.getItem("miniPlayer")!);
   useEffect(() => {
+    if (!miniPlayerOpen) {
+      localStorage.setItem("miniPlayer", JSON.stringify(0));
+    }
     // Function to update the height based on window width
     const updateHeight = () => {
       if (height > 0) {
         if (window.innerWidth < 768) {
-          setHeight(6);
+          localStorage.setItem("miniPlayer", JSON.stringify(6));
+          setHeight(miniPlayerOpen ? miniPlayerOpen : 6);
         } else {
-          setHeight(7);
+          localStorage.setItem("miniPlayer", JSON.stringify(7));
+          setHeight(miniPlayerOpen ? miniPlayerOpen : 7);
         }
+      } else {
+        setHeight(0);
+        localStorage.setItem("miniPlayer", JSON.stringify(0));
       }
     };
 
@@ -38,7 +47,7 @@ const MinimizePlayer = () => {
 
     // Cleanup the event listener on component unmount
     return () => window.removeEventListener("resize", updateHeight);
-  }, [height, pathname]);
+  }, [height, miniPlayerOpen, pathname]);
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {

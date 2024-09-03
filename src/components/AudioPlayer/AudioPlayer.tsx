@@ -1,5 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-"use client";
+// eslint-disable @next/entx / no - img - element / "use client";
 import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import placeHolder from "@/assets/etc/png/song.jpg";
 import LyricsIcon from "@/assets/icons/lyrics.svg";
@@ -17,17 +16,16 @@ import { Slider } from "../ui/slider";
 import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
 import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
-import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
 import SongMarquee from "./components/SongMarquee";
 import { useDispatch, useSelector } from "react-redux";
 import {
   pauseSong,
   PlayerState,
   playSong,
-  toggleRepeat,
 } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
+import Image from "next/image";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -371,12 +369,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           setFavorite((prev: boolean) => !prev);
           toast.success(
             <div style={{ display: "flex", alignItems: "center" }}>
-              <img
+              <Image
                 src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
                 alt={songName}
+                width={40}
+                height={40}
                 style={{
-                  width: "40px", // Adjust the size as needed
-                  height: "40px",
                   borderRadius: "8px",
                   marginRight: "8px",
                 }}
@@ -404,7 +402,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
-  const threeDotContent = ThreeDotContent({ currentSong });
+  const threeDotContent = ThreeDotContent({
+    currentSong,
+    handleAddtoFavourite,
+    favorite,
+  });
 
   return (
     <div className="audio-controls relative">
@@ -439,7 +441,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             : "w-full h-screen  bg-cover overflow-hidden bg-center"
         } `}
       >
-        {/* Dropdown section */}
         <div
           className={`${
             !showPlayer
@@ -470,10 +471,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4   xl:px-[120px]">
           <div className="w-full flex justify-between items-center">
             <div className="text-white flex mb-4 items-center gap-4">
-              <img
-                src={artwork ? artwork : placeHolder.src}
-                alt="Album Art"
-                className="w-10 h-10 md:h-16 md:w-16 rounded-lg object-cover"
+              <Image
+                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
+                alt={songName}
+                width={40}
+                height={40}
+                style={{
+                  borderRadius: "8px",
+                  marginRight: "8px",
+                }}
               />
               <div>
                 <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl">
