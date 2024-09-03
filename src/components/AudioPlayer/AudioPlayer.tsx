@@ -198,16 +198,44 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   //   }
   //   setPlaying(!playing);
   // };
-
+  const repeatStateIndex = (repeatState: PlayerState["repeat"]) => {
+    switch (repeatState) {
+      case "repeat-all":
+        return 0;
+      case "repeat-one":
+        return 1;
+      case "repeat-off":
+        return 2;
+      case "shuffle":
+        return 3;
+      default:
+        return 0;
+    }
+  };
   useEffect(() => {
     // Load initial state from localStorage
+    // const storedRepeat = localStorage.getItem(
+    //   "repeat"
+    // ) as PlayerState["repeat"];
+    // if (!storedRepeat) {
+    //   localStorage.setItem("repeat", "repeat-all");
+    // } else {
+    //   dispatch(toggleRepeat());
+    // }
+
     const storedRepeat = localStorage.getItem(
       "repeat"
     ) as PlayerState["repeat"];
-    if (storedRepeat) {
-      dispatch(toggleRepeat()); // Set repeat mode
+    if (!storedRepeat) {
+      localStorage.setItem("repeat", "repeat-all");
+      dispatch({ type: "player/toggleRepeat" });
+    } else {
+      if (storedRepeat !== "repeat-all") {
+        for (let i = 0; i < repeatStateIndex(storedRepeat); i++) {
+          dispatch({ type: "player/toggleRepeat" });
+        }
+      }
     }
-
     const storedSongData = localStorage.getItem("songData");
     if (storedSongData) {
       const { play, id } = JSON.parse(storedSongData);

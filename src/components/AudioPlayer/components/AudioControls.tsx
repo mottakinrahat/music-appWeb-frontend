@@ -32,9 +32,9 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
         const audioElement = ref.current;
         audioElement.playbackRate = playbackRate;
         if (playing) {
-          audioElement.play();
+          audioElement?.play();
         } else if (!playing) {
-          audioElement.pause();
+          audioElement?.pause();
         }
       }
     }, [playbackRate, ref, playing]);

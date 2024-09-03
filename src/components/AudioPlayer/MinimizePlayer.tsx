@@ -22,10 +22,12 @@ const MinimizePlayer = () => {
   useEffect(() => {
     // Function to update the height based on window width
     const updateHeight = () => {
-      if (window.innerWidth < 768) {
-        setHeight(6);
-      } else {
-        setHeight(7);
+      if (height > 0) {
+        if (window.innerWidth < 768) {
+          setHeight(6);
+        } else {
+          setHeight(7);
+        }
       }
     };
 
@@ -36,8 +38,7 @@ const MinimizePlayer = () => {
 
     // Cleanup the event listener on component unmount
     return () => window.removeEventListener("resize", updateHeight);
-  }, [pathname]);
-  
+  }, [height, pathname]);
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
@@ -108,17 +109,15 @@ const MinimizePlayer = () => {
     const getSongDataFromLocalStroage = JSON.parse(
       localStorage.getItem("songData")!
     );
-    if (getSongDataFromLocalStroage && getSongDataFromLocalStroage !== null) {
+    if (window) {
+      window.onload = () => {
+        setHeight(0);
+      };
+    } else if (getSongDataFromLocalStroage && getSongDataFromLocalStroage !== null) {
       setPlayMusicById(getSongDataFromLocalStroage.id);
       setReadyPlayer(true);
     } else {
       setReadyPlayer(false);
-    }
-
-    if (window) {
-      window.onload = () => {
-        setReadyPlayer(false);
-      };
     }
 
     // Clean up event listeners on unmount
