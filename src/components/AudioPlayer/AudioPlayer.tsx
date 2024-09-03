@@ -20,7 +20,7 @@ import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
 import { openDB } from "idb";
 import useLocalSongData from "@/hooks/useLocalSongData";
-// import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
+import { RepeatShuffleProps } from "./components/ReapetShuffleButton";
 import SongMarquee from "./components/SongMarquee";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -75,8 +75,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const [share, setShare] = useState<boolean>(false);
   const userId = userData?._id;
-  const [hasSong, setHasSong] = useState<boolean>(false);
-  const [idbSong, setIdbSong] = useState<any>(null);
+  const [repeats, setRepeat] = useState<any>();
+  const router = useRouter();
 
   useEffect(() => {
     const isFavourite = currentSong.favUsers.includes(userId);
@@ -159,28 +159,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
   }, [onAudioContextReady]);
 
-  // console.log(volume);
-  // console.log(currentSong);
-
-  // const isSongPlaying = useLocalSongData();
-  // console.log(isSongPlaying);
-
-  // const handlePlayPause = () => {
-  //   if (playing) {
-  //     audioRef.current?.pause();
-  //     localStorage.setItem(
-  //       "songData",
-  //       JSON.stringify({ play: false, id: songId })
-  //     );
-  //   } else {
-  //     audioRef.current?.play();
-  //     localStorage.setItem(
-  //       "songData",
-  //       JSON.stringify({ play: true, id: songId })
-  //     );
-  //   }
-  //   setPlaying(!playing);
-  // };
   const repeatStateIndex = (repeatState: PlayerState["repeat"]) => {
     switch (repeatState) {
       case "repeat-all":
@@ -281,8 +259,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
-  // console.log(audioRef.current);
-
   // Handle Open lyrics
 
   const handleOpenLyrics = () => {
@@ -366,68 +342,19 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
   //  repeat toggle
-  // const toggleRepeat = () => {
-  //   let newRepeat: RepeatShuffleProps["repeat"];
-  //   if (repeat === "repeat-all") {
-  //     newRepeat = "repeat-one";
-  //   } else if (repeat === "repeat-one") {
-  //     newRepeat = "repeat-off";
-  //   } else if (repeat === "repeat-off") {
-  //     newRepeat = "shuffle";
-  //   } else {
-  //     newRepeat = "repeat-all";
-  //   }
-  //   setRepeat(newRepeat);
-  //   localStorage.setItem("repeat", newRepeat);
-  // };
-
-  // handle playlist add
-  const handleAddtoPlayList = async () => {
-    const user = JSON.parse(localStorage?.getItem("user")!);
-    const userId = user?._id;
-    const playListData = {
-      id: songId,
-      userId: userId,
-    };
-
-    if (!userId) {
-      toast.warning("please login first");
-      router.push("/login");
+  const toggleRepeat = () => {
+    let newRepeat;
+    if (repeat === "repeat-all") {
+      newRepeat = "repeat-one";
+    } else if (repeat === "repeat-one") {
+      newRepeat = "repeat-off";
+    } else if (repeat === "repeat-off") {
+      newRepeat = "shuffle";
+    } else {
+      newRepeat = "repeat-all";
     }
-    toast("Please wait, adding to playlist... ", {
-      duration: 1000,
-    });
-    await axios
-      .put(
-        `https://music-app-web.vercel.app/api/v1/songs/play-list/${songId}/${userId}`,
-        playListData
-      )
-      .then((res) => {
-        if (res.data)
-          toast.success(
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <img
-                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
-                alt={songName}
-                style={{
-                  width: "40px", // Adjust the size as needed
-                  height: "40px",
-                  borderRadius: "8px",
-                  marginRight: "8px",
-                }}
-              />
-              <div>
-                <div style={{ fontWeight: "bold" }}>Playlist Added</div>
-                <div>{`${songName}, ${songAlbum?.albumName}`}</div>
-              </div>
-            </div>
-          );
-      })
-      .catch((err) => {
-        if (err) {
-          toast.error("Failed to add to playlist");
-        }
-      });
+    setRepeat(newRepeat);
+    localStorage.setItem("repeat", newRepeat);
   };
 
   // Three dot menu operations
