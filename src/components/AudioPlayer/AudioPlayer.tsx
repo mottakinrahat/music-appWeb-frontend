@@ -23,10 +23,7 @@ import SongMarquee from "./components/SongMarquee";
 import ThreeDotContent from "./components/ThreeDotContent";
 
 interface AudioPlayerProps {
-  onAudioContextReady: (
-    audioContext: AudioContext,
-    audioElement: HTMLAudioElement
-  ) => void;
+  onAudioContextReady: (audioContext: AudioContext, audioElement: HTMLAudioElement) => void;
   id?: any;
   handleNext: () => void;
   currentSong?: any;
@@ -50,8 +47,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const [repeat, setRepeat] =
-    useState<RepeatShuffleProps["repeat"]>("repeat-all");
+  const [repeat, setRepeat] = useState<RepeatShuffleProps["repeat"]>("repeat-all");
   const [playing, setPlaying] = useState<boolean>(play);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [favorite, setFavorite] = useState<boolean>(false);
@@ -112,21 +108,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   }, [currentSong, repeat, songData, speed, volume]);
   // Main Song
 
-  const {
-    songName,
-    bpm,
-    songLink,
-    artwork,
-    songArtist,
-    songAlbum,
-    _id: songId,
-  } = currentSong;
+  const { songName, bpm, songLink, artwork, songArtist, songAlbum, _id: songId } = currentSong;
 
   useEffect(() => {
     const handleInteraction = () => {
       if (!audioContextRef.current) {
-        const audioContext = new (window.AudioContext ||
-          (window as any).webkitAudioContext)();
+        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
         audioContextRef.current = audioContext;
         onAudioContextReady(audioContext, audioRef.current as HTMLAudioElement);
       } else if (audioContextRef.current.state === "suspended") {
@@ -144,16 +131,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handlePlayPause = () => {
     if (playing) {
       audioRef.current?.pause();
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: false, id: songId })
-      );
+      localStorage.setItem("songData", JSON.stringify({ play: false, id: songId }));
     } else {
       audioRef.current?.play();
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: true, id: songId })
-      );
+      localStorage.setItem("songData", JSON.stringify({ play: true, id: songId }));
     }
     setPlaying(!playing);
   };
@@ -214,19 +195,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const handlePreviousTenSecond = () => {
     if (audioRef.current) {
-      audioRef.current.currentTime = Math.max(
-        audioRef.current.currentTime - 10,
-        0
-      );
+      audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 10, 0);
     }
   };
 
   const handleNextTenSecond = () => {
     if (audioRef.current) {
-      audioRef.current.currentTime = Math.min(
-        audioRef.current.currentTime + 10,
-        duration
-      );
+      audioRef.current.currentTime = Math.min(audioRef.current.currentTime + 10, duration);
     }
   };
 
@@ -254,6 +229,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     localStorage.setItem("repeat", newRepeat);
   };
 
+  // handle add to favorate
+
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
     const userId = user?._id;
@@ -265,10 +242,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       toast.warning("Please login first!");
     } else {
       await axios
-        .put(
-          `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
-          playListData
-        )
+        .put(`https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`, playListData)
         .then((res) => {
           setFavorite((prev: boolean) => !prev);
           toast.success(
@@ -285,13 +259,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               />
               <div>
                 {favorite ? (
-                  <div style={{ fontWeight: "bold" }}>
-                    Favorites Removed Successfully
-                  </div>
+                  <div style={{ fontWeight: "bold" }}>Favorites Removed Successfully</div>
                 ) : (
-                  <div style={{ fontWeight: "bold" }}>
-                    Favorites Added Successfully
-                  </div>
+                  <div style={{ fontWeight: "bold" }}>Favorites Added Successfully</div>
                 )}
                 <div>{`${songName}, ${songAlbum?.albumName}`}</div>
               </div>
@@ -306,7 +276,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
-  const threeDotContent = ThreeDotContent({ currentSong });
+  const threeDotContent = ThreeDotContent({ currentSong, handleAddtoFavourite, favorite });
 
   return (
     <div className="audio-controls relative">
@@ -333,19 +303,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           volume={volume}
         />
       </div>
-      <div
-        className={`${
-          !showPlayer ? "hidden" : "w-full h-screen  bg-cover bg-center"
-        } `}
-      >
+      <div className={`${!showPlayer ? "hidden" : "w-full h-screen  bg-cover bg-center"} `}>
         {/* Dropdown section */}
-        <div
-          className={`${
-            !showPlayer
-              ? "hidden"
-              : "absolute p-4 lg:py-20 xl:px-[120px] right-0 top-16 text-white"
-          } `}
-        >
+        <div className={`${!showPlayer ? "hidden" : "absolute p-4 lg:py-20 xl:px-[120px] right-0 top-16 text-white"} `}>
           <DropDownBtn
             dropDownContent={threeDotContent}
             buttonContent={
@@ -443,9 +403,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           </div>
           <div className="w-full">
             <div className="flex justify-between gap-3 mb-14 lg:mb-0 items-center ">
-              <span className="text-white text-sm">
-                {formatTime(currentTime)}
-              </span>
+              <span className="text-white text-sm">{formatTime(currentTime)}</span>
               <span className="text-white text-sm">{formatTime(duration)}</span>
             </div>
           </div>
