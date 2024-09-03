@@ -1,53 +1,42 @@
-const CACHE_NAME = "offline-cache";
+const CACHE_NAME = "offline-cache-v1";
+const OFFLINE_URL = "/offline"; // Define offline URL
 
 // Assets to cache
 const ASSETS_TO_CACHE = [
-  "/",
-  "/offline",
-  // Add other assets like JS, CSS, and images
+  "/", // Ensure this is cached
+  OFFLINE_URL, // Ensure offline page is cached
+  // Add other static assets like JS, CSS, and images
 ];
 
 // Install Service Worker and cache resources
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return Promise.all(
-        ASSETS_TO_CACHE.map((url) =>
-          fetch(url)
-            .then((response) => {
-              if (response.ok) {
-                return cache.put(url, response);
-              }
-              // If the response is not OK, just skip this asset
-              return Promise.resolve();
-            })
-            .catch(() => {
-              // If the fetch fails, just skip this asset
-              return Promise.resolve();
-            })
-        )
-      );
+      return cache.addAll(ASSETS_TO_CACHE);
     })
   );
 });
 
 // Fetch from cache if offline
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return (
-        response ||
-        fetch(event.request).catch(() => {
-          if (event.request.mode === "navigate") {
-            return caches.match(OFFLINE_URL);
-          }
-        })
-      );
-    })
-  );
+  if (event.request.mode === "navigate") {
+    // For navigation requests, try network first, fallback to offline page
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match(OFFLINE_URL);
+      })
+    );
+  } else {
+    // For other requests, use cache-first strategy
+    event.respondWith(
+      caches.match(event.request).then((response) => {
+        return response || fetch(event.request);
+      })
+    );
+  }
 });
 
-// Activate Service Worker
+// Activate Service Worker and clean old caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
