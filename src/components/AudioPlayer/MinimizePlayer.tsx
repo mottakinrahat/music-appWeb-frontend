@@ -109,15 +109,17 @@ const MinimizePlayer = () => {
     const getSongDataFromLocalStroage = JSON.parse(
       localStorage.getItem("songData")!
     );
-    if (window) {
-      window.onload = () => {
-        setHeight(0);
-      };
-    } else if (getSongDataFromLocalStroage && getSongDataFromLocalStroage !== null) {
+    if (getSongDataFromLocalStroage && getSongDataFromLocalStroage !== null) {
       setPlayMusicById(getSongDataFromLocalStroage.id);
       setReadyPlayer(true);
     } else {
       setReadyPlayer(false);
+    }
+
+    if (window) {
+      window.onload = () => {
+        setHeight(0);
+      };
     }
 
     // Clean up event listeners on unmount
