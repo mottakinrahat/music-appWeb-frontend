@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { FaHeart } from "react-icons/fa";
 import {
   PlusCircleIcon,
   HeartIcon,
@@ -26,10 +27,11 @@ interface SongType {
 // Define the props for the component
 interface SongPropsType {
   currentSong: SongType;
+  handleAddtoFavourite: () => void;
+  favorite: boolean;
 }
 
-const ThreeDotContent: React.FC<SongPropsType> = ({ currentSong }) => {
-  const [favorite, setFavorite] = useState<boolean>(false);
+const ThreeDotContent: React.FC<SongPropsType> = ({ currentSong, handleAddtoFavourite, favorite }) => {
   const [share, setShare] = useState<boolean>(false);
 
   const router = useRouter();
@@ -53,10 +55,7 @@ const ThreeDotContent: React.FC<SongPropsType> = ({ currentSong }) => {
       duration: 1000,
     });
     await axios
-      .put(
-        `https://music-app-web.vercel.app/api/v1/songs/play-list/${songId}/${userId}`,
-        playListData
-      )
+      .put(`https://music-app-web.vercel.app/api/v1/songs/play-list/${songId}/${userId}`, playListData)
       .then((res) => {
         if (res.data)
           toast.success(
@@ -85,58 +84,6 @@ const ThreeDotContent: React.FC<SongPropsType> = ({ currentSong }) => {
       });
   };
 
-  const handleAddtoFavourite = async () => {
-    const user = JSON.parse(localStorage?.getItem("user")!);
-    const userId = user?._id;
-    const playListData = {
-      id: songId,
-      userId: userId,
-    };
-    if (!userId) {
-      toast.warning("Please login first!");
-    } else {
-      await axios
-        .put(
-          `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
-          playListData
-        )
-        .then((res) => {
-          setFavorite((prev: boolean) => !prev);
-          toast.success(
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <Image
-                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
-                alt={songName}
-                width={40}
-                height={40}
-                style={{
-                  borderRadius: "8px",
-                  marginRight: "8px",
-                }}
-              />
-              <div>
-                {favorite ? (
-                  <div style={{ fontWeight: "bold" }}>
-                    Favorites Removed Successfully
-                  </div>
-                ) : (
-                  <div style={{ fontWeight: "bold" }}>
-                    Favorites Added Successfully
-                  </div>
-                )}
-                <div>{`${songName}, ${songAlbum?.albumName}`}</div>
-              </div>
-            </div>
-          );
-        })
-        .catch((err) => {
-          if (err) {
-            toast.error("Failed to add to favourite list");
-          }
-        });
-    }
-  };
-
   return (
     <div className="font-bold text-textSecondary w-52  select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
       <ShareCard
@@ -155,7 +102,7 @@ const ThreeDotContent: React.FC<SongPropsType> = ({ currentSong }) => {
         onClick={handleAddtoFavourite}
         className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
       >
-        <HeartIcon className="h-6 w-6" />
+        {!favorite ? <HeartIcon className="h-6 w-6" /> : <FaHeart className="h-6 w-6 text-cyan-500" />}
         <span>Add to favorites</span>
       </h2>
       <h2

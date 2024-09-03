@@ -4,11 +4,7 @@ import * as React from "react";
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
@@ -20,13 +16,11 @@ export function DropDownBtn({ buttonContent, dropDownContent, onClick }: any) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button disabled onClick={onClick} className="text-white z-50">
+        <button disabled onClick={onClick} className="text-white z-50 cursor-pointer">
           {buttonContent}
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="max-w-md w-full">
-        {dropDownContent}
-      </DropdownMenuContent>
+      <DropdownMenuContent className="max-w-md w-full">{dropDownContent}</DropdownMenuContent>
     </DropdownMenu>
   );
 }
