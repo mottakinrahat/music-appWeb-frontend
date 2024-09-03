@@ -105,7 +105,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
         </div>
 
         <div>
-          {musicData.title ? (
+          {musicData.fileData ? (
             <TbDeviceIpadX
               onClick={handleDeleteSong}
               className="text-white hover:text-accent transition text-2xl cursor-pointer"

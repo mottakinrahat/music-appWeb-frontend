@@ -8,6 +8,9 @@ import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { playSong } from "@/redux/slice/music/musicActionSlice";
+import { toast } from "sonner";
+import { clearMusicData } from "@/redux/slice/music/musicDataSlice";
+import { initDB } from "@/utils/initDB";
 
 interface BaseCard {
   type: string;
@@ -54,6 +57,24 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
 }) => {
   const location = usePathname();
   const dispatch = useDispatch();
+
+  const deleteExistingSongFromIndexedDB = async () => {
+    const db = await initDB("MusicDB", 1, "songs");
+    const tx = db.transaction("songs", "readwrite");
+    const store = tx.objectStore("songs");
+    const allSongs = await store.getAll();
+    allSongs.forEach(async (song) => {
+      await store.delete(song.id);
+    });
+    await tx.done;
+    dispatch(clearMusicData()); // Dispatch Redux action to clear music data
+  };
+  const handleDeleteSong = async () => {
+    await deleteExistingSongFromIndexedDB();
+    dispatch(clearMusicData());
+    toast.success("Song Remove Successfully from Imported Song");
+  };
+
   const handleSetIdtoLocalStroage = () => {
     localStorage.setItem(
       "songData",
@@ -61,6 +82,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
     );
     localStorage.setItem("pathHistory", location);
     dispatch(playSong(musicId!));
+    handleDeleteSong();
   };
 
   return (
