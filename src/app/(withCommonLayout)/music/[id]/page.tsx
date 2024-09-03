@@ -2,6 +2,7 @@
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import useLocalSongData from "@/hooks/useLocalSongData";
 import axios from "axios";
+import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 interface PlayerInterface {
@@ -22,6 +23,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   );
   const [eqOpen, setEqOpen] = useState(false);
   const [tracks, setTraks] = useState<any>([]);
+  const pathname = usePathname();
 
   useEffect(() => {
     axios
@@ -50,6 +52,16 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
       setPlaying(false);
     }
   }, [currentSong, currentTrackIndex, songData?.play]);
+
+  useEffect(() => {
+    // Show the player only if the path matches `/music/:id`
+    if (pathname.startsWith("/music/")) {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: true, id: params?.id })
+      );
+    }
+  }, [pathname]);
 
   // const handlePrev = () => {
   //   if (currentTrackIndex !== null && currentTrackIndex > 0) {

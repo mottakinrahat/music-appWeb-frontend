@@ -213,6 +213,7 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/offline/")) {
       setShowPlayer(true);
+      localStorage.setItem("songData", JSON.stringify({play: true, id: songId}));
     } else {
       setShowPlayer(false);
     }

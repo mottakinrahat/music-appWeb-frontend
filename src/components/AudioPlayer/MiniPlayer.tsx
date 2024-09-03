@@ -68,6 +68,7 @@ MiniPlayerProps) => {
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
       setShowControl(true);
+      localStorage.setItem("songData", JSON.stringify({ play: true, id: id }));
     } else {
       setShowControl(false);
     }

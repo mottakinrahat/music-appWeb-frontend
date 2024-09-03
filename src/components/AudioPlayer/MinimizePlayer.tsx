@@ -100,6 +100,7 @@ const MinimizePlayer = () => {
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
+
       // document.body.classList.add("hide-scrollbar");
       setHeight(7);
     } else if (pathname.startsWith("/offline")) {
