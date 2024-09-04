@@ -153,15 +153,16 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   useEffect(() => {
     const fetchBPM = async () => {
       try {
-        const url = currentSong.songLink;
-
-        const detectedBPM = await detectBPM(url);
-        if (detectedBPM === null) {
-          setError(
-            "Unable to detect BPM. Please check the audio file and detection logic."
-          );
-        } else {
-          setBpm(detectedBPM);
+        const url = currentSong?.songLink;
+        if (url) {
+          const detectedBPM = await detectBPM(url);
+          if (detectedBPM === null) {
+            setError(
+              "Unable to detect BPM. Please check the audio file and detection logic."
+            );
+          } else {
+            setBpm(detectedBPM);
+          }
         }
       } catch (error) {
         console.error("Error fetching or processing audio:", error);
@@ -203,8 +204,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
-    }
-     else {
+    } else {
       setShowPlayer(false);
     }
     if (showPlayer) {
@@ -359,7 +359,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         backgroundPosition: "center",
       }}
     >
-      {/* Your content here */};
+      {/* Your content here */}
       <div className="absolute w-full h-screen bg-black opacity-40 "></div>
       <div className="flex z-10 flex-grow relative">
         {showPlayer && (

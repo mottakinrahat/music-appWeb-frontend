@@ -23,19 +23,15 @@ interface VolumeSettingDownRepeatProps {
   songUrl: string;
   audioRef: any;
   bpm: number;
-  bpmLoading: boolean;
   handleOpenPlayList: () => void;
   artwork: string;
   songArtist: string;
   songAlbum: string;
   songId: number;
+  bpmLoading: boolean;
 }
 
 const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
-  artwork,
-  songArtist,
-  songAlbum,
-  songId,
   volume,
   handleVolumeChange,
   handleMute,
@@ -43,9 +39,13 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   songUrl,
   audioRef,
   bpm,
-  bpmLoading,
   handleOpenPlayList,
-}: any) => {
+  artwork,
+  bpmLoading,
+  songAlbum,
+  songArtist,
+  songId,
+}) => {
   const router = useRouter();
 
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
@@ -104,7 +104,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
     <>
       <ul className="flex flex-col gap-[16px] p-[16px]">
         <li className="flex justify-between items-center">
-          <span>{bpm} BPM</span>
+          <span>{bpmLoading ? "Loading" : bpm} BPM</span>
         </li>
         <li className="flex justify-between gap-4 md:gap-10 items-center">
           <span> Playback speed:</span>{" "}
@@ -147,12 +147,12 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
         {/* Download button  */}
         <div>
           <DownloadOffline
+            artwork={artwork}
+            songAlbum={songAlbum}
+            songArtist={songArtist}
+            songId={songId}
             songName={songName}
             songUrl={songUrl}
-            artwork={artwork}
-            songArtist={songArtist}
-            songAlbum={songAlbum}
-            songId={songId}
           />
         </div>
         <div className={"group flex justify-center"}>
