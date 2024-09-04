@@ -54,7 +54,7 @@ function groupNeighborsByTempo(
     tempoCounts[tempo] = (tempoCounts[tempo] || 0) + 1;
   });
 
-  return Object.keys(tempoCounts).map((tempo) => ({
+  return Object.keys(tempoCounts).map((tempo: any) => ({
     tempo: parseInt(tempo, 10),
     count: tempoCounts[tempo],
   }));
