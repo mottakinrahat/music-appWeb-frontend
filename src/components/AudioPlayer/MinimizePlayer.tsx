@@ -121,13 +121,17 @@ const MinimizePlayer = () => {
       setReadyPlayer(true);
     } else {
       setReadyPlayer(false);
+      // localStorage.setItem(
+      //   "songData",
+      //   JSON.stringify({ id: id, play: false })
+      // );
     }
 
-    if (window) {
-      window.onload = () => {
-        setReadyPlayer(false);
-      };
-    }
+    // if (window) {
+    //   window.onload = () => {
+    //     setReadyPlayer(false);
+    //   };
+    // }
 
     // Clean up event listeners on unmount
     return () => {

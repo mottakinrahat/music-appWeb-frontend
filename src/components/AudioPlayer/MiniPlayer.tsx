@@ -67,9 +67,10 @@ MiniPlayerProps) => {
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
-      setShowControl(true);
-    } else {
       setShowControl(false);
+      localStorage.setItem("songData", JSON.stringify({ play: true, id: id }));
+    } else {
+      setShowControl(true);
     }
 
     if (artwork.length > 0) {
@@ -77,13 +78,13 @@ MiniPlayerProps) => {
     } else {
       setArtwork(placeHolder.src);
     }
-  }, [pathname, artwork]);
+  }, [pathname, artwork, id]);
 
   const handleSetPathHistory = () => {
     localStorage.setItem("pathHistory", pathname);
   };
 
-  if (!showControl)
+  if (showControl)
     return (
       <div
         onDoubleClick={() => router.replace(`/music/${id}`)}

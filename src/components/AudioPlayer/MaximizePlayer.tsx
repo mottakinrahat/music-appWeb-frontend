@@ -210,7 +210,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       setWidth(0);
       setListWidth(0);
     }
-  }, [pathname, showPlayer]);
+  }, [currentSong?._id, pathname, showPlayer]);
 
   const repeat = useSelector((state: RootState) => state.player.repeat);
 
