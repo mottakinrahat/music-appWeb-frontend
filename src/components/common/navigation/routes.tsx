@@ -24,17 +24,17 @@ const Routes = () => {
   );
 
   return filteredRoutes.map((route, idx) => (
-    <span className="block" key={idx}>
+    <div className="block" key={idx}>
       <Link href={route.route}>
-        <span
+        <p
           className={`nav-link ${
             activeRoute === route.route ? "active font-semibold" : ""
           }`}
         >
           {route.name}
-        </span>
+        </p>
       </Link>
-    </span>
+    </div>
   ));
 };
 

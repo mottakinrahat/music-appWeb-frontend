@@ -100,13 +100,13 @@ const Navbar = ({ blur = false }: NavInterface) => {
           <Logo />
         </div>
         <div>
-          <ul
+          <div
             className={`flex gap-10 ${
               blur || showNav ? "text-white z-40" : "text-base"
             } max-lg:hidden`}
           >
             <Routes />
-          </ul>
+          </div>
         </div>
         <div className="max-lg:hidden">
           {!user ? (
