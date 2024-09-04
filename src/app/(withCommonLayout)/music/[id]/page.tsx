@@ -2,7 +2,6 @@
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import useLocalSongData from "@/hooks/useLocalSongData";
 import axios from "axios";
-import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 interface PlayerInterface {
@@ -16,34 +15,61 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
     null
   );
-  // const [repeat, setRepeat] = useState<boolean>(false);
   const [playing, setPlaying] = useState<boolean>(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
   );
-  const [eqOpen, setEqOpen] = useState(false);
-  const [tracks, setTraks] = useState<any>([]);
-  const pathname = usePathname();
+  // const [eqOpen, setEqOpen] = useState(false);
+  const [tracks, setTracks] = useState<any>([]);
+  const [currentSong, setCurrentSong] = useState<any>(null);
 
+  // Fetch tracks on mount
   useEffect(() => {
     axios
       .get("https://music-app-web.vercel.app/api/v1/songs")
-      .then((data) => setTraks(data.data.data.songs));
+      .then((response) => {
+        setTracks(response.data.data.songs);
+      })
+      .catch((error) => {
+        console.error("Error fetching tracks:", error);
+      });
   }, []);
 
-  const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
-
+  // Set the current track based on params.id
   useEffect(() => {
-    const initialTrackIndex = tracks?.findIndex(
-      (track: any) => track?._id === params?.id
-    );
-    if (initialTrackIndex !== -1) {
-      setCurrentTrackIndex(initialTrackIndex);
+    if (tracks.length > 0 && params?.id) {
+      const initialTrackIndex = tracks.findIndex(
+        (track: any) => track._id === params?.id
+      );
+
+      if (initialTrackIndex !== -1) {
+        setCurrentTrackIndex(initialTrackIndex);
+        setCurrentSong(tracks[initialTrackIndex]);
+
+        // Ensure the song data is set in localStorage
+        const storedSongData = localStorage.getItem("songData");
+        let songData;
+
+        try {
+          songData = JSON.parse(storedSongData!);
+        } catch (error) {
+          songData = null;
+        }
+
+        if (!songData || songData.id !== params.id) {
+          localStorage.setItem(
+            "songData",
+            JSON.stringify({ id: params.id, play: true })
+          );
+          setPlaying(true); // Play the song automatically if it's the first load
+        } else {
+          setPlaying(songData.play);
+        }
+      }
     }
-    setCurrentSong(tracks[initialTrackIndex]);
   }, [params?.id, tracks]);
 
-  // Changing Play state
+  // Synchronize play state with localStorage data
   const songData = useLocalSongData();
   useEffect(() => {
     if (currentTrackIndex !== null && songData?.play === true) {
@@ -51,18 +77,9 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     } else {
       setPlaying(false);
     }
-  }, [currentSong, currentTrackIndex, songData?.play]);
+  }, [currentTrackIndex, songData]);
 
-  useEffect(() => {
-    // Show the player only if the path matches `/music/:id`
-    if (pathname.startsWith("/music/")) {
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: true, id: params?.id })
-      );
-    }
-  }, [pathname, params]);
-
+  // Display loading animation if current song is not set
   if (!currentSong) {
     return (
       <div>
@@ -71,56 +88,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     );
   }
 
-  // const handleAudioContextReady = (
-  //   audioContext: AudioContext,
-  //   audioElement: HTMLAudioElement
-  // ) => {
-  //   setAudioContext(audioContext);
-  //   setAudioElement(audioElement);
-  // };
-
-  // const handleOpenEqualizer = () => {
-  //   setEqOpen(!eqOpen);
-  // };
-
-  return (
-    <div
-    // className="flex flex-col h-screen overflow-hidden w-full"
-    // style={{
-    //   backgroundImage: `url(https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png)`,
-    //   backgroundRepeat: "no-repeat",
-    //   backgroundSize: "cover",
-    // }}
-    >
-      {/* <div className="absolute w-full h-screen bg-black opacity-10 z-10"></div>
-      <div className="flex z-20 flex-grow relative">
-        <Navbar blur />
-        <div className="flex-1 transition-all">
-          <AudioPlayer
-            handleNext={handleNext}
-            handlePrev={handlePrev}
-            id={params?.id}
-            currentSong={currentSong}
-            onAudioContextReady={handleAudioContextReady}
-            handleOpenEqualizer={handleOpenEqualizer}
-          />
-        </div>
-
-        <div
-          className={` bg-white h-full mt-[96px] max-lg:absolute transition-all duration-500 ${
-            eqOpen
-              ? "max-w-3xl w-[400px] lg:w-[500px] right-0 bottom-0"
-              : "w-0 -right-full bottom-0"
-          }`}
-        >
-          <AudioPlayerEqualizer
-            audioContext={audioContext}
-            audioElement={audioElement}
-          />
-        </div> *
-       </div> */}
-    </div>
-  );
+  return <div>{/* Your player UI goes here */}</div>;
 };
 
 export default Player;

@@ -15,12 +15,12 @@ const KaraokeAirFriendEtc = ({
         onClick={() => SetKaraokeOn(!karaokeOn)}
       >
         {karaokeOn ? (
-          <div className="flex text-xs sm:text-sm gap-[8px]">
+          <div className="flex gap-[8px]">
             <img src={micOnIcon.src} alt="micOnIcon" />
             <h2>Karaoke mode (On)</h2>
           </div>
         ) : (
-          <div className="flex items-center gap-[8px]">
+          <div className="flex  items-center gap-[8px]">
             <img src={micOnIcon.src} alt="micOnIcon" />
             <h2>Karaoke mode (Off)</h2>
           </div>

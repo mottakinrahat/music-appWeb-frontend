@@ -90,10 +90,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
-       localStorage.setItem(
-         "songData",
-         JSON.stringify({ play: true, id: songId })
-       );
     } else {
       setShowPlayer(false);
     }
