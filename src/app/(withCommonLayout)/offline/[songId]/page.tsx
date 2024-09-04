@@ -18,6 +18,7 @@ import { usePathname, useRouter } from "next/navigation"; // Import useRouter
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import ShowLyricsIcon from "@/components/AudioPlayer/components/PlayLIstIcon";
 import { Shuffle } from "lucide-react";
+import RepeatShuffleButton from "@/components/AudioPlayer/components/ReapetShuffleButton";
 
 // Function to retrieve a song Blob from IndexedDB
 const retrieveSongFromIndexedDB = async (id: string | number) => {
@@ -331,8 +332,9 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
           <div className="">
             <ShowLyricsIcon />
           </div>
-          <div className="">
-            <Shuffle />
+          <div>
+            <RepeatShuffleButton
+            />
           </div>
         </div>
       </div>
