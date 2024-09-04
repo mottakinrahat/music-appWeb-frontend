@@ -27,12 +27,31 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     ref
   ) => {
     const playing = useSelector((state: RootState) => state.player.playing);
+
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {
         const audioElement = ref.current;
         audioElement.playbackRate = playbackRate;
         if (playing) {
-          audioElement.play();
+          // Attempt to play the audio automatically
+          const playPromise = audioElement.play();
+
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                // Autoplay succeeded
+                console.log("Autoplay started successfully.");
+              })
+              .catch((error) => {
+                // Autoplay failed, attempt to unmute and retry, or prompt user
+                console.log("Autoplay blocked:", error);
+                audioElement.muted = true; // Mute the audio to allow autoplay
+                audioElement.play().catch((err) => {
+                  console.error("Still unable to autoplay:", err);
+                  // Optionally: Display a button to start playback manually
+                });
+              });
+          }
         } else if (!playing) {
           audioElement.pause();
         }
