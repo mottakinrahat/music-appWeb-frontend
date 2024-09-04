@@ -232,7 +232,7 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
 
   return (
     <div
-      className="flex flex-col select-none h-screen overflow-hidden justify-center w-full bg-cover bg-center transition-background-image duration-1000"
+      className="flex flex-col select-none lg:gap-[10px] md:p-10 p-4 xl:px-[120px] h-screen min-h-screen overflow-hidden justify-end pb-10 w-full bg-cover bg-center transition-background-image duration-1000"
       style={{
         backgroundImage: `url(${
           artwork
@@ -244,7 +244,8 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
         backgroundPosition: "center",
       }}
     >
-      <div className="container relative w-full flex flex-col lg:flex-row justify-between items-center gap-4 px-4">
+      <div className="fixed top-0 left-0 w-full h-screen bg-black opacity-40 "></div>
+      <div className="relative flex justify-between gap-2 ">
         <div className="text-white flex  flex-col lg:flex-row items-center mb-4 gap-4 lg:gap-8">
           <Image
             src={artwork ? artwork : placeHolder.src}
@@ -272,7 +273,7 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
           </div>
         </div>
         <div className="xl:flex  mb-8 mr-16">
-          <div className="flex absolute left-1/2  -translate-x-1/2 justify-center items-center gap-4">
+          <div className="flex absolute left-1/2 top-4 -translate-x-1/2 justify-center items-center gap-4">
             <button
               onClick={handlePreviousTenSecond}
               className="text-white group text-3xl mx-2 transition hover:text-gray-300 flex items-center gap-1"
@@ -333,13 +334,12 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
             <ShowLyricsIcon />
           </div>
           <div>
-            <RepeatShuffleButton
-            />
+            <RepeatShuffleButton />
           </div>
         </div>
       </div>
 
-      <div className="container flex justify-between items-center mt-4 px-4">
+      <div className="flex justify-between items-center mt-4">
         <Slider
           defaultValue={[currentTime]}
           max={duration}
@@ -349,7 +349,7 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
           className="flex-grow"
         />
       </div>
-      <div className="container text-white text-sm mt-4 w-full flex justify-between px-4">
+      <div className="text-white text-sm mt-4 w-full flex justify-between">
         <p>
           {Math.floor(currentTime / 60)}:
           {Math.floor(currentTime % 60)
