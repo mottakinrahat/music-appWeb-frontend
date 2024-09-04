@@ -61,38 +61,7 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
         JSON.stringify({ play: true, id: params?.id })
       );
     }
-  }, [pathname]);
-
-  // useEffect(() => {
-  //   // Show the player only if the path matches `/music/:id`
-  //   if (pathname.startsWith("/music/")) {
-  //     const songData = localStorage.getItem("songData");
-  //     if (songData != null && songData) {
-  //       return;
-  //     } else {
-  //       localStorage.setItem(
-  //         "songData",
-  //         JSON.stringify({ play: true, id: params?.id })
-  //       );
-  //     }
-  //   }
-  // }, [pathname]);
-
-  // const handlePrev = () => {
-  //   if (currentTrackIndex !== null && currentTrackIndex > 0) {
-  //     const newIndex = currentTrackIndex - 1;
-  //     setCurrentTrackIndex(newIndex);
-  //     setCurrentSong(tracks[newIndex]);
-  //   }
-  // };
-
-  // const handleNext = () => {
-  //   if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
-  //     const newIndex = currentTrackIndex + 1;
-  //     setCurrentTrackIndex(newIndex);
-  //     setCurrentSong(tracks[newIndex]);
-  //   }
-  // };
+  }, [pathname, params]);
 
   if (!currentSong) {
     return (

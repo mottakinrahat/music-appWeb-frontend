@@ -72,7 +72,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   }, [isEqOn]);
 
   useEffect(() => {
-    setCurrentBpm(bpm / playbackSpeed);
+    setCurrentBpm(bpm * playbackSpeed);
   }, [playbackSpeed, bpm]);
 
   // toggle quality
