@@ -18,7 +18,7 @@ interface NavInterface {
 const Navbar = ({ blur = false }: NavInterface) => {
   const [user, setUser] = useState(null);
 
-  const [showNav, setShowNav] = useState(true);
+  const [showNav, setShowNav] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
