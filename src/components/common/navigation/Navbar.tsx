@@ -7,12 +7,8 @@ import ToggleMenu from "./ToggleMenu";
 import Link from "next/link";
 import AlertCard from "@/components/Card/AlertCard";
 import ToastCard from "@/components/Card/ToastCard";
-import { Toaster } from "@/components/ui/sonner";
 import { MdOutlineCancel } from "react-icons/md";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { usePathname } from "next/navigation";
 
 interface NavInterface {
   blur?: boolean; // blur the background image? default is false.
@@ -20,9 +16,6 @@ interface NavInterface {
 
 const Navbar = ({ blur = false }: NavInterface) => {
   const [user, setUser] = useState(null);
-
-  const musicData = useSelector((state: RootState) => state.musicData);
-  const musicPath = usePathname();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");

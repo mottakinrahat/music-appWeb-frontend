@@ -1,11 +1,12 @@
 "use client";
+import useOnlineStatus from "@/hooks/useOnlineStatus";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-// import path from "path";
 import React from "react";
 
 const Routes = () => {
   const activeRoute = usePathname();
+  const isOnline = useOnlineStatus();
 
   const routes = [
     { route: "/", name: "Home" },
@@ -13,10 +14,17 @@ const Routes = () => {
     { route: "/sounds", name: "Sounds" },
     { route: "/talents", name: "Talents" },
     { route: "/vr-concerts", name: "VR Concerts" },
+    { route: "/offline", name: "Offline Music", requiresOnline: false },
   ];
 
-  return routes.map((route, idx) => (
-    <span className="block " key={idx}>
+  // Filter routes based on online status
+  const filteredRoutes = routes.filter(
+    (route) =>
+      route.requiresOnline === undefined || route.requiresOnline === isOnline
+  );
+
+  return filteredRoutes.map((route, idx) => (
+    <span className="block" key={idx}>
       <Link href={route.route}>
         <span
           className={`nav-link ${

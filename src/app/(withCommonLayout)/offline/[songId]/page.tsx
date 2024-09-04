@@ -213,11 +213,14 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/offline/")) {
       setShowPlayer(true);
-      localStorage.setItem("songData", JSON.stringify({play: true, id: songId}));
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: true, id: songId })
+      );
     } else {
       setShowPlayer(false);
     }
-  }, [pathname, showPlayer]);
+  }, [pathname, showPlayer, songId]);
 
   return (
     <div
@@ -232,7 +235,7 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
         backgroundPosition: "center",
       }}
     >
-      <div className="w-full flex flex-col items-center gap-4">
+      <div className="w-full flex flex-row justify-center items-center gap-4">
         <div className="text-white flex flex-row items-center mb-4  gap-8">
           <Image
             src={artwork ? artwork : placeHolder.src}
@@ -321,16 +324,14 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
         </div>
       </div>
 
-      <div className="w-full flex justify-center">
-        <div className="w-4/5 lg:w-3/5 xl:w-2/5">
-          <Slider
-            defaultValue={[currentTime]}
-            max={duration}
-            min={0}
-            value={[currentTime]}
-            onValueChange={handleSeek}
-          />
-        </div>
+      <div className="w-[80%] flex justify-center">
+        <Slider
+          defaultValue={[currentTime]}
+          max={duration}
+          min={0}
+          value={[currentTime]}
+          onValueChange={handleSeek}
+        />
       </div>
 
       <audio ref={audioRef} />
