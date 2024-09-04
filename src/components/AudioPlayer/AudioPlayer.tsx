@@ -131,7 +131,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const {
     songName,
-    
+
     songLink,
     artwork,
     songArtist,
@@ -229,8 +229,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     try {
       if (playing) {
         // Pause the song
+        const audioElement = document.querySelector(
+          "audio"
+        ) as HTMLAudioElement;
+        if (audioElement) {
+          audioElement.pause(); // Try to play the audio element
+        }
         dispatch(pauseSong());
-
         // Save play state to localStorage
         localStorage.setItem(
           "songData",
@@ -418,8 +423,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     handleAddtoFavourite,
     favorite,
   });
-
-
 
   return (
     <div className="audio-controls relative">

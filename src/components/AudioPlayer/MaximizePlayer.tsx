@@ -235,7 +235,9 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
-      router.push(`/music/${tracks[newIndex]?._id}`);
+      if (showPlayer) {
+        router.push(`/music/${tracks[newIndex]?._id}`);
+      }
     }
   };
 
@@ -258,7 +260,9 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
-      router.push(`/music/${tracks[newIndex]?._id}`);
+      if (showPlayer) {
+        router.push(`/music/${tracks[newIndex]?._id}`);
+      }
     }
   };
   const handleRandom = () => {
@@ -267,7 +271,9 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         currentTrackIndex + Math.floor(Math.random() * tracks.length - 1);
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
-      router.push(`/music/${tracks[newIndex]?._id}`);
+      if (showPlayer) {
+        router.push(`/music/${tracks[newIndex]?._id}`);
+      }
     }
   };
 
@@ -359,11 +365,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       {/* Your content here */}
       <div className="absolute w-full h-screen bg-black opacity-40 "></div>
       <div className="flex z-10 flex-grow relative">
-        {showPlayer && (
-          <div className="">
-            <Navbar blur />
-          </div>
-        )}
         <div className="flex-1 transition-all">
           <AudioPlayer
             audioContext={audioContext!}

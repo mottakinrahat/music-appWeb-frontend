@@ -9,12 +9,15 @@ import AlertCard from "@/components/Card/AlertCard";
 import ToastCard from "@/components/Card/ToastCard";
 import { MdOutlineCancel } from "react-icons/md";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import { usePathname } from "next/navigation";
 
 interface NavInterface {
   blur?: boolean; // blur the background image? default is false.
 }
 
 const Navbar = ({ blur = false }: NavInterface) => {
+  const [blurNav, setBlurNav] = useState(true);
+  const pathname = usePathname();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -40,6 +43,16 @@ const Navbar = ({ blur = false }: NavInterface) => {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
+
+  useEffect(() => {
+    if (pathname.startsWith("/music/")) {
+      setBlurNav(true);
+    } else if (pathname.startsWith("/offline/")) {
+      setBlurNav(true);
+    } else {
+      setBlurNav(false);
+    }
+  }, [pathname]);
 
   const [isAlertOpen, setAlertOpen] = useState(false);
 
@@ -72,12 +85,14 @@ const Navbar = ({ blur = false }: NavInterface) => {
   return (
     <nav
       className={`${
-        blur ? "bg-white/10 fixed  z-[9999] w-full text-white" : "bg-navigation"
-      } h-16 md:h-20 lg:h-24 flex items-center`}
+        blurNav || blur
+          ? "bg-white/10 fixed  z-[9999] w-full text-white"
+          : "bg-navigation"
+      } h-16 md:h-20 lg:h-24 flex items-center `}
     >
       <div
         className={`${
-          blur ? "md:p-10 p-4  xl:px-[120px]" : "container"
+          blurNav || blur ? "md:p-10 p-4  xl:px-[120px]" : "container"
         } w-full flex justify-between flex-wrap items-center`}
       >
         <div className="">
