@@ -51,6 +51,8 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
   const [quality, setQuality] = useState<any>("high");
   const [isEqOn, setEqOn] = useState(false);
+  const [currentBpm, setCurrentBpm] = useState<number>(bpm);
+
   useEffect(() => {
     const eq = localStorage.getItem("isEqOn");
     if (!eq) {
@@ -69,6 +71,10 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
     }
   }, [isEqOn]);
 
+  useEffect(() => {
+    setCurrentBpm(bpm / playbackSpeed);
+  }, [playbackSpeed, bpm]);
+
   // toggle quality
   const toggleQuality = () => {
     const newQuality =
@@ -81,7 +87,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
     }
   };
 
-  // handle palyback speed
+  // handle playback speed
   const handlePlaybackSpeed = () => {
     const speedOptions = [1, 1.5, 2, 0.5, 0.75];
     const nextIndex =
@@ -100,11 +106,12 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   const onMinimize = () => {
     dispatch(handleMinimize({ router: router }));
   };
+
   const settingContent = (
     <>
       <ul className="flex flex-col gap-[16px] p-[16px]">
         <li className="flex justify-between items-center">
-          <span>{bpmLoading ? "Loading" : bpm} BPM</span>
+          <span>{bpmLoading ? "Loading" : currentBpm.toFixed(2)} BPM</span>
         </li>
         <li className="flex justify-between gap-4 md:gap-10 items-center">
           <span> Playback speed:</span>{" "}
@@ -131,6 +138,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
       </ul>
     </>
   );
+
   return (
     <div>
       <div className="flex justify-center items-center gap-[24px]">
@@ -141,10 +149,6 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
             volume={volume}
           />
         </div>
-        {/* <div>
-          <img src={DownloadIcon.src} alt="DownloadIcon" />
-        </div> */}
-        {/* Download button  */}
         <div>
           <DownloadOffline
             artwork={artwork}
@@ -169,14 +173,12 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
           className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
           onClick={onMinimize}
         >
-          {/* <img src={QueueMusicIcon.src} alt="QueueMusicIcon" /> */}
           <LucideMinimize2 />
         </div>
         <div
           className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
           onClick={handleOpenPlayList}
         >
-          {/* <img src={QueueMusicIcon.src} alt="QueueMusicIcon" /> */}
           <PiPlaylistBold />
         </div>
       </div>

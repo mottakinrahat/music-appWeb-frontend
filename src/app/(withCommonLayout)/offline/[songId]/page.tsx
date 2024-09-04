@@ -14,7 +14,11 @@ import { initDB } from "@/utils/initDB";
 import Link from "next/link";
 import SongMarquee from "@/components/AudioPlayer/components/SongMarquee";
 import { Slider } from "@/components/ui/slider";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation"; // Import useRouter
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
+import ShowLyricsIcon from "@/components/AudioPlayer/components/PlayLIstIcon";
+import { Shuffle } from "lucide-react";
+import RepeatShuffleButton from "@/components/AudioPlayer/components/ReapetShuffleButton";
 
 // Function to retrieve a song Blob from IndexedDB
 const retrieveSongFromIndexedDB = async (id: string | number) => {
@@ -71,6 +75,10 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  const router = useRouter(); // Use the useRouter hook
+  const pathname = usePathname();
+  const [showPlayer, setShowPlayer] = useState(false);
+
   const songId = params?.songId;
 
   useEffect(() => {
@@ -101,10 +109,9 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
           const currentIndex = ids.indexOf(id);
           setCurrentSongIndex(currentIndex);
         } else {
-          // Handle the case where ids is undefined
           console.error("Failed to retrieve song IDs.");
-          setSongIds([]); // Optionally set an empty array or handle as needed
-          setCurrentSongIndex(-1); // Optionally set to a default value if no song IDs are found
+          setSongIds([]);
+          setCurrentSongIndex(-1);
         }
       } catch (error) {
         console.error("An error occurred while fetching song IDs:", error);
@@ -120,8 +127,8 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
   useEffect(() => {
     if (audioRef.current && audioUrl) {
       audioRef.current.src = audioUrl;
-      audioRef.current.play(); // Automatically play the song when URL changes
-      setPlaying(true); // Set playing state to true
+      audioRef.current.play();
+      setPlaying(true);
     }
   }, [audioUrl]);
 
@@ -159,6 +166,8 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
     setCurrentSongIndex(nextIndex);
 
     const nextSongId = songIds[nextIndex];
+    router.push(`/offline/${nextSongId}`); // Navigate to the new route dynamically
+
     const song = await retrieveSongFromIndexedDB(nextSongId);
     if (song) {
       setAudioUrl(song.url);
@@ -176,6 +185,8 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
     setCurrentSongIndex(prevIndex);
 
     const prevSongId = songIds[prevIndex];
+    router.push(`/offline/${prevSongId}`); // Navigate to the new route dynamically
+
     const song = await retrieveSongFromIndexedDB(prevSongId);
     if (song) {
       setAudioUrl(song.url);
@@ -199,60 +210,57 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
   };
 
   const handleSeek = (value: number[]) => {
-    const newTime = value[0]; // Get the first (and only) value from the array
+    const newTime = value[0];
 
     if (audioRef.current) {
       audioRef.current.currentTime = newTime;
       setCurrentTime(newTime);
     }
   };
-  const pathname = usePathname();
-  const [showPlayer, setShowPlayer] = useState(false);
 
   useEffect(() => {
-    // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/offline/")) {
       setShowPlayer(true);
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: true, id: songId })
+      );
     } else {
       setShowPlayer(false);
     }
-  }, [pathname, showPlayer]);
+  }, [pathname, showPlayer, songId]);
 
   return (
     <div
-      className="audio-controls relative  min-h-screen flex flex-col justify-center items-center p-4"
+      className="flex flex-col select-none h-screen overflow-hidden justify-center w-full bg-cover bg-center transition-background-image duration-1000"
       style={{
         backgroundImage: `url(${
           artwork
             ? artwork
             : "https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png"
         })`,
+        backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      <div className="w-full flex flex-col items-center gap-4">
-        <div className="text-white flex flex-row items-center mb-4  gap-8">
+      <div className="container relative w-full flex flex-col lg:flex-row justify-between items-center gap-4 px-4">
+        <div className="text-white flex  flex-col lg:flex-row items-center mb-4 gap-4 lg:gap-8">
           <Image
             src={artwork ? artwork : placeHolder.src}
             alt="song"
             width={50}
             height={50}
-            style={{
-              width: "50px",
-              height: "50px",
-              objectFit: "cover",
-              borderRadius: "8px",
-            }}
+            className="object-cover rounded-lg"
           />
-          <div className="text-center">
-            <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl">
+          <div className="text-center lg:text-left">
+            <h2 className="text-white text-base md:text-xl font-semibold mb-1 lg:text-2xl">
               <SongMarquee songName={songName} />
             </h2>
             <div className="flex flex-col items-center lg:flex-row lg:items-center gap-2">
               <p>{songArtist}</p>
               <div className="flex items-center">
-                <div className="size-2 bg-white rounded-full ml-2"></div>
+                <div className="w-2 h-2 bg-white rounded-full ml-2"></div>
                 <p>
                   Album:{" "}
                   <Link href={"#"} className="underline">
@@ -263,9 +271,8 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
             </div>
           </div>
         </div>
-
-        <div className="hidden xl:block mb-8">
-          <div className="flex justify-center items-center gap-4">
+        <div className="xl:flex  mb-8 mr-16">
+          <div className="flex absolute left-1/2  -translate-x-1/2 justify-center items-center gap-4">
             <button
               onClick={handlePreviousTenSecond}
               className="text-white group text-3xl mx-2 transition hover:text-gray-300 flex items-center gap-1"
@@ -277,18 +284,18 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
                 src={PreviousIcon.src}
                 alt="PreviousIcon"
                 className="group-hover:opacity-70"
-              />{" "}
+              />
               <span className="text-[16px]">10s</span>
             </button>
             <button
               onClick={handlePrev}
-              className={`text-lg ${"text-white transition hover:text-gray-300"}`}
+              className="text-lg text-white transition hover:text-gray-300"
             >
               <MdOutlineSkipPrevious className="h-7 w-7" />
             </button>
             <button
               onClick={handlePlayPause}
-              className={`text-lg flex items-center justify-center mx-4 ${"text-white transition hover:text-gray-300"}`}
+              className="text-lg flex items-center justify-center mx-4 text-white transition hover:text-gray-300"
             >
               {playing ? (
                 <MdPauseCircle className="h-10 w-10" />
@@ -298,7 +305,7 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
             </button>
             <button
               onClick={handleNext}
-              className={`text-lg ${"text-white transition hover:text-gray-300"}`}
+              className="text-lg text-white transition hover:text-gray-300"
             >
               <MdOutlineSkipNext className="h-7 w-7" />
             </button>
@@ -306,7 +313,7 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
               onClick={handleNextTenSecond}
               className="text-white group text-3xl mx-2 transition hover:text-gray-300 flex items-center gap-1"
             >
-              <span className="text-[16px]">10s</span>{" "}
+              <span className="text-[16px]">10s</span>
               <Image
                 width={100}
                 height={100}
@@ -318,20 +325,44 @@ const PlayOfflinePage: React.FC<PlayOfflinePageProps> = ({ params }) => {
             </button>
           </div>
         </div>
-      </div>
-
-      <div className="w-full flex justify-center">
-        <div className="w-4/5 lg:w-3/5 xl:w-2/5">
-          <Slider
-            defaultValue={[currentTime]}
-            max={duration}
-            min={0}
-            value={[currentTime]}
-            onValueChange={handleSeek}
-          />
+        <div className="flex justify-center lg:justify-start items-center text-white text-2xl mx-2 gap-4">
+          <div className="cursor-pointer transition text-white hover:text-accent">
+            <FaRegHeart />
+          </div>
+          <div className="">
+            <ShowLyricsIcon />
+          </div>
+          <div>
+            <RepeatShuffleButton
+            />
+          </div>
         </div>
       </div>
 
+      <div className="container flex justify-between items-center mt-4 px-4">
+        <Slider
+          defaultValue={[currentTime]}
+          max={duration}
+          min={0}
+          value={[currentTime]}
+          onValueChange={handleSeek}
+          className="flex-grow"
+        />
+      </div>
+      <div className="container text-white text-sm mt-4 w-full flex justify-between px-4">
+        <p>
+          {Math.floor(currentTime / 60)}:
+          {Math.floor(currentTime % 60)
+            .toString()
+            .padStart(2, "0")}
+        </p>
+        <p>
+          {Math.floor(duration / 60)}:
+          {Math.floor(duration % 60)
+            .toString()
+            .padStart(2, "0")}
+        </p>
+      </div>
       <audio ref={audioRef} />
     </div>
   );

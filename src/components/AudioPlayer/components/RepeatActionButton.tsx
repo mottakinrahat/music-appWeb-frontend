@@ -35,33 +35,6 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
             <ShowLyricsIcon handleOpenLyrics={handleOpenLyrics} />
           </div>
           <ReapetShuffleButton />
-          {/* <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <div
-                  className="active:text-gray-300 transition hover:text-accent"
-                  onClick={toggleRepeat}
-                >
-                  {repeat === "repeat-one" ? (
-                    <LucideRepeat1 />
-                  ) : repeat === "repeat-all" ? (
-                    <LucideRepeat />
-                  ) : (
-                    <PiShuffle />
-                  )}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{`Repeat ${
-                  repeat === "repeat-one"
-                    ? "on"
-                    : repeat === "repeat-all"
-                    ? "all"
-                    : "off"
-                }`}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider> */}
         </div>
       </div>
     </div>
