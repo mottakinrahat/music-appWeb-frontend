@@ -36,19 +36,6 @@ const LandingMusicCard = ({
   const [currentId, setCurrenId] = useState("");
   const [play, setPlay] = useState(playing);
 
-  useEffect(() => {
-    const currentSongDataFromLocalStroage = JSON.parse(
-      localStorage.getItem("songData")!
-    );
-    if (!currentSongDataFromLocalStroage) {
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: true, id: id ? id : null })
-      );
-    } else {
-      setCurrenId(currentSongDataFromLocalStroage.id);
-    }
-  }, [currentId, id]);
   // useLocalSongData({play: true, id: id ? id : null});
 
   return (
@@ -105,7 +92,7 @@ const LandingMusicCard = ({
                 onClick={() =>
                   localStorage.setItem(
                     "songData",
-                    JSON.stringify({ play: true, id: id ? id : null })
+                    JSON.stringify({ play: true, id: id })
                   )
                 }
               >
