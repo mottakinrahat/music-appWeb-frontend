@@ -235,7 +235,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
-      router.push(`music/${tracks[newIndex]?._id}`);
+      router.push(`/music/${tracks[newIndex]?._id}`);
     }
   };
 
@@ -258,7 +258,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
-      router.push(`music/${tracks[newIndex]?._id}`);
+      router.push(`/music/${tracks[newIndex]?._id}`);
     }
   };
   const handleRandom = () => {
@@ -267,7 +267,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         currentTrackIndex + Math.floor(Math.random() * tracks.length - 1);
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
-      router.push(`music/${tracks[newIndex]?._id}`);
+      router.push(`/music/${tracks[newIndex]?._id}`);
     }
   };
 
