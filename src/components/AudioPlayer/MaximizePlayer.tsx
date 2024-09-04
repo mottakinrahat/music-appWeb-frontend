@@ -154,7 +154,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   useEffect(() => {
     const fetchBPM = async () => {
       try {
-        const url = currentSong.songLink;
+        const url = currentSong?.songLink;
 
         const detectedBPM = await detectBPM(url);
         if (detectedBPM === null) {
