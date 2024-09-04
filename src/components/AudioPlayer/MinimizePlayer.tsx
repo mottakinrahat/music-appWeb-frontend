@@ -98,6 +98,10 @@ const MinimizePlayer = () => {
     //   setPlay(true);
     // }
     // Show the player only if the path matches `/music/:id`
+    if (showPlayer === false) {
+      setHeight(0);
+    }
+
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
 
@@ -114,16 +118,30 @@ const MinimizePlayer = () => {
       // document.body.classList.remove("hide-scrollbar");
       setShowPlayer(false);
     }
-    const getSongDataFromLocalStroage = JSON.parse(
-      localStorage.getItem("songData")!
-    );
-    if (getSongDataFromLocalStroage && getSongDataFromLocalStroage !== null) {
-      setPlayMusicById(getSongDataFromLocalStroage.id);
-      setReadyPlayer(true);
-    } else {
-      setReadyPlayer(false);
+    const getSongDataFromLocalStorage = localStorage.getItem("songData");
+    let songData;
+
+    try {
+      songData = JSON.parse(getSongDataFromLocalStorage!);
+    } catch (error) {
+      songData = null;
     }
 
+    if (
+      !songData ||
+      (typeof songData.id !== "string" && typeof songData.id !== "number") ||
+      songData.play === undefined ||
+      songData.play === null
+    ) {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: false, id: null })
+      );
+      setReadyPlayer(false);
+    } else {
+      setPlayMusicById(songData.id);
+      setReadyPlayer(true);
+    }
     if (window) {
       window.onload = () => {
         setReadyPlayer(false);
