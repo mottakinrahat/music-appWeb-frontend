@@ -203,8 +203,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
-    }
-     else {
+    } else {
       setShowPlayer(false);
     }
     if (showPlayer) {
@@ -359,14 +358,8 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         backgroundPosition: "center",
       }}
     >
-      {/* Your content here */};
       <div className="absolute w-full h-screen bg-black opacity-40 "></div>
       <div className="flex z-10 flex-grow relative">
-        {showPlayer && (
-          <div className="">
-            <Navbar blur />
-          </div>
-        )}
         <div className="flex-1 transition-all">
           <AudioPlayer
             audioContext={audioContext!}

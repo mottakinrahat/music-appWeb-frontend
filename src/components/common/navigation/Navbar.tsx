@@ -21,8 +21,18 @@ interface NavInterface {
 const Navbar = ({ blur = false }: NavInterface) => {
   const [user, setUser] = useState(null);
 
-  const musicData = useSelector((state: RootState) => state.musicData);
-  const musicPath = usePathname();
+  const [showNav, setShowNav] = useState(true);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (pathname.startsWith("/music/")) {
+      setShowNav(true);
+    } else if (pathname.startsWith("/offline/")) {
+      setShowNav(true);
+    } else {
+      setShowNav(false);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -79,12 +89,14 @@ const Navbar = ({ blur = false }: NavInterface) => {
   return (
     <nav
       className={`${
-        blur ? "bg-white/10 fixed  z-[9999] w-full text-white" : "bg-navigation"
+        showNav || blur
+          ? "bg-white/10 fixed  z-[9999] w-full text-white"
+          : "bg-navigation"
       } h-16 md:h-20 lg:h-24 flex items-center`}
     >
       <div
         className={`${
-          blur ? "md:p-10 p-4  xl:px-[120px]" : "container"
+          blur || showNav ? "md:p-10 p-4  xl:px-[120px]" : "container"
         } w-full flex justify-between flex-wrap items-center`}
       >
         <div className="">
@@ -93,7 +105,7 @@ const Navbar = ({ blur = false }: NavInterface) => {
         <div>
           <ul
             className={`flex gap-10 ${
-              blur ? "text-white z-40" : "text-base"
+              blur || showNav ? "text-white z-40" : "text-base"
             } max-lg:hidden`}
           >
             <Routes />
