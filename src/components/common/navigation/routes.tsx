@@ -13,6 +13,7 @@ const Routes = () => {
     { route: "/sounds", name: "Sounds" },
     { route: "/talents", name: "Talents" },
     { route: "/vr-concerts", name: "VR Concerts" },
+    { route: "/offline", name: "Offline Music" },
   ];
 
   return routes.map((route, idx) => (
