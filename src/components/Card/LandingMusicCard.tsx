@@ -37,18 +37,28 @@ const LandingMusicCard = ({
   const [play, setPlay] = useState(playing);
 
   useEffect(() => {
-    const currentSongDataFromLocalStroage = JSON.parse(
-      localStorage.getItem("songData")!
-    );
-    if (!currentSongDataFromLocalStroage) {
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: true, id: id ? id : null })
-      );
+    const getSongDataFromLocalStorage = localStorage.getItem("songData");
+    let songData;
+
+    try {
+      songData = JSON.parse(getSongDataFromLocalStorage!);
+    } catch (error) {
+      songData = null;
+    }
+
+    if (
+      !songData ||
+      (typeof songData.id !== "string" && typeof songData.id !== "number") ||
+      songData.play === undefined ||
+      songData.play === null
+    ) {
+      localStorage.setItem("songData", JSON.stringify({ play: true, id }));
+      setCurrenId(id);
     } else {
-      setCurrenId(currentSongDataFromLocalStroage.id);
+      setCurrenId(songData.id);
     }
   }, [currentId, id]);
+
   // useLocalSongData({play: true, id: id ? id : null});
 
   return (
