@@ -72,7 +72,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   }, [isEqOn]);
 
   useEffect(() => {
-    setCurrentBpm(bpm / playbackSpeed);
+    setCurrentBpm(bpm * playbackSpeed);
   }, [playbackSpeed, bpm]);
 
   // toggle quality
@@ -111,7 +111,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
     <>
       <ul className="flex flex-col gap-[16px] p-[16px]">
         <li className="flex justify-between items-center">
-          <span>{bpmLoading ? "Loading" : currentBpm.toFixed(2)} BPM</span>
+          <span>{bpmLoading ? "Loading" : currentBpm?.toFixed(2)} BPM</span>
         </li>
         <li className="flex justify-between gap-4 md:gap-10 items-center">
           <span> Playback speed:</span>{" "}
