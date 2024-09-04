@@ -47,6 +47,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [bpm, setBpm] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const repeat = useSelector((state: RootState) => state.player.repeat);
 
   //  Router
   const router = useRouter();
@@ -216,8 +217,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     }
   }, [currentSong?._id, pathname, showPlayer]);
 
-  const repeat = useSelector((state: RootState) => state.player.repeat);
-
   const handlePrev = () => {
     if (currentTrackIndex !== null) {
       let newIndex = currentTrackIndex - 1;
@@ -236,6 +235,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
+      router.push(`music/${tracks[newIndex]?._id}`);
     }
   };
 
@@ -258,6 +258,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
+      router.push(`music/${tracks[newIndex]?._id}`);
     }
   };
   const handleRandom = () => {
@@ -266,6 +267,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         currentTrackIndex + Math.floor(Math.random() * tracks.length - 1);
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
+      router.push(`music/${tracks[newIndex]?._id}`);
     }
   };
 
@@ -330,14 +332,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   };
   // PlayListOperations
   const handleOpenPlayList = () => {
-    // if (listWidth <= 0) {
-    //   setPlaylistOpen(0);
-
-    //   setListWidth(700);
-    // } else {
-    //   setPlaylistOpen(700);
-    //   setListWidth(0);
-    // }
     if (listWidth <= 0) {
       if (screenWidth < 480) {
         setListWidth(290);
