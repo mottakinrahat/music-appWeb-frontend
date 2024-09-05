@@ -5,7 +5,10 @@ import Providers from "@/lib/Providers";
 import Head from "next/head";
 import { Toaster } from "sonner";
 
-const outfit = Outfit({ subsets: ["latin"] });
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
   title: "X Mega Pro",

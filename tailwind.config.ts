@@ -23,6 +23,9 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        outfit: ["Outfit", "sans-serif"],
+      },
       colors: {
         navigation: "hsl(var(--navbar))",
         border: "hsl(var(--border))",
