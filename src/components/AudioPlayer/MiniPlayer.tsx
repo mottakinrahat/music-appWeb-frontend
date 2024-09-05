@@ -68,7 +68,6 @@ MiniPlayerProps) => {
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
       setShowControl(false);
-      localStorage.setItem("songData", JSON.stringify({ play: true, id: id }));
     } else {
       setShowControl(true);
     }
@@ -136,6 +135,7 @@ MiniPlayerProps) => {
             <div className="absolute w-1/2 flex-col px-5 md:max-w-sm lg:max-w-lg justify-center flex -translate-y-8 sm:-translate-y-7 mb-2 max-lg:w-full  top-[5.8rem] left-1/2 -translate-x-1/2 items-center">
               <GradientRange
                 defaultValue={[currentTime]}
+                step={0.01}
                 max={duration}
                 min={0}
                 value={[currentTime]}

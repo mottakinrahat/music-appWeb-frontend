@@ -98,6 +98,7 @@ const BannerContent: React.FC<BannerContentProps> = ({
     {/* Banner image part */}
     <div className=" w-full lg:-mx-10 mt-20 relative max-xl:-my-10 xl:pt-24 pt-0 p-0 flex justify-end ">
       <Image
+        priority
         src={image}
         height={full.height}
         alt="full"

@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 
 export const UpdateCoverPhoto = () => {
@@ -9,16 +10,20 @@ export const UpdateCoverPhoto = () => {
     }
   };
   return (
-    <div>
+    <div className="max-md:absolute right-2 top-2">
       <input
+    
         onChange={handleUpdateCover}
         type="file"
         className="hidden"
         name="coverPhoto"
         id="coverPhoto"
       />
-      <Button variant={"white"}>
-        <label htmlFor="coverPhoto" className="h-full flex items-center z-10">
+      <Button variant={"white"} className="max-md:py-0 max-md:h-8 max-md:px-2">
+        <label
+          htmlFor="coverPhoto"
+          className="h-full  text-xs md:text-base flex items-center z-10"
+        >
           Change Cover
         </label>
       </Button>

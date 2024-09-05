@@ -33,7 +33,9 @@ const PurchaseTokenComponent: React.FC<PurchaseTokenComponentProps> = () => {
   return (
     <div className="container">
       <div className="max-w-[588px] mx-auto">
-        <p className="text-[#262626] text-4xl font-semibold leading-normal tracking[-0.96px] mb-12">Purchase token</p>
+        <p className="text-[#262626] text-4xl font-semibold leading-normal tracking[-0.96px] mb-12">
+          Purchase token
+        </p>
 
         {/* Check box components */}
         <div className="space-y-6">
@@ -48,6 +50,7 @@ const PurchaseTokenComponent: React.FC<PurchaseTokenComponentProps> = () => {
               <label className="flex items-center flex-1 cursor-pointer">
                 <div className="px-1 py-1 border flex items-center justify-center rounded-md cursor-pointer">
                   <input
+                    id="plan"
                     type="radio"
                     name="plan"
                     value={plan?.value}
@@ -85,7 +88,13 @@ const PurchaseTokenComponent: React.FC<PurchaseTokenComponentProps> = () => {
               }`}
             >
               <div className="flex gap-3">
-                <DInput name="coupon" label="" defaultValue={""} placeholder="Add coupon" className="flex-1 w-full" />
+                <DInput
+                  name="coupon"
+                  label=""
+                  defaultValue={""}
+                  placeholder="Add coupon"
+                  className="flex-1 w-full"
+                />
                 <Button
                   type="submit"
                   variant="default"
@@ -94,27 +103,49 @@ const PurchaseTokenComponent: React.FC<PurchaseTokenComponentProps> = () => {
                   Apply
                 </Button>
               </div>
-              {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
+              {errorMessage && (
+                <p className="text-red-500 text-sm">{errorMessage}</p>
+              )}
             </DForm>
 
-            <div className={`grid grid-cols-2 transition-all duration-300 ${showCoupon ? "" : "-mt-24"}`}>
+            <div
+              className={`grid grid-cols-2 transition-all duration-300 ${
+                showCoupon ? "" : "-mt-24"
+              }`}
+            >
               <div className="border-r border-[#E6E6E6] pt-4 pr-6">
                 <div className="flex justify-between mb-2">
-                  <span className="text-black text-base font-normal leading-normal">Subtotal</span>
-                  <span className="text-black text-base font-semibold leading-normal">US $ {selectedPlan} </span>
+                  <span className="text-black text-base font-normal leading-normal">
+                    Subtotal
+                  </span>
+                  <span className="text-black text-base font-semibold leading-normal">
+                    US $ {selectedPlan}{" "}
+                  </span>
                 </div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-black text-base font-normal leading-normal">Taxes</span>
-                  <span className="text-black text-base font-semibold leading-normal">US $0.00</span>
+                  <span className="text-black text-base font-normal leading-normal">
+                    Taxes
+                  </span>
+                  <span className="text-black text-base font-semibold leading-normal">
+                    US $0.00
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-black text-base font-normal leading-normal">Coupon</span>
-                  <span className="text-black text-base font-semibold leading-normal">US $0.00</span>
+                  <span className="text-black text-base font-normal leading-normal">
+                    Coupon
+                  </span>
+                  <span className="text-black text-base font-semibold leading-normal">
+                    US $0.00
+                  </span>
                 </div>
               </div>
               <div className="pl-6 flex items-start justify-end flex-col">
-                <p className="text-black text-xl font-semibold leading-normal">Total</p>
-                <p className="text-black text-xl font-semibold leading-normal">US $ {selectedPlan}</p>
+                <p className="text-black text-xl font-semibold leading-normal">
+                  Total
+                </p>
+                <p className="text-black text-xl font-semibold leading-normal">
+                  US $ {selectedPlan}
+                </p>
               </div>
             </div>
           </div>

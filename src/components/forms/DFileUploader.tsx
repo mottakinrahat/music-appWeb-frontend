@@ -115,6 +115,7 @@ const DFileUploader = ({
             <Input
               {...field}
               type="file"
+              name={name}
               accept={accept} // Accept only audio files
               multiple // Enable multiple file selection
               onChange={(e) =>

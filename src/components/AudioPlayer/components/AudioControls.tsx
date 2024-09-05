@@ -40,14 +40,14 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
             playPromise
               .then(() => {
                 // Autoplay succeeded
-                console.log("Autoplay started successfully.");
+                // console.log("Autoplay started successfully.");
               })
               .catch((error) => {
                 // Autoplay failed, attempt to unmute and retry, or prompt user
-                console.log("Autoplay blocked:", error);
+                // console.log("Autoplay blocked:", error);
                 audioElement.muted = true; // Mute the audio to allow autoplay
                 audioElement.play().catch((err) => {
-                  console.error("Still unable to autoplay:", err);
+                  // console.error("Still unable to autoplay:", err);
                   // Optionally: Display a button to start playback manually
                 });
               });

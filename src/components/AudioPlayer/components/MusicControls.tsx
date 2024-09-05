@@ -162,6 +162,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
                 </span>
                 {/* Hidden file input */}
                 <input
+                  name="importAudio"
                   type="file"
                   id="importAudio"
                   accept="audio/*"
