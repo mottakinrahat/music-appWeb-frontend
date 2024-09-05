@@ -1,12 +1,10 @@
-"use client";
 import React from "react";
-import Banner from "@/assets/profile/banner.png";
 import Image from "next/image";
-import PlaceHolderUser from "@/assets/profile/placeholder.png";
-import { Button } from "../../ui/button";
-import { FaCamera } from "react-icons/fa6";
-import { useDispatch } from "react-redux";
-import { useUpdateUsersProfileMutation } from "@/redux/api/userApi";
+import Banner from "@/assets/profile/banner.png";
+import { UpdateCoverPhoto } from "./UpdateCoverPhoto";
+import { UpdateProfilePicture } from "./UpdateProfilePicture";
+import { MdOutlineStarBorderPurple500 } from "react-icons/md";
+import Link from "next/link";
 
 interface ProfileHeaderProps {
   firstName: string;
@@ -16,6 +14,8 @@ interface ProfileHeaderProps {
   role?: string;
   contact?: string;
   address?: string;
+  memberType: string;
+  designation: string;
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
@@ -26,85 +26,58 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   contact,
   imageUrl,
   role,
+  memberType,
+  designation,
 }) => {
-  const dispatch = useDispatch();
-
-  const handleUpdateProfilePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      console.log(file);
-    }
-  };
-
-  const handleUpdateCover = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]; // Change this to [0] to access the first file
-    if (file) {
-      console.log("Cover image file:", file);
-      // You can now use the file to update the cover (API call or preview)
-    }
-  };
-
   return (
-    <div
-      className="py-10"
-      style={{
-        backgroundImage: `linear-gradient(to top, rgba(217, 17, 141, 0.1), rgba(217, 17, 141, 0.1)), url(${Banner.src})`,
-        backgroundPosition: "bottom center",
-        backgroundSize: "100% auto",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
-        overflow: "hidden",
-      }}
-    >
-      <div className="container flex justify-between items-center">
-        <div>
-          <div className="flex relative group rounded-full items-center justify-center overflow-hidden">
-            <Image
-              src={PlaceHolderUser.src}
-              alt={`${firstName} ${lastName}'s profile`}
-              width={144}
-              height={144}
-              style={{ height: "144px", width: "144px", objectFit: "cover" }}
-              className="rounded-full"
-            />
-            <label
-              htmlFor="profilePhoto"
-              className="bg-black items-center justify-center flex cursor-pointer opacity-0 group-hover:opacity-40 w-full h-full border-gradient transition-opacity rounded-full absolute"
-            >
-              <input
-                onChange={handleUpdateProfilePhoto}
-                type="file"
-                className="hidden"
-                name="profilePhoto"
-                id="profilePhoto"
-              />
-              <FaCamera className="text-white absolute opacity-0 group-hover:opacity-100 left-1/2 transition-opacity text-2xl -translate-x-1/2" />
-            </label>
+    <div className="relative py-5 sm:py-14 md:py-5 lg:py-10 overflow-hidden">
+      <div className="absolute w-full h-full left-1/2 -translate-x-1/2 top-0 md:bottom-0  z-[-1]">
+        <Image
+          src={Banner}
+          alt="Cover photo"
+          priority
+          className="w-full mx-auto object-cover"
+        />
+      </div>
+      <div className="container flex flex-col md:flex-row justify-center items-center gap-10 md:justify-between">
+        <div className="flex gap-4">
+          <UpdateProfilePicture
+            firstName={firstName}
+            lastName={lastName}
+            imageUrl={imageUrl}
+          />
+          <div className="flex items-center">
+            <div className="grid gap-4">
+              <p className="text-5xl font-semibold">
+                {firstName} {lastName}
+              </p>
+              <div className="bg-[rgba(217,17,141,0.08)] flex items-center gap-2 font-semibold h-fit w-fit text-secondary rounded-full py-2 px-4">
+                <MdOutlineStarBorderPurple500 className="border-2 rounded-full text-lg border-secondary" />{" "}
+                {memberType}
+              </div>
+              <div className="text-textPrimary">
+                *Unlock your potential: Upgrade to{" "}
+                <Link
+                  className="text-textSecondary font-semibold underline"
+                  href={"/plans"}
+                >
+                  {" "}
+                  premium
+                </Link>
+              </div>
+            </div>
+            <div className="h-full w-px bg-[#E6E6E6] mx-2"></div>
+            <div>
+              <p className="text-base font-semibold">{designation}</p>
+              <p>{contact}</p>
+              <p>{address}</p>
+            </div>
           </div>
         </div>
-        {UpdateCoverPhoto()}
+        <UpdateCoverPhoto />
       </div>
     </div>
   );
-
-  function UpdateCoverPhoto() {
-    return (
-      <div>
-        <input
-          onChange={handleUpdateCover}
-          type="file"
-          className="hidden"
-          name="coverPhoto"
-          id="coverPhoto"
-        />
-        <Button variant={"white"}>
-          <label htmlFor="coverPhoto" className="h-full flex items-center z-10">
-            Change Cover
-          </label>
-        </Button>
-      </div>
-    );
-  }
 };
 
 export default ProfileHeader;

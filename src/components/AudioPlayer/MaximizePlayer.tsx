@@ -153,15 +153,17 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   useEffect(() => {
     const fetchBPM = async () => {
       try {
-        const url = currentSong.songLink;
+        const url = currentSong?.songLink;
 
-        const detectedBPM = await detectBPM(url);
-        if (detectedBPM === null) {
-          setError(
-            "Unable to detect BPM. Please check the audio file and detection logic."
-          );
-        } else {
-          setBpm(detectedBPM);
+        if (url) {
+          const detectedBPM = await detectBPM(url);
+          if (detectedBPM === null) {
+            setError(
+              "Unable to detect BPM. Please check the audio file and detection logic."
+            );
+          } else {
+            setBpm(detectedBPM);
+          }
         }
       } catch (error) {
         console.error("Error fetching or processing audio:", error);
@@ -232,6 +234,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
+      if (showPlayer) router.push(`/music/${tracks[newIndex]?._id}`);
     }
   };
 
@@ -254,6 +257,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
+      if (showPlayer) router.push(`/music/${tracks[newIndex]?._id}`);
     }
   };
   const handleRandom = () => {
@@ -262,6 +266,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         currentTrackIndex + Math.floor(Math.random() * tracks.length - 1);
       setCurrentTrackIndex(newIndex);
       setCurrentSong(tracks[newIndex]);
+      if (showPlayer) router.push(`/music/${tracks[newIndex]?._id}`);
     }
   };
 

@@ -131,7 +131,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const {
     songName,
-    
+
     songLink,
     artwork,
     songArtist,
@@ -419,8 +419,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     favorite,
   });
 
-
-
   return (
     <div className="audio-controls relative">
       <div className="absolute top-0 w-full ">
@@ -578,6 +576,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               defaultValue={[currentTime]}
               max={duration}
               min={0}
+              step={0.01}
               value={[currentTime]}
               onValueChange={handleSeek}
             />
