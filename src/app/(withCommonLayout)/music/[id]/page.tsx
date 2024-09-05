@@ -11,11 +11,6 @@ interface PlayerInterface {
 }
 
 const Player: React.FC<PlayerInterface> = ({ params }) => {
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
-    null
-  );
-  const [playing, setPlaying] = useState<boolean>(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
   );
@@ -55,29 +50,12 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
         } catch (error) {
           songData = null;
         }
-
-        if (!songData || songData.id !== params.id) {
-          localStorage.setItem(
-            "songData",
-            JSON.stringify({ id: params.id, play: true })
-          );
-          setPlaying(true); // Play the song automatically if it's the first load
-        } else {
-          setPlaying(songData.play);
-        }
       }
     }
   }, [params?.id, tracks]);
 
   // Synchronize play state with localStorage data
   const songData = useLocalSongData();
-  useEffect(() => {
-    if (currentTrackIndex !== null && songData?.play === true) {
-      setPlaying(true);
-    } else {
-      setPlaying(false);
-    }
-  }, [currentTrackIndex, songData]);
 
   // Display loading animation if current song is not set
   if (!currentSong) {

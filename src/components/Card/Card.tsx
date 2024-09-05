@@ -108,11 +108,11 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
               className="rounded-lg "
             />
             {/* Overlay */}
-            <Link href={musicId ? `/music/${musicId}` : "/"}>
-              <div
-                onClick={handleSetIdtoLocalStroage}
-                className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-              >
+            <Link
+              onClick={handleSetIdtoLocalStroage}
+              href={musicId ? `/music/${musicId}` : "/"}
+            >
+              <div className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
                 {type !== "freelancer" && (
                   <Image
                     src={playBtn}
