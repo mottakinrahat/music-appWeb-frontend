@@ -18,9 +18,12 @@ const playerSlice = createSlice({
   name: "player",
   initialState,
   reducers: {
-    playSong: (state, action: PayloadAction<string>) => {
+    playSong: (state, action: PayloadAction<string | null>) => {
       state.playing = true;
-      state.songId = action.payload;
+      state.songId = action?.payload;
+    },
+    playImport: (state) => {
+      state.playing = true;
     },
     pauseSong: (state) => {
       state.playing = false;
@@ -45,6 +48,11 @@ const playerSlice = createSlice({
   },
 });
 
-export const { playSong, pauseSong, toggleRepeat, setAudioElement } =
-  playerSlice.actions;
+export const {
+  playSong,
+  pauseSong,
+  playImport,
+  toggleRepeat,
+  setAudioElement,
+} = playerSlice.actions;
 export default playerSlice.reducer;

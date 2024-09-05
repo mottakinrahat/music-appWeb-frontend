@@ -14,11 +14,11 @@ import {
 import { RootState } from "@/redux/store";
 import { initDB } from "@/utils/initDB";
 import { toast } from "sonner";
+import { playImport, playSong } from "@/redux/slice/music/musicActionSlice";
 
 interface MusicControlsFace {
   handleOpenEqualizer: () => void;
 }
-
 
 const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
   const [showModal, setShowModal] = useState(false);
@@ -165,9 +165,10 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
                   type="file"
                   id="importAudio"
                   accept="audio/*"
-                  onChange={(e) =>
-                    e.target.files && handleFileSelect(e.target.files[0])
-                  }
+                  onChange={(e) => {
+                    e.target.files && handleFileSelect(e.target.files[0]);
+                    dispatch(playImport());
+                  }}
                   className="hidden"
                 />
               </label>
