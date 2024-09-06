@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
       setShowFooter(false);
-    } else if (pathname.startsWith("/offline/")) {
+    } else if (pathname.startsWith("/offline")) {
       setShowFooter(false);
     } else {
       setShowFooter(true);

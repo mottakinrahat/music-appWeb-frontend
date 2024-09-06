@@ -24,7 +24,7 @@ const Navbar = ({ blur = false }: NavInterface) => {
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
       setShowNav(true);
-    } else if (pathname.startsWith("/offline/")) {
+    } else if (pathname.startsWith("/offline")) {
       setShowNav(true);
     } else {
       setShowNav(false);
