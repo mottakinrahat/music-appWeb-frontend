@@ -86,6 +86,19 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   }, [currentSong.favUsers, userId]);
 
+  const [currentLyrics, setCurrentLyrics] = useState<string | any>(null);
+
+  useEffect(() => {
+    const getLyrics = async () => {
+      const response = await axios.get(
+        `https://music-app-web.vercel.app/api/v1/songs/${songData._id}/${currentTime}`
+      );
+      setCurrentLyrics(response.data.data.line);
+    };
+    getLyrics();
+  }, [currentTime, songData._id]);
+  // console.log(currentLyrics);
+
   useEffect(() => {
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
@@ -131,7 +144,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const {
     songName,
-
     songLink,
     artwork,
     songArtist,
@@ -173,16 +185,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
   useEffect(() => {
-    // Load initial state from localStorage
-    // const storedRepeat = localStorage.getItem(
-    //   "repeat"
-    // ) as PlayerState["repeat"];
-    // if (!storedRepeat) {
-    //   localStorage.setItem("repeat", "repeat-all");
-    // } else {
-    //   dispatch(toggleRepeat());
-    // }
-
     const storedRepeat = localStorage.getItem(
       "repeat"
     ) as PlayerState["repeat"];
@@ -419,8 +421,36 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     favorite,
   });
 
+  const isKaroke = useSelector((state: RootState) => state.player.karaoke);
+
+  const allLyrics = {
+    lines: songData?.lyrics.map((lyric: any) => lyric.line), // Store each line separately
+  };
+
   return (
     <div className="audio-controls relative">
+      {isKaroke && (
+        <div
+          style={{
+            display: "inline-block",
+            WebkitMaskImage:
+              "-webkit-gradient(linear, top, bottom, color-stop(0%, rgba(0,0,0,1)), color-stop(20%, rgba(0,0,0,0)), color-stop(80%, rgba(0,0,0,0)), color-stop(100%, rgba(0,0,0,1)))",
+            maskImage:
+              "linear-gradient(to bottom, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%, rgba(0,0,0,0) 10%, rgba(0,0,0,1) 0%)",
+          }}
+          className="absolute w-[1159px] max-h-[480px] no-scrollbar overflow-y-scroll z-50 scroll-smooth top-[174px] left-[120px] text-5xl text-white leading-snug font-semibold"
+        >
+          {allLyrics.lines.map((line: string, index: number) => (
+            <p key={index} className="mb-4">
+              {line === currentLyrics ? (
+                <p className="text-green-500">{currentLyrics}</p>
+              ) : (
+                <p>{line}</p>
+              )}
+            </p>
+          ))}
+        </div>
+      )}
       <div className="absolute top-0 w-full ">
         <MiniPlayer
           // currentSong={currentSong}

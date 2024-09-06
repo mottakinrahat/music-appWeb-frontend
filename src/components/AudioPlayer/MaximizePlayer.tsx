@@ -1,7 +1,6 @@
 "use client";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
 import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
-import Navbar from "@/components/common/navigation/Navbar";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
@@ -10,9 +9,7 @@ import Playlist from "./components/Playlist";
 import useLocalSongData from "@/hooks/useLocalSongData";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { parseBuffer } from "music-metadata";
 import { detectBPM } from "@/utils/bpmdetection";
-import Loading from "@/app/(withCommonLayout)/music/loading";
 
 interface PlayerInterface {
   params?: {
@@ -331,14 +328,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   };
   // PlayListOperations
   const handleOpenPlayList = () => {
-    // if (listWidth <= 0) {
-    //   setPlaylistOpen(0);
-
-    //   setListWidth(700);
-    // } else {
-    //   setPlaylistOpen(700);
-    //   setListWidth(0);
-    // }
     if (listWidth <= 0) {
       if (screenWidth < 480) {
         setListWidth(290);
@@ -364,6 +353,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       }}
     >
       <div className="absolute w-full h-screen bg-black opacity-40 "></div>
+
       <div className="flex z-10 flex-grow relative">
         <div className="flex-1 transition-all">
           <AudioPlayer
@@ -383,7 +373,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             loading={loading}
           />
         </div>
-
         {playlistOpen <= 0 && listWidth > 0 ? (
           <div
             onClick={handleOpenPlayList}
@@ -428,7 +417,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         ) : (
           ""
         )}
-
         <div
           className={`bg-white 2xl:relative h-full mt-[96px] top-[-2rem] md:top-[-1rem] lg:top-0  absolute transition-all duration-500 ${
             eqOpen <= 0 ? " right-0 bottom-0" : "w-0 -right-full bottom-0"
