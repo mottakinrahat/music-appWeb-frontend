@@ -42,7 +42,7 @@ interface AudioPlayerProps {
   handleRandom: () => void;
   setCurrentSong: (value: any) => void;
   audioContext: AudioContext;
-  bpm: number;
+  // bpm: number;
   loading: boolean;
 }
 
@@ -56,7 +56,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   handleOpenPlayList,
   handleRandom,
   audioContext,
-  bpm,
+  // bpm,
   loading,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -73,8 +73,20 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
   const [currentSong, setCurrentSong] = useState<any>(songData);
+  const [userClickedPlay, setUserClickedPlay] = useState<boolean>(false);
+  const dispatch = useDispatch();
   const userId = userData?._id;
   // const [repeats, setRepeat] = useState<any>();
+
+  const {
+    songName,
+    bpm,
+    songLink,
+    artwork,
+    songArtist,
+    songAlbum,
+    _id: songId,
+  } = currentSong;
 
   useEffect(() => {
     const isFavourite = currentSong.favUsers.includes(userId);
@@ -90,12 +102,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
+      // dispatch(playSong(songId));
+      // setUserClickedPlay(true);
     } else {
       setShowPlayer(false);
     }
-  }, [pathname]);
-
-  const dispatch = useDispatch();
+  }, [dispatch, pathname, songId]);
 
   // Seclectors
   const playing = useSelector((state: RootState) => state.player.playing);
@@ -128,16 +140,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   }, [currentSong, repeat, songData, speed, volume]);
   // Main Song
-
-  const {
-    songName,
-
-    songLink,
-    artwork,
-    songArtist,
-    songAlbum,
-    _id: songId,
-  } = currentSong;
 
   useEffect(() => {
     const handleInteraction = () => {
@@ -173,16 +175,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
   useEffect(() => {
-    // Load initial state from localStorage
-    // const storedRepeat = localStorage.getItem(
-    //   "repeat"
-    // ) as PlayerState["repeat"];
-    // if (!storedRepeat) {
-    //   localStorage.setItem("repeat", "repeat-all");
-    // } else {
-    //   dispatch(toggleRepeat());
-    // }
-
     const storedRepeat = localStorage.getItem(
       "repeat"
     ) as PlayerState["repeat"];
@@ -205,7 +197,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         dispatch(pauseSong());
       }
     }
-  }, [dispatch]);
+  }, [dispatch, userClickedPlay]);
 
   useEffect(() => {
     // Save state to localStorage whenever it changes
@@ -226,6 +218,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   // handle play pause song
   const handlePlayPause = async () => {
+    setUserClickedPlay((state) => !state);
+
     try {
       if (playing) {
         // Pause the song

@@ -89,7 +89,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
 
   // handle playback speed
   const handlePlaybackSpeed = () => {
-    const speedOptions = [1, 1.5, 2, 0.5, 0.75];
+    const speedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
     const nextIndex =
       (speedOptions.indexOf(playbackSpeed) + 1) % speedOptions.length;
     const newSpeed = speedOptions[nextIndex];
@@ -119,7 +119,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
             onClick={() => handlePlaybackSpeed()}
             className="font-semibold select-none cursor-pointer"
           >
-            {playbackSpeed.toFixed(2)}
+            {playbackSpeed.toFixed(2)}x
           </span>
         </li>
         <li className="flex justify-between items-center">

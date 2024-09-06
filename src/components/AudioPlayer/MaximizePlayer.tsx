@@ -378,7 +378,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             handleOpenEqualizer={handleOpenEqualizer}
             handleOpenPlayList={handleOpenPlayList}
             handleRandom={handleRandom}
-            bpm={bpm!}
+            // bpm={bpm!}
             // error={error}
             loading={loading}
           />
