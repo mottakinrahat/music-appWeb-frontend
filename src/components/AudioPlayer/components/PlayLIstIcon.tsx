@@ -1,10 +1,14 @@
 interface PlayListProps {
   handleOpenLyrics?: () => void;
+  className?: string;
 }
 
-const ShowLyricsIcon: React.FC<PlayListProps> = ({ handleOpenLyrics }) => {
+const ShowLyricsIcon: React.FC<PlayListProps> = ({
+  handleOpenLyrics,
+  className,
+}) => {
   return (
-    <div>
+    <div className={className}>
       <svg
         width="22"
         height="21"

@@ -15,9 +15,10 @@ import { useDispatch, useSelector } from "react-redux";
 export interface RepeatShuffleProps {
   // repeat: "repeat-one" | "repeat-all" | "repeat-off" | "shuffle";
   // toggleRepeat: () => void;
+  className?: string;
 }
 
-const RepeatShuffleButton = () => {
+const RepeatShuffleButton: React.FC<RepeatShuffleProps> = ({ className }) => {
   const dispatch = useDispatch();
   const repeat = useSelector((state: RootState) => state.player.repeat);
 
@@ -25,7 +26,7 @@ const RepeatShuffleButton = () => {
     dispatch(toggleRepeat());
   };
   return (
-    <div>
+    <div className={className}>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger>
