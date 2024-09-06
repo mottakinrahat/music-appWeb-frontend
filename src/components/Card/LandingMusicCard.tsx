@@ -62,7 +62,7 @@ const LandingMusicCard = ({
           />
         </div>
         <div>
-          <h2 className="text-base md:text-2xl gap-2 font-semibold mb-1">
+          <h2 className="text-base md:text-xl sm:text-2xl gap-2 font-semibold mb-1">
             {albumCard
               ? album
               : title.length > 16
@@ -125,7 +125,7 @@ const LandingMusicCard = ({
               onClick={() => handleRemoveFromPlaylist(id)} // Check if handleRemoveFromPlaylist is defined
               className="rounded-full w-8 h-8 md:w-11 md:h-11"
             >
-              <RxCross2 className="text-2xl" /> {/* Cross button */}
+              <RxCross2 className=" text-xl sm:text-2xl" /> {/* Cross button */}
             </button>
             <CurrentPlayingUsers
               addFriends={false}

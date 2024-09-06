@@ -23,15 +23,19 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
 }) => {
   return (
     <div>
-      <div className="text-white text-2xl mx-2 ">
-        <div className="flex justify-start items-center gap-[24px]">
+      <div className="text-white mt-4 min-[400px]:mt-0 text-2xl mx-2 ">
+        <div className="flex justify-start items-center gap-4 sm:gap-[24px]">
           <div
             onClick={handleAddToFavorites}
-            className="cursor-pointer transition text-white hover:text-accent"
+            className="cursor-pointer hidden min-[340px]:block transition text-white hover:text-accent"
           >
-            {isfavorite ? <FaHeart /> : <FaRegHeart />}
+            {isfavorite ? (
+              <FaHeart className="p-[2px] sm:p-0" />
+            ) : (
+              <FaRegHeart className="p-[2px] sm:p-0" />
+            )}
           </div>
-          <div className="hidden lg:block">
+          <div className="">
             <ShowLyricsIcon handleOpenLyrics={handleOpenLyrics} />
           </div>
           <ReapetShuffleButton />

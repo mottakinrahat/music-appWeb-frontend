@@ -141,7 +141,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
 
   return (
     <div>
-      <div className="flex justify-center items-center gap-[24px]">
+      <div className="flex justify-center items-center gap-3 sm:gap-[24px]">
         <div className="max-md:hidden">
           <Volumn
             handleMute={handleMute}
@@ -164,19 +164,19 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
             dropDownContent={settingContent}
             buttonContent={
               <>
-                <IoSettingsOutline className="active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
+                <IoSettingsOutline className="active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent  text-xl sm:text-2xl" />
               </>
             }
           />
         </div>
         <div
-          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
+          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent "
           onClick={onMinimize}
         >
-          <LucideMinimize2 />
+          <LucideMinimize2 className="p-[2px] sm:p-0 sm:text-2xl" />
         </div>
         <div
-          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
+          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent  text-xl sm:text-2xl"
           onClick={handleOpenPlayList}
         >
           <PiPlaylistBold />

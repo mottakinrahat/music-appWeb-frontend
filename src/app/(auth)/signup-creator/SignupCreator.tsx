@@ -27,9 +27,12 @@ const SignupCreatorComponenet: React.FC = () => {
           onSubmit={handleSubmit}
           defaultValues={defaultValues}
         >
-          <h1 className="text-[#262626] md:text-5xl text-2xl font-semibold">Create an account</h1>
+          <h1 className="text-[#262626] md:text-5xl  text-xl sm:text-2xl font-semibold">
+            Create an account
+          </h1>
           <p className="font-semibold md:text-base leading-6 text-sm">
-            Already have an account?<span className="text-accent"> Log in </span>
+            Already have an account?
+            <span className="text-accent"> Log in </span>
           </p>
 
           <div className="flex items-start justify-between gap-5">
@@ -72,10 +75,19 @@ const SignupCreatorComponenet: React.FC = () => {
 
           {/* DAW software proficiency */}
 
-          <DSelectTag required={true} name="proficiency" label="DAW software proficiency" options={dawOptions} />
+          <DSelectTag
+            required={true}
+            name="proficiency"
+            label="DAW software proficiency"
+            options={dawOptions}
+          />
           {/* File Uploader */}
 
-          <DFileUploader accept="audio/*" name="music" label="Do you have any sample work?" />
+          <DFileUploader
+            accept="audio/*"
+            name="music"
+            label="Do you have any sample work?"
+          />
 
           {/* Portfolio Link */}
 
@@ -115,8 +127,10 @@ const SignupCreatorComponenet: React.FC = () => {
           </Button>
         </DForm>
         <p className="text-[#4C4C4C] mt-5 p-4 text-sm md:text-base">
-          By clicking &quot;Sign up&quot; above, you acknowledge that you have read and you agree to our General{" "}
-          <span className="font-semibold">Terms and Conditions</span> and have read and acknowledge the{" "}
+          By clicking &quot;Sign up&quot; above, you acknowledge that you have
+          read and you agree to our General{" "}
+          <span className="font-semibold">Terms and Conditions</span> and have
+          read and acknowledge the{" "}
           <span className="font-semibold">Privacy policy.</span>
         </p>
       </div>

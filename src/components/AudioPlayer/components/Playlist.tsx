@@ -40,7 +40,7 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
         Song credit
       </div>
       <div className="">
-        <div className="max-h-[calc(100vh-15rem)] 2xl:max-h-[calc(100vh-23rem)] overflow-y-auto">
+        <div className="max-h-[calc(100vh-20rem)] 2xl:max-h-[calc(100vh-23rem)] overflow-y-auto">
           {currentTracks?.map((track: any, idx) => (
             <div key={idx} className="gap-2 w-full items-center mb-4">
               <LandingMusicCard

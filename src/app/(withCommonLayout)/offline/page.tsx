@@ -213,7 +213,7 @@ const PlayOfflinePage: React.FC = () => {
             className="object-cover rounded-lg"
           />
           <div className="text-center lg:text-left">
-            <h2 className="text-white text-base md:text-xl font-semibold mb-1 lg:text-2xl">
+            <h2 className="text-white text-base md:text-xl font-semibold mb-1 lg: text-xl sm:text-2xl">
               <SongMarquee songName={songName} />
             </h2>
             <div className="flex flex-col items-center lg:flex-row lg:items-center gap-2">

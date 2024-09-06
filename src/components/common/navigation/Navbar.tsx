@@ -119,8 +119,13 @@ const Navbar = ({ blur = false }: NavInterface) => {
             </Button>
           )}
         </div>
-        <div className="lg:hidden">
-          <ToggleMenu blur={blur} />
+        <div className="lg:hidden ">
+          <ToggleMenu
+            showNav={showNav}
+            handleLogout={handleLogout}
+            user={user}
+            blur={blur}
+          />
         </div>
       </div>
 

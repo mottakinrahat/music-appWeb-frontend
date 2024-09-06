@@ -110,9 +110,9 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
           onClick={handleOpenEqualizer}
           className="cursor-pointer text-xl select-none text-white"
         >
-          <FiSliders className="hover:text-accent transition text-2xl cursor-pointer" />
+          <FiSliders className="hover:text-accent transition p-[2px] sm:p-0 text-xl sm:text-2xl cursor-pointer" />
         </div>
-        <div className="flex items-center">
+        <div className="flex  sm:text-2xl items-center">
           <AirPlayButton />
         </div>
 
@@ -120,12 +120,12 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
           {musicData.fileData ? (
             <TbDeviceIpadX
               onClick={handleDeleteSong}
-              className="text-white hover:text-accent transition text-2xl cursor-pointer"
+              className="text-white hover:text-accent transition  text-xl sm:text-2xl cursor-pointer"
             />
           ) : (
             <MdDevices
               onClick={() => setShowModal(true)}
-              className="text-white hover:text-accent transition text-2xl cursor-pointer"
+              className="text-white hover:text-accent transition  text-xl sm:text-2xl cursor-pointer"
             />
           )}
         </div>
@@ -145,7 +145,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
             {/* Close Icon */}
             <IoMdClose
               onClick={() => setShowModal(false)}
-              className="absolute top-2 right-2 text-2xl text-gray-600 cursor-pointer hover:text-gray-800"
+              className="absolute top-2 right-2  text-xl sm:text-2xl text-gray-600 cursor-pointer hover:text-gray-800"
             />
             <h2 className="text-lg md:text-xl font-semibold mb-4 text-center">
               Import Audio
@@ -156,7 +156,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
                 htmlFor="importAudio"
                 className="flex flex-col items-center w-full px-4 py-10 border-dashed text-black hover:text-textPrimary border-accent rounded-lg shadow-lg tracking-wide uppercase border-2 hover:border-secondary transition-colors cursor-pointer"
               >
-                <FaUpload className="text-2xl mb-2" />
+                <FaUpload className=" text-xl sm:text-2xl mb-2" />
                 <span className="text-sm md:text-base leading-normal">
                   Select a file
                 </span>

@@ -140,7 +140,7 @@ const AirPlayButton = () => {
   const airplayControls = (
     <div className="min-h-40 max-w-xs border-0 bg-[#DBDAD9]">
       <div className="flex items-center justify-between">
-        <h3 className="text-2xl font-semibold mb-1 px-4 py-3">
+        <h3 className=" text-xl sm:text-2xl font-semibold mb-1 px-4 py-3">
           Select a device
         </h3>
         <p className="text-lg mr-2 cursor-pointer">Scan</p>
@@ -148,7 +148,7 @@ const AirPlayButton = () => {
       <div className="bg-black/10 h-px w-full" />
       <div className="px-4 py-2 pt-4 space-y-2 font-semibold text-base">
         <div className="flex gap-2 items-center">
-          <MdAirplay size={20} />
+          <MdAirplay />
           Web player ({browserName})
         </div>
         {bluetoothDevices.length > 0 ? (
@@ -180,7 +180,7 @@ const AirPlayButton = () => {
                   className="py-2 cursor-pointer flex gap-2 items-center"
                   onClick={() => connectToWifiDevice(device)}
                 >
-                  <RiSignalTowerLine />
+                  <RiSignalTowerLine className="p-[2px] sm:p-0" />
                   {device.name}{" "}
                   {connectedWifiDevice === device ? "(Connected)" : ""}
                 </li>
@@ -211,7 +211,7 @@ const AirPlayButton = () => {
               showPlayer
                 ? "text-white hover:text-accent"
                 : "text-textPrimary hover:text-textSecondary transition"
-            } my-auto inline-block transition`}
+            } my-auto p-[2px] sm:p-0 inline-block transition`}
           />
         }
       />

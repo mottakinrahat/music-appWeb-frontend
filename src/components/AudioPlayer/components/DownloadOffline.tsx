@@ -188,14 +188,16 @@ const DownloadOffline: React.FC<DownloadButtonProps> = ({
       aria-label={`Download ${songName}`}
     >
       {isDownloaded ? (
-        <LucideCheckCircle className="text-white text-2xl" />
+        <LucideCheckCircle className="text-white  p-[2px] sm:p-0 text-xl sm:text-2xl" />
       ) : isLoading && currentDownloadId === songId ? (
         <div className="relative flex items-center justify-center">
           <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-          <span className="absolute text-white text-xs">{progress}%</span>
+          <span className="absolute text-white text-[10px] sm:text-xs">
+            {progress}%
+          </span>
         </div>
       ) : (
-        <LucideDownload className="active:text-accent group-hover:text-accent transition hover:text-accent text-white focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
+        <LucideDownload className="active:text-accent group-hover:text-accent transition hover:text-accent text-white focus-within:text-accent focus:text-accent focus-visible:text-accent  p-[2px] sm:p-0 sm:text-2xl" />
       )}
     </a>
   );

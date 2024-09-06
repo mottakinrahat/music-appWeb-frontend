@@ -43,7 +43,7 @@ export const UpdateProfilePicture: React.FC<UpdateProfilePictureProps> = ({
           name="profilePhoto"
           id="profilePhoto"
         />
-        <FaCamera className="text-white text-2xl transition-opacity opacity-0 group-hover:opacity-100" />
+        <FaCamera className="text-white  text-xl sm:text-2xl transition-opacity opacity-0 group-hover:opacity-100" />
       </label>
     </div>
   );

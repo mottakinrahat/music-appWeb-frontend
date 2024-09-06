@@ -496,7 +496,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 }}
               />
               <div>
-                <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl">
+                <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-xl sm:text-2xl">
                   <SongMarquee
                     songName={
                       importedSong.fileData ? importedSong.title : songName
