@@ -8,11 +8,12 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Playlist from "./components/Playlist";
 import useLocalSongData from "@/hooks/useLocalSongData";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { parseBuffer } from "music-metadata";
 import { detectBPM } from "@/utils/bpmdetection";
 import Loading from "@/app/(withCommonLayout)/music/loading";
+import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 
 interface PlayerInterface {
   params?: {
@@ -47,6 +48,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [bpm, setBpm] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch();
 
   //  Router
   const router = useRouter();
@@ -275,7 +277,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     if (currentSong) {
       localStorage.setItem(
         "songData",
-        JSON.stringify({ play: true, id: currentSong._id })
+        JSON.stringify({ play: false, id: currentSong._id })
       );
       // router.replace(`/music/${currentSong._id}`);
     }
