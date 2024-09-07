@@ -39,6 +39,7 @@ const ImportSong: React.FC<ImportSongProps> = ({
           height: "auto",
           width: "auto",
         }}
+        className="lg:"
       />
       <div>
         <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-xl sm:text-2xl">

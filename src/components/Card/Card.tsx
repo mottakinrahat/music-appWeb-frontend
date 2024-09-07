@@ -108,7 +108,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
                 objectFit: "cover",
               }}
               className="rounded-lg"
-              onLoadingComplete={() => setImageLoading(false)}
+             
             />
             {/* Overlay */}
             {/* {imageLoading && (
