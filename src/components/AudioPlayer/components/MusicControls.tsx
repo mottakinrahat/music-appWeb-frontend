@@ -143,8 +143,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
           </>
         )}
       </div>
-
-      {/* File Import Modal */}
+      
       {showModal && (
         <ImportModal
           dragging={dragging}
