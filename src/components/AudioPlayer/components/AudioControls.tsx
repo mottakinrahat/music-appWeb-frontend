@@ -1,5 +1,6 @@
 "use client";
-import { pauseSong } from "@/redux/slice/music/musicActionSlice";
+import { useDebouncedValue } from "@/hooks/useDebounceValue";
+import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import React, { forwardRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,28 +32,34 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     const dispatch = useDispatch();
 
     // Set playback rate and handle play/pause based on "playing" state
-    
+    const debouncedPlaybackRate = useDebouncedValue(playbackRate, 500);
+
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {
         const audioElement = ref.current;
 
-        audioElement.playbackRate = playbackRate;
+        audioElement.playbackRate = debouncedPlaybackRate;
+        (audioElement as any).preservesPitch = true;
+        (audioElement as any).mozPreservesPitch = true; // For Firefox
+        (audioElement as any).webkitPreservesPitch = true; // For Safari
 
         if (playing) {
           const playPromise = audioElement.play();
           if (playPromise !== undefined) {
             playPromise.catch(() => {
-              audioElement.muted = true;
+              // audioElement.muted = true;
+              dispatch(playImport());
               audioElement.play().catch(() => {
-                // Optional: Handle further autoplay issues
+                audioElement.muted = true;
               });
             });
           }
         } else {
           audioElement.pause();
+          dispatch(pauseSong());
         }
       }
-    }, [playbackRate, ref, playing]);
+    }, [playbackRate, ref, playing, dispatch, debouncedPlaybackRate]);
 
     // Ensure volume is set correctly when the component mounts
     useEffect(() => {

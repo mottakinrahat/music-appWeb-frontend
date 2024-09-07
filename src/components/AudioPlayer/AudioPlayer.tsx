@@ -26,6 +26,7 @@ import {
 import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
 import Image from "next/image";
+import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -101,14 +102,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [currentLyrics, setCurrentLyrics] = useState<string | any>(null);
   useEffect(() => {
     const getLyrics = async () => {
-      console.log(`songData._id: ${songData._id}, currentTime: ${currentTime}`);
+      // console.log(`songData._id: ${songData._id}, currentTime: ${currentTime}`);
       try {
         const response = await axios.get(
           `https://music-app-web.vercel.app/api/v1/songs/${songData._id}/${currentTime}`
         );
         setCurrentLyrics(response.data.data.line);
       } catch (error) {
-        console.error("Error fetching lyrics:", error);
+        // console.error("Error fetching lyrics:", error);
       }
     };
     getLyrics();
@@ -271,7 +272,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   // Handle Open lyrics
 
   const handleOpenLyrics = () => {
-    alert("Open lyrics");
+    dispatch(karaoke());
   };
 
   const handleVolumeChange = (value: number[]) => {
@@ -450,7 +451,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     favorite,
   });
 
-  const isKaroke = useSelector((state: RootState) => state.player.karaoke);
+  const isKaroke = useSelector((state: RootState) => state.karaoke.karaoke);
 
   const allLyrics = {
     lines: songData?.lyrics.map((lyric: any) => lyric.line), // Store each line separately

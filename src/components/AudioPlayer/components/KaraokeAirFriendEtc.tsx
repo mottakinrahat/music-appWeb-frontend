@@ -3,16 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import CurrentPlayingUsers from "./CurrentPlayingUsers";
 import MusicControls from "./MusicControls";
 import { MdOutlineMicExternalOn } from "react-icons/md";
-import { karaoke } from "@/redux/slice/music/musicActionSlice";
 import { AppDispatch, RootState } from "@/redux/store";
+import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 
-const KaraokeAirFriendEtc = ({
-  karaokeOn,
-  SetKaraokeOn,
-  handleOpenEqualizer,
-}: any) => {
+const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
   const dispatch = useDispatch();
-  const isKaraoke = useSelector((state: RootState) => state.player.karaoke);
+  const isKaraoke = useSelector((state: RootState) => state.karaoke.karaoke);
 
   const karaokeHandler = () => {
     dispatch(karaoke());

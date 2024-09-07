@@ -18,6 +18,7 @@ import { playImport, playSong } from "@/redux/slice/music/musicActionSlice";
 import FXSVG from "@/components/svg/FXSVG";
 import Mixer from "@/components/svg/Mixer";
 import RadioButton from "@/components/svg/RadioButton";
+import AudioRecorder from "./AudioRecorder";
 
 interface MusicControlsFace {
   handleOpenEqualizer: () => void;
@@ -28,7 +29,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
   const [dragging, setDragging] = useState(false);
   const dispatch = useDispatch();
   const musicData = useSelector((state: RootState) => state.musicData);
-  const isKaraoke = useSelector((state: RootState) => state.player.karaoke);
+  const isKaraoke = useSelector((state: RootState) => state.karaoke.karaoke);
 
   // Save file to IndexedDB
   const saveFileToIndexedDB = async (fileData: string, title: string) => {
@@ -136,7 +137,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
           <>
             <FXSVG />
             <Mixer />
-            <RadioButton />
+            <AudioRecorder />
           </>
         )}
       </div>
