@@ -141,8 +141,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
           </>
         )}
       </div>
-
-      {/* File Import Modal */}
+      
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 px-4">
           <div
