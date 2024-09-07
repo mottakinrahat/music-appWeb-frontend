@@ -17,7 +17,7 @@ import WhoAreUse from "@/components/pageComponents/Home/WhoAreUse";
 
 export default function Home() {
   return (
-    <div className="">
+    <>
       <Banner />
       <Soponsors />
       <WhoAreUse />
@@ -31,6 +31,6 @@ export default function Home() {
       <VRConcerts />
       <Blogs />
       <Features />
-    </div>
+    </>
   );
 }

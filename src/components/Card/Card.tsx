@@ -60,7 +60,6 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   const location = usePathname();
   const dispatch = useDispatch();
   const importedSong = useSelector((state: RootState) => state.musicData);
-  const [imageLoading, setImageLoading] = useState(true);
 
   const deleteExistingSongFromIndexedDB = async () => {
     const db = await initDB("MusicDB", 1, "songs");
