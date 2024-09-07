@@ -5,6 +5,8 @@ import MusicControls from "./MusicControls";
 import { MdOutlineMicExternalOn } from "react-icons/md";
 import { AppDispatch, RootState } from "@/redux/store";
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
+import ImportDevice from "@/components/svg/ImportDevice";
+import { TbDeviceIpadX } from "react-icons/tb";
 
 const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
   const dispatch = useDispatch();
@@ -23,7 +25,7 @@ const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
         {isKaraoke ? (
           <div className="flex gap-[8px] text-accent">
             <MdOutlineMicExternalOn className="text-2xl" />
-            <h2>Karaoke mode (On)</h2>
+            <h2 className="hidden sm:block">Karaoke mode (On)</h2>
           </div>
         ) : (
           <button
@@ -33,10 +35,11 @@ const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
             }  items-center gap-[8px]`}
           >
             <MdOutlineMicExternalOn className="text-2xl" />
-            <h2>Karaoke mode (Off)</h2>
+            <h2 className="hidden sm:block">Karaoke mode (Off)</h2>
           </button>
         )}
       </div>
+      {/* <div className="sm:hidden block"></div> */}
       <div>
         <CurrentPlayingUsers addFriends />
       </div>

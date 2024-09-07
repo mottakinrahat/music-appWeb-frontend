@@ -52,7 +52,7 @@ const PlayButtons = ({
         {showControl && (
           <button
             onClick={handlePreviousTenSecond}
-            className="text-white group text-3xl mx-2 transition hover:text-gray-300 flex items-center gap-1"
+            className="text-white group text-3xl mx-4 sm:mx-2 transition hover:text-gray-300 flex items-center gap-1"
           >
             <Image
               width={100}
@@ -77,16 +77,16 @@ const PlayButtons = ({
         </button>
         <button
           onClick={handlePlayPause}
-          className={` text-lg  flex items-center justify-center mx-4  ${
+          className={` text-lg  flex items-center justify-center mx-5 sm:mx-4  ${
             showControl
               ? "text-white transition hover:text-gray-300"
               : "text-[#828282] transition hover:text-textPrimary"
           }`}
         >
           {playing ? (
-            <MdPauseCircle className="h-10 w-10" />
+            <MdPauseCircle className="h-12 w-12 sm:h-10 sm:w-10" />
           ) : (
-            <IoMdPlayCircle className="h-10 w-10" />
+            <IoMdPlayCircle className="h-12 w-12 sm:h-10 sm:w-10" />
           )}
         </button>
         <button
@@ -102,7 +102,7 @@ const PlayButtons = ({
         {showControl && (
           <button
             onClick={handleNextTenSecond}
-            className="text-white group text-3xl mx-2 transition hover:text-gray-300 flex items-center gap-1"
+            className="text-white group text-3xl mx-4 sm:mx-2 transition hover:text-gray-300 flex items-center gap-1"
           >
             <span className="text-[16px]">10s</span>{" "}
             <Image
