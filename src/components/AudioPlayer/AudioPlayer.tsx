@@ -101,14 +101,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [currentLyrics, setCurrentLyrics] = useState<string | any>(null);
   useEffect(() => {
     const getLyrics = async () => {
-      console.log(`songData._id: ${songData._id}, currentTime: ${currentTime}`);
       try {
         const response = await axios.get(
           `https://music-app-web.vercel.app/api/v1/songs/${songData._id}/${currentTime}`
         );
+        if (response.status === 404) {
+          setCurrentLyrics(null);
+        }
         setCurrentLyrics(response.data.data.line);
       } catch (error) {
-        console.error("Error fetching lyrics:", error);
+        console.clear();
       }
     };
     getLyrics();
