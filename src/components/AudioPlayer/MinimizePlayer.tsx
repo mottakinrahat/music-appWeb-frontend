@@ -92,12 +92,6 @@ const MinimizePlayer = () => {
   const play = isPlay?.play;
 
   useEffect(() => {
-    // if (showPlayer === false) {
-    //   setPlay(false);
-    // } else {
-    //   setPlay(true);
-    // }
-    // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
       // document.body.classList.add("hide-scrollbar");

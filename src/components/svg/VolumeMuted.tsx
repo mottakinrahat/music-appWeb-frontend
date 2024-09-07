@@ -1,6 +1,18 @@
-import React from "react";
+"use client";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const VolumeMuted = () => {
+  const pathname = usePathname();
+  const [showControl, setShowControl] = useState(true);
+  useEffect(() => {
+    if (pathname.startsWith("/music/")) {
+      setShowControl(true);
+    } else {
+      setShowControl(false);
+    }
+  }, [pathname]);
+
   return (
     <svg
       width="24"
@@ -25,24 +37,16 @@ const VolumeMuted = () => {
           <path
             id="volume_up_2"
             d="M3 14.9996V8.99961H7L12 3.99961V19.9996L7 14.9996H3ZM14 15.9996V7.94961C14.7833 8.31628 15.3958 8.86628 15.8375 9.59961C16.2792 10.3329 16.5 11.1329 16.5 11.9996C16.5 12.8496 16.2792 13.6371 15.8375 14.3621C15.3958 15.0871 14.7833 15.6329 14 15.9996ZM10 8.84961L7.85 10.9996H5V12.9996H7.85L10 15.1496V8.84961Z"
-            fill="white"
+            fill={showControl ? "white" : "#262626"}
           />
           {/* Cross line to indicate muted */}
+          
           <line
-            x1="6"
-            y1="6"
-            x2="18"
-            y2="18"
-            stroke="white"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <line
-            x1="6"
+            x1="4"
             y1="18"
             x2="18"
-            y2="6"
-            stroke="white"
+            y2="4"
+            stroke={showControl ? "white" : "#262626"}
             strokeWidth="2"
             strokeLinecap="round"
           />
