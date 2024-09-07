@@ -50,7 +50,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
               // audioElement.muted = true;
               dispatch(playImport());
               audioElement.play().catch(() => {
-                audioElement.muted = true;
+                // audioElement.muted = true;
               });
             });
           }
