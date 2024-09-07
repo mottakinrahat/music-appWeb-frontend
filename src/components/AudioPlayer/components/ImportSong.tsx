@@ -31,8 +31,8 @@ const ImportSong: React.FC<ImportSongProps> = ({
             : placeHolder.src
         }
         alt={songName}
-        width={40}
-        height={40}
+        width={100}
+        height={100}
         style={{
           borderRadius: "8px",
           marginRight: "8px",
