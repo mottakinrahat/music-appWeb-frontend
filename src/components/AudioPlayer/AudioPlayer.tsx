@@ -76,6 +76,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const [userClickedPlay, setUserClickedPlay] = useState<boolean>(false);
   const dispatch = useDispatch();
+  const isShowLyrics = useSelector(
+    (state: RootState) => state.player.showLyric
+  );
   const userId = userData?._id;
   // const [repeats, setRepeat] = useState<any>();
 
@@ -461,7 +464,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className="audio-controls relative">
-      {isKaroke && (
+      {(isKaroke || isShowLyrics) && (
         <div
           ref={lyricsDivRef}
           style={{
