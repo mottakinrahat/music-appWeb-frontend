@@ -18,6 +18,7 @@ import { playImport, playSong } from "@/redux/slice/music/musicActionSlice";
 import FXSVG from "@/components/svg/FXSVG";
 import Mixer from "@/components/svg/Mixer";
 import RadioButton from "@/components/svg/RadioButton";
+import ImportDevice from "@/components/svg/ImportDevice";
 
 interface MusicControlsFace {
   handleOpenEqualizer: () => void;
@@ -126,10 +127,9 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
               className="text-white hover:text-accent transition  text-xl sm:text-2xl cursor-pointer"
             />
           ) : (
-            <MdDevices
-              onClick={() => setShowModal(true)}
-              className="text-white hover:text-accent transition  text-xl sm:text-2xl cursor-pointer"
-            />
+            <p onClick={() => setShowModal(true)}>
+              <ImportDevice />
+            </p>
           )}
         </div>
         {isKaraoke && (

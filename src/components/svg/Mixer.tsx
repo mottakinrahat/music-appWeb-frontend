@@ -3,6 +3,7 @@ import React from "react";
 const Mixer = () => {
   return (
     <svg
+    className=""
       width="24"
       height="24"
       viewBox="0 0 24 24"
