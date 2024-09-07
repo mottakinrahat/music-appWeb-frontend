@@ -1,5 +1,4 @@
-// eslint-disable @next/entx / no - img - element / "use client";
-import React, { useState, useRef, useEffect, ChangeEvent } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import placeHolder from "@/assets/etc/png/song.jpg";
 import LyricsIcon from "@/assets/icons/lyrics.svg";
 import { formatTime } from "@/utils/FormatTime";
@@ -9,14 +8,12 @@ import PlayButtons from "./components/PlayButtons";
 import MusicControls from "./components/MusicControls";
 import axios from "axios";
 import { toast } from "sonner";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import MiniPlayer from "./MiniPlayer";
 import { Slider } from "../ui/slider";
 import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
 import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
-import SongMarquee from "./components/SongMarquee";
 import { useDispatch, useSelector } from "react-redux";
 import {
   pauseSong,
@@ -27,6 +24,8 @@ import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
 import Image from "next/image";
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
+import ImportSong from "./components/ImportSong";
+import Lyrics from "./components/Lyrics";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -43,7 +42,6 @@ interface AudioPlayerProps {
   handleRandom: () => void;
   setCurrentSong: (value: any) => void;
   audioContext: AudioContext;
-  // bpm: number;
   loading: boolean;
 }
 
@@ -57,7 +55,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   handleOpenPlayList,
   handleRandom,
   audioContext,
-  // bpm,
   loading,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -77,7 +74,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [userClickedPlay, setUserClickedPlay] = useState<boolean>(false);
   const dispatch = useDispatch();
   const userId = userData?._id;
-  // const [repeats, setRepeat] = useState<any>();
 
   const {
     songName,
@@ -118,11 +114,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   }, [currentTime, songData._id]);
 
   useEffect(() => {
-    // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
-      // dispatch(playSong(songId));
-      // setUserClickedPlay(true);
     } else {
       setShowPlayer(false);
     }
@@ -219,7 +212,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   }, [dispatch, userClickedPlay]);
 
   useEffect(() => {
-    // Save state to localStorage whenever it changes
     if (playing && songId) {
       localStorage.setItem(
         "songData",
@@ -235,43 +227,34 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     localStorage.setItem("repeat", repeat); // Save repeat mode
   }, [playing, songId, repeat]);
 
-  // handle play pause song
   const handlePlayPause = async () => {
     setUserClickedPlay((state) => !state);
 
     try {
       if (playing) {
-        // Pause the song
         dispatch(pauseSong());
-
-        // Save play state to localStorage
         localStorage.setItem(
           "songData",
           JSON.stringify({ play: false, id: songId })
         );
       } else {
-        // Play the song
         const audioElement = document.querySelector(
           "audio"
         ) as HTMLAudioElement;
         if (audioElement) {
-          await audioElement.play(); // Try to play the audio element
+          await audioElement.play();
         }
 
         dispatch(playSong(songId));
-
-        // Save play state to localStorage
         localStorage.setItem(
           "songData",
           JSON.stringify({ play: true, id: songId })
         );
       }
     } catch (error) {
-      // console.error("Playback failed:", error);
+      console.clear();
     }
   };
-
-  // Handle Open lyrics
 
   const handleOpenLyrics = () => {
     dispatch(karaoke());
@@ -303,7 +286,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const handleProgress = (currentTime: number, duration: number) => {
-    // Calculate the played percentage and set it
     const playedPercentage = duration ? currentTime / duration : 0;
     setPlayed(playedPercentage);
   };
@@ -321,9 +303,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     } else if (repeat === "repeat-off") {
       handleRandom();
     } else if (repeat === "shuffle") {
-      handleRandom(); // Assuming shuffle mode should also trigger a random track
+      handleRandom();
     }
-    // dispatch(handleEnded({ audioRef, handleNext, handleRandom }));
   };
 
   const handlePreviousTenSecond = () => {
@@ -345,7 +326,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const handleSeek = (value: number[]) => {
-    const newTime = value[0]; // Get the first (and only) value from the array
+    const newTime = value[0];
 
     if (audioRef.current) {
       audioRef.current.currentTime = newTime;
@@ -364,11 +345,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     } else {
       newRepeat = "repeat-all";
     }
-    // setRepeat(newRepeat);
     localStorage.setItem("repeat", newRepeat);
   };
-
-  // Three dot menu operations
 
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
@@ -426,27 +404,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
-  const lyricsDivRef = useRef<HTMLDivElement>(null);
-  const currentLyricsRef = useRef<HTMLParagraphElement>(null);
-
-  useEffect(() => {
-    if (currentLyricsRef.current && lyricsDivRef.current) {
-      const activeLyricTop = currentLyricsRef.current.offsetTop;
-      const containerHeight = lyricsDivRef.current.clientHeight;
-      const scrollPosition = activeLyricTop - containerHeight / 3; // Scroll to center
-
-      lyricsDivRef.current.scrollTo({
-        top: scrollPosition,
-        behavior: "smooth",
-      });
-    }
-  }, [currentLyrics]); // Run effect whenever currentLyrics changes
-
-  // Handle click event to set the active lyric
-  const handleClick = (line: string) => {
-    setCurrentLyrics(line); // Set the clicked lyric as active
-  };
-
   const threeDotContent = ThreeDotContent({
     currentSong,
     handleAddtoFavourite,
@@ -455,37 +412,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const isKaroke = useSelector((state: RootState) => state.karaoke.karaoke);
 
-  const allLyrics = {
-    lines: songData?.lyrics.map((lyric: any) => lyric.line), // Store each line separately
-  };
-
   return (
     <div className="audio-controls relative">
       {isKaroke && (
-        <div
-          ref={lyricsDivRef}
-          style={{
-            display: "inline-block",
-            WebkitMaskImage:
-              "-webkit-gradient(linear, top, bottom, color-stop(0%, rgba(0,0,0,1)), color-stop(20%, rgba(0,0,0,0)), color-stop(80%, rgba(0,0,0,0)), color-stop(100%, rgba(0,0,0,1)))",
-            maskImage:
-              "linear-gradient(to bottom, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%, rgba(0,0,0,0) 10%, rgba(0,0,0,1) 0%)",
-          }}
-          className="absolute w-[1159px] max-h-[480px] no-scrollbar overflow-y-scroll z-50 scroll-smooth top-[174px] left-[120px] text-5xl text-white leading-snug font-semibold"
-        >
-          {allLyrics.lines.map((line: string, index: number) => (
-            <p
-              key={index}
-              className={`mb-4 ${
-                line === currentLyrics ? "text-white" : "text-white/60"
-              }`}
-              ref={line === currentLyrics ? currentLyricsRef : null}
-              onClick={() => handleClick(line)} // On click, set this line as active
-            >
-              {line}
-            </p>
-          ))}
-        </div>
+        <Lyrics
+          songData={songData}
+          currentLyrics={currentLyrics}
+          setCurrentLyrics={setCurrentLyrics}
+        />
       )}
       <div className="absolute top-0 w-full ">
         <MiniPlayer
@@ -547,55 +481,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         </div>
         <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4   xl:px-[120px]">
           <div className="w-full flex justify-between items-center">
-            <div className="text-white flex mb-4 items-center gap-4">
-              <Image
-                priority
-                src={
-                  importedSong.fileData
-                    ? placeHolder.src
-                    : artwork
-                    ? artwork
-                    : placeHolder.src
-                } // Replace this with the image URL
-                alt={songName}
-                width={40}
-                height={40}
-                style={{
-                  borderRadius: "8px",
-                  marginRight: "8px",
-                  height: "auto",
-                  width: "auto",
-                }}
-              />
-              <div>
-                <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-xl sm:text-2xl">
-                  <SongMarquee
-                    songName={
-                      importedSong.fileData ? importedSong.title : songName
-                    }
-                    className="text-white"
-                  />
-                </h2>
-                <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
-                  {importedSong.fileData ? (
-                    <p>Imported from device.</p>
-                  ) : (
-                    <>
-                      <p>{songArtist}</p>
-                      <div className="flex items-center max-md:hidden gap-2">
-                        <div className="size-2 bg-white rounded-full ml-2"></div>
-                        <p>
-                          Album:{" "}
-                          <Link href={"#"} className="underline">
-                            {songAlbum.albumName}
-                          </Link>
-                        </p>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
+            <ImportSong
+              artwork={artwork}
+              songName={songName}
+              songAlbum={songAlbum}
+              songArtist={songArtist}
+            />
 
             <div className="hidden xl:mt-5 xl:block">
               <PlayButtons
@@ -619,7 +510,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           </div>
 
           <AudioControls
-            // audioContext={audioContext}
             volume={volume}
             ref={audioRef}
             src={importedSong.fileData ? importedSong.fileData : songLink}
