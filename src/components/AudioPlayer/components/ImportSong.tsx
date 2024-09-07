@@ -40,6 +40,7 @@ const ImportSong: React.FC<ImportSongProps> = ({
           width: "50px",
           objectFit: "cover",
         }}
+        className="lg:"
       />
       <div>
         <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-xl sm:text-2xl">

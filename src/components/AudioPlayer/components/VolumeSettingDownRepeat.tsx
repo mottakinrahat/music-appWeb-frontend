@@ -89,15 +89,29 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
 
   // handle playback speed
   const handlePlaybackSpeed = () => {
-    const speedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-    const nextIndex =
-      (speedOptions.indexOf(playbackSpeed) + 1) % speedOptions.length;
-    const newSpeed = speedOptions[nextIndex];
-    setPlaybackSpeed(newSpeed);
-    localStorage.setItem("speed", newSpeed.toString());
+    // Displayed values
+    const displaySpeedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+    // Actual speed values
+    const actualSpeedOptions = [0.45, 0.65, 0.8, 1, 1.25, 1.5, 1.75, 2];
 
+    // Find the next index based on the current displayed speed
+    const nextIndex =
+      (displaySpeedOptions.indexOf(playbackSpeed) + 1) %
+      displaySpeedOptions.length;
+
+    // Get the new display speed and the actual speed
+    const newDisplaySpeed = displaySpeedOptions[nextIndex];
+    const newActualSpeed = actualSpeedOptions[nextIndex];
+
+    // Update the state with the new display speed
+    setPlaybackSpeed(newDisplaySpeed);
+
+    // Store the actual speed in localStorage
+    localStorage.setItem("speed", newActualSpeed.toString());
+
+    // Set the actual playback speed in the audio element
     if (audioRef.current) {
-      audioRef.current.playbackRate = newSpeed;
+      audioRef.current.playbackRate = newActualSpeed;
     }
   };
 

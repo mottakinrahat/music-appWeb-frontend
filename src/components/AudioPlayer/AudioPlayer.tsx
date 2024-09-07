@@ -312,19 +312,45 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const handlePreviousTenSecond = () => {
     if (audioRef.current) {
-      audioRef.current.currentTime = Math.max(
-        audioRef.current.currentTime - 10,
-        0
+      const currentAudio = audioRef.current;
+      const wasPlaying = !currentAudio.paused; // Check if audio is playing
+
+      if (wasPlaying) {
+        currentAudio.pause(); // Pause the audio
+      }
+
+      // Skip the current time by 10 seconds, or to the end if duration is exceeded
+      currentAudio.currentTime = Math.min(
+        currentAudio.currentTime - 10,
+        duration
       );
+
+      // Resume playback if it was playing before the skip
+      if (wasPlaying) {
+        currentAudio.play();
+      }
     }
   };
 
   const handleNextTenSecond = () => {
     if (audioRef.current) {
-      audioRef.current.currentTime = Math.min(
-        audioRef.current.currentTime + 10,
+      const currentAudio = audioRef.current;
+      const wasPlaying = !currentAudio.paused; // Check if audio is playing
+
+      if (wasPlaying) {
+        currentAudio.pause(); // Pause the audio
+      }
+
+      // Skip the current time by 10 seconds, or to the end if duration is exceeded
+      currentAudio.currentTime = Math.min(
+        currentAudio.currentTime + 10,
         duration
       );
+
+      // Resume playback if it was playing before the skip
+      if (wasPlaying) {
+        currentAudio.play();
+      }
     }
   };
 
@@ -332,8 +358,19 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     const newTime = value[0];
 
     if (audioRef.current) {
-      audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
+      const currentAudio = audioRef.current;
+      const wasPlaying = !currentAudio.paused; // Check if audio is playing
+
+      if (wasPlaying) {
+        currentAudio.pause(); // Pause the audio before seeking
+      }
+
+      currentAudio.currentTime = newTime; // Set the new time
+      setCurrentTime(newTime); // Update the state with the new time
+
+      if (wasPlaying) {
+        currentAudio.play(); // Resume playback if it was playing before
+      }
     }
   };
 
