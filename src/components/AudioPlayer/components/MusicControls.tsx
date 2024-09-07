@@ -2,7 +2,6 @@
 import React, { useState, useEffect, DragEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FiSliders } from "react-icons/fi";
-import { MdDevices } from "react-icons/md";
 import { FaUpload } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { TbDeviceIpadX } from "react-icons/tb";
@@ -14,12 +13,12 @@ import {
 import { RootState } from "@/redux/store";
 import { initDB } from "@/utils/initDB";
 import { toast } from "sonner";
-import { playImport, playSong } from "@/redux/slice/music/musicActionSlice";
+import { playImport } from "@/redux/slice/music/musicActionSlice";
 import FXSVG from "@/components/svg/FXSVG";
 import Mixer from "@/components/svg/Mixer";
-import RadioButton from "@/components/svg/RadioButton";
 import AudioRecorder from "./AudioRecorder";
 import ImportDevice from "@/components/svg/ImportDevice";
+import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 
 interface MusicControlsFace {
   handleOpenEqualizer: () => void;
@@ -66,7 +65,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
             fileData: song.fileData,
             title: song.title,
           })
-        ); // Update Redux state
+        );
       }
     };
     retrieveFileFromIndexedDB(); // Retrieve song data on component mount
@@ -78,6 +77,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
       const base64Data = reader.result as string;
       const title = file.name; // Use the file name as the title
       await saveFileToIndexedDB(base64Data, title);
+      dispatch(karaoke()); // Turn off karaoke
       toast.success("Song Imported Successfully");
       setShowModal(false);
     };
@@ -118,14 +118,14 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
         >
           <FiSliders className="hover:text-accent transition p-[2px] sm:p-0 text-xl sm:text-2xl cursor-pointer" />
         </div>
-        <div className="flex  sm:text-2xl items-center">
+        <div className="flex sm:text-2xl items-center">
           <AirPlayButton />
         </div>
         <div>
           {musicData.fileData ? (
             <TbDeviceIpadX
               onClick={handleDeleteSong}
-              className="text-white hover:text-accent transition  text-xl sm:text-2xl cursor-pointer"
+              className="text-white hover:text-accent transition text-xl sm:text-2xl cursor-pointer"
             />
           ) : (
             <p onClick={() => setShowModal(true)}>
@@ -156,7 +156,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
             {/* Close Icon */}
             <IoMdClose
               onClick={() => setShowModal(false)}
-              className="absolute top-2 right-2  text-xl sm:text-2xl text-gray-600 cursor-pointer hover:text-gray-800"
+              className="absolute top-2 right-2 text-xl sm:text-2xl text-gray-600 cursor-pointer hover:text-gray-800"
             />
             <h2 className="text-lg md:text-xl font-semibold mb-4 text-center">
               Import Audio
@@ -167,7 +167,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
                 htmlFor="importAudio"
                 className="flex flex-col items-center w-full px-4 py-10 border-dashed text-black hover:text-textPrimary border-accent rounded-lg shadow-lg tracking-wide uppercase border-2 hover:border-secondary transition-colors cursor-pointer"
               >
-                <FaUpload className=" text-xl sm:text-2xl mb-2" />
+                <FaUpload className="text-xl sm:text-2xl mb-2" />
                 <span className="text-sm md:text-base leading-normal">
                   Select a file
                 </span>
