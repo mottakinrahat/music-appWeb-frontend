@@ -10,8 +10,7 @@ import useLocalSongData from "@/hooks/useLocalSongData";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { detectBPM } from "@/utils/bpmdetection";
-import Loading from "@/app/(withCommonLayout)/music/loading";
-import { pauseSong } from "@/redux/slice/music/musicActionSlice";
+
 
 interface PlayerInterface {
   params?: {

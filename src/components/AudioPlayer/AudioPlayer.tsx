@@ -99,17 +99,20 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   }, [currentSong.favUsers, userId]);
 
   const [currentLyrics, setCurrentLyrics] = useState<string | any>(null);
-
   useEffect(() => {
     const getLyrics = async () => {
-      const response = await axios.get(
-        `https://music-app-web.vercel.app/api/v1/songs/${songData._id}/${currentTime}`
-      );
-      setCurrentLyrics(response.data.data.line);
+      console.log(`songData._id: ${songData._id}, currentTime: ${currentTime}`);
+      try {
+        const response = await axios.get(
+          `https://music-app-web.vercel.app/api/v1/songs/${songData._id}/${currentTime}`
+        );
+        setCurrentLyrics(response.data.data.line);
+      } catch (error) {
+        console.error("Error fetching lyrics:", error);
+      }
     };
     getLyrics();
   }, [currentTime, songData._id]);
-  // console.log(currentLyrics);
 
   useEffect(() => {
     // Show the player only if the path matches `/music/:id`
@@ -420,6 +423,27 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
+  const lyricsDivRef = useRef<HTMLDivElement>(null);
+  const currentLyricsRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (currentLyricsRef.current && lyricsDivRef.current) {
+      const activeLyricTop = currentLyricsRef.current.offsetTop;
+      const containerHeight = lyricsDivRef.current.clientHeight;
+      const scrollPosition = activeLyricTop - containerHeight / 3; // Scroll to center
+
+      lyricsDivRef.current.scrollTo({
+        top: scrollPosition,
+        behavior: "smooth",
+      });
+    }
+  }, [currentLyrics]); // Run effect whenever currentLyrics changes
+
+  // Handle click event to set the active lyric
+  const handleClick = (line: string) => {
+    setCurrentLyrics(line); // Set the clicked lyric as active
+  };
+
   const threeDotContent = ThreeDotContent({
     currentSong,
     handleAddtoFavourite,
@@ -436,6 +460,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     <div className="audio-controls relative">
       {isKaroke && (
         <div
+          ref={lyricsDivRef}
           style={{
             display: "inline-block",
             WebkitMaskImage:
@@ -446,12 +471,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           className="absolute w-[1159px] max-h-[480px] no-scrollbar overflow-y-scroll z-50 scroll-smooth top-[174px] left-[120px] text-5xl text-white leading-snug font-semibold"
         >
           {allLyrics.lines.map((line: string, index: number) => (
-            <p key={index} className="mb-4">
-              {line === currentLyrics ? (
-                <p className="text-green-500">{currentLyrics}</p>
-              ) : (
-                <p>{line}</p>
-              )}
+            <p
+              key={index}
+              className={`mb-4 ${
+                line === currentLyrics ? "text-white" : "text-white/60"
+              }`}
+              ref={line === currentLyrics ? currentLyricsRef : null}
+              onClick={() => handleClick(line)} // On click, set this line as active
+            >
+              {line}
             </p>
           ))}
         </div>
