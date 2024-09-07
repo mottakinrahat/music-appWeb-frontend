@@ -38,6 +38,7 @@ const ImportSong: React.FC<ImportSongProps> = ({
           marginRight: "8px",
           height: "50px",
           width: "50px",
+          objectFit: "cover",
         }}
       />
       <div>
