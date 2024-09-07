@@ -9,6 +9,7 @@ import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
   const dispatch = useDispatch();
   const isKaraoke = useSelector((state: RootState) => state.karaoke.karaoke);
+  const musicData = useSelector((state: RootState) => state.musicData);
 
   const karaokeHandler = () => {
     dispatch(karaoke());
@@ -25,10 +26,15 @@ const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
             <h2>Karaoke mode (On)</h2>
           </div>
         ) : (
-          <div className="flex  items-center gap-[8px]">
+          <button
+            disabled={musicData.fileData ? true : false}
+            className={`flex ${
+              musicData.fileData && "text-white/70"
+            }  items-center gap-[8px]`}
+          >
             <MdOutlineMicExternalOn className="text-2xl" />
             <h2>Karaoke mode (Off)</h2>
-          </div>
+          </button>
         )}
       </div>
       <div>
