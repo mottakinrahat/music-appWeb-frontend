@@ -36,8 +36,8 @@ const ImportSong: React.FC<ImportSongProps> = ({
         style={{
           borderRadius: "8px",
           marginRight: "8px",
-          height: "auto",
-          width: "auto",
+          height: "50px",
+          width: "50px",
         }}
       />
       <div>

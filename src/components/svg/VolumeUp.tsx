@@ -24,7 +24,6 @@ const VolumeUp = () => {
       <g id="volume_up">
         <mask
           id="mask0_2383_6852"
-          style={{ marginRight: +"em" }}
           maskUnits="userSpaceOnUse"
           x="0"
           y="0"

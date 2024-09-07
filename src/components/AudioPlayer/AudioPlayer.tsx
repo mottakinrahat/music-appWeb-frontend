@@ -109,9 +109,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           setCurrentLyrics(null);
         }
         setCurrentLyrics(response.data.data.line);
-      } catch (error) {
-        console.clear();
-      }
+      } catch (error) {}
     };
     getLyrics();
   }, [currentTime, songData._id]);
@@ -255,7 +253,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         );
       }
     } catch (error) {
-      console.clear();
+      // console.clear();
     }
   };
 
@@ -456,7 +454,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           className={`${
             !showPlayer
               ? "hidden"
-              : "absolute p-4 lg:py-20 xl:px-[120px] right-0 top-16 text-white"
+              : "absolute p-4 lg:py-20 xl:px-[120px] right-0 top-20 text-white"
           } `}
         >
           <DropDownBtn
