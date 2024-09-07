@@ -15,6 +15,9 @@ import { RootState } from "@/redux/store";
 import { initDB } from "@/utils/initDB";
 import { toast } from "sonner";
 import { playImport, playSong } from "@/redux/slice/music/musicActionSlice";
+import FXSVG from "@/components/svg/FXSVG";
+import Mixer from "@/components/svg/Mixer";
+import RadioButton from "@/components/svg/RadioButton";
 
 interface MusicControlsFace {
   handleOpenEqualizer: () => void;
@@ -25,6 +28,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
   const [dragging, setDragging] = useState(false);
   const dispatch = useDispatch();
   const musicData = useSelector((state: RootState) => state.musicData);
+  const isKaraoke = useSelector((state: RootState) => state.player.karaoke);
 
   // Save file to IndexedDB
   const saveFileToIndexedDB = async (fileData: string, title: string) => {
@@ -115,7 +119,6 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
         <div className="flex  sm:text-2xl items-center">
           <AirPlayButton />
         </div>
-
         <div>
           {musicData.fileData ? (
             <TbDeviceIpadX
@@ -129,6 +132,13 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
             />
           )}
         </div>
+        {isKaraoke && (
+          <>
+            <FXSVG />
+            <Mixer />
+            <RadioButton />
+          </>
+        )}
       </div>
 
       {/* File Import Modal */}

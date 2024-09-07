@@ -1,27 +1,36 @@
-/* eslint-disable @next/next/no-img-element */
-import micOnIcon from "@/assets/icons/mic_external_on.svg";
+"use client";
+import { useDispatch, useSelector } from "react-redux";
 import CurrentPlayingUsers from "./CurrentPlayingUsers";
 import MusicControls from "./MusicControls";
+import { MdOutlineMicExternalOn } from "react-icons/md";
+import { karaoke } from "@/redux/slice/music/musicActionSlice";
+import { AppDispatch, RootState } from "@/redux/store";
 
 const KaraokeAirFriendEtc = ({
   karaokeOn,
   SetKaraokeOn,
   handleOpenEqualizer,
 }: any) => {
+  const dispatch = useDispatch();
+  const isKaraoke = useSelector((state: RootState) => state.player.karaoke);
+
+  const karaokeHandler = () => {
+    dispatch(karaoke());
+  };
   return (
     <div className="flex flex-wrap items-center gap-3 ">
       <div
         className="text-white cursor-pointer"
-        onClick={() => SetKaraokeOn(!karaokeOn)}
+        onClick={() => karaokeHandler()}
       >
-        {karaokeOn ? (
-          <div className="flex gap-[8px]">
-            <img src={micOnIcon.src} alt="micOnIcon" />
+        {isKaraoke ? (
+          <div className="flex gap-[8px] text-accent">
+            <MdOutlineMicExternalOn className="text-2xl" />
             <h2>Karaoke mode (On)</h2>
           </div>
         ) : (
           <div className="flex  items-center gap-[8px]">
-            <img src={micOnIcon.src} alt="micOnIcon" />
+            <MdOutlineMicExternalOn className="text-2xl" />
             <h2>Karaoke mode (Off)</h2>
           </div>
         )}
