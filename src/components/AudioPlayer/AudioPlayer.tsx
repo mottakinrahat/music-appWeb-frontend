@@ -474,9 +474,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             maskImage:
               "linear-gradient(to bottom, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%, rgba(0,0,0,0) 10%, rgba(0,0,0,1) 0%)",
           }}
-          className="absolute w-[1159px] max-h-[480px] no-scrollbar overflow-y-scroll z-50 scroll-smooth top-[174px] left-[120px] text-5xl text-white leading-snug font-semibold"
+          className="absolute w-full text-center xl:text-left px-10 xl:px-0 xl:w-[1000px] max-h-[480px] no-scrollbar overflow-y-scroll z-50 scroll-smooth top-[174px] xl:left-[120px] text-5xl text-white leading-snug font-semibold"
         >
-          {allLyrics.lines.map((line: string, index: number) => (
+          {allLyrics?.lines?.map((line: string, index: number) => (
             <p
               key={index}
               className={`mb-4 ${
