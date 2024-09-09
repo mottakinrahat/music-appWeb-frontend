@@ -67,31 +67,45 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
       }
     }, [playbackRate, ref, playing, dispatch, src]);
 
-    // Ensure volume is set correctly when the component mounts
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {
         const audioElement = ref.current;
         const clampedVolume = Math.max(0, Math.min(volume, 1));
 
         const setVolume = () => {
-          audioElement.volume = clampedVolume;
+          if (!audioElement.muted) {
+            audioElement.volume = clampedVolume;
+          }
         };
 
-        const handleCanPlay = () => {
-          // Set volume when the audio is ready to play
+        const handleMetadataLoaded = () => {
+          // Set volume when the metadata is loaded
           setVolume();
         };
 
+        const handleVolumeChange = () => {
+          if (!audioElement.muted) {
+            audioElement.volume = clampedVolume;
+          }
+        };
+
+        // If metadata is already loaded, set the volume immediately
         if (audioElement.readyState >= 1) {
-          // If the audio metadata is already loaded, set the volume immediately
           setVolume();
         } else {
-          // For Safari and other browsers, ensure volume is set after the audio can play
-          audioElement.addEventListener("canplay", handleCanPlay);
+          // For Safari, ensure volume is set after metadata is loaded
+          audioElement.addEventListener("loadedmetadata", handleMetadataLoaded);
         }
 
+        // Additional user interaction for Safari: ensure volume updates on user play event
+        audioElement.addEventListener("play", handleVolumeChange);
+
         return () => {
-          audioElement.removeEventListener("canplay", handleCanPlay);
+          audioElement.removeEventListener(
+            "loadedmetadata",
+            handleMetadataLoaded
+          );
+          audioElement.removeEventListener("play", handleVolumeChange);
         };
       }
     }, [volume, ref]);
