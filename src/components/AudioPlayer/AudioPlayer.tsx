@@ -26,6 +26,16 @@ import Image from "next/image";
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 import ImportSong from "./components/ImportSong";
 import Lyrics from "./components/Lyrics";
+import {
+  handleEnd,
+  handleMute,
+  handleNextTenSecond,
+  handleOpenLyrics,
+  handlePlayPause,
+  handlePreviousTenSecond,
+  handleProgress,
+  // handleVolumeChange,
+} from "@/utils/audioControls";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -230,38 +240,62 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     localStorage.setItem("repeat", repeat); // Save repeat mode
   }, [playing, songId, repeat]);
 
-  const handlePlayPause = async () => {
-    setUserClickedPlay((state) => !state);
+  // handlePlayPause({
+  //   dispatch,
+  //   playing,
+  //   songId,
+  //   setUserClickedPlay,
+  //   audioElement: audioRef.current,
+  // });
 
-    try {
-      if (playing) {
-        dispatch(pauseSong());
-        localStorage.setItem(
-          "songData",
-          JSON.stringify({ play: false, id: songId })
-        );
-      } else {
-        const audioElement = document.querySelector(
-          "audio"
-        ) as HTMLAudioElement;
-        if (audioElement) {
-          await audioElement.play();
-        }
+  // handleVolumeChange(volume, setVolume);
 
-        dispatch(playSong(songId));
-        localStorage.setItem(
-          "songData",
-          JSON.stringify({ play: true, id: songId })
-        );
-      }
-    } catch (error) {
-      console.clear();
-    }
-  };
+  // handleMute(volume, setVolume);
 
-  const handleOpenLyrics = () => {
-    dispatch(karaoke());
-  };
+  // handleProgress(currentTime, duration, setPlayed);
+
+  // handleEnd({
+  //   audioRef,
+  //   repeat,
+  //   handleNext,
+  //   handleRandom,
+  // });
+
+  // handlePreviousTenSecond(audioRef.current, duration);
+
+  // handleNextTenSecond(audioRef.current, duration);
+  // const handlePlayPause = async () => {
+  //   setUserClickedPlay((state) => !state);
+
+  //   try {
+  //     if (playing) {
+  //       dispatch(pauseSong());
+  //       localStorage.setItem(
+  //         "songData",
+  //         JSON.stringify({ play: false, id: songId })
+  //       );
+  //     } else {
+  //       const audioElement = document.querySelector(
+  //         "audio"
+  //       ) as HTMLAudioElement;
+  //       if (audioElement) {
+  //         await audioElement.play();
+  //       }
+
+  //       dispatch(playSong(songId));
+  //       localStorage.setItem(
+  //         "songData",
+  //         JSON.stringify({ play: true, id: songId })
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.clear();
+  //   }
+  // };
+
+  // const handleOpenLyrics = () => {
+  //   dispatch(karaoke());
+  // };
 
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
@@ -272,87 +306,87 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
-  // handle Mute
-  const handleMute = () => {
-    const getVolume = localStorage.getItem("volume");
+  // // handle Mute
+  // const handleMute = () => {
+  //   const getVolume = localStorage.getItem("volume");
 
-    if (parseFloat(getVolume!) > 0) {
-      localStorage.setItem("previousVolume", volume.toString());
-      localStorage.setItem("volume", (0).toString());
-      setVolume(0);
-    } else {
-      const previousVolume = localStorage.getItem("previousVolume");
-      localStorage.setItem("volume", previousVolume!);
+  //   if (parseFloat(getVolume!) > 0) {
+  //     localStorage.setItem("previousVolume", volume.toString());
+  //     localStorage.setItem("volume", (0).toString());
+  //     setVolume(0);
+  //   } else {
+  //     const previousVolume = localStorage.getItem("previousVolume");
+  //     localStorage.setItem("volume", previousVolume!);
 
-      setVolume(parseFloat(previousVolume!));
-    }
-  };
+  //     setVolume(parseFloat(previousVolume!));
+  //   }
+  // };
 
-  const handleProgress = (currentTime: number, duration: number) => {
-    const playedPercentage = duration ? currentTime / duration : 0;
-    setPlayed(playedPercentage);
-  };
+  // const handleProgress = (currentTime: number, duration: number) => {
+  //   const playedPercentage = duration ? currentTime / duration : 0;
+  //   setPlayed(playedPercentage);
+  // };
 
-  const handleEnd = () => {
-    const audioElement = audioRef.current;
+  // const handleEnd = () => {
+  //   const audioElement = audioRef.current;
 
-    if (repeat === "repeat-all") {
-      handleNext();
-    } else if (repeat === "repeat-one") {
-      if (audioElement) {
-        audioElement.currentTime = 0; // Restart the track
-        audioElement.play(); // Play the track again
-      }
-    } else if (repeat === "repeat-off") {
-      handleRandom();
-    } else if (repeat === "shuffle") {
-      handleRandom();
-    }
-  };
+  //   if (repeat === "repeat-all") {
+  //     handleNext();
+  //   } else if (repeat === "repeat-one") {
+  //     if (audioElement) {
+  //       audioElement.currentTime = 0; // Restart the track
+  //       audioElement.play(); // Play the track again
+  //     }
+  //   } else if (repeat === "repeat-off") {
+  //     handleRandom();
+  //   } else if (repeat === "shuffle") {
+  //     handleRandom();
+  //   }
+  // };
 
-  const handlePreviousTenSecond = () => {
-    if (audioRef.current) {
-      const currentAudio = audioRef.current;
-      const wasPlaying = !currentAudio.paused; // Check if audio is playing
+  // const handlePreviousTenSecond = () => {
+  //   if (audioRef.current) {
+  //     const currentAudio = audioRef.current;
+  //     const wasPlaying = !currentAudio.paused; // Check if audio is playing
 
-      if (wasPlaying) {
-        currentAudio.pause(); // Pause the audio
-      }
+  //     if (wasPlaying) {
+  //       currentAudio.pause(); // Pause the audio
+  //     }
 
-      // Skip the current time by 10 seconds, or to the end if duration is exceeded
-      currentAudio.currentTime = Math.min(
-        currentAudio.currentTime - 10,
-        duration
-      );
+  //     // Skip the current time by 10 seconds, or to the end if duration is exceeded
+  //     currentAudio.currentTime = Math.min(
+  //       currentAudio.currentTime - 10,
+  //       duration
+  //     );
 
-      // Resume playback if it was playing before the skip
-      if (wasPlaying) {
-        currentAudio.play();
-      }
-    }
-  };
+  //     // Resume playback if it was playing before the skip
+  //     if (wasPlaying) {
+  //       currentAudio.play();
+  //     }
+  //   }
+  // };
 
-  const handleNextTenSecond = () => {
-    if (audioRef.current) {
-      const currentAudio = audioRef.current;
-      const wasPlaying = !currentAudio.paused; // Check if audio is playing
+  // const handleNextTenSecond = () => {
+  //   if (audioRef.current) {
+  //     const currentAudio = audioRef.current;
+  //     const wasPlaying = !currentAudio.paused; // Check if audio is playing
 
-      if (wasPlaying) {
-        currentAudio.pause(); // Pause the audio
-      }
+  //     if (wasPlaying) {
+  //       currentAudio.pause(); // Pause the audio
+  //     }
 
-      // Skip the current time by 10 seconds, or to the end if duration is exceeded
-      currentAudio.currentTime = Math.min(
-        currentAudio.currentTime + 10,
-        duration
-      );
+  //     // Skip the current time by 10 seconds, or to the end if duration is exceeded
+  //     currentAudio.currentTime = Math.min(
+  //       currentAudio.currentTime + 10,
+  //       duration
+  //     );
 
-      // Resume playback if it was playing before the skip
-      if (wasPlaying) {
-        currentAudio.play();
-      }
-    }
-  };
+  //     // Resume playback if it was playing before the skip
+  //     if (wasPlaying) {
+  //       currentAudio.play();
+  //     }
+  //   }
+  // };
 
   const handleSeek = (value: number[]) => {
     const newTime = value[0];
@@ -467,16 +501,28 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           duration={duration}
           handleSeek={handleSeek}
           handleNext={handleNext}
-          handleNextTenSecond={handleNextTenSecond}
-          handlePlayPause={handlePlayPause}
-          handlePreviousTenSecond={handlePreviousTenSecond}
+          handleNextTenSecond={() =>
+            handleNextTenSecond(audioRef.current, duration)
+          }
+          handlePlayPause={() =>
+            handlePlayPause({
+              dispatch,
+              playing,
+              songId,
+              setUserClickedPlay,
+              audioElement: audioRef.current,
+            })
+          }
+          handlePreviousTenSecond={() =>
+            handlePreviousTenSecond(audioRef.current, duration)
+          }
           handlePrev={handlePrev}
           playing={playing}
           handleVolumeChange={handleVolumeChange}
           album={currentSong.songAlbum.albumName}
           artist={currentSong.songArtist}
           artwork={currentSong.artwork}
-          handleMute={handleMute}
+          handleMute={() => handleMute(volume, setVolume)}
           id={currentSong?._id}
           title={currentSong.songName}
           volume={volume}
@@ -493,7 +539,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           className={`${
             !showPlayer
               ? "hidden"
-              : "absolute p-4 lg:py-20 xl:px-[120px] right-0 top-20 text-white"
+              : "absolute p-4 py-24 lg:top-20 xl:px-[120px] right-0 text-white"
           } `}
         >
           <DropDownBtn
@@ -528,9 +574,18 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             <div className="hidden xl:mt-5 xl:block">
               <PlayButtons
                 handleNext={handleNext}
-                handleNextTenSecond={handleNextTenSecond}
-                handlePlayPause={handlePlayPause}
-                handlePreviousTenSecond={handlePreviousTenSecond}
+                handleNextTenSecond={() =>
+                  handleNextTenSecond(audioRef.current, duration)
+                }
+                handlePlayPause={() =>
+                  handlePlayPause({
+                    dispatch,
+                    playing,
+                    songId,
+                    setUserClickedPlay,
+                    audioElement: audioRef.current,
+                  })
+                }
                 handlePrev={handlePrev}
                 playing={playing}
               />
@@ -540,7 +595,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               toggleRepeat={toggleRepeat}
               src={LyricsIcon.src}
               repeat={repeat}
-              handleOpenLyrics={handleOpenLyrics}
+              handleOpenLyrics={() => handleOpenLyrics(dispatch)}
               handleAddToFavorites={handleAddtoFavourite}
               isfavorite={favorite}
             />
@@ -554,14 +609,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             onTimeUpdate={() => {
               const currentTime = audioRef.current?.currentTime || 0;
               const duration = audioRef.current?.duration || 0;
-              handleProgress(currentTime, duration);
+              handleProgress(currentTime, duration, setPlayed);
               setCurrentTime(currentTime);
             }}
             autoPlay={playing}
             onLoadedMetadata={() => {
               setDuration(audioRef.current?.duration || 0);
             }}
-            onEnded={handleEnd}
+            onEnded={() =>
+              handleEnd(audioRef, repeat, handleNext, handleRandom)
+            }
           />
 
           <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
@@ -585,9 +642,18 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <div className="flex w-full xl:hidden">
             <PlayButtons
               handleNext={handleNext}
-              handleNextTenSecond={handleNextTenSecond}
-              handlePlayPause={handlePlayPause}
-              handlePreviousTenSecond={handlePreviousTenSecond}
+              handleNextTenSecond={() =>
+                handleNextTenSecond(audioRef.current, duration)
+              }
+              handlePlayPause={() =>
+                handlePlayPause({
+                  dispatch,
+                  playing,
+                  songId,
+                  setUserClickedPlay,
+                  audioElement: audioRef.current,
+                })
+              }
               handlePrev={handlePrev}
               playing={playing}
             />
@@ -613,7 +679,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}
-                handleMute={handleMute}
+                handleMute={() => handleMute(volume, setVolume)}
               />
               <div className="md:hidden">
                 <MusicControls handleOpenEqualizer={handleOpenEqualizer} />

@@ -132,7 +132,7 @@ MiniPlayerProps) => {
               handlePrev={handlePrev}
               playing={playing}
             />
-            <div className="absolute w-1/2 flex-col px-5 md:max-w-sm lg:max-w-lg justify-center flex -translate-y-8 sm:-translate-y-7 mb-2 max-lg:w-full  top-[5.8rem] left-1/2 -translate-x-1/2 items-center">
+            <div className="absolute w-1/2 flex-col px-5 md:max-w-sm xl:max-w-md justify-center flex -translate-y-8 sm:-translate-y-7 mb-2 max-lg:w-full  top-[5.8rem] left-1/2 -translate-x-1/2 items-center">
               <GradientRange
                 defaultValue={[currentTime]}
                 step={0.01}
@@ -154,7 +154,7 @@ MiniPlayerProps) => {
               </div>
             </div>
           </div>
-          <div className="flex z-10  [@media(min-width:320px)]:gap-3  [@media(min-width:640px)]:gap-6 mb-10 md:mb-0 items-center">
+          <div className="flex z-10 gap-0 [@media(min-width:300px)]:gap-1 [@media(min-width:400px)]:gap-3  [@media(min-width:640px)]:gap-6 mb-8 sm:mb-10 lg:mb-0  items-center">
             <div className="hidden md:flex">
               <Volumn
                 handleMute={handleMute}
@@ -162,7 +162,7 @@ MiniPlayerProps) => {
                 volume={volume}
               />
             </div>
-            <div>
+            <div className="hidden [@media(min-width:300px)]:flex items-center">
               {/* <PlayLIstIcon /> */}
               <RepeatShuffleButton
               // repeat={repeat}
