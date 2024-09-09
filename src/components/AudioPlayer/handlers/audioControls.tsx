@@ -2,20 +2,6 @@ import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 import { pauseSong, playSong } from "@/redux/slice/music/musicActionSlice";
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
 
-interface AudioControlsProps {
-  dispatch: Dispatch<any>;
-  playing: boolean;
-  songId: string;
-  volume: number;
-  setVolume: Dispatch<SetStateAction<number>>;
-  setPlayed: Dispatch<SetStateAction<number>>;
-  audioRef: MutableRefObject<HTMLAudioElement | null>;
-  duration: number;
-  repeat: "repeat-all" | "repeat-one" | "repeat-off" | "shuffle";
-  handleNext: () => void;
-  handleRandom: () => void;
-}
-
 export const handlePlayPause = async ({
   dispatch,
   playing,
@@ -54,32 +40,28 @@ export const handlePlayPause = async ({
   }
 };
 
+export const toggleRepeat = (repeat: string) => {
+  let newRepeat;
+  if (repeat === "repeat-all") {
+    newRepeat = "repeat-one";
+  } else if (repeat === "repeat-one") {
+    newRepeat = "repeat-off";
+  } else if (repeat === "repeat-off") {
+    newRepeat = "shuffle";
+  } else {
+    newRepeat = "repeat-all";
+  }
+  localStorage.setItem("repeat", newRepeat);
+};
+
 export const handleOpenLyrics = (dispatch: Dispatch<any>) => {
   dispatch(karaoke());
 };
-
-// export const handleVolumeChange = (
-//   value: number[],
-//   setVolume: (value: number) => void
-// ) => {
-//   const newVolume = value[0];
-//   console.log("Type of setVolume:", typeof setVolume); // Should be 'function'
-//   console.log("setVolume:", setVolume); // Should be the state setter function
-
-//   localStorage.setItem("volume", JSON.stringify(newVolume));
-//   if (typeof setVolume === "function") {
-//     setVolume(newVolume);
-//   } else {
-//     console.error("setVolume is not a function");
-//   }
-// };
 
 export const handleMute = (
   volume: number,
   setVolume: (value: number) => void
 ) => {
-  console.log("setVolume:", setVolume); // Debugging line
-
   const getVolume = localStorage.getItem("volume");
 
   if (getVolume && parseFloat(getVolume) > 0) {

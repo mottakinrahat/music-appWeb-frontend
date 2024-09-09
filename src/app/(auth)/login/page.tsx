@@ -13,9 +13,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLoginMutation } from "@/redux/api/authApi";
 import { toast, Toaster } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 
 const Login = () => {
   const [login, { isLoading, error }] = useLoginMutation();
+  const songId = useSelector((state: RootState) => state.player.songId);
+  const dispatch = useDispatch();
   const router = useRouter();
   const defaultValues = {};
   const handleLogin = async (e: any) => {
@@ -26,7 +31,11 @@ const Login = () => {
 
       localStorage.setItem("token", res.data.data?.token);
       localStorage.setItem("user", JSON.stringify(user));
-
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: false, id: songId })
+      );
+      dispatch(pauseSong());
       toast.success("Login successful");
       router.push("/");
     } catch (error) {
