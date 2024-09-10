@@ -3,6 +3,24 @@ import { baseApi } from "./baseApi";
 const audioPlayerApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // Define mutation with dynamic parameters
+    // Getting all songs
+    getAllSong: build.mutation({
+      query: ({
+        page,
+        limit,
+        data,
+      }: {
+        page: number;
+        limit: number;
+        data: any;
+      }) => ({
+        url: `/songs?page=${page}&limit=${limit}`,
+        method: "GET",
+        body: data,
+      }),
+      invalidatesTags: ["allSongs"],
+    }),
+
     isFavourite: build.mutation({
       query: ({
         songId,
