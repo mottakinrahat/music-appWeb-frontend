@@ -11,8 +11,8 @@ interface AudioControlsProps {
   autoPlay?: boolean;
   onLoadedMetadata?: React.ReactEventHandler<HTMLAudioElement>;
   onEnded?: React.ReactEventHandler<HTMLAudioElement>;
-  playbackRate?: number;
-  volume?: number; // Volume should be between 0.0 and 1.0
+  playbackRate: number;
+  volume: number; // Volume should be between 0.0 and 1.0
 }
 
 const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
@@ -23,8 +23,8 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
       autoPlay,
       onLoadedMetadata,
       onEnded,
-      playbackRate = 1.0,
-      volume = 1.0,
+      playbackRate,
+      volume,
     },
     ref
   ) => {
@@ -32,13 +32,19 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     const dispatch = useDispatch();
 
     // Set playback rate and handle play/pause based on "playing" state
-    const debouncedPlaybackRate = useDebouncedValue(playbackRate, 500);
+    const [debouncedPlaybackRate, latedebouncedPlaybackRate] =
+      useDebouncedValue(playbackRate, 500);
 
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {
         const audioElement = ref.current;
 
-        audioElement.playbackRate = debouncedPlaybackRate;
+        // Apply immediate playback rate
+        if (playbackRate) {
+          audioElement.playbackRate = playbackRate; // Apply the immediate playback rate
+        }
+
+        // Preserve pitch in all browsers
         (audioElement as any).preservesPitch = true;
         (audioElement as any).mozPreservesPitch = true; // For Firefox
         (audioElement as any).webkitPreservesPitch = true; // For Safari
@@ -47,10 +53,10 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           const playPromise = audioElement.play();
           if (playPromise !== undefined) {
             playPromise.catch(() => {
-              // audioElement.muted = true;
               dispatch(playImport());
               audioElement.play().catch(() => {
-                // audioElement.muted = true;
+                // Handle playback issues here
+                dispatch(playImport());
               });
             });
           }
@@ -59,36 +65,50 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           dispatch(pauseSong());
         }
       }
-    }, [playbackRate, ref, playing, dispatch, debouncedPlaybackRate]);
+    }, [playbackRate, ref, playing, dispatch, src]);
 
-    // Ensure volume is set correctly when the component mounts
-useEffect(() => {
-  if (ref && "current" in ref && ref.current) {
-    const audioElement = ref.current;
-    const clampedVolume = Math.max(0, Math.min(volume, 1));
+    useEffect(() => {
+      if (ref && "current" in ref && ref.current) {
+        const audioElement = ref.current;
+        const clampedVolume = Math.max(0, Math.min(volume, 1));
 
-    const setVolume = () => {
-      audioElement.volume = clampedVolume;
-    };
+        const setVolume = () => {
+          if (!audioElement.muted) {
+            audioElement.volume = clampedVolume;
+          }
+        };
 
-    const handleCanPlay = () => {
-      // Set volume when the audio is ready to play
-      setVolume();
-    };
+        const handleMetadataLoaded = () => {
+          // Set volume when the metadata is loaded
+          setVolume();
+        };
 
-    if (audioElement.readyState >= 1) {
-      // If the audio metadata is already loaded, set the volume immediately
-      setVolume();
-    } else {
-      // For Safari and other browsers, ensure volume is set after the audio can play
-      audioElement.addEventListener("canplay", handleCanPlay);
-    }
+        const handleVolumeChange = () => {
+          if (!audioElement.muted) {
+            audioElement.volume = clampedVolume;
+          }
+        };
 
-    return () => {
-      audioElement.removeEventListener("canplay", handleCanPlay);
-    };
-  }
-}, [volume, ref]);
+        // If metadata is already loaded, set the volume immediately
+        if (audioElement.readyState >= 1) {
+          setVolume();
+        } else {
+          // For Safari, ensure volume is set after metadata is loaded
+          audioElement.addEventListener("loadedmetadata", handleMetadataLoaded);
+        }
+
+        // Additional user interaction for Safari: ensure volume updates on user play event
+        audioElement.addEventListener("play", handleVolumeChange);
+
+        return () => {
+          audioElement.removeEventListener(
+            "loadedmetadata",
+            handleMetadataLoaded
+          );
+          audioElement.removeEventListener("play", handleVolumeChange);
+        };
+      }
+    }, [volume, ref]);
 
     return (
       <audio

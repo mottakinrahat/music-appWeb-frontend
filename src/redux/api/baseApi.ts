@@ -23,5 +23,7 @@ export const baseApi = createApi({
     "Wishlist",
     "Biddings",
     "Vehicles",
+    "Favorite",
+    "Playlist"
   ],
 });
