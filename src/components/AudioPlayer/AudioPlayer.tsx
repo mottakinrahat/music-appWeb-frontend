@@ -286,7 +286,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (!userId) {
       toast.warning("Please login first!");
     } else {
-      setFavorite(favorite);
+      // setFavorite(true);
       handleFavorite(
         isFavourite,
         favorite,
@@ -295,11 +295,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         playListData,
         artwork, // Replace with dynamic artwork URL
         songName,
-        { albumName: songAlbum }, // Replace with dynamic album name
+        songAlbum, // Replace with dynamic album name
         { src: placeHolder.src } // Replace with dynamic placeholder URL
       );
     }
   };
+  // console.log(songName);
 
   const threeDotContent = ThreeDotContent({
     currentSong,
