@@ -19,6 +19,21 @@ const audioPlayerApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Favorite"],
     }),
+    getFavourite: build.mutation({
+      query: ({
+        userId,
+        data,
+      }: {
+        songId: string;
+        userId: string;
+        data: any;
+      }) => ({
+        url: `/favourite/${userId}`,
+        method: "GET",
+        body: data,
+      }),
+      invalidatesTags: ["Favorite"],
+    }),
 
     // Other endpoints...
     addToPlayList: build.mutation({
@@ -45,4 +60,5 @@ export const {
   useIsFavouriteMutation,
   useAddToPlayListMutation,
   useCreatePlayListMutation,
+  useGetFavouriteMutation,
 } = audioPlayerApi;

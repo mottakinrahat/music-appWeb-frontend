@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import Image from "next/image"; // Assuming you're using Next.js for Image
 
 // Update the handleFavorite function to accept the mutation function
-export const handleFavorite = async (
+const handleFavorite = async (
   isFavourite: any, // Function from the hook
   isFavouriteUser: any, // Function
   songId: string,
@@ -56,3 +56,17 @@ export const handleFavorite = async (
     console.error("Failed to set favorite:", err);
   }
 };
+
+// get favorites
+
+const getUserFavorites = async (getFavourites: any, userId: string) => {
+  try {
+    const favorites = await getFavourites({ userId }).unwrap();
+    return favorites?.data || [];
+  } catch (err) {
+    console.error("Failed to fetch favorites:", err);
+    return [];
+  }
+};
+
+export { handleFavorite, getUserFavorites };

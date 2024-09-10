@@ -22,7 +22,6 @@ import {
 } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
-import Image from "next/image";
 import ImportSong from "./components/ImportSong";
 import Lyrics from "./components/Lyrics";
 import {
@@ -36,8 +35,11 @@ import {
   toggleRepeat,
   // handleVolumeChange,
 } from "./handlers/audioControls";
-import { handleFavorite } from "./handlers/handleFavorite";
-import { useIsFavouriteMutation } from "@/redux/api/audioPlayerApi";
+import { getUserFavorites, handleFavorite } from "./handlers/handleFavorite";
+import {
+  useGetFavouriteMutation,
+  useIsFavouriteMutation,
+} from "@/redux/api/audioPlayerApi";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -84,6 +86,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const [userClickedPlay, setUserClickedPlay] = useState<boolean>(false);
+  const [isFavourite, { isLoading: isFavLoading, data: getFavData }] =
+    useIsFavouriteMutation();
+  const [getFavorites, { isLoading, data: getIsFav }] =
+    useGetFavouriteMutation();
+
   const dispatch = useDispatch();
   const isShowLyrics = useSelector(
     (state: RootState) => state.player.showLyric
@@ -103,15 +110,33 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const isFavouriteUser = currentSong.favUsers.includes(userId);
 
   useEffect(() => {
-    setFavorite(isFavouriteUser);
-
     const user = localStorage.getItem("user");
     if (user) {
       setUserData(JSON.parse(user));
     }
-  }, [currentSong.favUsers, userId, isFavouriteUser]);
+
+    if (userId) {
+      getUserFavorites(getFavorites, userId);
+      // getFav?.map
+      if (getIsFav?.data !== undefined) {
+        const fav = getIsFav?.data?.some(
+          (f: any) => f.favUsers == userId && f._id === songId
+        );
+
+        setFavorite(fav);
+      }
+    }
+  }, [
+    currentSong.favUsers,
+    userId,
+    isFavouriteUser,
+    getFavorites,
+    getIsFav,
+    songId,
+  ]);
 
   const [currentLyrics, setCurrentLyrics] = useState<string | any>(null);
+
   useEffect(() => {
     const getLyrics = async () => {
       try {
@@ -123,7 +148,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         }
         setCurrentLyrics(response.data.data.line);
       } catch (error) {
-        console.clear();
+        // console.clear();
       }
     };
     getLyrics();
@@ -250,8 +275,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       }
     }
   };
-  const [isFavourite, { isLoading, data: getFavData }] =
-    useIsFavouriteMutation();
 
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
@@ -263,7 +286,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (!userId) {
       toast.warning("Please login first!");
     } else {
-      setFavorite((prev: boolean) => !prev);
+      setFavorite(favorite);
       handleFavorite(
         isFavourite,
         favorite,

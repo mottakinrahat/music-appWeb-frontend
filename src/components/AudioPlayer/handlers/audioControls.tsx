@@ -36,7 +36,7 @@ export const handlePlayPause = async ({
       );
     }
   } catch (error) {
-    console.clear();
+    // console.clear();
   }
 };
 
