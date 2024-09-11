@@ -117,12 +117,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
     if (userId) {
       getUserFavorites(getFavorites, userId);
-      // getFav?.map
       if (getIsFav?.data !== undefined) {
         const fav = getIsFav?.data?.some(
           (f: any) => f.favUsers == userId && f._id === songId
         );
-
         setFavorite(fav);
       }
     }
@@ -162,7 +160,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   }, [dispatch, pathname, songId]);
 
-  // Seclectors
   const playing = useSelector((state: RootState) => state.player.playing);
   const repeat = useSelector((state: RootState) => state.player.repeat);
   const importedSong = useSelector((state: RootState) => state.musicData);
@@ -178,21 +175,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setPlaybackSpeed(parseFloat(speed));
     }
 
-    const volume = localStorage.getItem("volume");
-    if (!volume) {
+    const storedVolume = localStorage.getItem("volume");
+    if (!storedVolume) {
       localStorage.setItem("volume", "0.8");
-      setVolume(0.8);
     }
-    if (volume) {
-      setVolume(parseFloat(volume));
-    }
+    setVolume(parseFloat(storedVolume || "0.8"));
     setCurrentSong(songData);
     const getRepeat = localStorage.getItem("repeat");
     if (!getRepeat) {
       localStorage.setItem("repeat", repeat);
     }
-  }, [currentSong, repeat, songData, speed, volume]);
-  // Main Song
+  }, [currentSong, repeat, songData, speed]);
 
   useEffect(() => {
     const handleInteraction = () => {
@@ -247,31 +240,41 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     localStorage.setItem("repeat", repeat); // Save repeat mode
   }, [playing, songId, repeat]);
 
+  // Volume Change Handler
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
-    localStorage.setItem("volume", JSON.stringify(newVolume));
-    const oldVolume = localStorage.getItem("volume");
-    if (oldVolume) {
-      setVolume(parseFloat(oldVolume));
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume; // Ensure the volume is set directly on the audio element
+    }
+    localStorage.setItem("volume", JSON.stringify(newVolume)); // Save to localStorage
+  };
+
+  // Seek Handler
+  const handleSeek = (value: number[]) => {
+    const newTime = value[0];
+    if (audioRef.current) {
+      const wasPlaying = !audioRef.current.paused;
+      if (wasPlaying) {
+        audioRef.current.pause();
+      }
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+      if (wasPlaying) {
+        audioRef.current.play();
+      }
     }
   };
 
-  const handleSeek = (value: number[]) => {
-    const newTime = value[0];
-
+  // Mute Handler
+  const handleMute = () => {
     if (audioRef.current) {
-      const currentAudio = audioRef.current;
-      const wasPlaying = !currentAudio.paused; // Check if audio is playing
-
-      if (wasPlaying) {
-        currentAudio.pause(); // Pause the audio before seeking
-      }
-
-      currentAudio.currentTime = newTime; // Set the new time
-      setCurrentTime(newTime); // Update the state with the new time
-
-      if (wasPlaying) {
-        currentAudio.play(); // Resume playback if it was playing before
+      if (volume > 0) {
+        setVolume(0);
+        audioRef.current.volume = 0;
+      } else {
+        setVolume(0.8);
+        audioRef.current.volume = 0.8;
       }
     }
   };
@@ -286,21 +289,19 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (!userId) {
       toast.warning("Please login first!");
     } else {
-      // setFavorite(true);
       handleFavorite(
         isFavourite,
         favorite,
-        songId, // songId
-        userId, // userId
+        songId,
+        userId,
         playListData,
-        artwork, // Replace with dynamic artwork URL
+        artwork,
         songName,
-        songAlbum, // Replace with dynamic album name
-        { src: placeHolder.src } // Replace with dynamic placeholder URL
+        songAlbum,
+        { src: placeHolder.src }
       );
     }
   };
-  // console.log(songName);
 
   const threeDotContent = ThreeDotContent({
     currentSong,
@@ -346,7 +347,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           album={currentSong.songAlbum.albumName}
           artist={currentSong.songArtist}
           artwork={currentSong.artwork}
-          handleMute={() => handleMute(volume, setVolume)}
+          handleMute={handleMute}
           id={currentSong?._id}
           title={currentSong.songName}
           volume={volume}
@@ -448,8 +449,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           /> 
 
-     
-
           <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
             <Slider
               defaultValue={[currentTime]}
@@ -511,7 +510,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}
-                handleMute={() => handleMute(volume, setVolume)}
+                handleMute={handleMute}
               />
               <div className="md:hidden">
                 <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
