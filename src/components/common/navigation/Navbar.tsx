@@ -16,10 +16,11 @@ interface NavInterface {
 }
 
 const Navbar = ({ blur = false }: NavInterface) => {
+  const [blurNav, setBlurNav] = useState(true);
+  const pathname = usePathname();
   const [user, setUser] = useState(null);
 
   const [showNav, setShowNav] = useState(false);
-  const pathname = usePathname();
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
@@ -54,6 +55,16 @@ const Navbar = ({ blur = false }: NavInterface) => {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
+
+  useEffect(() => {
+    if (pathname.startsWith("/music/")) {
+      setBlurNav(true);
+    } else if (pathname.startsWith("/offline/")) {
+      setBlurNav(true);
+    } else {
+      setBlurNav(false);
+    }
+  }, [pathname]);
 
   const [isAlertOpen, setAlertOpen] = useState(false);
 

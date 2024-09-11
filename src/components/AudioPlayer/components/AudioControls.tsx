@@ -1,4 +1,10 @@
 import React, { useEffect, useRef, forwardRef } from "react";
+"use client";
+import { useDebouncedValue } from "@/hooks/useDebounceValue";
+import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
+import { RootState } from "@/redux/store";
+import React, { forwardRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 interface AudioControlsProps {
   src: string;
