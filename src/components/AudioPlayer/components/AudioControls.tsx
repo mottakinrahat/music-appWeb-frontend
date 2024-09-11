@@ -129,4 +129,3 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
 AudioControls.displayName = "AudioControls";
 
 export default AudioControls;
-
