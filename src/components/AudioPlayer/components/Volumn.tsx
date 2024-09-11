@@ -1,4 +1,7 @@
 "use client";
+import VolumeMiddle from "@/components/svg/VolumeMiddle";
+import VolumeMuted from "@/components/svg/VolumeMuted";
+import VolumeUp from "@/components/svg/VolumeUp";
 import {
   GradientRange,
   Slider,
@@ -46,7 +49,7 @@ export default function Volumn({
               : "text-white hover:text-gray-300"
           } text-xl mx-2 transition `}
         >
-          <RxSpeakerOff />
+          <VolumeMuted />
         </button>
       ) : volume < 0.3 ? (
         <button
@@ -57,7 +60,7 @@ export default function Volumn({
               : "text-white hover:text-gray-300"
           } text-xl mx-2 transition `}
         >
-          <RxSpeakerQuiet />
+          <VolumeMiddle />
         </button>
       ) : volume < 0.5 ? (
         <button
@@ -68,7 +71,7 @@ export default function Volumn({
               : "text-white hover:text-gray-300"
           } text-xl mx-2 transition `}
         >
-          <RxSpeakerModerate />
+          <VolumeMiddle />
         </button>
       ) : (
         <button
@@ -79,7 +82,7 @@ export default function Volumn({
               : "text-white hover:text-gray-300"
           } text-xl mx-2 transition `}
         >
-          <RxSpeakerLoud />
+          <VolumeUp />
         </button>
       )}
       {/* volume slider */}

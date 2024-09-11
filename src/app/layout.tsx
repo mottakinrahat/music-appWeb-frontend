@@ -4,6 +4,8 @@ import "./globals.css";
 import Providers from "@/lib/Providers";
 import Head from "next/head";
 import { Toaster } from "sonner";
+import "core-js/features/array/reverse";
+import "core-js/features/promise/finally";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -21,7 +23,6 @@ export default function RootLayout({
     <Providers>
       <html data-theme="light" lang="en">
         <Head>
-          {/* Add favicon links */}
           <link rel="icon" href="/favicon.ico" />
           <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
           <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico" />

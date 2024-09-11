@@ -61,7 +61,9 @@ const ConcertsCard: React.FC<ConcertCardInterface> = ({
       {/* Card Content */}
 
       <div>
-        <h2 className="text-2xl flex-1 font-semibold mb-2">{title}</h2>
+        <h2 className=" text-xl sm:text-2xl flex-1 font-semibold mb-2">
+          {title}
+        </h2>
         <div className="text-textPrimary text-base ">January 4, 5 p.m. PT</div>
       </div>
     </div>

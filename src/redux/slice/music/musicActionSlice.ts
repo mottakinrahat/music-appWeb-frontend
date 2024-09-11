@@ -5,6 +5,7 @@ export interface PlayerState {
   songId: string | null;
   repeat: "repeat-all" | "repeat-one" | "repeat-off" | "shuffle";
   audioElement: HTMLAudioElement | null | any;
+  showLyric: boolean;
 }
 
 const initialState: PlayerState = {
@@ -12,18 +13,25 @@ const initialState: PlayerState = {
   songId: null,
   repeat: "repeat-all", // Default repeat mode
   audioElement: null,
+  showLyric: false,
 };
 
 const playerSlice = createSlice({
   name: "player",
   initialState,
   reducers: {
-    playSong: (state, action: PayloadAction<string>) => {
+    playSong: (state, action: PayloadAction<string | null>) => {
       state.playing = true;
-      state.songId = action.payload;
+      state.songId = action?.payload;
+    },
+    playImport: (state) => {
+      state.playing = true;
     },
     pauseSong: (state) => {
       state.playing = false;
+    },
+    showLyric: (state) => {
+      state.showLyric = !state.showLyric;
     },
     toggleRepeat: (state) => {
       if (state.repeat === "repeat-all") {
@@ -45,6 +53,12 @@ const playerSlice = createSlice({
   },
 });
 
-export const { playSong, pauseSong, toggleRepeat, setAudioElement } =
-  playerSlice.actions;
+export const {
+  playSong,
+  pauseSong,
+  playImport,
+  toggleRepeat,
+  setAudioElement,
+  showLyric,
+} = playerSlice.actions;
 export default playerSlice.reducer;

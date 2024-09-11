@@ -3,10 +3,7 @@
 import { Area, AreaChart, CartesianGrid, XAxis, Dot, YAxis } from "recharts";
 
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-} from "@/components/ui/chart";
+import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 
 interface ChartInfc {
   data: Array<object>;
@@ -28,12 +25,12 @@ export function Chart({ data }: ChartInfc) {
     <Card className="border-0 p-0 -mx-10 shadow-none w-full">
       <CardContent className="border-0 p-0">
         <ChartContainer
-          style={{ minHeight: 0, minWidth: 0 }}
+          style={{ minHeight: 1, minWidth: 1 }}
           config={chartConfig}
         >
           <AreaChart
             data={data}
-            style={{ minHeight: 0, minWidth: 0 }}
+            style={{ minHeight: 1, minWidth: 1 }}
             margin={{ left: 2, right: 2 }}
           >
             <CartesianGrid vertical={true} horizontal={false} />

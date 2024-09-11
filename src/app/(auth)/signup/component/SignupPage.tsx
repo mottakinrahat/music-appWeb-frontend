@@ -15,9 +15,18 @@ import { z } from "zod";
 
 const signupSchema = z
   .object({
-    firstName: z.string().nonempty("First name is required").min(2, "First name must be at least 2 characters long"),
-    lastName: z.string().nonempty("Last name is required").min(2, "Last name must be at least 2 characters long"),
-    email: z.string().nonempty("Email is required").email("Invalid email address"),
+    firstName: z
+      .string()
+      .nonempty("First name is required")
+      .min(2, "First name must be at least 2 characters long"),
+    lastName: z
+      .string()
+      .nonempty("Last name is required")
+      .min(2, "Last name must be at least 2 characters long"),
+    email: z
+      .string()
+      .nonempty("Email is required")
+      .email("Invalid email address"),
     password: z
       .string()
       .nonempty("Password is required")
@@ -72,7 +81,9 @@ const SignupPage: React.FC = () => {
         onSubmit={handleSubmit}
         defaultValues={defaultValues}
       >
-        <h1 className="text-[#262626] md:text-5xl text-2xl font-semibold">Create an account</h1>
+        <h1 className="text-[#262626] md:text-5xl  text-xl sm:text-2xl font-semibold">
+          Create an account
+        </h1>
         <p className="font-semibold md:text-base leading-6 text-sm">
           Already have an account?<span className="text-accent"> Log in </span>
         </p>
@@ -94,7 +105,13 @@ const SignupPage: React.FC = () => {
           />
         </div>
         {/* Email */}
-        <DInput defaultValue={""} labelTextColor="#262626" name="email" label="Email" placeholder="Enter your email" />
+        <DInput
+          defaultValue={""}
+          labelTextColor="#262626"
+          name="email"
+          label="Email"
+          placeholder="Enter your email"
+        />
         {/* Password */}
         <DInput
           defaultValue={"@1111aA1111"}
@@ -147,8 +164,10 @@ const SignupPage: React.FC = () => {
       </div>
 
       <p className="text-[#4C4C4C] mt-5 p-4 text-sm md:text-base">
-        By clicking &quot;Sign up&quot; above, you acknowledge that you have read and you agree to our General{" "}
-        <span className="font-semibold">Terms and Conditions</span> and have read and acknowledge the{" "}
+        By clicking &quot;Sign up&quot; above, you acknowledge that you have
+        read and you agree to our General{" "}
+        <span className="font-semibold">Terms and Conditions</span> and have
+        read and acknowledge the{" "}
         <span className="font-semibold">Privacy policy.</span>
       </p>
     </div>

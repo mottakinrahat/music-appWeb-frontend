@@ -12,7 +12,19 @@ import Logo from "../logo/Logo";
 import Routes from "./routes";
 import Link from "next/link";
 
-const ToggleMenu = ({ blur }: any) => {
+interface ToggleMenuProps {
+  blur?: boolean; // blur the background image? default is false.
+  user?: any; // current user information
+  handleLogout: () => void; // function to handle logout
+  showNav?: boolean; //
+}
+
+const ToggleMenu: React.FC<ToggleMenuProps> = ({
+  blur,
+  user,
+  handleLogout,
+  showNav,
+}: any) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -27,19 +39,19 @@ const ToggleMenu = ({ blur }: any) => {
       >
         <span
           className={`block w-6 h-0.5 ${
-            blur ? "bg-white" : "bg-black"
+            blur || showNav ? "bg-white" : "bg-black"
           } transition-transform duration-300 ${
             isOpen ? "rotate-45 translate-y-[0.65rem]" : "translate-y-1.5"
           }`}
         ></span>
         <span
           className={`block w-6 h-0.5 ${
-            blur ? "bg-white" : "bg-black"
+            blur || showNav ? "bg-white" : "bg-black"
           } transition-opacity duration-300 ${isOpen ? "opacity-0" : ""}`}
         ></span>
         <span
           className={`block w-6 h-0.5 ${
-            blur ? "bg-white" : "bg-black"
+            blur || showNav ? "bg-white" : "bg-black"
           } transition-transform duration-300 ${
             isOpen ? "-rotate-45 -translate-y-4" : "-translate-y-1.5"
           }`}
@@ -48,7 +60,7 @@ const ToggleMenu = ({ blur }: any) => {
 
       {/* Adjust Drawer to use state */}
       <Drawer open={isOpen} onOpenChange={setIsOpen} direction="left">
-        <DrawerContent className="w-[70%] max-w-md h-screen">
+        <DrawerContent className="w-[70%] z-[99999]  max-w-md h-screen">
           <DrawerHeader>
             <DrawerTitle>
               <Logo />
@@ -58,9 +70,15 @@ const ToggleMenu = ({ blur }: any) => {
                 <Routes />
               </span>
               <div className="mt-3">
-                <Link href="/login">
-                  <div className="hover:font-semibold my">Login/Sign up</div>
-                </Link>
+                {!user ? (
+                  <Link href="/login">
+                    <div className="hover:font-semibold">Login/Sign up</div>
+                  </Link>
+                ) : (
+                  <div className="hover:font-semibold" onClick={handleLogout}>
+                    Logout
+                  </div>
+                )}
               </div>
             </DrawerDescription>
           </DrawerHeader>

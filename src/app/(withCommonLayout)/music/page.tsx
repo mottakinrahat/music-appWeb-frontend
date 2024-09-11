@@ -24,7 +24,7 @@ const AudioList = () => {
 
   return (
     <>
-      <NewReleases tracks={tracks} />;
+      <NewReleases tracks={tracks} />
       <HotPlayLists />
       <TopCharts />
       <TopAlbums />

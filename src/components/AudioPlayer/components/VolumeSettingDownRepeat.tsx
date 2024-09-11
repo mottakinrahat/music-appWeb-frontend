@@ -89,15 +89,29 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
 
   // handle playback speed
   const handlePlaybackSpeed = () => {
-    const speedOptions = [1, 1.5, 2, 0.5, 0.75];
-    const nextIndex =
-      (speedOptions.indexOf(playbackSpeed) + 1) % speedOptions.length;
-    const newSpeed = speedOptions[nextIndex];
-    setPlaybackSpeed(newSpeed);
-    localStorage.setItem("speed", newSpeed.toString());
+    // Displayed values
+    const displaySpeedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+    // Actual speed values
+    // const actualSpeedOptions = [0.45, 0.65, 0.8, 1, 1.25, 1.5, 1.75, 2];
 
+    // Find the next index based on the current displayed speed
+    const nextIndex =
+      (displaySpeedOptions.indexOf(playbackSpeed) + 1) %
+      displaySpeedOptions.length;
+
+    // Get the new display speed and the actual speed
+    const newDisplaySpeed = displaySpeedOptions[nextIndex];
+    // const newActualSpeed = actualSpeedOptions[nextIndex];
+
+    // Update the state with the new display speed
+    setPlaybackSpeed(newDisplaySpeed);
+
+    // Store the actual speed in localStorage
+    localStorage.setItem("speed", newDisplaySpeed.toString());
+
+    // Set the actual playback speed in the audio element
     if (audioRef.current) {
-      audioRef.current.playbackRate = newSpeed;
+      audioRef.current.playbackRate = newDisplaySpeed;
     }
   };
 
@@ -119,7 +133,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
             onClick={() => handlePlaybackSpeed()}
             className="font-semibold select-none cursor-pointer"
           >
-            {playbackSpeed.toFixed(2)}
+            {playbackSpeed.toFixed(2)}x
           </span>
         </li>
         <li className="flex justify-between items-center">
@@ -141,7 +155,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
 
   return (
     <div>
-      <div className="flex justify-center items-center gap-[24px]">
+      <div className="flex justify-center items-center gap-3 sm:gap-[24px]">
         <div className="max-md:hidden">
           <Volumn
             handleMute={handleMute}
@@ -164,19 +178,19 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
             dropDownContent={settingContent}
             buttonContent={
               <>
-                <IoSettingsOutline className="active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
+                <IoSettingsOutline className="active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent  text-xl sm:text-2xl" />
               </>
             }
           />
         </div>
         <div
-          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
+          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent "
           onClick={onMinimize}
         >
-          <LucideMinimize2 />
+          <LucideMinimize2 className="p-[2px] sm:p-0 sm:text-2xl" />
         </div>
         <div
-          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
+          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent  text-xl sm:text-2xl"
           onClick={handleOpenPlayList}
         >
           <PiPlaylistBold />

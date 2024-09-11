@@ -12,7 +12,7 @@ const usersApi = baseApi.injectEndpoints({
     }),
     // get all pet
     updateUsersProfile: build.mutation({
-      query: (payload: any) => {
+      query: (payload: { userName: string; photoUrl: string }) => {
         return {
           url: `/users/profile`,
           method: "PUT",
@@ -25,21 +25,27 @@ const usersApi = baseApi.injectEndpoints({
     updateUser: build.mutation({
       query: (payload) => {
         const { id, role, userStatus } = payload;
-    
+
         const body: any = {};
         if (role) body.role = role;
         if (userStatus) body.userStatus = userStatus;
-    
+
         return {
           url: `/users/${id}`,
           method: "PUT",
-          body, 
+          body,
         };
       },
       invalidatesTags: ["Users"],
     }),
-    
-    
+
+    deleteUser: build.mutation({
+      query: (id: string) => ({
+        url: `/users/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Users"],
+    }),
   }),
 });
 
@@ -47,4 +53,5 @@ export const {
   useGetAllUsersQuery,
   useUpdateUsersProfileMutation,
   useUpdateUserMutation,
+  useDeleteUserMutation,
 } = usersApi;

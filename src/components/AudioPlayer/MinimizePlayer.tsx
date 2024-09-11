@@ -13,7 +13,7 @@ const MinimizePlayer = () => {
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(true);
   // const [play, setPlay] = useState(true);
-  const [height, setHeight] = useState(7); // Initial height
+  const [height, setHeight] = useState(0); // Initial height
   const resizingRef = useRef<HTMLDivElement | null>(null);
   const [startY, setStartY] = useState<number>(0);
   const [startHeight, setStartHeight] = useState<number>(0);
@@ -92,12 +92,6 @@ const MinimizePlayer = () => {
   const play = isPlay?.play;
 
   useEffect(() => {
-    // if (showPlayer === false) {
-    //   setPlay(false);
-    // } else {
-    //   setPlay(true);
-    // }
-    // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
       // document.body.classList.add("hide-scrollbar");

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import playBtn from "@/assets/icons/play_circle.png";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { clearMusicData } from "@/redux/slice/music/musicDataSlice";
 import { initDB } from "@/utils/initDB";
 import { RootState } from "@/redux/store";
+import { Skeleton } from "../ui/skeleton";
 
 interface BaseCard {
   type: string;
@@ -105,14 +106,18 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
                 aspectRatio: "1 / 1",
                 objectFit: "cover",
               }}
-              className="rounded-lg "
+              className="rounded-lg"
+             
             />
             {/* Overlay */}
-            <Link href={musicId ? `/music/${musicId}` : "/"}>
-              <div
-                onClick={handleSetIdtoLocalStroage}
-                className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-              >
+            {/* {imageLoading && (
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+            )} */}
+            <Link
+              onClick={handleSetIdtoLocalStroage}
+              href={musicId ? `/music/${musicId}` : "/"}
+            >
+              <div className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
                 {type !== "freelancer" && (
                   <Image
                     src={playBtn}
@@ -147,7 +152,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
       <div className="">
         {title && (
           <Link href={musicId ? `/music/${musicId}` : "/"} className="">
-            <h2 className="text-xl lg:text-2xl text-textPrimary hover:text-textSecondary cursor-pointer font-semibold mb-2">
+            <h2 className="text-xl lg:text-2xl sm:text-2xl text-textPrimary hover:text-textSecondary cursor-pointer font-semibold mb-2">
               {title.length > 22 ? `${title.slice(0, 22)}...` : title}
             </h2>
           </Link>
@@ -172,7 +177,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
         {type === "freelancer" && freelancerType && (
           <>
             {rating !== undefined && (
-              <div className="mt-2 text-2xl">
+              <div className="mt-2  text-xl sm:text-2xl">
                 <span className="text-yellow-500">★</span>
                 <span className="ml-1 text-sm">{rating}</span>
               </div>
