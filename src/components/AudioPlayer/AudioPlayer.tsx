@@ -78,7 +78,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [favorite, setFavorite] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
   const [played, setPlayed] = useState<number>(0);
-  const [volume, setVolume] = useState<number>(0.8);
+  const [volume, setVolume] = useState<number>(0.8); // Default volume set to 0.8
   const [playbackSpeed, setPlaybackSpeed] = useState<any>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
   const [userData, setUserData] = useState<any>();
@@ -175,11 +175,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setPlaybackSpeed(parseFloat(speed));
     }
 
-    const storedVolume = localStorage.getItem("volume");
-    if (!storedVolume) {
-      localStorage.setItem("volume", "0.8");
-    }
-    setVolume(parseFloat(storedVolume || "0.8"));
     setCurrentSong(songData);
     const getRepeat = localStorage.getItem("repeat");
     if (!getRepeat) {
@@ -247,7 +242,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (audioRef.current) {
       audioRef.current.volume = newVolume; // Ensure the volume is set directly on the audio element
     }
-    localStorage.setItem("volume", JSON.stringify(newVolume)); // Save to localStorage
   };
 
   // Seek Handler
