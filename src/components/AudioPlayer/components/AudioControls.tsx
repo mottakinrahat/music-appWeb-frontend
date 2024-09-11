@@ -138,6 +138,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
         autoPlay={playing}
         onLoadedMetadata={onLoadedMetadata}
         onEnded={onEnded}
+        muted={volume <= 0}
       >
         Your browser does not support the audio element.
       </audio>
