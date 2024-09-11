@@ -36,6 +36,19 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {
         const audioElement = ref.current;
+        // Create an audio context for Safari to handle playback better
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        const audioContext = new AudioContext();
+
+        // Resume the audio context on user interaction
+        const resumeAudioContext = () => {
+          if (audioContext.state === 'suspended') {
+            audioContext.resume();
+          }
+        };
+
+        document.addEventListener('click', resumeAudioContext);
+        document.addEventListener('touchstart', resumeAudioContext);
 
         // Apply playback rate
         if (debouncedPlaybackRate) {
@@ -61,6 +74,11 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           audioElement.pause();
           dispatch(pauseSong());
         }
+
+        return () => {
+          document.removeEventListener('click', resumeAudioContext);
+          document.removeEventListener('touchstart', resumeAudioContext);
+        };
       }
     }, [debouncedPlaybackRate, ref, playing, dispatch, src]);
 
@@ -70,6 +88,11 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
         const clampedVolume = Math.max(0, Math.min(volume, 1));
 
         const setVolume = () => {
+          // Unmute explicitly if the volume is greater than 0
+          if (audioElement.muted && clampedVolume > 0) {
+            audioElement.muted = false;
+          }
+
           if (!audioElement.muted) {
             audioElement.volume = clampedVolume;
           }
