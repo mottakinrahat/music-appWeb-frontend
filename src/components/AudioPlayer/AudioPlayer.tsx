@@ -428,7 +428,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             />
           </div>
 
-          <AudioControls
+           <AudioControls
             volume={volume}
             ref={audioRef}
             src={importedSong.fileData ? importedSong.fileData : songLink}
@@ -446,7 +446,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             onEnded={() =>
               handleEnd(audioRef, repeat, handleNext, handleRandom)
             }
-          />
+          /> 
+
+     
 
           <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
             <Slider
