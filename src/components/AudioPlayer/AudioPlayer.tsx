@@ -122,7 +122,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           setCurrentLyrics(null);
         }
         setCurrentLyrics(response.data.data.line);
-      } catch (error) {}
+      } catch (error) {
+        console.clear();
+      }
     };
     getLyrics();
   }, [currentTime, songData._id]);
@@ -223,8 +225,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
     localStorage.setItem("volume", JSON.stringify(newVolume));
+
+    // Retrieve the volume from local storage immediately after setting it
     const oldVolume = localStorage.getItem("volume");
-    if (oldVolume) {
+    if (oldVolume !== null) {
+      // Parse the volume correctly and set it
       setVolume(parseFloat(oldVolume));
     }
   };
@@ -402,7 +407,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             />
           </div>
 
-           <AudioControls
+          <AudioControls
             volume={volume}
             ref={audioRef}
             src={importedSong.fileData ? importedSong.fileData : songLink}
@@ -413,16 +418,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               handleProgress(currentTime, duration, setPlayed);
               setCurrentTime(currentTime);
             }}
-            autoPlay={playing}
             onLoadedMetadata={() => {
               setDuration(audioRef.current?.duration || 0);
             }}
             onEnded={() =>
               handleEnd(audioRef, repeat, handleNext, handleRandom)
             }
-          /> 
-
-     
+          />
 
           <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
             <Slider
