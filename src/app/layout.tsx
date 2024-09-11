@@ -6,7 +6,7 @@ import Head from "next/head";
 import { Toaster } from "sonner";
 import "core-js/features/array/reverse";
 import "core-js/features/promise/finally";
-
+import 'core-js';
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

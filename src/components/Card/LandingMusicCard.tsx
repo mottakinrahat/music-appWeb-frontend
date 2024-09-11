@@ -105,7 +105,7 @@ const LandingMusicCard = ({
                 onClick={() =>
                   localStorage.setItem(
                     "songData",
-                    JSON.stringify({ play: true, id: id ? id : null })
+                    JSON.stringify({ play: true, id: id })
                   )
                 }
               >
