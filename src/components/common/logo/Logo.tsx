@@ -3,6 +3,7 @@ import logo_x from "@/assets/logo/logo.svg";
 import logo_text from "@/assets/logo/logo_text.svg";
 import Image from "next/image";
 import Link from "next/link";
+import OfflineNotification from "@/utils/offlineNotification";
 
 const Logo = () => {
   return (
@@ -26,8 +27,8 @@ const Logo = () => {
             alt="Music Appweb"
           />
         </div>
-        
       </div>
+      <OfflineNotification />
     </Link>
   );
 };

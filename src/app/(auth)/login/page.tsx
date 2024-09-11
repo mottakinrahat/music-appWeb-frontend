@@ -1,6 +1,5 @@
 "use client";
 import DForm from "@/components/forms/DForm";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DInput from "@/components/forms/DInput";
 import SocialLogin from "@/components/common/socialLogin/SocialLogin";
@@ -9,32 +8,35 @@ import { Button } from "@/components/ui/button";
 import { FaFacebook } from "react-icons/fa6";
 import { FaApple } from "react-icons/fa";
 import DCheckbox from "@/components/forms/DCheckbox";
-import axios from "axios";
 import { loginSchema } from "./loginSchema";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useLoginMutation } from "@/redux/api/authApi";
+import { toast, Toaster } from "sonner";
 
 const Login = () => {
+  const [login, { isLoading, error }] = useLoginMutation();
   const router = useRouter();
   const defaultValues = {};
   const handleLogin = async (e: any) => {
     const formData = e;
-    console.log(formData);
+    try {
+      const res = await login(formData).unwrap();
+      const user = res?.data?.user;
 
-    axios
-      .post("https://music-app-web.vercel.app/api/v1/auth/login", e, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        const user = res?.data?.data?.user;
-        localStorage.setItem("token", res.data.data?.token);
-        localStorage.setItem("user", JSON.stringify(user));
-        router.push("/");
-      });
+      localStorage.setItem("token", res.data.data?.token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      toast.success("Login successful");
+      router.push("/");
+    } catch (error) {
+      toast.error("Your email or password is incorrect");
+    }
   };
 
   return (
     <div className=" flex items-center  max-w-xl mx-auto flex-col justify-center p-4">
+      <Toaster position="bottom-center" />
       <DForm
         resolver={zodResolver(loginSchema)}
         className="flex flex-col gap-5 w-full"
@@ -51,7 +53,7 @@ const Login = () => {
         </p>
         {/* {/ email /} */}
         <DInput
-          defaultValue={"mailme.jibon@gmail.com"}
+          defaultValue={"testuser@gmail.com"}
           labelTextColor="#262626"
           name="email"
           label="Email"
@@ -59,7 +61,7 @@ const Login = () => {
         />
         {/* {/ Password /} */}
         <DInput
-          defaultValue={"@1111aA2222"}
+          defaultValue={"@1111aA1111"}
           labelTextColor="#262626"
           name="password"
           label="Password"

@@ -1,5 +1,7 @@
 "use client";
+import { RootState } from "@/redux/store";
 import React, { forwardRef, useEffect, RefObject } from "react";
+import { useSelector } from "react-redux";
 
 interface AudioControlsProps {
   src: string;
@@ -24,19 +26,25 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     },
     ref
   ) => {
+    const playing = useSelector((state: RootState) => state.player.playing);
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {
         const audioElement = ref.current;
         audioElement.playbackRate = playbackRate;
+        if (playing) {
+          audioElement.play();
+        } else if (!playing) {
+          audioElement.pause();
+        }
       }
-    }, [playbackRate, ref]);
+    }, [playbackRate, ref, playing]);
 
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {
         const audioElement = ref.current;
         const clampedVolume = Math.max(0, Math.min(volume, 1));
         if (audioElement.volume !== clampedVolume) {
-          console.log(`Setting volume to ${clampedVolume}`);
+          // console.log(`Setting volume to ${clampedVolume}`);
           audioElement.volume = clampedVolume;
         }
       }
@@ -48,7 +56,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
         ref={ref}
         src={src}
         onTimeUpdate={onTimeUpdate}
-        autoPlay={autoPlay}
+        autoPlay={playing}
         onLoadedMetadata={onLoadedMetadata}
         onEnded={onEnded}
       >

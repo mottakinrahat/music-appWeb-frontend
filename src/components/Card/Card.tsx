@@ -6,6 +6,12 @@ import Link from "next/link";
 // import { IoHeartOutline } from "react-icons/io5";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { playSong } from "@/redux/slice/music/musicActionSlice";
+import { toast } from "sonner";
+import { clearMusicData } from "@/redux/slice/music/musicDataSlice";
+import { initDB } from "@/utils/initDB";
+import { RootState } from "@/redux/store";
 
 interface BaseCard {
   type: string;
@@ -51,9 +57,34 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   albumRouteLink,
 }) => {
   const location = usePathname();
+  const dispatch = useDispatch();
+  const importedSong = useSelector((state: RootState) => state.musicData);
+
+  const deleteExistingSongFromIndexedDB = async () => {
+    const db = await initDB("MusicDB", 1, "songs");
+    const tx = db.transaction("songs", "readwrite");
+    const store = tx.objectStore("songs");
+    const allSongs = await store.getAll();
+    allSongs.forEach(async (song) => {
+      await store.delete(song.id);
+    });
+    await tx.done;
+    dispatch(clearMusicData()); // Dispatch Redux action to clear music data
+  };
+  const handleDeleteSong = async () => {
+    await deleteExistingSongFromIndexedDB();
+    dispatch(clearMusicData());
+    toast.success("Imported song removed.");
+  };
+
   const handleSetIdtoLocalStroage = () => {
-    localStorage.setItem("songId", musicId!);
+    localStorage.setItem(
+      "songData",
+      JSON.stringify({ play: true, id: musicId })
+    );
     localStorage.setItem("pathHistory", location);
+    dispatch(playSong(musicId!));
+    if (importedSong.fileData) handleDeleteSong();
   };
 
   return (
@@ -115,12 +146,20 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
       {/* Card Content */}
       <div className="">
         {title && (
-          <h2 className="text-xl lg:text-2xl font-semibold mb-2">{title}</h2>
+          <Link href={musicId ? `/music/${musicId}` : "/"} className="">
+            <h2 className="text-xl lg:text-2xl text-textPrimary hover:text-textSecondary cursor-pointer font-semibold mb-2">
+              {title.length > 22 ? `${title.slice(0, 22)}...` : title}
+            </h2>
+          </Link>
         )}
-        {artistName && <p className="text-sm text-gray-600">{artistName}</p>}
+        {artistName && (
+          <p className="text-sm text-textPrimary hover:text-textSecondary">
+            {artistName}
+          </p>
+        )}
 
         {album && (
-          <p className="text-sm text-gray-600 ">
+          <p className="text-sm text-textPrimary hover:text-textSecondary ">
             Album:{" "}
             <Link
               href={albumRouteLink ? albumRouteLink : "/"}

@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/drawer";
 import Logo from "../logo/Logo";
 import Routes from "./routes";
+import Link from "next/link";
 
-const ToggleMenu = () => {
+const ToggleMenu = ({ blur }: any) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -25,17 +26,21 @@ const ToggleMenu = () => {
         }`}
       >
         <span
-          className={`block w-6 h-0.5 bg-black transition-transform duration-300 ${
+          className={`block w-6 h-0.5 ${
+            blur ? "bg-white" : "bg-black"
+          } transition-transform duration-300 ${
             isOpen ? "rotate-45 translate-y-[0.65rem]" : "translate-y-1.5"
           }`}
         ></span>
         <span
-          className={`block w-6 h-0.5 bg-black transition-opacity duration-300 ${
-            isOpen ? "opacity-0" : ""
-          }`}
+          className={`block w-6 h-0.5 ${
+            blur ? "bg-white" : "bg-black"
+          } transition-opacity duration-300 ${isOpen ? "opacity-0" : ""}`}
         ></span>
         <span
-          className={`block w-6 h-0.5 bg-black transition-transform duration-300 ${
+          className={`block w-6 h-0.5 ${
+            blur ? "bg-white" : "bg-black"
+          } transition-transform duration-300 ${
             isOpen ? "-rotate-45 -translate-y-4" : "-translate-y-1.5"
           }`}
         ></span>
@@ -52,6 +57,11 @@ const ToggleMenu = () => {
               <span className="space-y-3 block mt-5">
                 <Routes />
               </span>
+              <div className="mt-3">
+                <Link href="/login">
+                  <div className="hover:font-semibold my">Login/Sign up</div>
+                </Link>
+              </div>
             </DrawerDescription>
           </DrawerHeader>
         </DrawerContent>

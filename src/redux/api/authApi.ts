@@ -15,9 +15,9 @@ const authApi = baseApi.injectEndpoints({
     // register
     register: build.mutation({
       query: (data: any) => {
-        console.log(data, "redux");
+        // console.log(data, "redux");
         return {
-          url: `/users`,
+          url: `/signup/user`,
           method: "POST",
           body: data,
         };

@@ -21,11 +21,11 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
   const handleRemoveFromPlaylist = (id: string) => {
     const updatedTracks = tracks?.filter((track) => track._id !== id);
     setCurrentTracks(updatedTracks);
-    console.log(`Removing song with id: ${id}`);
+    // console.log(`Removing song with id: ${id}`);
   };
-
+  // console.log(tracks);
   return (
-    <div className="p-8">
+    <div className="p-2 min-w-0 bg-white  overflow-hidden lg:p-6 xl:p-8">
       {/* play list */}
       <div className="flex justify-between">
         <h2 className="text-3xl font-semibold">Next Queue</h2>
@@ -39,21 +39,23 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
       <div className="font-semibold mt-6 mb-10 text-accent text-center">
         Song credit
       </div>
-      <div>
-        {currentTracks?.map((track: any) => (
-          <div key={track.id} className="gap-2 w-full items-center mb-4">
-            <LandingMusicCard
-              album={track?.songAlbum.albumName}
-              artist={track?.songArtist}
-              artwork={track?.artwork}
-              id={track?._id}
-              title={track?.songName}
-              playing={playing}
-              setPlaying={() => setPlaying(playing)}
-              handleRemoveFromPlaylist={handleRemoveFromPlaylist}
-            />
-          </div>
-        ))}
+      <div className="">
+        <div className="max-h-[calc(100vh-15rem)] 2xl:max-h-[calc(100vh-23rem)] overflow-y-auto">
+          {currentTracks?.map((track: any, idx) => (
+            <div key={idx} className="gap-2 w-full items-center mb-4">
+              <LandingMusicCard
+                album={track?.songAlbum.albumName}
+                artist={track?.songArtist}
+                artwork={track?.artwork}
+                id={track?._id}
+                title={track?.songName}
+                playing={playing}
+                setPlaying={() => setPlaying(playing)}
+                handleRemoveFromPlaylist={handleRemoveFromPlaylist}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

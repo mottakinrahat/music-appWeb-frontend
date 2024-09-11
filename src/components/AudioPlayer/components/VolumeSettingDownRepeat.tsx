@@ -10,6 +10,10 @@ import Volumn from "@/components/AudioPlayer/components/Volumn";
 
 import { DropDownBtn } from "@/components/AudioPlayer/components/DropDownBtn";
 import DownloadOffline from "./DownloadOffline";
+import { useDispatch } from "react-redux";
+import { handleMinimize } from "@/redux/slice/music/musicAsyncTunk";
+import { AppDispatch } from "@/redux/store";
+import { PiPlaylistBold } from "react-icons/pi";
 
 interface VolumeSettingDownRepeatProps {
   volume: number;
@@ -18,6 +22,13 @@ interface VolumeSettingDownRepeatProps {
   songName: string;
   songUrl: string;
   audioRef: any;
+  bpm: number;
+  handleOpenPlayList: () => void;
+  artwork: string;
+  songArtist: string;
+  songAlbum: string;
+  songId: number;
+  bpmLoading: boolean;
 }
 
 const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
@@ -27,12 +38,21 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   songName,
   songUrl,
   audioRef,
-}: any) => {
+  bpm,
+  handleOpenPlayList,
+  artwork,
+  bpmLoading,
+  songAlbum,
+  songArtist,
+  songId,
+}) => {
   const router = useRouter();
 
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
   const [quality, setQuality] = useState<any>("high");
   const [isEqOn, setEqOn] = useState(false);
+  const [currentBpm, setCurrentBpm] = useState<number>(bpm);
+
   useEffect(() => {
     const eq = localStorage.getItem("isEqOn");
     if (!eq) {
@@ -51,6 +71,10 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
     }
   }, [isEqOn]);
 
+  useEffect(() => {
+    setCurrentBpm(bpm * playbackSpeed);
+  }, [playbackSpeed, bpm]);
+
   // toggle quality
   const toggleQuality = () => {
     const newQuality =
@@ -63,7 +87,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
     }
   };
 
-  // handle palyback speed
+  // handle playback speed
   const handlePlaybackSpeed = () => {
     const speedOptions = [1, 1.5, 2, 0.5, 0.75];
     const nextIndex =
@@ -77,22 +101,19 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
     }
   };
 
-  const handleMinimize = () => {
-    const pathHistory = localStorage.getItem("pathHistory");
-    if (pathHistory) {
-      router.replace(pathHistory);
-    } else {
-      router.replace("/");
-    }
+  const dispatch: AppDispatch = useDispatch();
+
+  const onMinimize = () => {
+    dispatch(handleMinimize({ router: router }));
   };
 
   const settingContent = (
     <>
       <ul className="flex flex-col gap-[16px] p-[16px]">
         <li className="flex justify-between items-center">
-          <span>169 BPM</span>
+          <span>{bpmLoading ? "Loading" : currentBpm?.toFixed(2)} BPM</span>
         </li>
-        <li className="flex justify-between items-center">
+        <li className="flex justify-between gap-4 md:gap-10 items-center">
           <span> Playback speed:</span>{" "}
           <span
             onClick={() => handlePlaybackSpeed()}
@@ -117,6 +138,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
       </ul>
     </>
   );
+
   return (
     <div>
       <div className="flex justify-center items-center gap-[24px]">
@@ -127,12 +149,15 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
             volume={volume}
           />
         </div>
-        {/* <div>
-          <img src={DownloadIcon.src} alt="DownloadIcon" />
-        </div> */}
-        {/* Download button  */}
         <div>
-          <DownloadOffline songName={songName} songUrl={songUrl} />
+          <DownloadOffline
+            artwork={artwork}
+            songAlbum={songAlbum}
+            songArtist={songArtist}
+            songId={songId}
+            songName={songName}
+            songUrl={songUrl}
+          />
         </div>
         <div className={"group flex justify-center"}>
           <DropDownBtn
@@ -146,10 +171,15 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
         </div>
         <div
           className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
-          onClick={handleMinimize}
+          onClick={onMinimize}
         >
-          {/* <img src={QueueMusicIcon.src} alt="QueueMusicIcon" /> */}
           <LucideMinimize2 />
+        </div>
+        <div
+          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl"
+          onClick={handleOpenPlayList}
+        >
+          <PiPlaylistBold />
         </div>
       </div>
     </div>

@@ -16,10 +16,6 @@ interface WifiDeviceType {
   // Add additional properties if needed
 }
 
-// interface AirPlayButtonProps {
-//   handleScan: () => void;
-// }
-
 const AirPlayButton = () => {
   const [bluetoothDevices, setBluetoothDevices] = useState<
     BluetoothDeviceType[]
@@ -135,26 +131,21 @@ const AirPlayButton = () => {
   };
 
   const handleScan = async () => {
+    // console.log("Scanning for devices...");
     await requestBluetoothDevices();
     await discoverWifiDevices();
+    // console.log("scanning");
   };
 
   const airplayControls = (
     <div className="min-h-40 max-w-xs border-0 bg-[#DBDAD9]">
-      <h3 className="text-2xl font-semibold mb-1 px-4 py-3">Select a device</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-2xl font-semibold mb-1 px-4 py-3">
+          Select a device
+        </h3>
+        <p className="text-lg mr-2 cursor-pointer">Scan</p>
+      </div>
       <div className="bg-black/10 h-px w-full" />
-      {/* <button
-        onClick={requestBluetoothDevices}
-        className="px-4 hover:text-black/70 transition text-base py-2"
-      >
-        Scan for Bluetooth devices
-      </button>
-      <button
-        onClick={discoverWifiDevices}
-        className="px-4 hover:text-black/70 transition text-base py-2"
-      >
-        Scan for WiFi devices
-      </button> */}
       <div className="px-4 py-2 pt-4 space-y-2 font-semibold text-base">
         <div className="flex gap-2 items-center">
           <MdAirplay size={20} />
@@ -211,19 +202,20 @@ const AirPlayButton = () => {
   );
 
   return (
-    <DropDownBtn
-      dropDownContent={airplayControls}
-      onClick={handleScan}
-      buttonContent={
-        <Airplay
-          className={`${
-            showPlayer
-              ? "text-white hover:text-accent"
-              : "text-textPrimary hover:text-textSecondary transition"
-          }   transition`}
-        />
-      }
-    />
+    <div onClick={handleScan}>
+      <DropDownBtn
+        dropDownContent={airplayControls}
+        buttonContent={
+          <Airplay
+            className={`${
+              showPlayer
+                ? "text-white hover:text-accent"
+                : "text-textPrimary hover:text-textSecondary transition"
+            } my-auto inline-block transition`}
+          />
+        }
+      />
+    </div>
   );
 };
 

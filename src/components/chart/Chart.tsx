@@ -6,8 +6,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
 
 interface ChartInfc {
@@ -36,7 +34,7 @@ export function Chart({ data }: ChartInfc) {
           <AreaChart
             data={data}
             style={{ minHeight: 0, minWidth: 0 }}
-            margin={{ left: 12, right: 12 }}
+            margin={{ left: 2, right: 2 }}
           >
             <CartesianGrid vertical={true} horizontal={false} />
 

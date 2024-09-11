@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
+
 import { Chart } from "@/components/chart/Chart";
 import React, { useRef, useState, useEffect } from "react";
 import { IoCheckmarkSharp } from "react-icons/io5";
@@ -45,45 +46,45 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
   }, []);
 
   useEffect(() => {
-    const eq = localStorage.getItem("isEqOn");
-    if (!eq) {
-      localStorage.setItem("isEqOn", JSON.stringify(!isOn));
-    }
-    if (eq) {
-      setIsOn(eq === "true" ? true : false);
+    if (!isOn) {
+      // Instantly reset to "flat" preset when EQ is off
+      const flatGains = presets[defaultPreset];
+      setGains(flatGains);
+      applyPreset(flatGains);
+      setSelectedPreset(defaultPreset);
     }
   }, [isOn]);
 
   const toggleSwitch = () => {
-    localStorage.setItem("isEqOn", (!isOn).toString());
-    if (isOn) {
-      // If turning EQ off
-      localStorage.setItem(
-        "eqSettings",
-        JSON.stringify({
-          gains,
-          preset: selectedPreset,
-        })
-      );
-      setSelectedPreset(null);
-      setGains([0, 0, 0, 0, 0, 0]);
-    } else {
-      // If turning EQ on
-      const savedSettings = localStorage.getItem("eqSettings");
-      if (savedSettings) {
-        const { gains: savedGains, preset } = JSON.parse(savedSettings);
-        setGains(savedGains);
-        setSelectedPreset(preset);
-        applyPreset(savedGains);
+    setIsOn((prevIsOn) => {
+      const newIsOn = !prevIsOn;
+      localStorage.setItem("isEqOn", newIsOn.toString());
+
+      if (newIsOn) {
+        // If turning EQ on, restore the last used preset or default
+        const savedSettings = localStorage.getItem("eqSettings");
+        if (savedSettings) {
+          const { gains: savedGains, preset } = JSON.parse(savedSettings);
+          setGains(savedGains);
+          setSelectedPreset(preset);
+          applyPreset(savedGains);
+        } else {
+          // Apply default preset if no saved settings
+          const defaultGains = presets[defaultPreset];
+          setGains(defaultGains);
+          setSelectedPreset(defaultPreset);
+          applyPreset(defaultGains);
+        }
       } else {
-        // Apply default preset if no saved settings
-        const defaultGains = presets[defaultPreset];
-        setGains(defaultGains);
+        // If turning EQ off, reset to "flat"
+        const flatGains = presets[defaultPreset];
+        setGains(flatGains);
+        applyPreset(flatGains);
         setSelectedPreset(defaultPreset);
-        applyPreset(defaultGains);
       }
-    }
-    setIsOn((prevIsOn) => !prevIsOn);
+
+      return newIsOn;
+    });
   };
 
   useEffect(() => {
@@ -162,8 +163,8 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
   }));
 
   return (
-    <div className="p-10 bg-white relative z-[9999] overflow-auto  md:w-[500px] w-[400px]">
-      <h3 className="text-3xl font-semibold mb-8">EQ Settings</h3>
+    <div className="p-4 md:p-5 lg:p-10 bg-white relative z-[9999] overflow-auto w-[300]  md:w-[500px] sm:w-[400px]">
+      <h3 className="text-3xl font-semibold mb-5 md:mb-8">EQ Settings</h3>
       <div
         className={`transition-opacity duration-300 w-full ${
           !isOn ? "opacity-40 " : "opacity-100"
@@ -177,7 +178,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
           <h3 className="font-semibold">Equalizer</h3>
           <div
             onClick={toggleSwitch}
-            className={`w-10 h-6 flex items-center rounded-full duration-300 p-1 cursor-pointer ${
+            className={`w-10 h-6 flex items-center rounded-full duration-300 p-1 cursor-pointer mb-4 md:mb-6 ${
               isOn ? "bg-accent" : "bg-gray-300"
             }`}
           >
@@ -193,20 +194,22 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
             {Object.keys(presets).map((preset, index) => (
               <li
                 onClick={() => {
-                  setSelectedPreset(preset);
-                  applyPreset(presets[preset as PresetKeys]);
-                  localStorage.setItem(
-                    "eqSettings",
-                    JSON.stringify({
-                      gains: presets[preset as PresetKeys],
-                      preset: preset,
-                    })
-                  );
+                  if (isOn) {
+                    setSelectedPreset(preset);
+                    applyPreset(presets[preset as PresetKeys]);
+                    localStorage.setItem(
+                      "eqSettings",
+                      JSON.stringify({
+                        gains: presets[preset as PresetKeys],
+                        preset: preset,
+                      })
+                    );
+                  }
                 }}
                 key={index}
                 className="flex cursor-pointer justify-between w-[8rem] items-center"
               >
-                <button className="my-[6px]">
+                <button className="my-1 md:my-[6px]">
                   {preset.charAt(0).toUpperCase() + preset.slice(1)}
                 </button>
                 {selectedPreset === preset && (
@@ -224,14 +227,14 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
                 key={index}
                 className="flex justify-between w-[8rem] items-center opacity-70"
               >
-                <button className="my-[6px]" disabled>
+                <button className="my-1 md:my-[6px]" disabled>
                   {preset.charAt(0).toUpperCase() + preset.slice(1)}
                 </button>
-                {selectedPreset === preset && (
+                {/* {selectedPreset === preset && (
                   <div>
                     <IoCheckmarkSharp className="text-accent" />
                   </div>
-                )}
+                )} */}
               </li>
             ))}
           </ul>

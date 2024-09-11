@@ -29,7 +29,7 @@ const KaraokeAirFriendEtc = ({
       <div>
         <CurrentPlayingUsers addFriends />
       </div>
-      <div className="max-md:hidden">
+      <div className="max-md:hidden ">
         <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
       </div>
     </div>

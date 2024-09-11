@@ -1,38 +1,31 @@
-/* eslint-disable @next/next/no-img-element */
-"use client";
+// eslint-disable @next/entx / no - img - element / "use client";
 import React, { useState, useRef, useEffect, ChangeEvent } from "react";
 import placeHolder from "@/assets/etc/png/song.jpg";
 import LyricsIcon from "@/assets/icons/lyrics.svg";
-
 import { formatTime } from "@/utils/FormatTime";
-
-import {
-  PlusCircleIcon,
-  HeartIcon,
-  ShareIcon,
-  CircleStackIcon,
-  UserCircleIcon,
-  MusicalNoteIcon,
-} from "@heroicons/react/24/outline";
-
 import AudioControls from "./components/AudioControls";
 import RepeatActionButton from "./components/RepeatActionButton";
 import PlayButtons from "./components/PlayButtons";
 import MusicControls from "./components/MusicControls";
-import Volumn from "./components/Volumn";
 import axios from "axios";
 import { toast } from "sonner";
-// import { Toaster } from "../ui/sonner";
 import Link from "next/link";
-import ShareCard from "../Card/ShareCard";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import MiniPlayer from "./MiniPlayer";
 import { Slider } from "../ui/slider";
 import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
 import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
-
-// import { tracks } from "@/app/(withCommonLayout)/music/page";
+import SongMarquee from "./components/SongMarquee";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  pauseSong,
+  PlayerState,
+  playSong,
+} from "@/redux/slice/music/musicActionSlice";
+import { RootState } from "@/redux/store";
+import ThreeDotContent from "./components/ThreeDotContent";
+import Image from "next/image";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -47,11 +40,14 @@ interface AudioPlayerProps {
   play: boolean;
   handleOpenPlayList: () => void;
   handleRandom: () => void;
+  setCurrentSong: (value: any) => void;
+  audioContext: AudioContext;
+  bpm: number;
+  loading: boolean;
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
   onAudioContextReady,
-  id,
   currentSong: songData,
   handleOpenEqualizer,
   handleNext,
@@ -59,24 +55,36 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   play,
   handleOpenPlayList,
   handleRandom,
+  audioContext,
+  bpm,
+  loading,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const [repeat, setRepeat] = useState<any>("repeat-all");
-  const [playing, setPlaying] = useState<boolean>(play);
+
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [favorite, setFavorite] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
   const [played, setPlayed] = useState<number>(0);
   const [volume, setVolume] = useState<number>(0.8);
   const [playbackSpeed, setPlaybackSpeed] = useState<any>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
-
-  // const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
-  //   null
-  // );
-
+  const [userData, setUserData] = useState<any>();
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
+  const [currentSong, setCurrentSong] = useState<any>(songData);
+  const userId = userData?._id;
+  // const [repeats, setRepeat] = useState<any>();
+
+  useEffect(() => {
+    const isFavourite = currentSong.favUsers.includes(userId);
+    setFavorite(isFavourite);
+
+    const user = localStorage.getItem("user");
+    if (user) {
+      setUserData(JSON.parse(user));
+    }
+  }, [currentSong.favUsers, userId]);
 
   useEffect(() => {
     // Show the player only if the path matches `/music/:id`
@@ -87,8 +95,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   }, [pathname]);
 
-  const [currentSong, setCurrentSong] = useState<any>(songData);
-  const [share, setShare] = useState<boolean>(false);
+  const dispatch = useDispatch();
+
+  // Seclectors
+  const playing = useSelector((state: RootState) => state.player.playing);
+  const repeat = useSelector((state: RootState) => state.player.repeat);
+  const importedSong = useSelector((state: RootState) => state.musicData);
 
   const speed = localStorage.getItem("speed");
   useEffect(() => {
@@ -114,20 +126,19 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (!getRepeat) {
       localStorage.setItem("repeat", repeat);
     }
-    if (volume) {
-      setRepeat(getRepeat);
-    }
   }, [currentSong, repeat, songData, speed, volume]);
   // Main Song
+
   const {
     songName,
+
     songLink,
     artwork,
     songArtist,
     songAlbum,
     _id: songId,
   } = currentSong;
-  const router = useRouter();
+
   useEffect(() => {
     const handleInteraction = () => {
       if (!audioContextRef.current) {
@@ -147,20 +158,116 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
   }, [onAudioContextReady]);
 
-  // console.log(volume);
-  // console.log(currentSong);
-
-  const handlePlayPause = () => {
-    if (playing) {
-      audioRef.current?.pause();
-    } else {
-      audioRef.current?.play();
+  const repeatStateIndex = (repeatState: PlayerState["repeat"]) => {
+    switch (repeatState) {
+      case "repeat-all":
+        return 0;
+      case "repeat-one":
+        return 1;
+      case "repeat-off":
+        return 2;
+      case "shuffle":
+        return 3;
+      default:
+        return 0;
     }
-    setPlaying(!playing);
+  };
+  useEffect(() => {
+    // Load initial state from localStorage
+    // const storedRepeat = localStorage.getItem(
+    //   "repeat"
+    // ) as PlayerState["repeat"];
+    // if (!storedRepeat) {
+    //   localStorage.setItem("repeat", "repeat-all");
+    // } else {
+    //   dispatch(toggleRepeat());
+    // }
+
+    const storedRepeat = localStorage.getItem(
+      "repeat"
+    ) as PlayerState["repeat"];
+    if (!storedRepeat) {
+      localStorage.setItem("repeat", "repeat-all");
+      dispatch({ type: "player/toggleRepeat" });
+    } else {
+      if (storedRepeat !== "repeat-all") {
+        for (let i = 0; i < repeatStateIndex(storedRepeat); i++) {
+          dispatch({ type: "player/toggleRepeat" });
+        }
+      }
+    }
+    const storedSongData = localStorage.getItem("songData");
+    if (storedSongData) {
+      const { play, id } = JSON.parse(storedSongData);
+      if (play) {
+        dispatch(playSong(id));
+      } else {
+        dispatch(pauseSong());
+      }
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    // Save state to localStorage whenever it changes
+    if (playing && songId) {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: true, id: songId })
+      );
+    } else if (!playing && songId) {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: false, id: songId })
+      );
+    }
+
+    localStorage.setItem("repeat", repeat); // Save repeat mode
+  }, [playing, songId, repeat]);
+
+  // handle play pause song
+  const handlePlayPause = async () => {
+    try {
+      if (playing) {
+        // Pause the song
+        const audioElement = document.querySelector(
+          "audio"
+        ) as HTMLAudioElement;
+        if (audioElement) {
+          audioElement.pause(); // Try to play the audio element
+        }
+        dispatch(pauseSong());
+        // Save play state to localStorage
+        localStorage.setItem(
+          "songData",
+          JSON.stringify({ play: false, id: songId })
+        );
+      } else {
+        // Play the song
+        const audioElement = document.querySelector(
+          "audio"
+        ) as HTMLAudioElement;
+        if (audioElement) {
+          await audioElement.play(); // Try to play the audio element
+        }
+
+        dispatch(playSong(songId));
+
+        // Save play state to localStorage
+        localStorage.setItem(
+          "songData",
+          JSON.stringify({ play: true, id: songId })
+        );
+      }
+    } catch (error) {
+      // console.error("Playback failed:", error);
+    }
   };
 
-  // devJibon
-  // handle palyback Speed
+  // Handle Open lyrics
+
+  const handleOpenLyrics = () => {
+    alert("Open lyrics");
+  };
 
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
@@ -193,28 +300,22 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setPlayed(playedPercentage);
   };
 
-  const handleDuration = (duration: number) => {
-    setDuration(duration);
-  };
+  const handleEnd = () => {
+    const audioElement = audioRef.current;
 
-  const handleEnded = () => {
     if (repeat === "repeat-all") {
       handleNext();
     } else if (repeat === "repeat-one") {
-      const audioElement = audioRef.current;
-
       if (audioElement) {
-        if (repeat) {
-          audioElement.currentTime = 0; // Restart the track
-          audioElement.play(); // Play the track again
-        } else {
-          // You can handle what happens when the track ends and repeat is not enabled (e.g., stop playback)
-          audioElement.pause(); // Pause the track
-        }
+        audioElement.currentTime = 0; // Restart the track
+        audioElement.play(); // Play the track again
       }
     } else if (repeat === "repeat-off") {
       handleRandom();
+    } else if (repeat === "shuffle") {
+      handleRandom(); // Assuming shuffle mode should also trigger a random track
     }
+    // dispatch(handleEnded({ audioRef, handleNext, handleRandom }));
   };
 
   const handlePreviousTenSecond = () => {
@@ -243,66 +344,20 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setCurrentTime(newTime);
     }
   };
-  //  repeat toggle
-  const toggleRepeat = () => {
-    if (repeat === "repeat-all") {
-      setRepeat("repeat-one");
-      localStorage.setItem("repeat", "repeat-one");
-    } else if (repeat === "repeat-one") {
-      setRepeat("repeat-off");
-      localStorage.setItem("repeat", "repeat-off");
-    } else if (repeat === "repeat-off") {
-      setRepeat("repeat-all");
-      localStorage.setItem("repeat", "repeat-all");
-    }
-  };
 
-  // handle playlist add
-  const handleAddtoPlayList = async () => {
-    const user = JSON.parse(localStorage?.getItem("user")!);
-    const userId = user?._id;
-    const playListData = {
-      id: songId,
-      userId: userId,
-    };
-    if (!userId) {
-      toast("please login first");
-      router.push("/login");
+  const toggleRepeat = () => {
+    let newRepeat;
+    if (repeat === "repeat-all") {
+      newRepeat = "repeat-one";
+    } else if (repeat === "repeat-one") {
+      newRepeat = "repeat-off";
+    } else if (repeat === "repeat-off") {
+      newRepeat = "shuffle";
+    } else {
+      newRepeat = "repeat-all";
     }
-    toast("Please wait, adding to playlist... ", {
-      duration: 1000,
-    });
-    await axios
-      .put(
-        `https://music-app-web.vercel.app/api/v1/songs/play-list/${songId}/${userId}`,
-        playListData
-      )
-      .then((res) => {
-        if (res.data)
-          toast(
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <img
-                src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
-                alt={songName}
-                style={{
-                  width: "40px", // Adjust the size as needed
-                  height: "40px",
-                  borderRadius: "8px",
-                  marginRight: "8px",
-                }}
-              />
-              <div>
-                <div style={{ fontWeight: "bold" }}>Playlist Added</div>
-                <div>{`${songName}, ${songAlbum?.albumName}`}</div>
-              </div>
-            </div>
-          );
-      })
-      .catch((err) => {
-        if (err) {
-          toast.error("Failed to add to playlist");
-        }
-      });
+    // setRepeat(newRepeat);
+    localStorage.setItem("repeat", newRepeat);
   };
 
   // Three dot menu operations
@@ -315,92 +370,67 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       userId: userId,
     };
     if (!userId) {
-      toast("please login first");
-      router.push("/login");
-    }
-    toast("Please wait, adding to favorites... ", {
-      duration: 1000,
-    });
-    await axios
-      .put(
-        `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
-        playListData
-      )
-      .then((res) => {
-        if (res.data)
-          toast(
+      toast.warning("Please login first!");
+    } else {
+      await axios
+        .put(
+          `https://music-app-web.vercel.app/api/v1/favourite/${songId}/${userId}`,
+          playListData
+        )
+        .then((res) => {
+          setFavorite((prev: boolean) => !prev);
+          toast.success(
             <div style={{ display: "flex", alignItems: "center" }}>
-              <img
+              <Image
                 src={artwork ? artwork : placeHolder.src} // Replace this with the image URL
                 alt={songName}
+                width={60}
+                height={60}
+                priority
                 style={{
-                  width: "40px", // Adjust the size as needed
-                  height: "40px",
                   borderRadius: "8px",
                   marginRight: "8px",
+                  objectFit: "cover",
+                  width: "50px",
+                  height: "50px",
                 }}
               />
               <div>
-                <div style={{ fontWeight: "bold" }}>Favorites Added</div>
+                {favorite ? (
+                  <div style={{ fontWeight: "bold" }}>
+                    Favorites Removed Successfully
+                  </div>
+                ) : (
+                  <div style={{ fontWeight: "bold" }}>
+                    Favorites Added Successfully
+                  </div>
+                )}
                 <div>{`${songName}, ${songAlbum?.albumName}`}</div>
               </div>
             </div>
           );
-      })
-      .catch((err) => {
-        if (err) {
-          toast.error("Failed to add to playlist");
-        }
-      });
+        })
+        .catch((err) => {
+          if (err) {
+            toast.error("Failed to add to favourite list");
+          }
+        });
+    }
   };
 
-  const threeDotContent = (
-    <div className="font-bold text-textSecondary w-52  select-none px-[16px] py-[24px] flex flex-col gap-[24px]">
-      <h2
-        onClick={handleAddtoPlayList}
-        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
-      >
-        <PlusCircleIcon className="h-6 w-6" />
-        <span>Add to playlist</span>
-      </h2>
-      <h2
-        onClick={handleAddtoFavourite}
-        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
-      >
-        <HeartIcon className="h-6 w-6" />
-        <span>Add to favorites</span>
-      </h2>
-      <h2
-        onClick={() => setShare(!share)}
-        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
-      >
-        <ShareIcon className="h-6 w-6" />
-        <span>Share</span>
-      </h2>
-      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
-        <CircleStackIcon className="h-6 w-6" />
-        <span>Go album</span>
-      </h2>
-      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
-        <UserCircleIcon className="h-6 w-6" />
-        <span>Go artist</span>
-      </h2>
-      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
-        <MusicalNoteIcon className="h-6 w-6" />
-        <span>Song credit</span>
-      </h2>
-    </div>
-  );
+  const threeDotContent = ThreeDotContent({
+    currentSong,
+    handleAddtoFavourite,
+    favorite,
+  });
 
   return (
     <div className="audio-controls relative">
-      <ShareCard
-        open={share}
-        setOpen={setShare}
-        shareUrl={`https://music-web-liangu.vercel.app//music/66c99c0a36fe71b995557d6b`}
-      />
       <div className="absolute top-0 w-full ">
         <MiniPlayer
+          // currentSong={currentSong}
+          // repeat={repeat}
+          // toggleRepeat={handleToggleRepeat}
           currentTime={currentTime}
           duration={duration}
           handleSeek={handleSeek}
@@ -422,15 +452,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       </div>
       <div
         className={`${
-          !showPlayer ? "hidden" : "w-full h-screen  bg-cover bg-center"
+          !showPlayer
+            ? "hidden"
+            : "w-full h-screen  bg-cover overflow-hidden bg-center"
         } `}
       >
-        {/* Dropdown section */}
         <div
           className={`${
             !showPlayer
               ? "hidden"
-              : "absolute p-4 xl:py-16 xl:px-[120px] right-0 top-16 text-white"
+              : "absolute p-4 lg:py-20 xl:px-[120px] right-0 top-16 text-white"
           } `}
         >
           <DropDownBtn
@@ -453,37 +484,59 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           />
         </div>
-        <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4  xl:px-[120px]">
-          <div className="w-full flex justify-between items-center px-4 md:mb-4">
-            <div className="text-white flex items-center gap-2">
-              <img
-                // style={{ width: "auto", height: "auto" }}
-                src={artwork ? artwork : placeHolder.src}
-                alt="Album Art"
-                // height={80}
-                // width={80}
-                className="w-10 h-10 md:h-16 md:w-16 rounded-lg object-cover"
+        <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4   xl:px-[120px]">
+          <div className="w-full flex justify-between items-center">
+            <div className="text-white flex mb-4 items-center gap-4">
+              <Image
+                priority
+                src={
+                  importedSong.fileData
+                    ? placeHolder.src
+                    : artwork
+                    ? artwork
+                    : placeHolder.src
+                } // Replace this with the image URL
+                alt={songName}
+                width={40}
+                height={40}
+                style={{
+                  borderRadius: "8px",
+                  marginRight: "8px",
+                  height: "auto",
+                  width: "auto",
+                }}
               />
               <div>
-                <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1">
-                  {songName}
+                <h2 className="text-white text-base md:text-xl gap-2 font-semibold mb-1 lg:text-2xl">
+                  <SongMarquee
+                    songName={
+                      importedSong.fileData ? importedSong.title : songName
+                    }
+                    className="text-white"
+                  />
                 </h2>
                 <div className="flex lg:items-center max-lg:flex-col flex-wrap ">
-                  <p>{songArtist}</p>
-                  <div className="flex items-center max-md:hidden gap-2">
-                    <div className="size-2 bg-white rounded-full ml-2"></div>
-                    <p>
-                      Album:{" "}
-                      <Link href={"#"} className="underline">
-                        {songAlbum.albumName}
-                      </Link>
-                    </p>
-                  </div>
+                  {importedSong.fileData ? (
+                    <p>Imported from device.</p>
+                  ) : (
+                    <>
+                      <p>{songArtist}</p>
+                      <div className="flex items-center max-md:hidden gap-2">
+                        <div className="size-2 bg-white rounded-full ml-2"></div>
+                        <p>
+                          Album:{" "}
+                          <Link href={"#"} className="underline">
+                            {songAlbum.albumName}
+                          </Link>
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
 
-            <div className="hidden xl:block">
+            <div className="hidden xl:mt-5 xl:block">
               <PlayButtons
                 handleNext={handleNext}
                 handleNextTenSecond={handleNextTenSecond}
@@ -494,22 +547,21 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               />
             </div>
 
-            {/* repeat button component */}
-
             <RepeatActionButton
               toggleRepeat={toggleRepeat}
               src={LyricsIcon.src}
               repeat={repeat}
-              handlePlayListOpen={handleOpenPlayList}
+              handleOpenLyrics={handleOpenLyrics}
               handleAddToFavorites={handleAddtoFavourite}
-              isfavorite={true}
+              isfavorite={favorite}
             />
           </div>
 
           <AudioControls
+            // audioContext={audioContext}
             volume={volume}
             ref={audioRef}
-            src={songLink}
+            src={importedSong.fileData ? importedSong.fileData : songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={() => {
               const currentTime = audioRef.current?.currentTime || 0;
@@ -521,10 +573,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             onLoadedMetadata={() => {
               setDuration(audioRef.current?.duration || 0);
             }}
-            onEnded={handleEnded}
+            onEnded={handleEnd}
           />
 
-          <div className="w-full cursor-pointer py-1 flex items-center">
+          <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
             <Slider
               defaultValue={[currentTime]}
               max={duration}
@@ -534,7 +586,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             />
           </div>
           <div className="w-full">
-            <div className="flex justify-between gap-3 items-center px-3">
+            <div className="flex justify-between gap-3 mb-14 lg:mb-0 items-center ">
               <span className="text-white text-sm">
                 {formatTime(currentTime)}
               </span>
@@ -558,21 +610,27 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               karaokeOn={karaokeOn}
               SetKaraokeOn={setKaraokeOn}
             />
-            <div className="md:hidden flex flex-col gap-4 justify-between">
+            <div className="flex flex-col gap-4 justify-between">
               <VolumeSettingDownRepeat
+                artwork={artwork}
+                songArtist={songArtist}
+                songAlbum={songAlbum}
+                songId={songId}
+                bpm={bpm}
+                bpmLoading={loading}
                 songName={songName}
                 songUrl={songLink}
                 audioRef={audioRef}
+                handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}
                 handleMute={handleMute}
               />
-              <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
+              <div className="md:hidden">
+                <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
+              </div>
             </div>
           </div>
-          {/* <div className="md:hidden flex justify-between">
-            <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
-          </div> */}
         </div>
       </div>
     </div>

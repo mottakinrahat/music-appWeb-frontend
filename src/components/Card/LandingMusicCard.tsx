@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { FaPause, FaPlay } from "react-icons/fa6"; // Import the cross icon
 import { RxCross2 } from "react-icons/rx";
 import CurrentPlayingUsers from "../AudioPlayer/components/CurrentPlayingUsers";
+import useLocalSongData from "@/hooks/useLocalSongData";
 
 interface LandingMusicCardInterface {
   id: any;
@@ -35,14 +36,7 @@ const LandingMusicCard = ({
   const [currentId, setCurrenId] = useState("");
   const [play, setPlay] = useState(playing);
 
-  useEffect(() => {
-    const currentSongId = localStorage.getItem("songId");
-    if (!currentSongId) {
-      localStorage.setItem("songId", id);
-    } else {
-      setCurrenId(currentSongId);
-    }
-  }, [currentId, id]);
+  // useLocalSongData({play: true, id: id ? id : null});
 
   return (
     <div className="flex justify-between gap-4 py-2 items-center max-w-xl">
@@ -51,15 +45,19 @@ const LandingMusicCard = ({
           <img
             src={artwork ? artwork : placeHolder.src}
             alt="Album Art"
-            className="w-16 h-16 aspect-square rounded-lg"
+            className="w-16 h-16 object-cover aspect-square rounded-lg"
           />
         </div>
         <div>
           <h2 className="text-base md:text-2xl gap-2 font-semibold mb-1">
-            {albumCard ? album : title}
+            {albumCard
+              ? album
+              : title.length > 16
+              ? `${title.slice(0, 16)}...`
+              : title}
           </h2>
           <div className="flex lg:items-center max-lg:flex-col flex-wrap">
-            <div className="flex items-center gap-2">
+            <div className="flex  text-xs sm:text-sm items-center gap-2">
               {!albumCard ? (
                 <p>
                   Album:{" "}
@@ -91,7 +89,12 @@ const LandingMusicCard = ({
             ) : (
               <Link
                 href={`/music/${id}`}
-                onClick={() => localStorage.setItem("songId", id)}
+                onClick={() =>
+                  localStorage.setItem(
+                    "songData",
+                    JSON.stringify({ play: true, id: id })
+                  )
+                }
               >
                 <Button
                   // Check if setPlaying is defined
@@ -107,11 +110,14 @@ const LandingMusicCard = ({
           <div className="flex gap-2">
             <button
               onClick={() => handleRemoveFromPlaylist(id)} // Check if handleRemoveFromPlaylist is defined
-              className="rounded-full w-11 h-11"
+              className="rounded-full w-8 h-8 md:w-11 md:h-11"
             >
               <RxCross2 className="text-2xl" /> {/* Cross button */}
             </button>
-            <CurrentPlayingUsers addFriends={false} className="text-black" />
+            <CurrentPlayingUsers
+              addFriends={false}
+              className="text-black hidden md:flex"
+            />
           </div>
         )}
       </div>
