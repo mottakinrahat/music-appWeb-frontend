@@ -122,9 +122,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           setCurrentLyrics(null);
         }
         setCurrentLyrics(response.data.data.line);
-      } catch (error) {
-        console.clear();
-      }
+      } catch (error) {}
     };
     getLyrics();
   }, [currentTime, songData._id]);
