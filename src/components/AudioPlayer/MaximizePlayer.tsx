@@ -213,6 +213,8 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     }
   }, [currentSong?._id, pathname, showPlayer]);
 
+  const repeat = useSelector((state: RootState) => state.player.repeat);
+
   const handlePrev = () => {
     if (currentTrackIndex !== null) {
       let newIndex = currentTrackIndex - 1;

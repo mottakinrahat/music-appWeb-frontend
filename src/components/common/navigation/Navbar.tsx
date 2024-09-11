@@ -21,7 +21,6 @@ const Navbar = ({ blur = false }: NavInterface) => {
   const [user, setUser] = useState(null);
 
   const [showNav, setShowNav] = useState(false);
-  const pathname = usePathname();
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
