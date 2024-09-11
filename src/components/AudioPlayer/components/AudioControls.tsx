@@ -89,6 +89,19 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           }
         };
 
+        // Ensure volume is set after user interaction (Safari fix)
+        const handleUserInteraction = () => {
+          setVolume();
+          audioElement.play().catch(() => {
+            // Handle any playback errors
+            console.log("Playback was prevented.");
+          });
+
+          // Remove the listener after the first interaction
+          document.removeEventListener("click", handleUserInteraction);
+          document.removeEventListener("touchstart", handleUserInteraction);
+        };
+
         // If metadata is already loaded, set the volume immediately
         if (audioElement.readyState >= 1) {
           setVolume();
@@ -100,12 +113,18 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
         // Additional user interaction for Safari: ensure volume updates on user play event
         audioElement.addEventListener("play", handleVolumeChange);
 
+        // Listen for any user interaction to enable playback
+        document.addEventListener("click", handleUserInteraction);
+        document.addEventListener("touchstart", handleUserInteraction);
+
         return () => {
           audioElement.removeEventListener(
             "loadedmetadata",
             handleMetadataLoaded
           );
           audioElement.removeEventListener("play", handleVolumeChange);
+          document.removeEventListener("click", handleUserInteraction);
+          document.removeEventListener("touchstart", handleUserInteraction);
         };
       }
     }, [volume, ref]);
