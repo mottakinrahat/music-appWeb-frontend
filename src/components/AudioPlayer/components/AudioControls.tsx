@@ -12,7 +12,7 @@ interface AudioControlsProps {
   onLoadedMetadata?: React.ReactEventHandler<HTMLAudioElement>;
   onEnded?: React.ReactEventHandler<HTMLAudioElement>;
   playbackRate: number;
-  volume: number; // Volume should be between 0.0 and 1.0
+  volume: number;
 }
 
 const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
@@ -31,23 +31,21 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     const playing = useSelector((state: RootState) => state.player.playing);
     const dispatch = useDispatch();
 
-    // Set playback rate and handle play/pause based on "playing" state
-    const [debouncedPlaybackRate, latedebouncedPlaybackRate] =
-      useDebouncedValue(playbackRate, 500);
+    const [debouncedPlaybackRate] = useDebouncedValue(playbackRate, 500);
 
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {
         const audioElement = ref.current;
 
-        // Apply immediate playback rate
-        if (playbackRate) {
-          audioElement.playbackRate = playbackRate; // Apply the immediate playback rate
+        // Apply playback rate
+        if (debouncedPlaybackRate) {
+          audioElement.playbackRate = debouncedPlaybackRate;
         }
 
-        // Preserve pitch in all browsers
+        // Preserve pitch in Safari and Firefox
         (audioElement as any).preservesPitch = true;
-        (audioElement as any).mozPreservesPitch = true; // For Firefox
-        (audioElement as any).webkitPreservesPitch = true; // For Safari
+        (audioElement as any).mozPreservesPitch = true;
+        (audioElement as any).webkitPreservesPitch = true;
 
         if (playing) {
           const playPromise = audioElement.play();
@@ -55,7 +53,6 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
             playPromise.catch(() => {
               dispatch(playImport());
               audioElement.play().catch(() => {
-                // Handle playback issues here
                 dispatch(playImport());
               });
             });
@@ -65,7 +62,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           dispatch(pauseSong());
         }
       }
-    }, [playbackRate, ref, playing, dispatch, src]);
+    }, [debouncedPlaybackRate, ref, playing, dispatch, src]);
 
     useEffect(() => {
       if (ref && "current" in ref && ref.current) {
@@ -79,41 +76,28 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
         };
 
         const handleMetadataLoaded = () => {
-          // Set volume when the metadata is loaded
           setVolume();
         };
 
-        const handleVolumeChange = () => {
-          if (!audioElement.muted) {
-            audioElement.volume = clampedVolume;
-          }
-        };
-
-        // Ensure volume is set after user interaction (Safari fix)
         const handleUserInteraction = () => {
           setVolume();
           audioElement.play().catch(() => {
-            // Handle any playback errors
             console.log("Playback was prevented.");
           });
 
-          // Remove the listener after the first interaction
           document.removeEventListener("click", handleUserInteraction);
           document.removeEventListener("touchstart", handleUserInteraction);
         };
 
-        // If metadata is already loaded, set the volume immediately
         if (audioElement.readyState >= 1) {
           setVolume();
         } else {
-          // For Safari, ensure volume is set after metadata is loaded
           audioElement.addEventListener("loadedmetadata", handleMetadataLoaded);
+          audioElement.addEventListener("canplaythrough", handleMetadataLoaded); // Added for Safari
         }
 
-        // Additional user interaction for Safari: ensure volume updates on user play event
-        audioElement.addEventListener("play", handleVolumeChange);
+        audioElement.addEventListener("play", setVolume);
 
-        // Listen for any user interaction to enable playback
         document.addEventListener("click", handleUserInteraction);
         document.addEventListener("touchstart", handleUserInteraction);
 
@@ -122,7 +106,11 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
             "loadedmetadata",
             handleMetadataLoaded
           );
-          audioElement.removeEventListener("play", handleVolumeChange);
+          audioElement.removeEventListener(
+            "canplaythrough",
+            handleMetadataLoaded
+          ); // Added for Safari
+          audioElement.removeEventListener("play", setVolume);
           document.removeEventListener("click", handleUserInteraction);
           document.removeEventListener("touchstart", handleUserInteraction);
         };
@@ -148,91 +136,3 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
 AudioControls.displayName = "AudioControls";
 
 export default AudioControls;
-
-// "use client";
-// import React, { useEffect, useRef, forwardRef } from "react";
-
-// interface AudioControlsProps {
-//   volume: number;
-//   src: string;
-//   playbackRate: number;
-//   autoPlay: boolean;
-//   onTimeUpdate: () => void;
-//   onLoadedMetadata: () => void;
-//   onEnded: () => void;
-// }
-
-// const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
-//   (
-//     {
-//       volume,
-//       src,
-//       playbackRate,
-//       autoPlay,
-//       onTimeUpdate,
-//       onLoadedMetadata,
-//       onEnded,
-//     },
-//     ref
-//   ) => {
-//     const audioRef = useRef<HTMLAudioElement>(null);
-
-//     // Sync the forwarded ref with the internal audioRef
-//     useEffect(() => {
-//       if (ref && typeof ref === "function") {
-//         ref(audioRef.current);
-//       } else if (ref) {
-//         (ref as any).current = audioRef.current;
-//       }
-//     }, [ref]);
-
-//     // Update volume when prop changes
-//     useEffect(() => {
-//       if (audioRef.current) {
-//         audioRef.current.volume = volume;
-//       }
-//     }, [volume]);
-
-//     // Update playback speed when prop changes
-//     useEffect(() => {
-//       if (audioRef.current) {
-//         audioRef.current.playbackRate = playbackRate;
-//       }
-//     }, [playbackRate]);
-
-//     // Prevent muting on click or touch in Safari
-//     // useEffect(() => {
-//     //   const preventMute = (e: Event) => {
-//     //     if (audioRef.current) {
-//     //       const wasMuted = audioRef.current.muted;
-//     //       if (wasMuted) {
-//     //         audioRef.current.muted = false;
-//     //       }
-//     //     }
-//     //   };
-//     //   window.addEventListener("click", preventMute);
-//     //   window.addEventListener("touchstart", preventMute);
-
-//     //   return () => {
-//     //     window.removeEventListener("click", preventMute);
-//     //     window.removeEventListener("touchstart", preventMute);
-//     //   };
-//     // }, []);
-
-//     return (
-//       <audio
-//         ref={audioRef}
-//         src={src}
-//         autoPlay={autoPlay}
-//         onTimeUpdate={onTimeUpdate}
-//         onLoadedMetadata={onLoadedMetadata}
-//         onEnded={onEnded}
-//         muted={volume <= 0}
-//         controls
-//       />
-//     );
-//   }
-// );
-
-// AudioControls.displayName = "AudioControls";
-// export default AudioControls;
