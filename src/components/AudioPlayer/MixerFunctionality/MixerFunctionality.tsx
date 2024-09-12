@@ -4,17 +4,15 @@ import React, { useState } from "react";
 
 const MixerFunctionality = () => {
   const [showModal, setShowModal] = useState(false);
-  const handleShowModal = () => {
-    setShowModal(!showModal);
-  };
+
   return (
     <>
-      <button onClick={handleShowModal}>
+      <button onClick={() => setShowModal(!showModal)}>
         <Mixer showModal={showModal} />
       </button>
 
       {showModal && (
-        <div className="absolute top-[720px] left-[70px] md:left:[200px] lg:left-[510px] xl:left-[580px] bg-[#DBDAD9] w-[372px] gap-2 p-4 rounded-[8px]">
+        <div className="absolute top-[720px] left-[70px] md:left:[200px] lg:left-[510px] xl:left-[510px] bg-[#DBDAD9] w-[372px] gap-2 p-4 rounded-[8px]">
           <div className="flex me-0 gap-4 items-center">
             <p className="w-[95px] flex justify-end">Guid Vocal:</p>
             <div className="w-[228px]">

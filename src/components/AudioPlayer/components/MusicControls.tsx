@@ -15,8 +15,8 @@ import AudioRecorder from "./AudioRecorder";
 import ImportDevice from "@/components/svg/ImportDevice";
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 import ImportModal from "./ImportModal";
-import FXFunctionality from "@/components/FxFunctionality/FXFunctionality";
 import MixerFunctionality from "../MixerFunctionality/MixerFunctionality";
+import FXFunctionality from "../FxFunctionality/FXFunctionality";
 
 interface MusicControlsFace {
   handleOpenEqualizer: () => void;
