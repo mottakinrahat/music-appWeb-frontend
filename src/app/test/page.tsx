@@ -2,10 +2,11 @@
 
 "use client"; // Enabling client-side rendering for React hooks
 
+import { useAudio } from "@/lib/AudioProvider";
 import React, { useEffect, useRef, useState } from "react";
 
 const AudioPlayer = () => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { audioRef } = useAudio();
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5); // Initial volume set to 50%
   const [currentTime, setCurrentTime] = useState(0);
@@ -51,7 +52,7 @@ const AudioPlayer = () => {
         document.removeEventListener("touchstart", handleUserInteraction);
       };
     }
-  }, [volume]);
+  }, [audioRef, volume]);
 
   const togglePlay = () => {
     if (audioRef.current) {

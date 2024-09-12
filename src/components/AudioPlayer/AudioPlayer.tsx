@@ -22,7 +22,6 @@ import {
 } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
-import Image from "next/image";
 import ImportSong from "./components/ImportSong";
 import Lyrics from "./components/Lyrics";
 import {
@@ -38,7 +37,9 @@ import {
 } from "./handlers/audioControls";
 import { handleFavorite } from "./handlers/handleFavorite";
 import { useIsFavouriteMutation } from "@/redux/api/audioPlayerApi";
+import timeToSeconds from "@/utils/timeToSeconds";
 
+interface TimeProps {}
 interface AudioPlayerProps {
   onAudioContextReady: (
     audioContext: AudioContext,
@@ -88,6 +89,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const isShowLyrics = useSelector(
     (state: RootState) => state.player.showLyric
   );
+
   const userId = userData?._id;
 
   const {
@@ -123,7 +125,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         }
         setCurrentLyrics(response.data.data);
       } catch (error) {
-        console.clear();
+        // console.clear();
       }
     };
     getLyrics();
@@ -409,7 +411,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
           <AudioControls
             volume={volume}
-            ref={audioRef}
+            // ref={audioRef}
             src={importedSong.fileData ? importedSong.fileData : songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={() => {
@@ -483,7 +485,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 bpmLoading={loading}
                 songName={songName}
                 songUrl={songLink}
-                audioRef={audioRef}
+                // audioRef={audioRef}
                 handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}

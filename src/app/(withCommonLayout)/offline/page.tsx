@@ -15,6 +15,7 @@ import RepeatShuffleButton from "@/components/AudioPlayer/components/ReapetShuff
 import { Slider } from "@/components/ui/slider";
 import { initDB } from "@/utils/initDB";
 import SongMarquee from "@/components/AudioPlayer/components/SongMarquee";
+import { useAudio } from "@/lib/AudioProvider";
 
 // Function to retrieve a song Blob from IndexedDB
 const retrieveSongFromIndexedDB = async (id: string | number) => {
@@ -63,7 +64,8 @@ const PlayOfflinePage: React.FC = () => {
   const [songIds, setSongIds] = useState<number[] | string>([]);
   const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  // const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { audioRef } = useAudio();
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -103,7 +105,7 @@ const PlayOfflinePage: React.FC = () => {
       audioRef.current.play();
       setPlaying(true);
     }
-  }, [audioUrl]);
+  }, [audioRef, audioUrl]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -119,7 +121,7 @@ const PlayOfflinePage: React.FC = () => {
         audio.removeEventListener("timeupdate", handleTimeUpdate);
       };
     }
-  }, [audioUrl]);
+  }, [audioRef, audioUrl]);
 
   const handlePlayPause = () => {
     if (audioRef.current) {

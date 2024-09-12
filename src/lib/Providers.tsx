@@ -2,6 +2,7 @@
 import { store } from "@/redux/store";
 import { useEffect } from "react";
 import { Provider } from "react-redux";
+import { AudioProvider } from "./AudioProvider";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
@@ -10,7 +11,12 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  return <Provider store={store}>{children}</Provider>;
+  return <Provider store={store}>
+    <AudioProvider>
+      
+    {children}
+  </AudioProvider>
+  </Provider>;
 };
 
 export default Providers;
