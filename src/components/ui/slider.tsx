@@ -85,4 +85,25 @@ const VolumeRange2 = React.forwardRef<
 ));
 VolumeRange2.displayName = SliderPrimitive.Root.displayName;
 
-export { Slider, GradientRange, VolumeRange, VolumeRange2 };
+
+const VolumeRangeMixer = React.forwardRef<
+  React.ElementRef<typeof SliderPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <SliderPrimitive.Root
+    ref={ref}
+    className={cn(
+      "relative flex w-full touch-none select-none items-center group",
+      className
+    )}
+    {...props}
+  >
+    <SliderPrimitive.Track className="relative h-1 rounded-full cursor-pointer w-full grow overflow-hidden   bg-[#B4B4B4]">
+      <SliderPrimitive.Range className="absolute rounded-full h-full bg-[#000000]" />
+    </SliderPrimitive.Track>
+    <SliderPrimitive.Thumb className="block h-4 w-4 cursor-pointer rounded-full bg-transparent group-hover:bg-black ring-offset-background transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50" />
+  </SliderPrimitive.Root>
+));
+VolumeRangeMixer.displayName = SliderPrimitive.Root.displayName;
+
+export { Slider, GradientRange, VolumeRange, VolumeRange2, VolumeRangeMixer };

@@ -1,9 +1,15 @@
 import React from "react";
 
-const Mixer = () => {
+interface MixerProps {
+  showModal: boolean;
+}
+
+const Mixer = ({ showModal }: MixerProps) => {
   return (
     <svg
-    className=""
+      className={`hover:stroke-accent cursor-pointer transition ${
+        showModal && "stroke-accent"
+      }`}
       width="24"
       height="24"
       viewBox="0 0 24 24"

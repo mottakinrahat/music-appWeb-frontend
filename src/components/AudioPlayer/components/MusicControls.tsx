@@ -2,8 +2,6 @@
 import React, { useState, useEffect, DragEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FiSliders } from "react-icons/fi";
-import { FaUpload } from "react-icons/fa";
-import { IoMdClose } from "react-icons/io";
 import { TbDeviceIpadX } from "react-icons/tb";
 import AirPlayButton from "./AirPlayButton";
 import {
@@ -13,13 +11,12 @@ import {
 import { RootState } from "@/redux/store";
 import { initDB } from "@/utils/initDB";
 import { toast } from "sonner";
-import { playImport } from "@/redux/slice/music/musicActionSlice";
-import FXSVG from "@/components/svg/FXSVG";
-import Mixer from "@/components/svg/Mixer";
 import AudioRecorder from "./AudioRecorder";
 import ImportDevice from "@/components/svg/ImportDevice";
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 import ImportModal from "./ImportModal";
+import FXFunctionality from "@/components/FxFunctionality/FXFunctionality";
+import MixerFunctionality from "../MixerFunctionality/MixerFunctionality";
 
 interface MusicControlsFace {
   handleOpenEqualizer: () => void;
@@ -51,7 +48,7 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
       await store.delete(song.id);
     });
     await tx.done;
-    dispatch(clearMusicData()); // Dispatch Redux action to clear music data
+    dispatch(clearMusicData());
   };
 
   // Retrieve file from IndexedDB
@@ -111,7 +108,6 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
 
   return (
     <>
-      {/* Controls Component */}
       <div className="flex justify-between items-center gap-2 lg:gap-4">
         <div
           onClick={handleOpenEqualizer}
@@ -123,7 +119,6 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
           <AirPlayButton />
         </div>
         <div>
-          {/* className="hidden sm:block" */}
           {musicData.fileData ? (
             <TbDeviceIpadX
               onClick={handleDeleteSong}
@@ -137,13 +132,13 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
         </div>
         {isKaraoke && (
           <>
-            <FXSVG />
-            <Mixer />
+            <FXFunctionality />
+            <MixerFunctionality />
             <AudioRecorder />
           </>
         )}
       </div>
-      
+
       {showModal && (
         <ImportModal
           dragging={dragging}
