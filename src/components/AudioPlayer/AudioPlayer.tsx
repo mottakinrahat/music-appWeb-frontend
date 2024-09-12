@@ -411,7 +411,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
           <AudioControls
             volume={volume}
-            ref={audioRef}
+            // ref={audioRef}
             src={importedSong.fileData ? importedSong.fileData : songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={() => {
@@ -485,7 +485,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 bpmLoading={loading}
                 songName={songName}
                 songUrl={songLink}
-                audioRef={audioRef}
+                // audioRef={audioRef}
                 handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}

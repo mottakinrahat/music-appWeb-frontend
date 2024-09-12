@@ -1,4 +1,5 @@
 "use client";
+import { useAudio } from "@/lib/AudioProvider";
 import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import React, { forwardRef, useEffect, useRef } from "react";
@@ -13,19 +14,20 @@ interface AudioControlsProps {
   volume: number;
 }
 
-const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
+const AudioControls = (
   (
-    { src, onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume },
-    ref
+    { src, onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume }:AudioControlsProps
+   
   ) => {
     const playing = useSelector((state: RootState) => state.player.playing);
     const dispatch = useDispatch();
-
+    const { audioRef } = useAudio();
     // Use a ref to force updates only on volume changes
     const audioElementRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
-      const audioElement = ref && "current" in ref ? ref.current : null;
+      const audioElement =
+        audioRef && "current" in audioRef ? audioRef.current : null;
 
       if (audioElement) {
         // Apply immediate playback rate
@@ -55,10 +57,11 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           dispatch(pauseSong());
         }
       }
-    }, [ref, playing, dispatch, src, playbackRate]);
+    }, [audioRef, playing, dispatch, src, playbackRate]);
 
     useEffect(() => {
-      const audioElement = ref && "current" in ref ? ref.current : null;
+      const audioElement =
+        audioRef && "current" in audioRef ? audioRef.current : null;
 
       if (audioElement) {
         const clampedVolume = Math.max(0, Math.min(volume, 1));
@@ -96,17 +99,12 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           audioElement.removeEventListener("play", handlePlay);
         };
       }
-    }, [volume, ref]);
+    }, [volume, audioRef]);
 
     return (
       <audio
         crossOrigin="anonymous"
-        ref={(node) => {
-          audioElementRef.current = node;
-          if (ref && "current" in ref) {
-            ref.current = node;
-          }
-        }}
+        ref={audioRef}
         src={src}
         onTimeUpdate={onTimeUpdate}
         autoPlay={playing}
@@ -120,6 +118,5 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
   }
 );
 
-AudioControls.displayName = "AudioControls";
 
 export default AudioControls;

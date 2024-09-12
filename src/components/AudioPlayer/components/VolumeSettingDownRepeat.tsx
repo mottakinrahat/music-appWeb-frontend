@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { handleMinimize } from "@/redux/slice/music/musicAsyncTunk";
 import { AppDispatch } from "@/redux/store";
 import { PiPlaylistBold } from "react-icons/pi";
+import { useAudio } from "@/lib/AudioProvider";
 
 interface VolumeSettingDownRepeatProps {
   volume: number;
@@ -21,7 +22,6 @@ interface VolumeSettingDownRepeatProps {
   handleMute: () => void;
   songName: string;
   songUrl: string;
-  audioRef: any;
   bpm: number;
   handleOpenPlayList: () => void;
   artwork: string;
@@ -37,7 +37,6 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   handleMute,
   songName,
   songUrl,
-  audioRef,
   bpm,
   handleOpenPlayList,
   artwork,
@@ -47,7 +46,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   songId,
 }) => {
   const router = useRouter();
-
+  const { audioRef } = useAudio();
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
   const [quality, setQuality] = useState<any>("high");
   const [isEqOn, setEqOn] = useState(false);
