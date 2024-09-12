@@ -121,7 +121,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         if (response.status === 404) {
           setCurrentLyrics(null);
         }
-        setCurrentLyrics(response.data.data.line);
+        setCurrentLyrics(response.data.data);
       } catch (error) {
         console.clear();
       }
