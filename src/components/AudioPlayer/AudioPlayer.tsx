@@ -123,14 +123,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         if (response.status === 404) {
           setCurrentLyrics(null);
         }
-        const startTime = timeToSeconds(response.data.data.startTime);
-        const endTime = timeToSeconds(response.data.data.endTime);
-        console.log(
-          startTime,
-          endTime,
-          currentTime >= startTime || currentTime <= endTime
-        );
-        setCurrentLyrics(response.data.data.line);
+        setCurrentLyrics(response.data.data);
       } catch (error) {
         // console.clear();
       }

@@ -1,9 +1,18 @@
 import { useEffect, useRef } from "react";
 
+interface Lyric {
+  _id: string;
+  startTime: string;
+  endTime: string;
+  line: string;
+}
+
 interface LyricsProps {
-  songData?: any;
-  currentLyrics: string | any;
-  setCurrentLyrics: (value: any) => void;
+  songData?: {
+    lyrics: Lyric[];
+  };
+  currentLyrics: Lyric | null; // Use Lyric type or null
+  setCurrentLyrics: (value: Lyric | null) => void;
 }
 
 const Lyrics: React.FC<LyricsProps> = ({
@@ -27,13 +36,12 @@ const Lyrics: React.FC<LyricsProps> = ({
     }
   }, [currentLyrics]);
 
-  // Handle click event to set the active lyric
-  const handleClick = (line: string) => {
-    setCurrentLyrics(line); // Set the clicked lyric as active
+  const handleClick = (lyric: Lyric) => {
+    setCurrentLyrics(lyric); // Set the clicked lyric as active
   };
-  const allLyrics = {
-    lines: songData?.lyrics.map((lyric: any) => lyric.line), // Store each line separately
-  };
+
+  const allLyrics = songData?.lyrics || [];
+
   return (
     <div
       ref={lyricsDivRef}
@@ -46,16 +54,16 @@ const Lyrics: React.FC<LyricsProps> = ({
       }}
       className="absolute w-full text-center xl:text-left px-10 xl:px-0 xl:w-[1000px] max-h-[340px] md:max-h-[400px] xl:max-h-[480px] no-scrollbar overflow-y-scroll z-50 scroll-smooth top-[150px] xl:top-[174px] xl:left-[120px] text-xl sm:text-2xl lg:text-4xl xl:text-5xl text-white leading-snug font-semibold"
     >
-      {allLyrics?.lines?.map((line: string, index: number) => (
+      {allLyrics.map((lyric) => (
         <p
-          key={index}
+          key={lyric._id}
           className={`mb-4 ${
-            line === currentLyrics ? "text-white" : "text-white/55"
+            lyric._id === currentLyrics?._id ? "text-white" : "text-white/55"
           }`}
-          ref={line === currentLyrics ? currentLyricsRef : null}
-          onClick={() => handleClick(line)} // On click, set this line as active
+          ref={lyric._id === currentLyrics?._id ? currentLyricsRef : null}
+          onClick={() => handleClick(lyric)} // On click, set this line as active
         >
-          {line}
+          {lyric.line}
         </p>
       ))}
     </div>
