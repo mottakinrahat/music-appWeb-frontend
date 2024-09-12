@@ -6,7 +6,8 @@ import Head from "next/head";
 import { Toaster } from "sonner";
 import "core-js/features/array/reverse";
 import "core-js/features/promise/finally";
-import 'core-js';
+import "core-js";
+import Script from "next/script";
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -28,6 +29,10 @@ export default function RootLayout({
           <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico" />
           <meta name="theme-color" content="#ffffff" />
         </Head>
+        <Script
+          src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver"
+          strategy="beforeInteractive"
+        />
         <body className={outfit.className}>
           {children}
           <Toaster position="bottom-center" />
