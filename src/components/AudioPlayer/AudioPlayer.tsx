@@ -22,6 +22,7 @@ import {
 } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
+import Image from "next/image";
 import ImportSong from "./components/ImportSong";
 import Lyrics from "./components/Lyrics";
 import {
@@ -35,11 +36,8 @@ import {
   toggleRepeat,
   // handleVolumeChange,
 } from "./handlers/audioControls";
-import { getUserFavorites, handleFavorite } from "./handlers/handleFavorite";
-import {
-  useGetFavouriteMutation,
-  useIsFavouriteMutation,
-} from "@/redux/api/audioPlayerApi";
+import { handleFavorite } from "./handlers/handleFavorite";
+import { useIsFavouriteMutation } from "@/redux/api/audioPlayerApi";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -86,11 +84,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const [userClickedPlay, setUserClickedPlay] = useState<boolean>(false);
-  const [isFavourite, { isLoading: isFavLoading, data: getFavData }] =
-    useIsFavouriteMutation();
-  const [getFavorites, { isLoading, data: getIsFav }] =
-    useGetFavouriteMutation();
-
   const dispatch = useDispatch();
   const isShowLyrics = useSelector(
     (state: RootState) => state.player.showLyric
@@ -110,33 +103,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const isFavouriteUser = currentSong.favUsers.includes(userId);
 
   useEffect(() => {
+    setFavorite(isFavouriteUser);
+
     const user = localStorage.getItem("user");
     if (user) {
       setUserData(JSON.parse(user));
     }
-
-    if (userId) {
-      getUserFavorites(getFavorites, userId);
-      // getFav?.map
-      if (getIsFav?.data !== undefined) {
-        const fav = getIsFav?.data?.some(
-          (f: any) => f.favUsers == userId && f._id === songId
-        );
-
-        setFavorite(fav);
-      }
-    }
-  }, [
-    currentSong.favUsers,
-    userId,
-    isFavouriteUser,
-    getFavorites,
-    getIsFav,
-    songId,
-  ]);
+  }, [currentSong.favUsers, userId, isFavouriteUser]);
 
   const [currentLyrics, setCurrentLyrics] = useState<string | any>(null);
-
   useEffect(() => {
     const getLyrics = async () => {
       try {
@@ -148,7 +123,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         }
         setCurrentLyrics(response.data.data.line);
       } catch (error) {
-        // console.clear();
+        console.clear();
       }
     };
     getLyrics();
@@ -250,8 +225,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
     localStorage.setItem("volume", JSON.stringify(newVolume));
+
+    // Retrieve the volume from local storage immediately after setting it
     const oldVolume = localStorage.getItem("volume");
-    if (oldVolume) {
+    if (oldVolume !== null) {
+      // Parse the volume correctly and set it
       setVolume(parseFloat(oldVolume));
     }
   };
@@ -275,6 +253,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       }
     }
   };
+  const [isFavourite, { isLoading, data: getFavData }] =
+    useIsFavouriteMutation();
 
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
@@ -286,7 +266,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (!userId) {
       toast.warning("Please login first!");
     } else {
-      // setFavorite(true);
+      setFavorite((prev: boolean) => !prev);
       handleFavorite(
         isFavourite,
         favorite,
@@ -295,12 +275,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         playListData,
         artwork, // Replace with dynamic artwork URL
         songName,
-        songAlbum, // Replace with dynamic album name
+        { albumName: songAlbum }, // Replace with dynamic album name
         { src: placeHolder.src } // Replace with dynamic placeholder URL
       );
     }
   };
-  // console.log(songName);
 
   const threeDotContent = ThreeDotContent({
     currentSong,
@@ -428,7 +407,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             />
           </div>
 
-           <AudioControls
+          <AudioControls
             volume={volume}
             ref={audioRef}
             src={importedSong.fileData ? importedSong.fileData : songLink}
@@ -439,16 +418,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               handleProgress(currentTime, duration, setPlayed);
               setCurrentTime(currentTime);
             }}
-            autoPlay={playing}
             onLoadedMetadata={() => {
               setDuration(audioRef.current?.duration || 0);
             }}
             onEnded={() =>
               handleEnd(audioRef, repeat, handleNext, handleRandom)
             }
-          /> 
-
-     
+          />
 
           <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
             <Slider
