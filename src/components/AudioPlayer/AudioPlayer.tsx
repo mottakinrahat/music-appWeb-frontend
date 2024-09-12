@@ -22,7 +22,6 @@ import {
 } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
-import Image from "next/image";
 import ImportSong from "./components/ImportSong";
 import Lyrics from "./components/Lyrics";
 import {
@@ -38,7 +37,9 @@ import {
 } from "./handlers/audioControls";
 import { handleFavorite } from "./handlers/handleFavorite";
 import { useIsFavouriteMutation } from "@/redux/api/audioPlayerApi";
+import timeToSeconds from "@/utils/timeToSeconds";
 
+interface TimeProps {}
 interface AudioPlayerProps {
   onAudioContextReady: (
     audioContext: AudioContext,
@@ -88,6 +89,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const isShowLyrics = useSelector(
     (state: RootState) => state.player.showLyric
   );
+
   const userId = userData?._id;
 
   const {
@@ -121,9 +123,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         if (response.status === 404) {
           setCurrentLyrics(null);
         }
+        const startTime = timeToSeconds(response.data.data.startTime);
+        const endTime = timeToSeconds(response.data.data.endTime);
+        console.log(
+          startTime,
+          endTime,
+          currentTime >= startTime || currentTime <= endTime
+        );
         setCurrentLyrics(response.data.data.line);
       } catch (error) {
-        console.clear();
+        // console.clear();
       }
     };
     getLyrics();

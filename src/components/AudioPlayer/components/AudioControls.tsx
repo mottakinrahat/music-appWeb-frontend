@@ -55,7 +55,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           dispatch(pauseSong());
         }
       }
-    }, [debouncedPlaybackRate, ref, playing, dispatch, src]);
+    }, [ref, playing, dispatch, src, playbackRate]);
 
     useEffect(() => {
       const audioElement = ref && "current" in ref ? ref.current : null;
