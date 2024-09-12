@@ -1,12 +1,14 @@
 "use client";
+import { useDebouncedValue } from "@/hooks/useDebounceValue";
 import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
-import React, { forwardRef, useEffect, useRef } from "react";
+import React, { forwardRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 interface AudioControlsProps {
   src: string;
   onTimeUpdate?: React.ChangeEventHandler<HTMLAudioElement>;
+  autoPlay?: boolean;
   onLoadedMetadata?: React.ReactEventHandler<HTMLAudioElement>;
   onEnded?: React.ReactEventHandler<HTMLAudioElement>;
   playbackRate: number;
@@ -15,35 +17,53 @@ interface AudioControlsProps {
 
 const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
   (
-    { src, onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume },
+    {
+      src,
+      onTimeUpdate,
+      autoPlay,
+      onLoadedMetadata,
+      onEnded,
+      playbackRate,
+      volume,
+    },
     ref
   ) => {
     const playing = useSelector((state: RootState) => state.player.playing);
     const dispatch = useDispatch();
 
-    // Use a ref to force updates only on volume changes
-    const audioElementRef = useRef<HTMLAudioElement | null>(null);
+    const [debouncedPlaybackRate] = useDebouncedValue(playbackRate, 500);
 
     useEffect(() => {
-      const audioElement = ref && "current" in ref ? ref.current : null;
+      if (ref && "current" in ref && ref.current) {
+        const audioElement = ref.current;
+        // Create an audio context for Safari to handle playback better
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        const audioContext = new AudioContext();
 
-      if (audioElement) {
-        // Apply immediate playback rate
-        if (playbackRate) {
-          audioElement.playbackRate = playbackRate;
+        // Resume the audio context on user interaction
+        const resumeAudioContext = () => {
+          if (audioContext.state === 'suspended') {
+            audioContext.resume();
+          }
+        };
+
+        document.addEventListener('click', resumeAudioContext);
+        document.addEventListener('touchstart', resumeAudioContext);
+
+        // Apply playback rate
+        if (debouncedPlaybackRate) {
+          audioElement.playbackRate = debouncedPlaybackRate;
         }
 
-        // Set the necessary pitch properties
+        // Preserve pitch in Safari and Firefox
         (audioElement as any).preservesPitch = true;
         (audioElement as any).mozPreservesPitch = true;
         (audioElement as any).webkitPreservesPitch = true;
 
-        // Handle playback status
         if (playing) {
           const playPromise = audioElement.play();
           if (playPromise !== undefined) {
             playPromise.catch(() => {
-              // Ensure the dispatch is called if playback fails
               dispatch(playImport());
               audioElement.play().catch(() => {
                 dispatch(playImport());
@@ -63,9 +83,8 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     }, [debouncedPlaybackRate, ref, playing, dispatch, src]);
 
     useEffect(() => {
-      const audioElement = ref && "current" in ref ? ref.current : null;
-
-      if (audioElement) {
+      if (ref && "current" in ref && ref.current) {
+        const audioElement = ref.current;
         const clampedVolume = Math.max(0, Math.min(volume, 1));
 
         const setVolume = () => {
@@ -80,14 +99,19 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
         };
 
         const handleMetadataLoaded = () => {
-          setVolume(); // Set volume when metadata is loaded
+          setVolume();
         };
 
-        const handlePlay = () => {
-          setVolume(); // Ensure volume is set on play
+        const handleUserInteraction = () => {
+          setVolume();
+          audioElement.play().catch(() => {
+            console.log("Playback was prevented.");
+          });
+
+          document.removeEventListener("click", handleUserInteraction);
+          document.removeEventListener("touchstart", handleUserInteraction);
         };
 
-        // Set the volume immediately if metadata is already loaded
         if (audioElement.readyState >= 1) {
           setVolume();
         } else {
@@ -95,15 +119,23 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           audioElement.addEventListener("canplaythrough", handleMetadataLoaded); // Added for Safari
         }
 
-        // Safari-specific volume handling on play
-        audioElement.addEventListener("play", handlePlay);
+        audioElement.addEventListener("play", setVolume);
+
+        document.addEventListener("click", handleUserInteraction);
+        document.addEventListener("touchstart", handleUserInteraction);
 
         return () => {
           audioElement.removeEventListener(
             "loadedmetadata",
             handleMetadataLoaded
           );
-          audioElement.removeEventListener("play", handlePlay);
+          audioElement.removeEventListener(
+            "canplaythrough",
+            handleMetadataLoaded
+          ); // Added for Safari
+          audioElement.removeEventListener("play", setVolume);
+          document.removeEventListener("click", handleUserInteraction);
+          document.removeEventListener("touchstart", handleUserInteraction);
         };
       }
     }, [volume, ref]);
@@ -111,12 +143,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     return (
       <audio
         crossOrigin="anonymous"
-        ref={(node) => {
-          audioElementRef.current = node;
-          if (ref && "current" in ref) {
-            ref.current = node;
-          }
-        }}
+        ref={ref}
         src={src}
         onTimeUpdate={onTimeUpdate}
         autoPlay={playing}
