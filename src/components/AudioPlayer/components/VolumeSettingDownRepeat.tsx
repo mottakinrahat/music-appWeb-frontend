@@ -17,7 +17,7 @@ import { PiPlaylistBold } from "react-icons/pi";
 
 interface VolumeSettingDownRepeatProps {
   volume: number;
-  handleVolumeChange: any;
+  handleVolumeChange: ()=> void;
   handleMute: () => void;
   songName: string;
   songUrl: string;
