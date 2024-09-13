@@ -416,7 +416,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               handleProgress(currentTime, duration, setPlayed);
               setCurrentTime(currentTime);
             }}
-            autoPlay={playing}
             onLoadedMetadata={() => {
               setDuration(audioRef.current?.duration || 0);
             }}
