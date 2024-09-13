@@ -15,22 +15,22 @@ interface AudioControlsProps {
 }
 
 const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
+const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
   (
-    {
-      src,
-      onTimeUpdate,
-      onLoadedMetadata,
-      onEnded,
-      playbackRate = 1.0,
-      volume = 1.0,
-    },
+    { src, onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume },
     ref
   ) => {
     const playing = useSelector((state: RootState) => state.player.playing);
+    const dispatch = useDispatch();
+    // Use a ref to force updates only on volume changes
+    // const audioRef = useRef<HTMLAudioElement | null>(null);
+    const { setAudioRef } = useAudio();
 
     // Set playback rate and handle play/pause based on "playing" state
 
     useEffect(() => {
+      setAudioRef(ref);
+      const audioElement = ref && "current" in ref ? ref.current : null;
       if (ref && "current" in ref && ref.current) {
         const audioElement = ref.current;
 
@@ -50,12 +50,13 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           audioElement.pause();
         }
       }
-    }, [playbackRate, ref, playing]);
+    }, [ref, playing, dispatch, src, playbackRate, setAudioRef]);
 
     // Ensure volume is set correctly when the component mounts
     useEffect(() => {
-      if (ref && "current" in ref && ref.current) {
-        const audioElement = ref.current;
+      const audioElement = ref && "current" in ref ? ref.current : null;
+
+      if (audioElement) {
         const clampedVolume = Math.max(0, Math.min(volume, 1));
 
         const setVolume = () => {
@@ -91,7 +92,6 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     );
   }
 );
-
 AudioControls.displayName = "AudioControls";
 
 export default AudioControls;

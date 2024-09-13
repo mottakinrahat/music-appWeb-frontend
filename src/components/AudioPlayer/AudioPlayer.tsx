@@ -38,6 +38,8 @@ import {
 } from "./handlers/audioControls";
 import { handleFavorite } from "./handlers/handleFavorite";
 import { useIsFavouriteMutation } from "@/redux/api/audioPlayerApi";
+import timeToSeconds from "@/utils/timeToSeconds";
+import { useAudio } from "@/lib/AudioProvider";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -101,15 +103,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   } = currentSong;
 
   const isFavouriteUser = currentSong.favUsers.includes(userId);
+  const { setAudioRef } = useAudio();
 
   useEffect(() => {
+    setAudioRef(audioRef);
     setFavorite(isFavouriteUser);
 
     const user = localStorage.getItem("user");
     if (user) {
       setUserData(JSON.parse(user));
     }
-  }, [currentSong.favUsers, userId, isFavouriteUser]);
+  }, [currentSong.favUsers, userId, isFavouriteUser, setAudioRef]);
 
   const [currentLyrics, setCurrentLyrics] = useState<string | any>(null);
   useEffect(() => {

@@ -2,6 +2,7 @@
 "use client";
 
 import { Chart } from "@/components/chart/Chart";
+import { useAudio } from "@/lib/AudioProvider";
 import React, { useRef, useState, useEffect } from "react";
 import { IoCheckmarkSharp } from "react-icons/io5";
 
@@ -11,13 +12,14 @@ interface EqualizerProps {
 }
 
 const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
-  audioContext,
+  // audioContext,
   audioElement,
 }) => {
   const gainNodesRef = useRef<GainNode[]>([]);
   const [gains, setGains] = useState<number[]>([]);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
   const [isOn, setIsOn] = useState(false);
+  const { audioContext } = useAudio();
 
   // Frequencies for the equalizer
   const frequencyLabels = [`60Hz`, "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
@@ -87,12 +89,22 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
     });
   };
 
+  const { musicSource } = useAudio();
+
   useEffect(() => {
-    if (audioContext && audioElement && gainNodesRef.current.length === 0) {
+    if (audioContext && audioElement) {
+      // // Clean up existing filters if any
+      // gainNodesRef.current.forEach((filter) => filter.disconnect());
+
       let audioSource = (audioElement as any)._sourceNode;
 
+      // if (!audioSource) {
+      //   audioSource = audioContext.createMediaElementSource(audioElement);
+      //   (audioElement as any)._sourceNode = audioSource;
+      // }
+
       if (!audioSource) {
-        audioSource = audioContext.createMediaElementSource(audioElement);
+        audioSource = musicSource;
         (audioElement as any)._sourceNode = audioSource;
       }
 
@@ -113,7 +125,16 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
       filters[filters.length - 1].connect(audioContext.destination);
       audioSource.connect(filters[0]);
 
+      // Update the reference to the new filters
       gainNodesRef.current = filters;
+
+      // Clean up function for this effect
+      return () => {
+        filters.forEach((filter) => filter.disconnect());
+        if (audioSource) {
+          audioSource.disconnect();
+        }
+      };
     }
   }, [audioContext, audioElement, frequencies, isOn, gains]);
 
