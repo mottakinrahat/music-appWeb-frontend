@@ -251,11 +251,6 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({
                 <button className="my-1 md:my-[6px]" disabled>
                   {preset.charAt(0).toUpperCase() + preset.slice(1)}
                 </button>
-                {/* {selectedPreset === preset && (
-                  <div>
-                    <IoCheckmarkSharp className="text-accent" />
-                  </div>
-                )} */}
               </li>
             ))}
           </ul>

@@ -3,7 +3,10 @@ import { useState, useRef, useEffect } from "react";
 import { openDB } from "idb";
 import RadioButton from "@/components/svg/RadioButton";
 import { useDispatch } from "react-redux";
-import { setRecordedUrl } from "@/redux/slice/karaoke/karaokeActionSlice";
+import {
+  record,
+  setRecordedUrl,
+} from "@/redux/slice/karaoke/karaokeActionSlice";
 import { useAudio } from "@/lib/AudioProvider";
 import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
 
@@ -12,6 +15,7 @@ const AudioRecorder = () => {
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  const micStreamRef = useRef<MediaStream | null>(null); // Add ref to store mic stream
   const dispatch = useDispatch();
   const { audioRef, audioContext, musicSource } = useAudio(); // Get the ref from the context
 
@@ -23,6 +27,8 @@ const AudioRecorder = () => {
     }
   }, [audioURL, dispatch]);
 
+  const monitoringAudio = new Audio();
+
   // Function to play a short beep sound
   const playBeep = () => {
     if (audioContext) {
@@ -30,7 +36,7 @@ const AudioRecorder = () => {
       const gainNode = audioContext.createGain();
 
       oscillator.type = "sine";
-      oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+      oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
       gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
 
       oscillator.connect(gainNode);
@@ -43,13 +49,16 @@ const AudioRecorder = () => {
 
   // Request user media and start recording
   const startRecording = async () => {
-    // dispatch(pauseSong());
+    dispatch(record(true));
+    dispatch(pauseSong());
     try {
       playBeep();
 
       const micStream = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
+
+      micStreamRef.current = micStream; // Store mic stream in ref
 
       if (!audioRef.current) {
         console.warn("No audio element available.");
@@ -64,27 +73,18 @@ const AudioRecorder = () => {
       if (audioContext) {
         await audioContext.resume();
 
-        // Create a MediaStreamDestination for recording
         const recordingDestination =
           audioContext.createMediaStreamDestination();
-
-        // Create an AudioBufferSourceNode for monitoring
         const monitoringDestination =
           audioContext.createMediaStreamDestination();
-
-        // Create sources
         const micSource = audioContext.createMediaStreamSource(micStream);
-        // const musicSource = audioContext.createMediaElementSource(mediaElement);
 
-        // Connect sources to the monitoring destination for playback
         micSource.connect(monitoringDestination);
         musicSource.connect(monitoringDestination);
 
-        // Connect sources to the recording destination for recording
         micSource.connect(recordingDestination);
         musicSource.connect(recordingDestination);
 
-        // Set up the MediaRecorder with the recording destination
         mediaRecorderRef.current = new MediaRecorder(
           recordingDestination.stream
         );
@@ -105,8 +105,6 @@ const AudioRecorder = () => {
         mediaRecorderRef.current.start();
         setIsRecording(true);
 
-        // Connect the monitoring destination to the speakers
-        const monitoringAudio = new Audio();
         monitoringAudio.srcObject = monitoringDestination.stream;
         monitoringAudio.play();
       }
@@ -116,9 +114,18 @@ const AudioRecorder = () => {
   };
 
   const stopRecording = () => {
+    dispatch(pauseSong());
+    dispatch(record(false));
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
+      monitoringAudio.pause();
       setIsRecording(false);
+    }
+
+    // Stop all tracks in the micStream
+    if (micStreamRef.current) {
+      micStreamRef.current.getTracks().forEach((track) => track.stop());
+      micStreamRef.current = null; // Clear the ref
     }
   };
 

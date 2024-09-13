@@ -22,8 +22,8 @@ const karaokeActionSlice = createSlice({
     karaoke: (state) => {
       state.karaoke = !state.karaoke;
     },
-    record: (state) => {
-      state.record = !state.record;
+    record: (state, action: PayloadAction<boolean>) => {
+      state.record = action.payload;
     },
   },
 });
