@@ -106,7 +106,6 @@ const AudioRecorder = () => {
         setIsRecording(true);
 
         monitoringAudio.srcObject = monitoringDestination.stream;
-        monitoringAudio.play();
       }
     } catch (err) {
       console.error("Error accessing microphone or system audio:", err);
@@ -151,12 +150,6 @@ const AudioRecorder = () => {
           </button>
         )}
       </div>
-      {audioURL && (
-        <div className="mt-4">
-          <h2 className="text-lg font-semibold">Recorded Audio:</h2>
-          <audio controls src={audioURL} className="mt-2" />
-        </div>
-      )}
     </div>
   );
 };
