@@ -80,7 +80,7 @@ const AudioRecorder = () => {
         const micSource = audioContext.createMediaStreamSource(micStream);
 
         micSource.connect(monitoringDestination);
-        musicSource.connect(monitoringDestination);
+        // musicSource.connect(monitoringDestination);
 
         micSource.connect(recordingDestination);
         musicSource.connect(recordingDestination);
@@ -106,6 +106,7 @@ const AudioRecorder = () => {
         setIsRecording(true);
 
         monitoringAudio.srcObject = monitoringDestination.stream;
+        monitoringAudio.play();
       }
     } catch (err) {
       console.error("Error accessing microphone or system audio:", err);
@@ -114,6 +115,11 @@ const AudioRecorder = () => {
 
   const stopRecording = () => {
     dispatch(pauseSong());
+    const mediaElement = audioRef.current;
+    if (mediaElement) {
+      mediaElement.pause();
+    }
+
     dispatch(isKaraokeRecord(false));
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();

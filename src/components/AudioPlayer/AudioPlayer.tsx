@@ -39,6 +39,7 @@ import { handleFavorite } from "./handlers/handleFavorite";
 import { useIsFavouriteMutation } from "@/redux/api/audioPlayerApi";
 import timeToSeconds from "@/utils/timeToSeconds";
 import { useAudio } from "@/lib/AudioProvider";
+import AudioRecordSlider from "./AudioRecording/AudioRecordSlider";
 
 interface TimeProps {}
 interface AudioPlayerProps {
@@ -430,7 +431,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               handleEnd(audioRef, repeat, handleNext, handleRandom)
             }
           />
-
+          <AudioRecordSlider audioUrl={songLink} />
           <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
             <Slider
               defaultValue={[currentTime]}
