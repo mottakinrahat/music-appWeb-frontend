@@ -140,6 +140,8 @@ const AudioRecorder = () => {
     await db.put("audio", { blob });
   };
 
+  
+
   return (
     <div>
       <div className="flex items-center">
