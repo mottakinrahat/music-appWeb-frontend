@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import Providers from "@/lib/Providers";
 import Head from "next/head";
 import { Toaster } from "sonner";
-import "core-js/features/array/reverse";
-import "core-js/features/promise/finally";
-import 'core-js';
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

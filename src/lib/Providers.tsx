@@ -13,7 +13,6 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
 
   return <Provider store={store}>
     <AudioProvider>
-      
     {children}
   </AudioProvider>
   </Provider>;

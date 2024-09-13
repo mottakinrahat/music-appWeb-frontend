@@ -2,8 +2,6 @@
 import React, { useState, useEffect, DragEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FiSliders } from "react-icons/fi";
-import { FaUpload } from "react-icons/fa";
-import { IoMdClose } from "react-icons/io";
 import { TbDeviceIpadX } from "react-icons/tb";
 import AirPlayButton from "./AirPlayButton";
 import {
@@ -13,14 +11,10 @@ import {
 import { RootState } from "@/redux/store";
 import { initDB } from "@/utils/initDB";
 import { toast } from "sonner";
-import { playImport } from "@/redux/slice/music/musicActionSlice";
-import FXSVG from "@/components/svg/FXSVG";
-import Mixer from "@/components/svg/Mixer";
-import AudioRecorder from "./AudioRecorder";
+import AudioRecorder from "../AudioRecording/AudioRecorder";
 import ImportDevice from "@/components/svg/ImportDevice";
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 import ImportModal from "./ImportModal";
-import { FaX } from "react-icons/fa6";
 import FXFunctionality from "../FXFunctionality/FXFunctionality";
 import MixerFunctionality from "../MixerFunctionality/MixerFunctionality";
 

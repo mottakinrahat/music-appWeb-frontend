@@ -8,7 +8,7 @@ import {
   setRecordedUrl,
 } from "@/redux/slice/karaoke/karaokeActionSlice";
 import { useAudio } from "@/lib/AudioProvider";
-import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
+import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 
 const AudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
