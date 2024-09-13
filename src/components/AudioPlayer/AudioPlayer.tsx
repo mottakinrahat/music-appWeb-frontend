@@ -22,6 +22,7 @@ import {
 } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
+import Image from "next/image";
 import ImportSong from "./components/ImportSong";
 import Lyrics from "./components/Lyrics";
 import {
@@ -37,9 +38,7 @@ import {
 } from "./handlers/audioControls";
 import { handleFavorite } from "./handlers/handleFavorite";
 import { useIsFavouriteMutation } from "@/redux/api/audioPlayerApi";
-import timeToSeconds from "@/utils/timeToSeconds";
 
-interface TimeProps {}
 interface AudioPlayerProps {
   onAudioContextReady: (
     audioContext: AudioContext,
@@ -89,7 +88,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const isShowLyrics = useSelector(
     (state: RootState) => state.player.showLyric
   );
-
   const userId = userData?._id;
 
   const {
@@ -123,10 +121,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         if (response.status === 404) {
           setCurrentLyrics(null);
         }
-        setCurrentLyrics(response.data.data);
-      } catch (error) {
-        // console.clear();
-      }
+        setCurrentLyrics(response.data.data.line);
+      } catch (error) {}
     };
     getLyrics();
   }, [currentTime, songData._id]);
@@ -227,11 +223,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
     localStorage.setItem("volume", JSON.stringify(newVolume));
-
-    // Retrieve the volume from local storage immediately after setting it
     const oldVolume = localStorage.getItem("volume");
-    if (oldVolume !== null) {
-      // Parse the volume correctly and set it
+    if (oldVolume) {
       setVolume(parseFloat(oldVolume));
     }
   };
@@ -411,7 +404,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
           <AudioControls
             volume={volume}
-            autoPlay={playing}
             ref={audioRef}
             src={importedSong.fileData ? importedSong.fileData : songLink}
             playbackRate={playbackSpeed}
@@ -421,6 +413,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               handleProgress(currentTime, duration, setPlayed);
               setCurrentTime(currentTime);
             }}
+            autoPlay={playing}
             onLoadedMetadata={() => {
               setDuration(audioRef.current?.duration || 0);
             }}
@@ -486,7 +479,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 bpmLoading={loading}
                 songName={songName}
                 songUrl={songLink}
-                // audioRef={audioRef}
                 handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}

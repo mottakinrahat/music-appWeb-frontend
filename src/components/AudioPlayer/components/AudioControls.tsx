@@ -1,132 +1,95 @@
 "use client";
-import React, { forwardRef, useEffect, useRef } from "react";
+import { pauseSong } from "@/redux/slice/music/musicActionSlice";
+import { RootState } from "@/redux/store";
+import React, { forwardRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 interface AudioControlsProps {
   src: string;
-  volume: number;
-  autoPlay: boolean;
-  onTimeUpdate: () => void;
-  onLoadedMetadata: () => void;
-  onEnded: () => void;
-  playbackRate: number;
+  onTimeUpdate?: React.ChangeEventHandler<HTMLAudioElement>;
+  autoPlay?: boolean;
+  onLoadedMetadata?: React.ReactEventHandler<HTMLAudioElement>;
+  onEnded?: React.ReactEventHandler<HTMLAudioElement>;
+  playbackRate?: number;
+  volume?: number; // Volume should be between 0.0 and 1.0
 }
 
 const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
   (
     {
       src,
-      volume,
-      autoPlay,
       onTimeUpdate,
+      autoPlay,
       onLoadedMetadata,
       onEnded,
-      playbackRate,
+      playbackRate = 1.0,
+      volume = 1.0,
     },
     ref
   ) => {
-    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const playing = useSelector((state: RootState) => state.player.playing);
+    const dispatch = useDispatch();
+
+    // Set playback rate and handle play/pause based on "playing" state
 
     useEffect(() => {
-      const audioElement = audioRef.current;
+      if (ref && "current" in ref && ref.current) {
+        const audioElement = ref.current;
 
-      if (audioElement) {
-        // Clamp volume between 0 and 1
+        audioElement.playbackRate = playbackRate;
+
+        if (playing) {
+          const playPromise = audioElement.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {
+              audioElement.muted = true;
+              audioElement.play().catch(() => {
+                // Optional: Handle further autoplay issues
+              });
+            });
+          }
+        } else {
+          audioElement.pause();
+        }
+      }
+    }, [playbackRate, ref, playing]);
+
+    // Ensure volume is set correctly when the component mounts
+    useEffect(() => {
+      if (ref && "current" in ref && ref.current) {
+        const audioElement = ref.current;
         const clampedVolume = Math.max(0, Math.min(volume, 1));
 
         const setVolume = () => {
-          if (!audioElement.muted) {
-            audioElement.volume = clampedVolume;
-          }
+          audioElement.volume = clampedVolume;
         };
 
-        const handleMetadataLoaded = () => {
-          // Set volume when the metadata is loaded (Safari needs this)
-          setVolume();
-        };
-
-        const handleVolumeChange = () => {
-          if (!audioElement.muted) {
-            audioElement.volume = clampedVolume;
-          }
-        };
-
-        // Ensure volume is set after user interaction (Safari fix)
-        const handleUserInteraction = () => {
-          setVolume();
-          audioElement.play().catch(() => {
-            // Handle any playback errors
-            console.log("Playback was prevented.");
-          });
-
-          // Remove the listener after the first interaction
-          document.removeEventListener("touchstart", handleUserInteraction);
-        };
-
-        // If metadata is already loaded, set the volume immediately
         if (audioElement.readyState >= 1) {
+          // If metadata is already loaded, set volume immediately
           setVolume();
         } else {
-          // For Safari, ensure volume is set after metadata is loaded
-          // audioElement.addEventListener("loadedmetadata", handleMetadataLoaded);
+          // Set volume once the metadata is loaded
+          audioElement.addEventListener("loadedmetadata", setVolume);
         }
-
-        // Additional user interaction for Safari: ensure volume updates on user play event
-        audioElement.addEventListener("play", handleVolumeChange);
-
-        // Listen for any user interaction to enable playback
-        document.addEventListener("click", handleUserInteraction);
-        document.addEventListener("touchstart", handleUserInteraction);
 
         return () => {
-          audioElement.removeEventListener(
-            "loadedmetadata",
-            handleMetadataLoaded
-          );
-          audioElement.removeEventListener("play", handleVolumeChange);
-          document.removeEventListener("click", handleUserInteraction);
-          document.removeEventListener("touchstart", handleUserInteraction);
+          audioElement.removeEventListener("loadedmetadata", setVolume);
         };
       }
-    }, [volume]);
-
-    // Handle autoPlay and playback rate changes
-    useEffect(() => {
-      const audioElement = audioRef.current;
-      if (audioElement) {
-        audioElement.playbackRate = playbackRate;
-
-        if (autoPlay && !audioElement.muted) {
-          audioElement.play().catch((err) => {
-            // Catch autoplay restrictions for Safari
-            console.log("Autoplay restriction error:", err);
-          });
-        }
-      }
-    }, [autoPlay, playbackRate]);
+    }, [volume, ref]);
 
     return (
       <audio
-        className="hidden"
-        ref={(instance) => {
-          audioRef.current = instance;
-          if (typeof ref === "function") {
-            ref(instance);
-          } else if (ref) {
-            (ref as React.MutableRefObject<HTMLAudioElement | null>).current =
-              instance;
-          }
-        }}
-        src={src}
         crossOrigin="anonymous"
-        autoPlay={autoPlay}
+        ref={ref}
+        src={src}
         onTimeUpdate={onTimeUpdate}
+        autoPlay={playing}
         onLoadedMetadata={onLoadedMetadata}
         onEnded={onEnded}
-        preload="auto"
-        controls
-        muted={!autoPlay} // Mute when volume is 0
-        playsInline
-      />
+      >
+        Your browser does not support the audio element.
+      </audio>
     );
   }
 );
