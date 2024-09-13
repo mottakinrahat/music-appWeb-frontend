@@ -20,6 +20,9 @@ import AudioRecorder from "./AudioRecorder";
 import ImportDevice from "@/components/svg/ImportDevice";
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 import ImportModal from "./ImportModal";
+import { FaX } from "react-icons/fa6";
+import FXFunctionality from "../FXFunctionality/FXFunctionality";
+import MixerFunctionality from "../MixerFunctionality/MixerFunctionality";
 
 interface MusicControlsFace {
   handleOpenEqualizer: () => void;
@@ -137,13 +140,13 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
         </div>
         {isKaraoke && (
           <>
-            <FXSVG />
-            <Mixer />
+            <FXFunctionality />
+            <MixerFunctionality />
             <AudioRecorder />
           </>
         )}
       </div>
-      
+
       {showModal && (
         <ImportModal
           dragging={dragging}
