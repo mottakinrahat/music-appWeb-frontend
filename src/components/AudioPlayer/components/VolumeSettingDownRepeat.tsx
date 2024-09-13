@@ -18,7 +18,7 @@ import { useAudio } from "@/lib/AudioProvider";
 
 interface VolumeSettingDownRepeatProps {
   volume: number;
-  handleVolumeChange: any;
+  handleVolumeChange: ()=> void;
   handleMute: () => void;
   songName: string;
   songUrl: string;

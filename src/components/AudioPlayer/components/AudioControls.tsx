@@ -1,5 +1,4 @@
 "use client";
-import { useAudio } from "@/lib/AudioProvider";
 import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import React, { forwardRef, useEffect, useRef } from "react";
