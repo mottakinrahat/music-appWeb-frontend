@@ -33,12 +33,11 @@ import {
   handlePreviousTenSecond,
   handleProgress,
   toggleRepeat,
-  // handleVolumeChange,
 } from "./handlers/audioControls";
 import { handleFavorite } from "./handlers/handleFavorite";
 import { useIsFavouriteMutation } from "@/redux/api/audioPlayerApi";
-import timeToSeconds from "@/utils/timeToSeconds";
 import { useAudio } from "@/lib/AudioProvider";
+import RecordingControlls from "./AudioRecording/RecordingControlls";
 import AudioRecordSlider from "./AudioRecording/AudioRecordSlider";
 
 interface TimeProps {}
@@ -128,9 +127,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           setCurrentLyrics(null);
         }
         setCurrentLyrics(response.data.data);
-      } catch (error) {
-        // console.clear();
-      }
+      } catch (error) {}
     };
     getLyrics();
   }, [currentTime, songData._id]);
@@ -173,7 +170,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       localStorage.setItem("repeat", repeat);
     }
   }, [currentSong, repeat, songData, speed, volume]);
-  // Main Song
 
   useEffect(() => {
     const handleInteraction = () => {
@@ -294,6 +290,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   });
 
   const isKaroke = useSelector((state: RootState) => state.karaoke.karaoke);
+  const isRecording = useSelector(
+    (state: RootState) => state.karaoke.isKaraokeRecord
+  );
 
   return (
     <div className="audio-controls relative">
@@ -371,7 +370,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           />
         </div>
-        <div className="flex flex-col justify-end h-full gap-2 lg:gap-[24px] md:p-10 p-4   xl:px-[120px]">
+        <div
+          className={`flex flex-col justify-end h-full gap-2 ${
+            isRecording ? "" : "lg:gap-[24px]"
+          } md:p-10 p-4   xl:px-[120px]`}
+        >
           <div className="w-full flex justify-between items-center">
             <ImportSong
               artwork={artwork}
@@ -380,28 +383,34 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               songArtist={songArtist}
             />
 
-            <div className="hidden xl:mt-5 xl:block">
-              <PlayButtons
-                handleNext={handleNext}
-                handleNextTenSecond={() =>
-                  handleNextTenSecond(audioRef.current, duration)
-                }
-                handlePreviousTenSecond={() =>
-                  handlePreviousTenSecond(audioRef.current, duration)
-                }
-                handlePlayPause={() =>
-                  handlePlayPause({
-                    dispatch,
-                    playing,
-                    songId,
-                    setUserClickedPlay,
-                    audioElement: audioRef.current,
-                  })
-                }
-                handlePrev={handlePrev}
-                playing={playing}
-              />
-            </div>
+            {isRecording ? (
+              <div className="hidden xl:mt-5 xl:block">
+                <RecordingControlls songDuration={duration} />
+              </div>
+            ) : (
+              <div className="hidden xl:mt-10 xl:block">
+                <PlayButtons
+                  handleNext={handleNext}
+                  handleNextTenSecond={() =>
+                    handleNextTenSecond(audioRef.current, duration)
+                  }
+                  handlePreviousTenSecond={() =>
+                    handlePreviousTenSecond(audioRef.current, duration)
+                  }
+                  handlePlayPause={() =>
+                    handlePlayPause({
+                      dispatch,
+                      playing,
+                      songId,
+                      setUserClickedPlay,
+                      audioElement: audioRef.current,
+                    })
+                  }
+                  handlePrev={handlePrev}
+                  playing={playing}
+                />
+              </div>
+            )}
 
             <RepeatActionButton
               toggleRepeat={toggleRepeat}
@@ -431,16 +440,20 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               handleEnd(audioRef, repeat, handleNext, handleRandom)
             }
           />
-          <AudioRecordSlider audioUrl={songLink} />
+
           <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
-            <Slider
-              defaultValue={[currentTime]}
-              max={duration}
-              min={0}
-              step={0.01}
-              value={[currentTime]}
-              onValueChange={handleSeek}
-            />
+            {isRecording ? (
+              <AudioRecordSlider handleSeek={handleSeek} currentTime={currentTime} audioUrl={songLink} />
+            ) : (
+              <Slider
+                defaultValue={[currentTime]}
+                max={duration}
+                min={0}
+                step={0.01}
+                value={[currentTime]}
+                onValueChange={handleSeek}
+              />
+            )}
           </div>
           <div className="w-full">
             <div className="flex justify-between gap-3 mb-14 lg:mb-0 items-center ">

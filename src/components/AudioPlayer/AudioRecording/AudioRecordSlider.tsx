@@ -3,9 +3,15 @@ import WaveSurfer from "wavesurfer.js";
 
 interface AudioVisualizerProps {
   audioUrl: string;
+  currentTime: number;
+  handleSeek: (value: number[]) => void;
 }
 
-const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({ audioUrl }) => {
+const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({
+  audioUrl,
+  currentTime,
+  handleSeek,
+}) => {
   const waveformRef = useRef<HTMLDivElement | null>(null);
   const [waveSurfer, setWaveSurfer] = useState<WaveSurfer | null>(null);
 
@@ -41,6 +47,12 @@ const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({ audioUrl }) => {
       }
     };
   }, [audioUrl]); // Recreate WaveSurfer instance when audioUrl changes
+
+  useEffect(() => {
+    if (waveSurfer && waveSurfer.getDuration()) {
+      waveSurfer.seekTo(currentTime / waveSurfer.getDuration());
+    }
+  }, [currentTime, waveSurfer]);
 
   return (
     <div className="w-full h-5 relative overflow-hidden">

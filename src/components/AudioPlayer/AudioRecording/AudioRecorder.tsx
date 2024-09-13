@@ -15,9 +15,9 @@ const AudioRecorder = () => {
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
-  const micStreamRef = useRef<MediaStream | null>(null); // Add ref to store mic stream
+  const micStreamRef = useRef<MediaStream | null>(null);
   const dispatch = useDispatch();
-  const { audioRef, audioContext, musicSource } = useAudio(); // Get the ref from the context
+  const { audioRef, audioContext, musicSource } = useAudio();
 
   useEffect(() => {
     if (audioURL) {
@@ -29,7 +29,6 @@ const AudioRecorder = () => {
 
   const monitoringAudio = new Audio();
 
-  // Function to play a short beep sound
   const playBeep = () => {
     if (audioContext) {
       const oscillator = audioContext.createOscillator();
@@ -47,7 +46,6 @@ const AudioRecorder = () => {
     }
   };
 
-  // Request user media and start recording
   const startRecording = async () => {
     dispatch(isKaraokeRecord(true));
     dispatch(pauseSong());
@@ -58,7 +56,7 @@ const AudioRecorder = () => {
         audio: true,
       });
 
-      micStreamRef.current = micStream; // Store mic stream in ref
+      micStreamRef.current = micStream;
 
       if (!audioRef.current) {
         console.warn("No audio element available.");
@@ -127,10 +125,9 @@ const AudioRecorder = () => {
       setIsRecording(false);
     }
 
-    // Stop all tracks in the micStream
     if (micStreamRef.current) {
       micStreamRef.current.getTracks().forEach((track) => track.stop());
-      micStreamRef.current = null; // Clear the ref
+      micStreamRef.current = null;
     }
   };
 
