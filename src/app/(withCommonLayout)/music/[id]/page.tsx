@@ -18,6 +18,12 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   const [tracks, setTracks] = useState<any>([]);
   const [currentSong, setCurrentSong] = useState<any>(null);
 
+  useEffect(() => {
+    localStorage.setItem(
+      "songData",
+      JSON.stringify({ play: true, id: params?.id })
+    );
+  }, [params?.id]);
   // Fetch tracks on mount
   useEffect(() => {
     axios
@@ -58,13 +64,13 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   const songData = useLocalSongData();
 
   // Display loading animation if current song is not set
-  if (!currentSong) {
-    return (
-      <div>
-        <LoadingAnimation />
-      </div>
-    );
-  }
+  // if (!currentSong) {
+  //   return (
+  //     <div>
+  //       <LoadingAnimation />
+  //     </div>
+  //   );
+  // }
 
   return <div>{/* Your player UI goes here */}</div>;
 };

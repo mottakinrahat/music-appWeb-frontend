@@ -3,13 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface PlayerState {
   recordedUrl: string;
   karaoke: boolean;
-  record: boolean;
+  isKaraokeRecord: boolean;
 }
 
 const initialState: PlayerState = {
   recordedUrl: "",
   karaoke: false,
-  record: false,
+  isKaraokeRecord: false,
 };
 
 const karaokeActionSlice = createSlice({
@@ -22,11 +22,11 @@ const karaokeActionSlice = createSlice({
     karaoke: (state) => {
       state.karaoke = !state.karaoke;
     },
-    record: (state, action: PayloadAction<boolean>) => {
-      state.record = action.payload;
+    isKaraokeRecord: (state, action: PayloadAction<boolean>) => {
+      state.isKaraokeRecord = action.payload;
     },
   },
 });
 
-export const { setRecordedUrl, karaoke, record } = karaokeActionSlice.actions;
+export const { setRecordedUrl, karaoke, isKaraokeRecord } = karaokeActionSlice.actions;
 export default karaokeActionSlice.reducer;

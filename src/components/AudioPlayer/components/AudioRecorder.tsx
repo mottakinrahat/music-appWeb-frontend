@@ -4,7 +4,7 @@ import { openDB } from "idb";
 import RadioButton from "@/components/svg/RadioButton";
 import { useDispatch } from "react-redux";
 import {
-  record,
+  isKaraokeRecord,
   setRecordedUrl,
 } from "@/redux/slice/karaoke/karaokeActionSlice";
 import { useAudio } from "@/lib/AudioProvider";
@@ -49,7 +49,7 @@ const AudioRecorder = () => {
 
   // Request user media and start recording
   const startRecording = async () => {
-    dispatch(record(true));
+    dispatch(isKaraokeRecord(true));
     dispatch(pauseSong());
     try {
       playBeep();
@@ -115,7 +115,7 @@ const AudioRecorder = () => {
 
   const stopRecording = () => {
     dispatch(pauseSong());
-    dispatch(record(false));
+    dispatch(isKaraokeRecord(false));
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       monitoringAudio.pause();

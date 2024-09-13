@@ -20,7 +20,11 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     ref
   ) => {
     const playing = useSelector((state: RootState) => state.player.playing);
+    const isKaraokeRecord = useSelector(
+      (state: RootState) => state.karaoke.isKaraokeRecord
+    );
     const dispatch = useDispatch();
+
     // Use a ref to force updates only on volume changes
     // const audioRef = useRef<HTMLAudioElement | null>(null);
     const { setAudioRef } = useAudio();
@@ -41,7 +45,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
         (audioElement as any).webkitPreservesPitch = true;
 
         // Handle playback status
-        if (playing) {
+        if (playing && !isKaraokeRecord) {
           const playPromise = audioElement.play();
           if (playPromise !== undefined) {
             playPromise.catch(() => {
@@ -52,12 +56,23 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
               });
             });
           }
+        } else if (isKaraokeRecord) {
+          audioElement.pause();
+          dispatch(pauseSong());
         } else {
           audioElement.pause();
           dispatch(pauseSong());
         }
       }
-    }, [ref, playing, dispatch, src, playbackRate, setAudioRef]);
+    }, [
+      ref,
+      playing,
+      dispatch,
+      src,
+      playbackRate,
+      setAudioRef,
+      isKaraokeRecord,
+    ]);
 
     useEffect(() => {
       const audioElement = ref && "current" in ref ? ref.current : null;
