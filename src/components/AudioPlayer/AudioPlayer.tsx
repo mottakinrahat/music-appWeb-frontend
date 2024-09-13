@@ -411,7 +411,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
           <AudioControls
             volume={volume}
-            // ref={audioRef}
+            autoPlay={playing}
+            ref={audioRef}
             src={importedSong.fileData ? importedSong.fileData : songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={() => {
