@@ -5,6 +5,7 @@ import RadioButton from "@/components/svg/RadioButton";
 import { useDispatch } from "react-redux";
 import { setRecordedUrl } from "@/redux/slice/karaoke/karaokeActionSlice";
 import { useAudio } from "@/lib/AudioProvider";
+import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
 
 const AudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -12,7 +13,7 @@ const AudioRecorder = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const dispatch = useDispatch();
-  const { audioRef, audioContext } = useAudio(); // Get the ref from the context
+  const { audioRef, audioContext, musicSource } = useAudio(); // Get the ref from the context
 
   useEffect(() => {
     if (audioURL) {
@@ -42,6 +43,7 @@ const AudioRecorder = () => {
 
   // Request user media and start recording
   const startRecording = async () => {
+    // dispatch(pauseSong());
     try {
       playBeep();
 
@@ -72,7 +74,7 @@ const AudioRecorder = () => {
 
         // Create sources
         const micSource = audioContext.createMediaStreamSource(micStream);
-        const musicSource = audioContext.createMediaElementSource(mediaElement);
+        // const musicSource = audioContext.createMediaElementSource(mediaElement);
 
         // Connect sources to the monitoring destination for playback
         micSource.connect(monitoringDestination);

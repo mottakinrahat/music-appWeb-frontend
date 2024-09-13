@@ -14,20 +14,20 @@ interface AudioControlsProps {
   volume: number;
 }
 
-const AudioControls = (
+const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
   (
-    { src, onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume }:AudioControlsProps
-   
+    { src, onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume },
+    ref
   ) => {
     const playing = useSelector((state: RootState) => state.player.playing);
     const dispatch = useDispatch();
-    const { audioRef } = useAudio();
     // Use a ref to force updates only on volume changes
-    const audioElementRef = useRef<HTMLAudioElement | null>(null);
+    // const audioRef = useRef<HTMLAudioElement | null>(null);
+    const { setAudioRef } = useAudio();
 
     useEffect(() => {
-      const audioElement =
-        audioRef && "current" in audioRef ? audioRef.current : null;
+      setAudioRef(ref);
+      const audioElement = ref && "current" in ref ? ref.current : null;
 
       if (audioElement) {
         // Apply immediate playback rate
@@ -57,11 +57,10 @@ const AudioControls = (
           dispatch(pauseSong());
         }
       }
-    }, [audioRef, playing, dispatch, src, playbackRate]);
+    }, [ref, playing, dispatch, src, playbackRate, setAudioRef]);
 
     useEffect(() => {
-      const audioElement =
-        audioRef && "current" in audioRef ? audioRef.current : null;
+      const audioElement = ref && "current" in ref ? ref.current : null;
 
       if (audioElement) {
         const clampedVolume = Math.max(0, Math.min(volume, 1));
@@ -99,12 +98,12 @@ const AudioControls = (
           audioElement.removeEventListener("play", handlePlay);
         };
       }
-    }, [volume, audioRef]);
+    }, [volume, ref]);
 
     return (
       <audio
         crossOrigin="anonymous"
-        ref={audioRef}
+        ref={ref}
         src={src}
         onTimeUpdate={onTimeUpdate}
         autoPlay={playing}
@@ -117,6 +116,6 @@ const AudioControls = (
     );
   }
 );
-
+AudioControls.displayName = "AudioControls";
 
 export default AudioControls;
