@@ -19,7 +19,6 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     {
       src,
       onTimeUpdate,
-      autoPlay,
       onLoadedMetadata,
       onEnded,
       playbackRate = 1.0,
@@ -28,7 +27,6 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     ref
   ) => {
     const playing = useSelector((state: RootState) => state.player.playing);
-    const dispatch = useDispatch();
 
     // Set playback rate and handle play/pause based on "playing" state
 

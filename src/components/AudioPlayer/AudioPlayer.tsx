@@ -121,7 +121,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         if (response.status === 404) {
           setCurrentLyrics(null);
         }
-        setCurrentLyrics(response.data.data.line);
+        setCurrentLyrics(response.data.data);
       } catch (error) {}
     };
     getLyrics();
@@ -248,8 +248,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       }
     }
   };
-  const [isFavourite, { isLoading, data: getFavData }] =
-    useIsFavouriteMutation();
+  const [isFavourite] = useIsFavouriteMutation();
 
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
