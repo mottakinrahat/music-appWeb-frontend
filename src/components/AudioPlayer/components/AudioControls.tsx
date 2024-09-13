@@ -1,5 +1,5 @@
 "use client";
-import { pauseSong } from "@/redux/slice/music/musicActionSlice";
+import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import React, { forwardRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 interface AudioControlsProps {
   src: string;
   onTimeUpdate?: React.ChangeEventHandler<HTMLAudioElement>;
-  autoPlay?: boolean;
   onLoadedMetadata?: React.ReactEventHandler<HTMLAudioElement>;
   onEnded?: React.ReactEventHandler<HTMLAudioElement>;
   playbackRate?: number;

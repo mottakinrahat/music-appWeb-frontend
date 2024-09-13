@@ -76,7 +76,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [favorite, setFavorite] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
   const [played, setPlayed] = useState<number>(0);
-  const [volume, setVolume] = useState<number>(0.8);
+  const [volume, setVolume] = useState<number>(0.8); // Default volume set to 0.8
   const [playbackSpeed, setPlaybackSpeed] = useState<any>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
   const [userData, setUserData] = useState<any>();
@@ -135,7 +135,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   }, [dispatch, pathname, songId]);
 
-  // Seclectors
   const playing = useSelector((state: RootState) => state.player.playing);
   const repeat = useSelector((state: RootState) => state.player.repeat);
   const importedSong = useSelector((state: RootState) => state.musicData);
@@ -151,21 +150,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setPlaybackSpeed(parseFloat(speed));
     }
 
-    const volume = localStorage.getItem("volume");
-    if (!volume) {
-      localStorage.setItem("volume", "0.8");
-      setVolume(0.8);
-    }
-    if (volume) {
-      setVolume(parseFloat(volume));
-    }
     setCurrentSong(songData);
     const getRepeat = localStorage.getItem("repeat");
     if (!getRepeat) {
       localStorage.setItem("repeat", repeat);
     }
-  }, [currentSong, repeat, songData, speed, volume]);
-  // Main Song
+  }, [currentSong, repeat, songData, speed]);
 
   useEffect(() => {
     const handleInteraction = () => {
@@ -220,6 +210,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     localStorage.setItem("repeat", repeat); // Save repeat mode
   }, [playing, songId, repeat]);
 
+  // Volume Change Handler
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
     localStorage.setItem("volume", JSON.stringify(newVolume));
@@ -229,22 +220,31 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
+  // Seek Handler
   const handleSeek = (value: number[]) => {
     const newTime = value[0];
-
     if (audioRef.current) {
-      const currentAudio = audioRef.current;
-      const wasPlaying = !currentAudio.paused; // Check if audio is playing
-
+      const wasPlaying = !audioRef.current.paused;
       if (wasPlaying) {
-        currentAudio.pause(); // Pause the audio before seeking
+        audioRef.current.pause();
       }
-
-      currentAudio.currentTime = newTime; // Set the new time
-      setCurrentTime(newTime); // Update the state with the new time
-
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
       if (wasPlaying) {
-        currentAudio.play(); // Resume playback if it was playing before
+        audioRef.current.play();
+      }
+    }
+  };
+
+  // Mute Handler
+  const handleMute = () => {
+    if (audioRef.current) {
+      if (volume > 0) {
+        setVolume(0);
+        audioRef.current.volume = 0;
+      } else {
+        setVolume(0.8);
+        audioRef.current.volume = 0.8;
       }
     }
   };
@@ -264,10 +264,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       handleFavorite(
         isFavourite,
         favorite,
-        songId, // songId
-        userId, // userId
+        songId,
+        userId,
         playListData,
-        artwork, // Replace with dynamic artwork URL
+        artwork,
         songName,
         { albumName: songAlbum }, // Replace with dynamic album name
         { src: placeHolder.src } // Replace with dynamic placeholder URL
@@ -319,7 +319,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           album={currentSong.songAlbum.albumName}
           artist={currentSong.songArtist}
           artwork={currentSong.artwork}
-          handleMute={() => handleMute(volume, setVolume)}
+          handleMute={handleMute}
           id={currentSong?._id}
           title={currentSong.songName}
           volume={volume}
@@ -480,8 +480,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 songUrl={songLink}
                 handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
-                handleVolumeChange={handleVolumeChange}
-                handleMute={() => handleMute(volume, setVolume)}
+                handleVolumeChange={() => handleVolumeChange}
+                handleMute={handleMute}
               />
               <div className="md:hidden">
                 <MusicControls handleOpenEqualizer={handleOpenEqualizer} />
