@@ -43,8 +43,8 @@ const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({ audioUrl }) => {
   }, [audioUrl]); // Recreate WaveSurfer instance when audioUrl changes
 
   return (
-    <div className="w-full h-10">
-      <div ref={waveformRef} />
+    <div className="w-full h-5 relative overflow-hidden">
+      <div className="-mt-5" ref={waveformRef} />
     </div>
   );
 };
