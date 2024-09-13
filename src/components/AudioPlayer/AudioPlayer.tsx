@@ -33,12 +33,11 @@ import {
   handlePreviousTenSecond,
   handleProgress,
   toggleRepeat,
-  // handleVolumeChange,
 } from "./handlers/audioControls";
 import { handleFavorite } from "./handlers/handleFavorite";
 import { useIsFavouriteMutation } from "@/redux/api/audioPlayerApi";
-import timeToSeconds from "@/utils/timeToSeconds";
 import { useAudio } from "@/lib/AudioProvider";
+import RecordingControlls from "./AudioRecording/RecordingControlls";
 
 interface TimeProps {}
 interface AudioPlayerProps {
@@ -127,9 +126,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           setCurrentLyrics(null);
         }
         setCurrentLyrics(response.data.data);
-      } catch (error) {
-        // console.clear();
-      }
+      } catch (error) {}
     };
     getLyrics();
   }, [currentTime, songData._id]);
@@ -172,7 +169,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       localStorage.setItem("repeat", repeat);
     }
   }, [currentSong, repeat, songData, speed, volume]);
-  // Main Song
 
   useEffect(() => {
     const handleInteraction = () => {
@@ -293,6 +289,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   });
 
   const isKaroke = useSelector((state: RootState) => state.karaoke.karaoke);
+  const isRecording = useSelector(
+    (state: RootState) => state.karaoke.isKaraokeRecord
+  );
 
   return (
     <div className="audio-controls relative">
@@ -379,28 +378,34 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               songArtist={songArtist}
             />
 
-            <div className="hidden xl:mt-5 xl:block">
-              <PlayButtons
-                handleNext={handleNext}
-                handleNextTenSecond={() =>
-                  handleNextTenSecond(audioRef.current, duration)
-                }
-                handlePreviousTenSecond={() =>
-                  handlePreviousTenSecond(audioRef.current, duration)
-                }
-                handlePlayPause={() =>
-                  handlePlayPause({
-                    dispatch,
-                    playing,
-                    songId,
-                    setUserClickedPlay,
-                    audioElement: audioRef.current,
-                  })
-                }
-                handlePrev={handlePrev}
-                playing={playing}
-              />
-            </div>
+            {isRecording ? (
+              <div className="hidden xl:mt-5 xl:block">
+                <RecordingControlls songDuration={duration} />
+              </div>
+            ) : (
+              <div className="hidden xl:mt-5 xl:block">
+                <PlayButtons
+                  handleNext={handleNext}
+                  handleNextTenSecond={() =>
+                    handleNextTenSecond(audioRef.current, duration)
+                  }
+                  handlePreviousTenSecond={() =>
+                    handlePreviousTenSecond(audioRef.current, duration)
+                  }
+                  handlePlayPause={() =>
+                    handlePlayPause({
+                      dispatch,
+                      playing,
+                      songId,
+                      setUserClickedPlay,
+                      audioElement: audioRef.current,
+                    })
+                  }
+                  handlePrev={handlePrev}
+                  playing={playing}
+                />
+              </div>
+            )}
 
             <RepeatActionButton
               toggleRepeat={toggleRepeat}
