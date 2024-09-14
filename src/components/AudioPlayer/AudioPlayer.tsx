@@ -444,7 +444,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
             {isRecording ? (
               <AudioRecordSlider
-                handleSeek={handleSeek}
                 currentTime={currentTime}
                 audioUrl={songLink}
               />

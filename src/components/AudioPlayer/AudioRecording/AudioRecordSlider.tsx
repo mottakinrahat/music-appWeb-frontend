@@ -6,19 +6,14 @@ import WaveSurfer from "wavesurfer.js";
 interface AudioVisualizerProps {
   audioUrl: string;
   currentTime: number;
-  handleSeek: (value: number[]) => void;
 }
 
 const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({
   audioUrl,
   currentTime,
-  handleSeek,
 }) => {
   const waveformRef = useRef<HTMLDivElement | null>(null);
   const [waveSurfer, setWaveSurfer] = useState<WaveSurfer | null>(null);
-  const recorderUrl = useSelector(
-    (state: RootState) => state.karaoke.recordedUrl
-  );
 
   useEffect(() => {
     let waveSurferInstance: WaveSurfer | null = null;
