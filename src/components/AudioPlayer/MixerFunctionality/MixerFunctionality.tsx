@@ -3,6 +3,8 @@ import { VolumeRangeMixer } from "@/components/ui/slider";
 import { RootState } from "@/redux/store";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { DropDownBtn } from "../components/DropDownBtn";
+import { IoSettingsOutline } from "react-icons/io5";
 
 const MixerFunctionality = () => {
   const [showModal, setShowModal] = useState(false);
@@ -98,63 +100,64 @@ const MixerFunctionality = () => {
     };
   }, [guidVocalVolume, vocalVolume, instrumentalVolume, isRecording]);
 
+  const settingContent = (
+    <div className="p-4 bg-[#DBDAD9] rounded-[8px]">
+      <div className="flex gap-4 items-center">
+        <p className="w-[95px] flex justify-end">Guid Vocal:</p>
+        <div className="w-[228px]">
+          <VolumeRangeMixer
+            defaultValue={[guidVocalVolume]}
+            max={100}
+            step={1}
+            onValueChange={(value) => setGuidVocalVolume(value[0])}
+          />
+        </div>
+      </div>
+      <div className="flex gap-4 items-center mt-2">
+        <p className="w-[95px] flex justify-end">Vocal:</p>
+        <div className="w-[228px]">
+          <VolumeRangeMixer
+            defaultValue={[vocalVolume]}
+            max={100}
+            step={1}
+            onValueChange={(value) => setVocalVolume(value[0])}
+          />
+        </div>
+      </div>
+      <div className="flex gap-4 items-center mt-2">
+        <p className="w-[95px] flex justify-end">Instrumental:</p>
+        <div className="w-[228px]">
+          <VolumeRangeMixer
+            defaultValue={[instrumentalVolume]}
+            max={100}
+            step={1}
+            onValueChange={(value) => setInstrumentalVolume(value[0])}
+          />
+        </div>
+      </div>
+      <div className="mt-4">
+        {isRecording ? (
+          <p className="text-red-500">Recording in progress...</p>
+        ) : recordedUrl ? (
+          <div>
+            <p>Recording completed!</p>
+            <audio controls src={recordedUrl}></audio>
+          </div>
+        ) : (
+          <p>No recording available.</p>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <>
-      <button onClick={() => setShowModal(!showModal)}>
-        <Mixer showModal={showModal} />
-      </button>
-
-      {showModal && (
-        <div className="absolute top-[720px] left-[70px] md:left:[200px] lg:left-[510px] xl:left-[510px] bg-[#DBDAD9] w-[372px] gap-2 p-4 rounded-[8px]">
-          <div className="flex me-0 gap-4 items-center">
-            <p className="w-[95px] flex justify-end">Guid Vocal:</p>
-            <div className="w-[228px]">
-              <VolumeRangeMixer
-                defaultValue={[guidVocalVolume]}
-                max={100}
-                step={1}
-                onValueChange={(value) => setGuidVocalVolume(value[0])}
-              />
-            </div>
-          </div>
-          <div className="flex me-0 gap-4 items-center">
-            <p className="w-[95px] flex justify-end">Vocal:</p>
-            <div className="w-[228px]">
-              <VolumeRangeMixer
-                defaultValue={[vocalVolume]}
-                max={100}
-                step={1}
-                onValueChange={(value) => setVocalVolume(value[0])}
-              />
-            </div>
-          </div>
-          <div className="flex me-0 gap-4 items-center">
-            <p className="w-[95px] flex justify-end">Instrumental:</p>
-            <div className="w-[228px]">
-              <VolumeRangeMixer
-                defaultValue={[instrumentalVolume]}
-                max={100}
-                step={1}
-                onValueChange={(value) => setInstrumentalVolume(value[0])}
-              />
-            </div>
-          </div>
-
-          {/* Conditional rendering for recording */}
-          <div className="mt-4">
-            {isRecording ? (
-              <p className="text-red-500">Recording in progress...</p>
-            ) : recordedUrl ? (
-              <div>
-                <p>Recording completed!</p>
-                <audio controls src={recordedUrl}></audio>
-              </div>
-            ) : (
-              <p>No recording available.</p>
-            )}
-          </div>
-        </div>
-      )}
+      <div className={"group flex justify-center"}>
+        <DropDownBtn
+          dropDownContent={settingContent}
+          buttonContent={<Mixer showModal={showModal} />}
+        />
+      </div>
     </>
   );
 };
