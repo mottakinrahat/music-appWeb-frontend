@@ -22,7 +22,11 @@ const BlogCard: React.FC<BlogCardInterface> = ({
   type,
 }) => {
   return (
-    <div className={`rounded-lg max-w-md w-full ${className ? className : ""}`}>
+    <div
+      className={`rounded-lg max-w-md mx-auto w-full ${
+        className ? className : ""
+      }`}
+    >
       {/* Image Container */}
       <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (

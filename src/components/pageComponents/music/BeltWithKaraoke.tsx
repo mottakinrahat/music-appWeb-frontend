@@ -24,16 +24,15 @@ const BeltWithKaraoke = () => {
     <div
       style={{
         backgroundImage: `url(${bgImg.src})`,
-        backgroundSize: "cover",
+
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
-        backgroundAttachment: "fixed",
       }}
-      className="relative overflow-hidden py-20"
+      className="relative overflow-hidden sm:bg-fixed py-5 md:py-20 bg-cover sm:bg-auto"
     >
       <div className="container">
         <img
-          className="absolute w-[48%] left-28 opacity-25 z-10 -top-[20%]"
+          className="absolute w-[100%] left-0 sm:w-[48%] sm:left-28 opacity-25 z-10 sm:-top-[20%]"
           src={bgImg2.src}
         />
         <Heading
@@ -44,7 +43,7 @@ const BeltWithKaraoke = () => {
           You can belt out your favorite hits, challenge your friends to epic
           sing-offs, and experience the joy of karaoke anytime, anywhere.
         </Heading>
-        <div className="flex flex-wrap gap-2 mt-20">
+        <div className="hidden sm:flex flex-wrap gap-2 mt-20">
           <div className="font-semibold text-4xl text-white mt-4">Hot Now:</div>
           <div className="text-white">
             <LandingMusicCard

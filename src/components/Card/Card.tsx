@@ -89,7 +89,9 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   };
 
   return (
-    <div className={`rounded-lg max-w-md ${className ? className : ""}`}>
+    <div
+      className={`rounded-lg mx-auto max-w-md ${className ? className : ""}`}
+    >
       {/* Image Container */}
       <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (
