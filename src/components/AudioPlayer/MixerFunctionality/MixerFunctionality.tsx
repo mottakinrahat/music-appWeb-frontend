@@ -85,11 +85,11 @@ const MixerFunctionality = () => {
       }
 
       // Disconnect the microphone and reset gain
-      if (micSource && gainNode && audioContext) {
-        micSource.disconnect(gainNode);
-        gainNode.disconnect(audioContext.destination);
-        audioContext.close();
-      }
+      // if (micSource && gainNode && audioContext) {
+      //   micSource.disconnect(gainNode);
+      //   gainNode.disconnect(audioContext.destination);
+      //   audioContext.close();
+      // }
     }
 
     return () => {

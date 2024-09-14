@@ -93,7 +93,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
       {/* Image Container */}
       <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (
-          <div className="rounded-xl flex w-full h-fit relative cursor-pointer overflow-hidden group">
+          <div className="rounded-xl flex w-full h-full relative cursor-pointer overflow-hidden group">
             <Image
               priority
               src={imageUrl}
@@ -101,18 +101,15 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
               width={280}
               height={280}
               style={{
-                width: "auto",
+                width: "280px",
                 height: "auto",
                 aspectRatio: "1 / 1",
                 objectFit: "cover",
               }}
               className="rounded-lg"
-             
             />
             {/* Overlay */}
-            {/* {imageLoading && (
-              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-            )} */}
+
             <Link
               onClick={handleSetIdtoLocalStroage}
               href={musicId ? `/music/${musicId}` : "/"}
@@ -124,7 +121,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
                     alt={playBtn.src || "Card image"}
                     width={100}
                     height={100}
-                    style={{ width: "auto", height: "auto" }}
+                    style={{ width: "40px", height: "40px" }}
                     className="rounded-lg"
                   />
                 )}
