@@ -4,7 +4,6 @@ import { RootState } from "@/redux/store";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { DropDownBtn } from "../components/DropDownBtn";
-import { IoSettingsOutline } from "react-icons/io5";
 
 const MixerFunctionality = () => {
   const [showModal, setShowModal] = useState(false);
@@ -16,9 +15,6 @@ const MixerFunctionality = () => {
 
   const isRecording = useSelector(
     (state: RootState) => state.karaoke.isRecording
-  );
-  const recordedUrl = useSelector(
-    (state: RootState) => state.karaoke.recordedUrl
   );
 
   useEffect(() => {
@@ -85,11 +81,11 @@ const MixerFunctionality = () => {
       }
 
       // Disconnect the microphone and reset gain
-      if (micSource && gainNode && audioContext) {
-        micSource.disconnect(gainNode);
-        gainNode.disconnect(audioContext.destination);
-        audioContext.close();
-      }
+      // if (micSource && gainNode && audioContext) {
+      //   micSource.disconnect(gainNode);
+      //   gainNode.disconnect(audioContext.destination);
+      //   audioContext.close();
+      // }
     }
 
     return () => {
@@ -134,18 +130,6 @@ const MixerFunctionality = () => {
             onValueChange={(value) => setInstrumentalVolume(value[0])}
           />
         </div>
-      </div>
-      <div className="mt-4">
-        {isRecording ? (
-          <p className="text-red-500">Recording in progress...</p>
-        ) : recordedUrl ? (
-          <div>
-            <p>Recording completed!</p>
-            <audio controls src={recordedUrl}></audio>
-          </div>
-        ) : (
-          <p>No recording available.</p>
-        )}
       </div>
     </div>
   );
