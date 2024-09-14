@@ -443,7 +443,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
           <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
             {isRecording ? (
-              <AudioRecordSlider handleSeek={handleSeek} currentTime={currentTime} audioUrl={songLink} />
+              <AudioRecordSlider
+                handleSeek={handleSeek}
+                currentTime={currentTime}
+                audioUrl={songLink}
+              />
             ) : (
               <Slider
                 defaultValue={[currentTime]}
@@ -507,6 +511,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}
                 handleMute={() => handleMute(volume, setVolume)}
+                handleAddToFavorites={handleAddtoFavourite}
+                isfavorite={favorite}
               />
               <div className="md:hidden">
                 <MusicControls handleOpenEqualizer={handleOpenEqualizer} />

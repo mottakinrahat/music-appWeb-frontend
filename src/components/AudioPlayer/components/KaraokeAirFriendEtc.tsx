@@ -3,15 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import CurrentPlayingUsers from "./CurrentPlayingUsers";
 import MusicControls from "./MusicControls";
 import { MdOutlineMicExternalOn } from "react-icons/md";
-import { AppDispatch, RootState } from "@/redux/store";
+import { RootState } from "@/redux/store";
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
-import ImportDevice from "@/components/svg/ImportDevice";
-import { TbDeviceIpadX } from "react-icons/tb";
 
 const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
   const dispatch = useDispatch();
   const isKaraoke = useSelector((state: RootState) => state.karaoke.karaoke);
   const musicData = useSelector((state: RootState) => state.musicData);
+  const isRecording = useSelector(
+    (state: RootState) => state.karaoke.isKaraokeRecord
+  );
 
   const karaokeHandler = () => {
     dispatch(karaoke());
@@ -23,10 +24,10 @@ const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
         onClick={() => karaokeHandler()}
       >
         {isKaraoke ? (
-          <div className="flex gap-[8px] text-accent">
+          <button disabled={isRecording} className="flex gap-[8px] text-accent">
             <MdOutlineMicExternalOn className="text-2xl" />
             <h2 className="hidden sm:block">Karaoke mode (On)</h2>
-          </div>
+          </button>
         ) : (
           <button
             disabled={musicData.fileData ? true : false}
