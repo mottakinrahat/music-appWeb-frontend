@@ -56,7 +56,10 @@ const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({
 
   return (
     <div className="w-full h-5 relative overflow-hidden">
+      {/*for development mode */}
       <div className="-mt-5" ref={waveformRef} />
+      {/*for production mode */}
+      {/* <div ref={waveformRef} /> */}
     </div>
   );
 };
