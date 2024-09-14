@@ -24,6 +24,9 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
   const getIsRecordingState = useSelector(
     (state: RootState) => state.karaoke.isRecording
   );
+  const getSongLink = useSelector(
+    (state: RootState) => state.karaoke.recordedUrl
+  );
   const [recordingTime, setRecordingTime] = useState(0);
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -229,21 +232,25 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
   };
 
   const stopRecording = () => {
-    if (getIsRecordingState === true || getIsRecordingState === 'pause' || getIsRecordingState === 'play') {
-       dispatch(isRecording(false));
+    if (
+      getIsRecordingState === true ||
+      getIsRecordingState === "pause" ||
+      getIsRecordingState === "play"
+    ) {
+      dispatch(isRecording(false));
       dispatch(pauseSong());
       const mediaElement = audioRef.current;
       if (mediaElement) {
         mediaElement.pause();
       }
-      
+
       dispatch(isRecording(false));
       if (mediaRecorderRef.current) {
         mediaRecorderRef.current.stop();
         monitoringAudio.pause();
         setIsRecording(false);
       }
-      
+
       if (micStreamRef.current) {
         micStreamRef.current.getTracks().forEach((track) => track.stop());
         micStreamRef.current = null;
@@ -276,9 +283,27 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
   return (
     <div className="absolute justify-center -translate-y-12 max-lg:w-full left-1/2 -translate-x-1/2 items-center">
       <div className="flex gap-6 items-center">
-        <FaCirclePlay className="w-6 h-6 text-white" />
-        <RecordingSVG onClick={handleRecordingState} />
-        <RadioButton onClick={stopRecording} className="w-6 h-6 text-white" />
+        <div
+          className={`${
+            getSongLink.length > 1 && getIsRecordingState === false
+              ? "cursor-pointer text-white"
+              : "text-[#aaaaaa] cursor-not-allowed"
+          }`}
+          title="Start recording first."
+        >
+          <FaCirclePlay className="w-6 h-6" />
+        </div>
+        <div title="Recording">
+          <RecordingSVG onClick={handleRecordingState} />
+        </div>
+        <div
+          className={`${
+            getIsRecordingState ? "cursor-pointer" : "cursor-not-allowed"
+          }`}
+          title="Start recording first."
+        >
+          <RadioButton onClick={stopRecording} className="w-6 h-6 text-white" />
+        </div>
       </div>
       <div className="flex justify-center text-white">
         <p>{formatTime(recordingTime)}</p>

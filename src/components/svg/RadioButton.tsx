@@ -20,7 +20,6 @@ const RadioButton = ({
       viewBox="0 0 24 24"
       fill="none"
       onClick={onClick}
-      className={`${isRecording ? "cursor-pointer" : "cursor-not-allowed"}`}
       xmlns="http://www.w3.org/2000/svg"
     >
       <mask
