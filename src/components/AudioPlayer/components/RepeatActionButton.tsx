@@ -2,6 +2,8 @@ import React from "react";
 import ShowLyricsIcon from "./PlayLIstIcon";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import ReapetShuffleButton from "./ReapetShuffleButton";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 // inrerface
 export interface RepeatActionButtonProps {
@@ -21,24 +23,36 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
   isfavorite,
   handleAddToFavorites,
 }) => {
+  const isRecording = useSelector(
+    (state: RootState) => state.karaoke.isKaraokeRecord
+  );
+
   return (
     <div>
       <div className="text-white mt-4 min-[400px]:mt-0 text-2xl mx-2 ">
         <div className="flex justify-start items-center gap-4 sm:gap-[24px]">
-          <div
-            onClick={handleAddToFavorites}
-            className="cursor-pointer hidden min-[340px]:block transition text-white hover:text-accent"
-          >
-            {isfavorite ? (
-              <FaHeart className="p-[2px] sm:p-0" />
-            ) : (
-              <FaRegHeart className="p-[2px] sm:p-0" />
-            )}
-          </div>
-          <div className="">
-            <ShowLyricsIcon handleOpenLyrics={handleOpenLyrics} />
-          </div>
-          <ReapetShuffleButton />
+          {isRecording ? (
+            <>
+              <ReapetShuffleButton />
+            </>
+          ) : (
+            <>
+              <div
+                onClick={handleAddToFavorites}
+                className="cursor-pointer hidden min-[340px]:block transition text-white hover:text-accent"
+              >
+                {isfavorite ? (
+                  <FaHeart className="p-[2px] sm:p-0" />
+                ) : (
+                  <FaRegHeart className="p-[2px] sm:p-0" />
+                )}
+              </div>
+              <div className="">
+                <ShowLyricsIcon handleOpenLyrics={handleOpenLyrics} />
+              </div>
+              <ReapetShuffleButton />
+            </>
+          )}
         </div>
       </div>
     </div>

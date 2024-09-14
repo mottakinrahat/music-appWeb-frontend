@@ -10,11 +10,13 @@ import Volumn from "@/components/AudioPlayer/components/Volumn";
 
 import { DropDownBtn } from "@/components/AudioPlayer/components/DropDownBtn";
 import DownloadOffline from "./DownloadOffline";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { handleMinimize } from "@/redux/slice/music/musicAsyncTunk";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 import { PiPlaylistBold } from "react-icons/pi";
 import { useAudio } from "@/lib/AudioProvider";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
+import AddSVG from "@/components/svg/AddSVG";
 
 interface VolumeSettingDownRepeatProps {
   volume: number;
@@ -29,6 +31,8 @@ interface VolumeSettingDownRepeatProps {
   songAlbum: string;
   songId: number;
   bpmLoading: boolean;
+  isfavorite: boolean;
+  handleAddToFavorites: () => void;
 }
 
 const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
@@ -44,6 +48,8 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   songAlbum,
   songArtist,
   songId,
+  isfavorite,
+  handleAddToFavorites,
 }) => {
   const router = useRouter();
   const { audioRef } = useAudio();
@@ -115,6 +121,12 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   };
 
   const dispatch: AppDispatch = useDispatch();
+  const isRecording = useSelector(
+    (state: RootState) => state.karaoke.isKaraokeRecord
+  );
+  const isRecordedUrl = useSelector(
+    (state: RootState) => state.karaoke.recordedUrl
+  );
 
   const onMinimize = () => {
     dispatch(handleMinimize({ router: router }));
@@ -155,45 +167,83 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   return (
     <div>
       <div className="flex justify-center items-center gap-3 sm:gap-[24px]">
-        <div className="max-md:hidden">
-          <Volumn
-            handleMute={handleMute}
-            handleVolumeChange={handleVolumeChange}
-            volume={volume}
-          />
-        </div>
-        <div>
-          <DownloadOffline
-            artwork={artwork}
-            songAlbum={songAlbum}
-            songArtist={songArtist}
-            songId={songId}
-            songName={songName}
-            songUrl={songUrl}
-          />
-        </div>
-        <div className={"group flex justify-center"}>
-          <DropDownBtn
-            dropDownContent={settingContent}
-            buttonContent={
-              <>
-                <IoSettingsOutline className="active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent  text-xl sm:text-2xl" />
-              </>
-            }
-          />
-        </div>
-        <div
-          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent "
-          onClick={onMinimize}
-        >
-          <LucideMinimize2 className="p-[2px] sm:p-0 sm:text-2xl" />
-        </div>
-        <div
-          className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent  text-xl sm:text-2xl"
-          onClick={handleOpenPlayList}
-        >
-          <PiPlaylistBold />
-        </div>
+        {isRecording ? (
+          <>
+            <div className={"group flex justify-center"}>
+              <DropDownBtn
+                dropDownContent={settingContent}
+                buttonContent={
+                  <>
+                    <IoSettingsOutline className="active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent  text-xl sm:text-2xl" />
+                  </>
+                }
+              />
+            </div>
+            <div>
+              <DownloadOffline
+                artwork={artwork}
+                songAlbum={songAlbum}
+                songArtist={songArtist}
+                songId={songId}
+                songName={songName}
+                songUrl={songUrl}
+              />
+            </div>
+            <AddSVG />
+            <div
+              onClick={handleAddToFavorites}
+              className="cursor-pointer hidden min-[340px]:block transition text-white hover:text-accent"
+            >
+              {isfavorite ? (
+                <FaHeart className="p-[2px] sm:p-0 w-6 h-6" />
+              ) : (
+                <FaRegHeart className="p-[2px] sm:p-0 w-6 h-6" />
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="max-md:hidden">
+              <Volumn
+                handleMute={handleMute}
+                handleVolumeChange={handleVolumeChange}
+                volume={volume}
+              />
+            </div>
+            <div>
+              <DownloadOffline
+                artwork={artwork}
+                songAlbum={songAlbum}
+                songArtist={songArtist}
+                songId={songId}
+                songName={songName}
+                songUrl={songUrl}
+              />
+            </div>
+            <div className={"group flex justify-center"}>
+              <DropDownBtn
+                dropDownContent={settingContent}
+                buttonContent={
+                  <>
+                    <IoSettingsOutline className="active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent  text-xl sm:text-2xl" />
+                  </>
+                }
+              />
+            </div>
+            <div
+              className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent "
+              onClick={onMinimize}
+            >
+              <LucideMinimize2 className="p-[2px] sm:p-0 sm:text-2xl" />
+            </div>
+            <div
+              className="text-white cursor-pointer active:text-accent group-hover:text-accent transition hover:text-accent focus-within:text-accent focus:text-accent focus-visible:text-accent  text-xl sm:text-2xl"
+              onClick={handleOpenPlayList}
+            >
+              <PiPlaylistBold />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
