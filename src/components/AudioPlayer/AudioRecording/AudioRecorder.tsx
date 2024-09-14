@@ -12,146 +12,150 @@ import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 
 const AudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
-  const [audioURL, setAudioURL] = useState<string | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
-  const micStreamRef = useRef<MediaStream | null>(null);
+  // const [audioURL, setAudioURL] = useState<string | null>(null);
+  // const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  // const chunksRef = useRef<Blob[]>([]);
+  // const micStreamRef = useRef<MediaStream | null>(null);
   const dispatch = useDispatch();
-  const { audioRef, audioContext, musicSource } = useAudio();
+  // const { audioRef, audioContext, musicSource } = useAudio();
 
-  useEffect(() => {
-    if (audioURL) {
-      dispatch(setRecordedUrl(audioURL));
-    } else {
-      dispatch(setRecordedUrl(""));
-    }
-  }, [audioURL, dispatch]);
+  // useEffect(() => {
+  //   if (audioURL) {
+  //     dispatch(setRecordedUrl(audioURL));
+  //   } else {
+  //     dispatch(setRecordedUrl(""));
+  //   }
+  // }, [audioURL, dispatch]);
 
-  const monitoringAudio = new Audio();
+  // const monitoringAudio = new Audio();
 
-  const playBeep = () => {
-    if (audioContext) {
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+  // const playBeep = () => {
+  //   if (audioContext) {
+  //     const oscillator = audioContext.createOscillator();
+  //     const gainNode = audioContext.createGain();
 
-      oscillator.type = "sine";
-      oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
-      gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+  //     oscillator.type = "sine";
+  //     oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+  //     gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
 
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+  //     oscillator.connect(gainNode);
+  //     gainNode.connect(audioContext.destination);
 
-      oscillator.start();
-      oscillator.stop(audioContext.currentTime + 0.2);
-    }
-  };
+  //     oscillator.start();
+  //     oscillator.stop(audioContext.currentTime + 0.2);
+  //   }
+  // };
 
-  const startRecording = async () => {
-    dispatch(isKaraokeRecord(true));
-    dispatch(pauseSong());
-    try {
-      playBeep();
+  // const startRecording = async () => {
 
-      const micStream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-      });
+  //   dispatch(pauseSong());
+  //   try {
+  //     playBeep();
 
-      micStreamRef.current = micStream;
+  //     const micStream = await navigator.mediaDevices.getUserMedia({
+  //       audio: true,
+  //     });
 
-      if (!audioRef.current) {
-        console.warn("No audio element available.");
-        return;
-      }
+  //     micStreamRef.current = micStream;
 
-      const mediaElement = audioRef.current;
-      if (mediaElement.paused) {
-        await mediaElement.play();
-      }
+  //     if (!audioRef.current) {
+  //       console.warn("No audio element available.");
+  //       return;
+  //     }
 
-      if (audioContext) {
-        await audioContext.resume();
+  //     const mediaElement = audioRef.current;
+  //     if (mediaElement.paused) {
+  //       await mediaElement.play();
+  //     }
 
-        const recordingDestination =
-          audioContext.createMediaStreamDestination();
-        const monitoringDestination =
-          audioContext.createMediaStreamDestination();
-        const micSource = audioContext.createMediaStreamSource(micStream);
+  //     if (audioContext) {
+  //       await audioContext.resume();
 
-        micSource.connect(monitoringDestination);
-        // musicSource.connect(monitoringDestination);
+  //       const recordingDestination =
+  //         audioContext.createMediaStreamDestination();
+  //       const monitoringDestination =
+  //         audioContext.createMediaStreamDestination();
+  //       const micSource = audioContext.createMediaStreamSource(micStream);
 
-        micSource.connect(recordingDestination);
-        musicSource.connect(recordingDestination);
+  //       micSource.connect(monitoringDestination);
+  //       // musicSource.connect(monitoringDestination);
 
-        mediaRecorderRef.current = new MediaRecorder(
-          recordingDestination.stream
-        );
+  //       micSource.connect(recordingDestination);
+  //       musicSource.connect(recordingDestination);
 
-        mediaRecorderRef.current.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            chunksRef.current.push(event.data);
-          }
-        };
+  //       mediaRecorderRef.current = new MediaRecorder(
+  //         recordingDestination.stream
+  //       );
 
-        mediaRecorderRef.current.onstop = async () => {
-          const audioBlob = new Blob(chunksRef.current, { type: "audio/webm" });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          setAudioURL(audioUrl);
-          saveToIndexedDB(audioBlob);
-        };
+  //       mediaRecorderRef.current.ondataavailable = (event) => {
+  //         if (event.data.size > 0) {
+  //           chunksRef.current.push(event.data);
+  //         }
+  //       };
 
-        mediaRecorderRef.current.start();
-        setIsRecording(true);
+  //       mediaRecorderRef.current.onstop = async () => {
+  //         const audioBlob = new Blob(chunksRef.current, { type: "audio/webm" });
+  //         const audioUrl = URL.createObjectURL(audioBlob);
+  //         setAudioURL(audioUrl);
+  //         saveToIndexedDB(audioBlob);
+  //       };
 
-        monitoringAudio.srcObject = monitoringDestination.stream;
-        monitoringAudio.play();
-      }
-    } catch (err) {
-      console.error("Error accessing microphone or system audio:", err);
-    }
-  };
+  //       mediaRecorderRef.current.start();
+  //       setIsRecording(true);
 
-  const stopRecording = () => {
-    dispatch(pauseSong());
-    const mediaElement = audioRef.current;
-    if (mediaElement) {
-      mediaElement.pause();
-    }
+  //       monitoringAudio.srcObject = monitoringDestination.stream;
+  //       monitoringAudio.play();
+  //     }
+  //   } catch (err) {
+  //     console.error("Error accessing microphone or system audio:", err);
+  //   }
+  // };
 
-    dispatch(isKaraokeRecord(false));
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
-      monitoringAudio.pause();
-      setIsRecording(false);
-    }
+  // const stopRecording = () => {
+  //   dispatch(pauseSong());
+  //   const mediaElement = audioRef.current;
+  //   if (mediaElement) {
+  //     mediaElement.pause();
+  //   }
 
-    if (micStreamRef.current) {
-      micStreamRef.current.getTracks().forEach((track) => track.stop());
-      micStreamRef.current = null;
-    }
-  };
+  //   dispatch(isKaraokeRecord(false));
+  //   if (mediaRecorderRef.current) {
+  //     mediaRecorderRef.current.stop();
+  //     monitoringAudio.pause();
+  //     setIsRecording(false);
+  //   }
 
-  const saveToIndexedDB = async (blob: Blob) => {
-    const db = await openDB("audio-db", 1, {
-      upgrade(db) {
-        db.createObjectStore("audio", { keyPath: "id", autoIncrement: true });
-      },
-    });
-    await db.put("audio", { blob });
-  };
+  //   if (micStreamRef.current) {
+  //     micStreamRef.current.getTracks().forEach((track) => track.stop());
+  //     micStreamRef.current = null;
+  //   }
+  // };
 
-  
+  // const saveToIndexedDB = async (blob: Blob) => {
+  //   const db = await openDB("audio-db", 1, {
+  //     upgrade(db) {
+  //       db.createObjectStore("audio", { keyPath: "id", autoIncrement: true });
+  //     },
+  //   });
+  //   await db.put("audio", { blob });
+  // };
 
   return (
     <div>
-      <div className="flex items-center">
+      <div className="flex items-center group">
         {isRecording ? (
-          <button onClick={stopRecording} className="cursor-pointer">
-            <RadioButton className="fill-red-500" />
+          <button
+            onClick={() => dispatch(isKaraokeRecord(false))}
+            className="cursor-pointer"
+          >
+            <RadioButton className="fill-accent" />
           </button>
         ) : (
-          <button onClick={startRecording} className="cursor-pointer">
-            <RadioButton className="fill-accent" />
+          <button
+            onClick={() => dispatch(isKaraokeRecord(true))}
+            className="cursor-pointer"
+          >
+            <RadioButton className="fill-white group-hover:fill-accent" />
           </button>
         )}
       </div>
