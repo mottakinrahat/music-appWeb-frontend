@@ -1,4 +1,6 @@
+import { RootState } from "@/redux/store";
 import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import WaveSurfer from "wavesurfer.js";
 
 interface AudioVisualizerProps {
@@ -14,6 +16,9 @@ const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({
 }) => {
   const waveformRef = useRef<HTMLDivElement | null>(null);
   const [waveSurfer, setWaveSurfer] = useState<WaveSurfer | null>(null);
+  const recorderUrl = useSelector(
+    (state: RootState) => state.karaoke.recordedUrl
+  );
 
   useEffect(() => {
     let waveSurferInstance: WaveSurfer | null = null;
