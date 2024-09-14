@@ -5,14 +5,14 @@ import { RootState } from "@/redux/store";
 
 const AudioRecorder = () => {
   const dispatch = useDispatch();
-  const isKaraokeOn = useSelector(
+  const isKaraokeRecording = useSelector(
     (state: RootState) => state.karaoke.isKaraokeRecord
   );
 
   return (
     <div>
       <div className="flex items-center group">
-        {isKaraokeOn ? (
+        {isKaraokeRecording ? (
           <button
             onClick={() => dispatch(isKaraokeRecord(false))}
             className="cursor-pointer"
