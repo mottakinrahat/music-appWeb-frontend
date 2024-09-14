@@ -5,6 +5,7 @@ export interface PlayerState {
   karaoke: boolean;
   isKaraokeRecord: boolean;
   isRecording: boolean | "play" | "pause";
+  playRecording: boolean;
 }
 
 const initialState: PlayerState = {
@@ -12,6 +13,7 @@ const initialState: PlayerState = {
   karaoke: false,
   isKaraokeRecord: false,
   isRecording: false,
+  playRecording: false,
 };
 
 const karaokeActionSlice = createSlice({
@@ -27,12 +29,20 @@ const karaokeActionSlice = createSlice({
     isKaraokeRecord: (state, action: PayloadAction<boolean>) => {
       state.isKaraokeRecord = action.payload;
     },
-isRecording: (state, action: PayloadAction<boolean | "play" | "pause">) => {
+    isRecording: (state, action: PayloadAction<boolean | "play" | "pause">) => {
       state.isRecording = action.payload;
+    },
+    playRecording: (state) => {
+      state.playRecording = !state.playRecording;
     },
   },
 });
 
-export const { setRecordedUrl, karaoke, isKaraokeRecord, isRecording } =
-  karaokeActionSlice.actions;
+export const {
+  setRecordedUrl,
+  karaoke,
+  isKaraokeRecord,
+  isRecording,
+  playRecording,
+} = karaokeActionSlice.actions;
 export default karaokeActionSlice.reducer;

@@ -4,13 +4,14 @@ import { useAudio } from "@/lib/AudioProvider";
 import {
   isKaraokeRecord,
   isRecording,
+  playRecording,
   setRecordedUrl,
 } from "@/redux/slice/karaoke/karaokeActionSlice";
 import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import { openDB } from "idb";
 import React, { useEffect, useRef, useState } from "react";
-import { FaCirclePlay } from "react-icons/fa6";
+import { FaCirclePause, FaCirclePlay } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 
 interface RecordingProps {
@@ -23,6 +24,9 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
   );
   const getIsRecordingState = useSelector(
     (state: RootState) => state.karaoke.isRecording
+  );
+  const playRecord = useSelector(
+    (state: RootState) => state.karaoke.playRecording
   );
   const getSongLink = useSelector(
     (state: RootState) => state.karaoke.recordedUrl
@@ -289,9 +293,20 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
               ? "cursor-pointer text-white"
               : "text-[#aaaaaa] cursor-not-allowed"
           }`}
-          title="Start recording first."
+          title={
+            getSongLink.length > 1 ? "Play/Pause" : "Start recording first."
+          }
+          onClick={() =>
+            getSongLink.length > 1 &&
+            getIsRecordingState === false &&
+            dispatch(playRecording())
+          }
         >
-          <FaCirclePlay className="w-6 h-6" />
+          {playRecord ? (
+            <FaCirclePause className="w-6 h-6" />
+          ) : (
+            <FaCirclePlay className="w-6 h-6" />
+          )}
         </div>
         <div title="Recording">
           <RecordingSVG onClick={handleRecordingState} />
