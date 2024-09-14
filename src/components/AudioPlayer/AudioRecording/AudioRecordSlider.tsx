@@ -12,8 +12,22 @@ const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({
   audioUrl,
   currentTime,
 }) => {
+  const recordedUrl = useSelector(
+    (state: RootState) => state.karaoke.recordedUrl
+  );
   const waveformRef = useRef<HTMLDivElement | null>(null);
   const [waveSurfer, setWaveSurfer] = useState<WaveSurfer | null>(null);
+  const [urlToLoad, setUrlToLoad] = useState<string>(audioUrl);
+
+  useEffect(() => {
+    if (recordedUrl) {
+      // Use recordedUrl from Redux if available
+      setUrlToLoad(recordedUrl);
+    } else {
+      // Fallback to audioUrl from props
+      setUrlToLoad(audioUrl);
+    }
+  }, [recordedUrl, audioUrl]);
 
   useEffect(() => {
     let waveSurferInstance: WaveSurfer | null = null;
@@ -32,7 +46,7 @@ const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({
         normalize: true,
       });
 
-      waveSurferInstance.load(audioUrl);
+      waveSurferInstance.load(urlToLoad);
       setWaveSurfer(waveSurferInstance); // Store the instance in state
     }
 
@@ -46,7 +60,7 @@ const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({
         }
       }
     };
-  }, [audioUrl]); // Recreate WaveSurfer instance when audioUrl changes
+  }, [urlToLoad]); // Recreate WaveSurfer instance when urlToLoad changes
 
   useEffect(() => {
     if (waveSurfer && waveSurfer.getDuration()) {
@@ -55,9 +69,11 @@ const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({
   }, [currentTime, waveSurfer]);
 
   return (
-    <div className="w-full h-5 relative overflow-hidden">
-      <div className="-mt-5" ref={waveformRef} />
-    </div>
+    <>
+      <div className="w-full h-5 relative overflow-hidden">
+        <div className="-mt-5" ref={waveformRef} />
+      </div>
+    </>
   );
 };
 

@@ -22,6 +22,9 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
   const isKaraokeRecording = useSelector(
     (state: RootState) => state.karaoke.isKaraokeRecord
   );
+  const recordedUrl = useSelector(
+    (state: RootState) => state.karaoke.recordedUrl
+  );
   const getIsRecordingState = useSelector(
     (state: RootState) => state.karaoke.isRecording
   );
@@ -284,6 +287,20 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
     await db.put("audio", { blob });
   };
 
+  const [isPlaying, setIsPlaying] = useState(false);
+  const recordedAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const togglePlayPause = () => {
+    if (recordedAudioRef.current) {
+      if (isPlaying) {
+        recordedAudioRef.current.pause();
+      } else {
+        recordedAudioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
   return (
     <div className="absolute justify-center -translate-y-12 max-lg:w-full left-1/2 -translate-x-1/2 items-center">
       <div className="flex gap-6 items-center">
@@ -302,11 +319,13 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
             dispatch(playRecording())
           }
         >
-          {playRecord ? (
-            <FaCirclePause className="w-6 h-6" />
-          ) : (
-            <FaCirclePlay className="w-6 h-6" />
-          )}
+          <button onClick={togglePlayPause} disabled={!recordedUrl}>
+            {isPlaying ? (
+              <FaCirclePause className="w-6 h-6" />
+            ) : (
+              <FaCirclePlay className="w-6 h-6" />
+            )}
+          </button>
         </div>
         <div title="Recording">
           <RecordingSVG onClick={handleRecordingState} />
@@ -325,6 +344,14 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
         <span className="mx-1"> / </span>
         <p>{formatTime(parseInt(songDuration))}</p>
       </div>
+      {recordedUrl && (
+        <audio
+          className="hidden"
+          controls
+          src={recordedUrl}
+          ref={recordedAudioRef}
+        />
+      )}
     </div>
   );
 };

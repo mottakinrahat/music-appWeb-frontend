@@ -434,13 +434,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <AudioControls
             volume={volume}
             ref={audioRef}
-            src={
-              isKaraokeRecord && isKaraokePlay && recordedUrl
-                ? recordedUrl
-                : importedSong.fileData
-                ? importedSong.fileData
-                : songLink
-            }
+            src={songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={() => {
               const currentTime = audioRef.current?.currentTime || 0;
@@ -460,11 +454,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             {isRecording ? (
               <AudioRecordSlider
                 currentTime={currentTime}
-                audioUrl={
-                  isKaraokeRecord && isKaraokePlay && recordedUrl
-                    ? recordedUrl
-                    : songLink
-                }
+                audioUrl={songLink}
               />
             ) : (
               <Slider
