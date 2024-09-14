@@ -302,7 +302,7 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
   };
 
   return (
-    <div className="absolute justify-center -translate-y-12 max-lg:w-full left-1/2 -translate-x-1/2 items-center">
+    <div className="absolute bottom-[6.5rem] min-[310px]:bottom-[6.5rem] min-[340px]:bottom-[8rem] min-[347px]:bottom-[5rem] min-[380px]:bottom-[5.5rem] min-[420px]:bottom-[5rem] min-[768px]:bottom-[7.5rem] min-[860px]:bottom-[5rem] min-[1024px]:bottom-[10rem] w-full left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 max-lg:gap-2">
       <div className="flex gap-6 items-center">
         <div
           className={`${
@@ -339,8 +339,8 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
           <RadioButton onClick={stopRecording} className="w-6 h-6 text-white" />
         </div>
       </div>
-      <div className="flex justify-center text-white">
-        <p>{formatTime(recordingTime)}</p>
+      <div className="flex items-center text-white max-lg:items-center">
+        <p className="">{formatTime(recordingTime)}</p>
         <span className="mx-1"> / </span>
         <p>{formatTime(parseInt(songDuration))}</p>
       </div>

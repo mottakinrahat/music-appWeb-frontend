@@ -100,7 +100,7 @@ const MixerFunctionality = () => {
     <div className="p-4 bg-[#DBDAD9] rounded-[8px]">
       <div className="flex gap-4 items-center">
         <p className="w-[95px] flex justify-end">Guid Vocal:</p>
-        <div className="w-[228px]">
+        <div className="w-[100px] sm:w-[150px] md:w-[228px]">
           <VolumeRangeMixer
             defaultValue={[guidVocalVolume]}
             max={100}
@@ -111,7 +111,7 @@ const MixerFunctionality = () => {
       </div>
       <div className="flex gap-4 items-center mt-2">
         <p className="w-[95px] flex justify-end">Vocal:</p>
-        <div className="w-[228px]">
+        <div className="w-[100px] sm:w-[150px] md:w-[228px]">
           <VolumeRangeMixer
             defaultValue={[vocalVolume]}
             max={100}
@@ -122,7 +122,7 @@ const MixerFunctionality = () => {
       </div>
       <div className="flex gap-4 items-center mt-2">
         <p className="w-[95px] flex justify-end">Instrumental:</p>
-        <div className="w-[228px]">
+        <div className="w-[100px] sm:w-[150px] md:w-[228px]">
           <VolumeRangeMixer
             defaultValue={[instrumentalVolume]}
             max={100}

@@ -5,6 +5,8 @@ import MusicControls from "./MusicControls";
 import { MdOutlineMicExternalOn } from "react-icons/md";
 import { RootState } from "@/redux/store";
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
+import { FiSliders } from "react-icons/fi";
+import SongImportModalHandler from "./SongImportHandaler";
 
 const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
   const dispatch = useDispatch();
@@ -40,7 +42,15 @@ const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
           </button>
         )}
       </div>
-      {/* <div className="sm:hidden block"></div> */}
+      <div className="sm:hidden flex gap-3 items-center">
+        <div
+          onClick={handleOpenEqualizer}
+          className="cursor-pointer text-xl select-none text-white"
+        >
+          <FiSliders className="hover:text-accent transition p-[2px] sm:p-0 text-xl sm:text-2xl cursor-pointer" />
+        </div>
+        <SongImportModalHandler musicData={musicData} />
+      </div>
       <div>
         <CurrentPlayingUsers addFriends />
       </div>

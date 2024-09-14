@@ -475,28 +475,34 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               <span className="text-white text-sm">{formatTime(duration)}</span>
             </div>
           </div>
-          <div className="flex w-full xl:hidden">
-            <PlayButtons
-              handleNext={handleNext}
-              handleNextTenSecond={() =>
-                handleNextTenSecond(audioRef.current, duration)
-              }
-              handlePreviousTenSecond={() =>
-                handlePreviousTenSecond(audioRef.current, duration)
-              }
-              handlePlayPause={() =>
-                handlePlayPause({
-                  dispatch,
-                  playing,
-                  songId,
-                  setUserClickedPlay,
-                  audioElement: audioRef.current,
-                })
-              }
-              handlePrev={handlePrev}
-              playing={playing}
-            />
-          </div>
+          {isRecording ? (
+            <div className="xl:hidden">
+              <RecordingControlls songDuration={duration} />
+            </div>
+          ) : (
+            <div className="flex w-full xl:hidden">
+              <PlayButtons
+                handleNext={handleNext}
+                handleNextTenSecond={() =>
+                  handleNextTenSecond(audioRef.current, duration)
+                }
+                handlePreviousTenSecond={() =>
+                  handlePreviousTenSecond(audioRef.current, duration)
+                }
+                handlePlayPause={() =>
+                  handlePlayPause({
+                    dispatch,
+                    playing,
+                    songId,
+                    setUserClickedPlay,
+                    audioElement: audioRef.current,
+                  })
+                }
+                handlePrev={handlePrev}
+                playing={playing}
+              />
+            </div>
+          )}
 
           <div className="flex justify-between items-center">
             <KaraokeAirFriendEtc
