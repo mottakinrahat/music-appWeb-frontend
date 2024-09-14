@@ -90,6 +90,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const isShowLyrics = useSelector(
     (state: RootState) => state.player.showLyric
   );
+  const isKaraokeRecord = useSelector(
+    (state: RootState) => state.karaoke.isKaraokeRecord
+  );
+  const isKaraokePlay = useSelector(
+    (state: RootState) => state.karaoke.playRecording
+  );
+  const recordedUrl = useSelector(
+    (state: RootState) => state.karaoke.recordedUrl
+  );
 
   const userId = userData?._id;
 
@@ -425,7 +434,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <AudioControls
             volume={volume}
             ref={audioRef}
-            src={importedSong.fileData ? importedSong.fileData : songLink}
+            src={
+              isKaraokeRecord && isKaraokePlay && recordedUrl
+                ? recordedUrl
+                : importedSong.fileData
+                ? importedSong.fileData
+                : songLink
+            }
             playbackRate={playbackSpeed}
             onTimeUpdate={() => {
               const currentTime = audioRef.current?.currentTime || 0;
@@ -446,7 +461,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               <AudioRecordSlider
                 handleSeek={handleSeek}
                 currentTime={currentTime}
-                audioUrl={songLink}
+                audioUrl={
+                  isKaraokeRecord && isKaraokePlay && recordedUrl
+                    ? recordedUrl
+                    : songLink
+                }
               />
             ) : (
               <Slider
