@@ -121,11 +121,8 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   };
 
   const dispatch: AppDispatch = useDispatch();
-  const isRecording = useSelector(
-    (state: RootState) => state.karaoke.isKaraokeRecord
-  );
-  const isRecordedUrl = useSelector(
-    (state: RootState) => state.karaoke.recordedUrl
+  const isKaraoke = useSelector(
+    (state: RootState) => state.karaoke.karaoke
   );
 
   const onMinimize = () => {
@@ -167,7 +164,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   return (
     <div>
       <div className="flex justify-center items-center gap-3 sm:gap-[24px]">
-        {isRecording ? (
+        {isKaraoke ? (
           <>
             <div className={"group flex justify-center"}>
               <DropDownBtn

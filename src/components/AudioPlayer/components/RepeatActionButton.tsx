@@ -23,15 +23,15 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
   isfavorite,
   handleAddToFavorites,
 }) => {
-  const isRecording = useSelector(
-    (state: RootState) => state.karaoke.isKaraokeRecord
+  const isKaraoke = useSelector(
+    (state: RootState) => state.karaoke.karaoke
   );
 
   return (
     <div>
       <div className="text-white mt-4 min-[400px]:mt-0 text-2xl mx-2 ">
         <div className="flex justify-start items-center gap-4 sm:gap-[24px]">
-          {isRecording ? (
+          {isKaraoke ? (
             <>
               <ReapetShuffleButton />
             </>
