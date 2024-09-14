@@ -8,7 +8,6 @@ const AudioRecorder = () => {
   const isKaraokeRecording = useSelector(
     (state: RootState) => state.karaoke.isKaraokeRecord
   );
-
   return (
     <div>
       <div className="flex items-center group">
