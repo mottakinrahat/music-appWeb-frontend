@@ -356,7 +356,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           className={`${
             !showPlayer
               ? "hidden"
-              : "absolute p-4 py-24 lg:top-20 xl:px-[120px] right-0 text-white"
+              : "absolute p-4 pt-32 lg:top-20 xl:px-[120px] right-0 text-white"
           } `}
         >
           <DropDownBtn
