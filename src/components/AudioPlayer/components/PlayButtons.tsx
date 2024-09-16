@@ -10,6 +10,8 @@ import {
 } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface PlayButtonsFace {
   handlePreviousTenSecond?: () => void;
@@ -30,6 +32,7 @@ const PlayButtons = ({
 }: PlayButtonsFace) => {
   const pathname = usePathname();
   const [showControl, setShowControl] = useState(true);
+  const play = useSelector((state: RootState) => state.player.playing);
 
   useEffect(() => {
     // Show the player only if the path matches `/music/:id`
@@ -83,7 +86,7 @@ const PlayButtons = ({
               : "text-[#828282] transition hover:text-textPrimary"
           }`}
         >
-          {playing ? (
+          {play ? (
             <MdPauseCircle className="h-12 w-12 sm:h-10 sm:w-10" />
           ) : (
             <IoMdPlayCircle className="h-12 w-12 sm:h-10 sm:w-10" />

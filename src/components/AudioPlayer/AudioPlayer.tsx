@@ -209,7 +209,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     const storedSongData = localStorage.getItem("songData");
     if (storedSongData) {
       const { play, id } = JSON.parse(storedSongData);
-      if (play) {
+      if (play && userClickedPlay) {
         dispatch(playSong(id));
       } else {
         dispatch(pauseSong());

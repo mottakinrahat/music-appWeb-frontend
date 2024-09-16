@@ -7,12 +7,12 @@ import Link from "next/link";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { playSong } from "@/redux/slice/music/musicActionSlice";
+import { pauseSong, playSong } from "@/redux/slice/music/musicActionSlice";
 import { toast } from "sonner";
 import { clearMusicData } from "@/redux/slice/music/musicDataSlice";
 import { initDB } from "@/utils/initDB";
 import { RootState } from "@/redux/store";
-import { Skeleton } from "../ui/skeleton";
+import { useAudio } from "@/lib/AudioProvider";
 
 interface BaseCard {
   type: string;
@@ -78,14 +78,38 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
     toast.success("Imported song removed.");
   };
 
-  const handleSetIdtoLocalStroage = () => {
+  const { audioContext, audioRef } = useAudio();
+
+  const handleSetIdtoLocalStorage = () => {
+    // Store the song ID and play state in localStorage
     localStorage.setItem(
       "songData",
       JSON.stringify({ play: true, id: musicId })
     );
     localStorage.setItem("pathHistory", location);
-    dispatch(playSong(musicId!));
-    if (importedSong.fileData) handleDeleteSong();
+
+    if (musicId) {
+      dispatch(playSong(musicId));
+
+      // Check if AudioContext and audioRef are available and play the audio
+      if (audioContext && audioContext.state === "suspended") {
+        audioContext.resume().then(() => {
+          if (audioRef?.current) {
+            audioRef.current.play().catch((err: any) => {
+              dispatch(pauseSong());
+            });
+          }
+        });
+      } else if (audioRef?.current) {
+        audioRef.current.play().catch((err: any) => {
+          dispatch(pauseSong());
+        });
+      }
+    }
+
+    if (importedSong.fileData) {
+      handleDeleteSong(); // Ensure this handles song deletion if necessary
+    }
   };
 
   return (
@@ -113,7 +137,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
             {/* Overlay */}
 
             <Link
-              onClick={handleSetIdtoLocalStroage}
+              onClick={handleSetIdtoLocalStorage}
               href={musicId ? `/music/${musicId}` : "/"}
             >
               <div className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
