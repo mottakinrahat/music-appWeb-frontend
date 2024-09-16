@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   pauseSong,
   PlayerState,
+  playImport,
   playSong,
 } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
@@ -223,15 +224,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         "songData",
         JSON.stringify({ play: true, id: songId })
       );
+      dispatch(playSong(songId));
     } else if (!playing && songId) {
       localStorage.setItem(
         "songData",
         JSON.stringify({ play: false, id: songId })
       );
+      dispatch(pauseSong());
     }
 
     localStorage.setItem("repeat", repeat); // Save repeat mode
-  }, [playing, songId, repeat]);
+  }, [playing, songId, repeat, dispatch]);
 
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
@@ -261,6 +264,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
       if (wasPlaying) {
         currentAudio.play(); // Resume playback if it was playing before
+        dispatch(playImport());
       }
     }
   };

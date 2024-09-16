@@ -3,7 +3,9 @@
 "use client"; // Enabling client-side rendering for React hooks
 
 import { useAudio } from "@/lib/AudioProvider";
+import { playImport } from "@/redux/slice/music/musicActionSlice";
 import React, { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 
 const AudioPlayer = () => {
   const { audioRef } = useAudio();
@@ -11,6 +13,7 @@ const AudioPlayer = () => {
   const [volume, setVolume] = useState(0.5); // Initial volume set to 50%
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+    const dispatch = useDispatch();
 
   const audioSrc =
     "https://res.cloudinary.com/dnzhxznox/video/upload/v1724405518/seg1edqe3t50ypfbrsr7.mp3"; // Replace with your audio source
@@ -33,6 +36,7 @@ const AudioPlayer = () => {
       const handleUserInteraction = () => {
         if (audio.paused) {
           audio.play();
+           dispatch(playImport());
         }
         audio.volume = volume; // Set initial volume
         document.removeEventListener("click", handleUserInteraction);
@@ -52,12 +56,13 @@ const AudioPlayer = () => {
         document.removeEventListener("touchstart", handleUserInteraction);
       };
     }
-  }, [audioRef, volume]);
+  }, [audioRef, dispatch, volume]);
 
   const togglePlay = () => {
     if (audioRef.current) {
       if (audioRef.current.paused) {
         audioRef.current.play();
+         dispatch(playImport());
         setIsPlaying(true);
       } else {
         audioRef.current.pause();

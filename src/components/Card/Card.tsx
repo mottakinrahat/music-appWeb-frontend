@@ -7,12 +7,17 @@ import Link from "next/link";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { pauseSong, playSong } from "@/redux/slice/music/musicActionSlice";
+import {
+  pauseSong,
+  playImport,
+  playSong,
+} from "@/redux/slice/music/musicActionSlice";
 import { toast } from "sonner";
 import { clearMusicData } from "@/redux/slice/music/musicDataSlice";
 import { initDB } from "@/utils/initDB";
 import { RootState } from "@/redux/store";
 import { useAudio } from "@/lib/AudioProvider";
+import { Skeleton } from "../ui/skeleton";
 
 interface BaseCard {
   type: string;
@@ -60,6 +65,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   const location = usePathname();
   const dispatch = useDispatch();
   const importedSong = useSelector((state: RootState) => state.musicData);
+  const [imgloading, setImgLoading] = useState(true);
 
   const deleteExistingSongFromIndexedDB = async () => {
     const db = await initDB("MusicDB", 1, "songs");
@@ -98,12 +104,14 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
             audioRef.current.play().catch((err: any) => {
               dispatch(pauseSong());
             });
+            dispatch(playImport());
           }
         });
       } else if (audioRef?.current) {
         audioRef.current.play().catch((err: any) => {
           dispatch(pauseSong());
         });
+        dispatch(playImport());
       }
     }
 
@@ -120,6 +128,17 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
       <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (
           <div className="rounded-xl flex w-full h-full relative cursor-pointer overflow-hidden group">
+            {imgloading && (
+              <Skeleton
+                className="w-full h-full rounded-lg"
+                style={{
+                  aspectRatio: "1 / 1",
+                  objectFit: "cover",
+                  width: "280px",
+                  height: "280px",
+                }}
+              />
+            )}
             <Image
               priority
               src={imageUrl}
@@ -133,8 +152,8 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
                 objectFit: "cover",
               }}
               className="rounded-lg"
+              onLoad={() => setImgLoading(false)}
             />
-            {/* Overlay */}
 
             <Link
               onClick={handleSetIdtoLocalStorage}
