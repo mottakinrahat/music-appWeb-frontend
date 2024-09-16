@@ -64,10 +64,11 @@ const PlayOfflinePage: React.FC = () => {
   const [songIds, setSongIds] = useState<number[] | string>([]);
   const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
 
-  // const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { audioRef } = useAudio();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  // const { audioRef, setAudioRef } = useAudio();
 
   useEffect(() => {
+    // setAudioRef()
     const fetchSongs = async () => {
       try {
         const ids = await getAllSongIds();
@@ -246,7 +247,7 @@ const PlayOfflinePage: React.FC = () => {
                 alt="PreviousIcon"
                 className="group-hover:opacity-70"
               />
-              <span className="text-xs hidden group-hover:inline">10s</span>
+              <span className="text-lg group-hover:text-textPrimary">10s</span>
             </button>
             <button
               onClick={handlePrev}
@@ -256,7 +257,7 @@ const PlayOfflinePage: React.FC = () => {
             </button>
             <button
               onClick={handlePlayPause}
-              className="text-white text-5xl mx-2 transition hover:text-gray-300"
+              className="text-white text-6xl mx-2 transition hover:text-gray-300"
             >
               {playing ? (
                 <MdPauseCircle className="text-3xl" />
@@ -282,7 +283,7 @@ const PlayOfflinePage: React.FC = () => {
                 alt="NextIcon"
                 className="group-hover:opacity-70"
               />
-              <span className="text-xs hidden group-hover:inline">10s</span>
+              <span className="text-lg group-hover:text-textPrimary">10s</span>
             </button>
           </div>
         </div>

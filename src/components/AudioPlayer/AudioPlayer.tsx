@@ -296,7 +296,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className="audio-controls relative">
-      {(isKaroke || isShowLyrics) && (
+      {(isKaroke || isShowLyrics || !importSongUrl) && (
         <Lyrics
           songData={songData}
           currentLyrics={currentLyrics}
@@ -425,7 +425,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <AudioControls
             volume={volume}
             ref={audioRef}
-            src={importSongUrl ? ImportSong : songLink}
+            src={importSongUrl ? importSongUrl : songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={() => {
               const currentTime = audioRef.current?.currentTime || 0;

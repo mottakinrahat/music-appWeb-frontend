@@ -50,7 +50,6 @@ const SongImportModalHandler: React.FC<SongImportModalHandlerProps> = ({
       const base64Data = reader.result as string;
       const title = file.name; // Use the file name as the title
       await saveFileToIndexedDB(base64Data, title);
-      dispatch(karaoke()); // Turn off karaoke
       toast.success("Song Imported Successfully");
       setShowModal(false);
     };
