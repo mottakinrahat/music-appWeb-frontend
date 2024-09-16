@@ -40,7 +40,6 @@ import { useAudio } from "@/lib/AudioProvider";
 import RecordingControlls from "./AudioRecording/RecordingControlls";
 import AudioRecordSlider from "./AudioRecording/AudioRecordSlider";
 
-interface TimeProps {}
 interface AudioPlayerProps {
   onAudioContextReady: (
     audioContext: AudioContext,
@@ -90,15 +89,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const isShowLyrics = useSelector(
     (state: RootState) => state.player.showLyric
   );
-  const isKaraokeRecord = useSelector(
-    (state: RootState) => state.karaoke.isKaraokeRecord
-  );
-  const isKaraokePlay = useSelector(
-    (state: RootState) => state.karaoke.playRecording
-  );
-  const recordedUrl = useSelector(
-    (state: RootState) => state.karaoke.recordedUrl
-  );
 
   const userId = userData?._id;
 
@@ -130,7 +120,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     const getLyrics = async () => {
       try {
         const response = await axios.get(
-          `https://music-app-web.vercel.app/api/v1/songs/${songData._id}/${currentTime}`
+          `${process.env.NEXT_PUBLIC_API_URL}/songs/${songData._id}/${currentTime}`
         );
         if (response.status === 404) {
           setCurrentLyrics(null);
@@ -152,7 +142,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   // Seclectors
   const playing = useSelector((state: RootState) => state.player.playing);
   const repeat = useSelector((state: RootState) => state.player.repeat);
-  const importedSong = useSelector((state: RootState) => state.musicData);
 
   const speed = localStorage.getItem("speed");
   useEffect(() => {
@@ -264,8 +253,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       }
     }
   };
-  const [isFavourite, { isLoading, data: getFavData }] =
-    useIsFavouriteMutation();
+  const [isFavourite] = useIsFavouriteMutation();
 
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
@@ -520,7 +508,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 bpmLoading={loading}
                 songName={songName}
                 songUrl={songLink}
-                // audioRef={audioRef}
                 handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}

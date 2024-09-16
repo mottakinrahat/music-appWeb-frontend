@@ -6,7 +6,6 @@ const useOnlineStatus = () => {
   );
 
   useEffect(() => {
-    // Ensure the effect runs only on the client side
     if (typeof window === "undefined") return;
 
     const updateOnlineStatus = () => {

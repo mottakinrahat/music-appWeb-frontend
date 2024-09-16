@@ -21,8 +21,6 @@ const handleFavorite = async (
       userId,
       data,
     }).unwrap();
-    // console.log(getFavData);
-    // Show success toast notification
     toast.success(
       <div style={{ display: "flex", alignItems: "center" }}>
         <Image

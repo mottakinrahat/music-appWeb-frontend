@@ -79,13 +79,6 @@ const MixerFunctionality = () => {
       if (instrumentalElement) {
         instrumentalElement.volume = 0; // Mute instrumental
       }
-
-      // Disconnect the microphone and reset gain
-      // if (micSource && gainNode && audioContext) {
-      //   micSource.disconnect(gainNode);
-      //   gainNode.disconnect(audioContext.destination);
-      //   audioContext.close();
-      // }
     }
 
     return () => {

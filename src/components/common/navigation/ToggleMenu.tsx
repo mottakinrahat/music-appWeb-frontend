@@ -13,10 +13,10 @@ import Routes from "./routes";
 import Link from "next/link";
 
 interface ToggleMenuProps {
-  blur?: boolean; // blur the background image? default is false.
-  user?: any; // current user information
-  handleLogout: () => void; // function to handle logout
-  showNav?: boolean; //
+  blur?: boolean; 
+  user?: any; 
+  handleLogout: () => void; 
+  showNav?: boolean;
 }
 
 const ToggleMenu: React.FC<ToggleMenuProps> = ({

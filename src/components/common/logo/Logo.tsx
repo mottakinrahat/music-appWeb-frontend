@@ -14,7 +14,6 @@ const Logo = () => {
             width={49}
             height={49}
             className="inline-block md:w-[49px] md:h-[49px] w-[30px] h-[20px] object-contain"
-            // style={{ height: "auto", width: "auto" }}
             src={logo_x}
             alt="Music Appweb"
           />{" "}
@@ -22,7 +21,6 @@ const Logo = () => {
             className="inline-block mt-6 md:w-[93px] md:h-[19px] w-[56px] h-[12px] object-contain"
             width={200}
             height={200}
-            // style={{ height: "auto", width: "auto" }}
             src={logo_text}
             alt="Music Appweb"
           />

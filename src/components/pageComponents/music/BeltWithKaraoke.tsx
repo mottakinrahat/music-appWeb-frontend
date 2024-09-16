@@ -3,7 +3,6 @@
 import React from "react";
 import bgImg from "@/assets/images/musicpagebg.png";
 import bgImg2 from "@/assets/etc/banner/Decoration.png";
-// import Container from "@/components/common/container/Container";
 import Heading from "@/components/ui/heading";
 import image from "@/assets/images/img.png";
 import LandingMusicCard from "@/components/Card/LandingMusicCard";

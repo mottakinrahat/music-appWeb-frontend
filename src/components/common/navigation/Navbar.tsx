@@ -12,7 +12,7 @@ import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
 import { usePathname } from "next/navigation";
 
 interface NavInterface {
-  blur?: boolean; // blur the background image? default is false.
+  blur?: boolean;
 }
 
 const Navbar = ({ blur = false }: NavInterface) => {

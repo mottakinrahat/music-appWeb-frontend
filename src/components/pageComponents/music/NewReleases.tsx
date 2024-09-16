@@ -14,7 +14,6 @@ import {
 import Loading from "@/app/(withCommonLayout)/music/loading";
 
 const NewReleases = ({ tracks }: any) => {
-  // console.log(tracks);
   if (tracks.length <= 0) return <Loading />;
   return (
     <Container bgGray={true}>

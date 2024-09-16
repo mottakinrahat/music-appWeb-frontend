@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import playBtn from "@/assets/icons/play_circle.png";
 import Link from "next/link";
-// import { IoHeartOutline } from "react-icons/io5";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";

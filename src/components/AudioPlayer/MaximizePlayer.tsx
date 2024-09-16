@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { detectBPM } from "@/utils/bpmdetection";
 
-
 interface PlayerInterface {
   params?: {
     id: any;
@@ -142,7 +141,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
   useEffect(() => {
     axios
-      .get("https://music-app-web.vercel.app/api/v1/songs")
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/songs`)
       .then((data) => setTraks(data.data.data.songs));
   }, []);
 

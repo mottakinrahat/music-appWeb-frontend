@@ -2,7 +2,7 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import PlayButtons from "./components/PlayButtons";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {useEffect, useState } from "react";
 import { FiMaximize2 } from "react-icons/fi";
 import Link from "next/link";
 import placeHolder from "@/assets/etc/png/song.jpg";
@@ -10,7 +10,6 @@ import { GradientRange } from "../ui/slider";
 import { formatTime } from "@/utils/FormatTime";
 import Volumn from "./components/Volumn";
 import AirPlayButton from "./components/AirPlayButton";
-// import ShowLyricsIcon from "./components/PlayLIstIcon";
 import RepeatShuffleButton from "./components/ReapetShuffleButton";
 import SongMarquee from "./components/SongMarquee";
 
@@ -32,9 +31,6 @@ interface MiniPlayerProps {
   duration: number;
   currentTime: number;
   handleSeek: (value: number[]) => void;
-  // repeat: RepeatShuffleProps["repeat"];
-  // toggleRepeat: RepeatShuffleProps["toggleRepeat"];
-  // currentSong: any[];
 }
 
 const MiniPlayer = ({
@@ -55,9 +51,8 @@ const MiniPlayer = ({
   currentTime,
   duration,
   handleSeek,
-}: // repeat,
-// toggleRepeat,
-// currentSong,
+}:
+
 MiniPlayerProps) => {
   const [artWork, setArtwork] = useState(artwork);
   const pathname = usePathname();
@@ -165,8 +160,6 @@ MiniPlayerProps) => {
             <div className="hidden [@media(min-width:300px)]:flex items-center">
               {/* <PlayLIstIcon /> */}
               <RepeatShuffleButton
-              // repeat={repeat}
-              // toggleRepeat={toggleRepeat}
               />
             </div>
             <div className="hidden [@media(min-width:380px)]:flex items-center">

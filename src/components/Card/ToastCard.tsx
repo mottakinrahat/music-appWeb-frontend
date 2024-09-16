@@ -1,6 +1,5 @@
 import { toast } from "sonner";
 import { ReactNode } from "react";
-import { Toaster } from "../ui/sonner";
 
 interface ToastCardProps {
   title: string;

@@ -4,7 +4,6 @@ import { FaCheck } from "react-icons/fa6";
 import { DropDownBtn } from "../components/DropDownBtn";
 
 const FXFunctionality = () => {
-  const [showModal, setShowModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   const dropdownContent = (
