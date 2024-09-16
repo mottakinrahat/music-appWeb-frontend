@@ -91,6 +91,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   );
 
   const userId = userData?._id;
+  const importSongUrl = useSelector(
+    (state: RootState) => state.musicData.fileData
+  );
 
   const {
     songName,
@@ -422,7 +425,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <AudioControls
             volume={volume}
             ref={audioRef}
-            src={songLink}
+            src={importSongUrl ? importSongUrl : songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={() => {
               const currentTime = audioRef.current?.currentTime || 0;

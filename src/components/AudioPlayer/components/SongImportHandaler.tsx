@@ -9,6 +9,7 @@ import { initDB } from "@/utils/initDB";
 import ImportDevice from "@/components/svg/ImportDevice";
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 import ImportModal from "./ImportModal";
+import { TbDeviceIpadX } from "react-icons/tb";
 
 interface SongImportModalHandlerProps {
   musicData: { fileData: string | null };
@@ -55,12 +56,11 @@ const SongImportModalHandler: React.FC<SongImportModalHandlerProps> = ({
     };
     reader.readAsDataURL(file);
   };
-    const handleDeleteSong = async () => {
-      await deleteExistingSongFromIndexedDB();
-      dispatch(clearMusicData());
-      toast.success("Song Removed Successfully from Imported Songs");
-    };
-
+  const handleDeleteSong = async () => {
+    await deleteExistingSongFromIndexedDB();
+    dispatch(clearMusicData());
+    toast.success("Song Removed Successfully from Imported Songs");
+  };
 
   const handleFileDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -83,12 +83,10 @@ const SongImportModalHandler: React.FC<SongImportModalHandlerProps> = ({
   return (
     <>
       {musicData.fileData ? (
-        <button
+        <TbDeviceIpadX
           onClick={handleDeleteSong}
           className="text-white hover:text-accent transition text-xl sm:text-2xl cursor-pointer"
-        >
-          Delete Song
-        </button>
+        />
       ) : (
         <p onClick={() => setShowModal(true)}>
           <ImportDevice />
