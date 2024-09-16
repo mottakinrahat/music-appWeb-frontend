@@ -20,6 +20,9 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     ref
   ) => {
     const playing = useSelector((state: RootState) => state.player.playing);
+    const audioVolume = useSelector(
+      (state: RootState) => state.player.audioVolume
+    );
     const dispatch = useDispatch();
     const { setAudioRef } = useAudio();
 
@@ -127,18 +130,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
       // Update volume and playback rate on each change
       const updateVolumeAndPlaybackRate = () => {
         if (!audioElement) return;
-
-        const clampedVolume = Math.max(0, Math.min(volume!, 1));
-
-        // Apply the new volume immediately
-        if (!audioElement.muted) {
-          audioElement.volume = clampedVolume;
-        }
-
-        // Update the playback rate if it has changed
-        if (playbackRate && audioElement.playbackRate !== playbackRate) {
-          audioElement.playbackRate = playbackRate;
-        }
+        audioElement.volume = audioVolume;
       };
 
       if (audioElement) {
@@ -160,7 +152,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           );
         }
       };
-    }, [volume, playbackRate, ref]);
+    }, [volume, ref, audioVolume]);
 
     return (
       <audio
@@ -170,7 +162,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
         onTimeUpdate={onTimeUpdate}
         onLoadedMetadata={onLoadedMetadata}
         onEnded={onEnded}
-        muted={volume! <= 0}
+        muted={audioVolume <= 0}
       >
         Your browser does not support the audio element.
       </audio>

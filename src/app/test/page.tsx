@@ -8,7 +8,7 @@ import React, { useEffect, useRef, useState } from "react";
 const AudioPlayer = () => {
   const { audioRef } = useAudio();
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.5); // Initial volume set to 50%
+  const [volume, setVolume] = useState(0.8); // Initial volume set to 50%
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 

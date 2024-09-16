@@ -16,6 +16,7 @@ import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  audioVolume,
   pauseSong,
   PlayerState,
   playSong,
@@ -161,16 +162,18 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (!volume) {
       localStorage.setItem("volume", "0.8");
       setVolume(0.8);
+      dispatch(audioVolume(0.8));
     }
     if (volume) {
       setVolume(parseFloat(volume));
+      dispatch(audioVolume(parseFloat(volume)));
     }
     setCurrentSong(songData);
     const getRepeat = localStorage.getItem("repeat");
     if (!getRepeat) {
       localStorage.setItem("repeat", repeat);
     }
-  }, [currentSong, repeat, songData, speed, volume]);
+  }, [currentSong, dispatch, repeat, songData, speed, volume]);
 
   useEffect(() => {
     const handleInteraction = () => {
@@ -228,12 +231,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
     localStorage.setItem("volume", JSON.stringify(newVolume));
+     dispatch(audioVolume(value[0]));
 
     // Retrieve the volume from local storage immediately after setting it
     const oldVolume = localStorage.getItem("volume");
     if (oldVolume !== null) {
       // Parse the volume correctly and set it
       setVolume(parseFloat(oldVolume));
+      dispatch(audioVolume(parseFloat(oldVolume)));
     }
   };
 
@@ -330,7 +335,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           album={currentSong.songAlbum.albumName}
           artist={currentSong.songArtist}
           artwork={currentSong.artwork}
-          handleMute={() => handleMute(volume, setVolume)}
+          handleMute={() => {
+            handleMute(volume, dispatch, setVolume);
+            dispatch(audioVolume(volume));
+          }}
           id={currentSong?._id}
           title={currentSong.songName}
           volume={volume}
@@ -514,7 +522,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}
-                handleMute={() => handleMute(volume, setVolume)}
+                handleMute={() => {
+                  handleMute(volume, dispatch, setVolume);
+                  dispatch(audioVolume(volume));
+                }}
                 handleAddToFavorites={handleAddtoFavourite}
                 isfavorite={favorite}
               />

@@ -1,5 +1,9 @@
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
-import { pauseSong, playSong } from "@/redux/slice/music/musicActionSlice";
+import {
+  audioVolume,
+  pauseSong,
+  playSong,
+} from "@/redux/slice/music/musicActionSlice";
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
 
 export const handlePlayPause = async ({
@@ -60,11 +64,13 @@ export const handleOpenLyrics = (dispatch: Dispatch<any>) => {
 
 export const handleMute = (
   volume: number,
+  dispatch: Dispatch<any>,
   setVolume: (value: number) => void
 ) => {
   const getVolume = localStorage.getItem("volume");
 
   if (getVolume && parseFloat(getVolume) > 0) {
+    dispatch(audioVolume(0));
     localStorage.setItem("previousVolume", volume.toString());
     localStorage.setItem("volume", (0).toString());
     setVolume(0);
@@ -73,9 +79,11 @@ export const handleMute = (
     if (previousVolume) {
       localStorage.setItem("volume", previousVolume);
       setVolume(parseFloat(previousVolume));
+      dispatch(audioVolume(parseFloat(previousVolume)));
     } else {
       localStorage.setItem("volume", (0).toString());
       setVolume(0);
+      dispatch(audioVolume(0));
     }
   }
 };

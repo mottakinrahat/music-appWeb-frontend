@@ -20,7 +20,7 @@ import AddSVG from "@/components/svg/AddSVG";
 
 interface VolumeSettingDownRepeatProps {
   volume: number;
-  handleVolumeChange: any;
+  handleVolumeChange: (value: number[]) => void;
   handleMute: () => void;
   songName: string;
   songUrl: string;
