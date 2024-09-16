@@ -13,9 +13,9 @@ import Routes from "./routes";
 import Link from "next/link";
 
 interface ToggleMenuProps {
-  blur?: boolean; 
-  user?: any; 
-  handleLogout: () => void; 
+  blur?: boolean;
+  user?: any;
+  handleLogout: () => void;
   showNav?: boolean;
 }
 
@@ -60,7 +60,7 @@ const ToggleMenu: React.FC<ToggleMenuProps> = ({
 
       {/* Adjust Drawer to use state */}
       <Drawer open={isOpen} onOpenChange={setIsOpen} direction="left">
-        <DrawerContent className="w-[70%] z-[99999]  max-w-md h-screen">
+        <DrawerContent className="w-[70%] z-[99999]  max-w-md h-[100%] -top-2">
           <DrawerHeader>
             <DrawerTitle>
               <Logo />

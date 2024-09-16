@@ -121,9 +121,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   };
 
   const dispatch: AppDispatch = useDispatch();
-  const isKaraoke = useSelector(
-    (state: RootState) => state.karaoke.karaoke
-  );
+  const isKaraoke = useSelector((state: RootState) => state.karaoke.karaoke);
 
   const onMinimize = () => {
     dispatch(handleMinimize({ router: router }));
@@ -133,7 +131,9 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
     <>
       <ul className="flex flex-col gap-[16px] p-[16px]">
         <li className="flex justify-between items-center">
-          <span>{bpmLoading ? "Loading" : currentBpm?.toFixed(2)} BPM</span>
+          <span>
+            {bpmLoading ? "Loading" : parseInt(currentBpm.toString())} BPM
+          </span>
         </li>
         <li className="flex justify-between gap-4 md:gap-10 items-center">
           <span> Playback speed:</span>{" "}

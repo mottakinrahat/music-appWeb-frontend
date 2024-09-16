@@ -16,7 +16,7 @@ const AudioPlayer = () => {
     "https://res.cloudinary.com/dnzhxznox/video/upload/v1724405518/seg1edqe3t50ypfbrsr7.mp3"; // Replace with your audio source
 
   useEffect(() => {
-    if (audioRef.current) {
+    if (audioRef?.current) {
       const audio = audioRef.current;
 
       // Handle metadata loaded event
@@ -55,7 +55,7 @@ const AudioPlayer = () => {
   }, [audioRef, volume]);
 
   const togglePlay = () => {
-    if (audioRef.current) {
+    if (audioRef?.current) {
       if (audioRef.current.paused) {
         audioRef.current.play();
         setIsPlaying(true);

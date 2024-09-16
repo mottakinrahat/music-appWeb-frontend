@@ -8,7 +8,7 @@ import OfflineNotification from "@/utils/offlineNotification";
 const Logo = () => {
   return (
     <Link href={"/"}>
-      <div className="inline-block cursor-pointer">
+      <div className="inline-block -z-10 cursor-pointer">
         <div className="">
           <Image
             width={49}

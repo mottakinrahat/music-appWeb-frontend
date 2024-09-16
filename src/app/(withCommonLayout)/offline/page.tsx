@@ -65,7 +65,51 @@ const PlayOfflinePage: React.FC = () => {
   const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isSafari, setIsSafari] = useState(false);
   // const { audioRef, setAudioRef } = useAudio();
+
+  useEffect(() => {
+    const isSafariBrowser =
+      /^((?!chrome|android).)*safari/i.test(navigator.userAgent) ||
+      /iPad|iPhone|iPod/.test(navigator.userAgent);
+    setIsSafari(isSafariBrowser);
+  }, []);
+
+  useEffect(() => {
+    const audioElement = audioRef.current;
+
+    if (audioElement) {
+      const handleMetadataLoaded = () => {
+        // Safeguard for duration in Safari, which may not be immediately available
+        const durationValue = audioElement.duration;
+
+        if (durationValue && durationValue !== Infinity) {
+          setDuration(durationValue);
+        } else if (isSafari) {
+          // Safari might require a play/pause cycle to fetch duration correctly
+          audioElement
+            .play()
+            .then(() => {
+              audioElement.pause();
+              setDuration(audioElement.duration);
+            })
+            .catch(() => {
+              console.warn("Unable to play/pause to fetch duration.");
+            });
+        }
+      };
+
+      // Handle metadata load
+      audioElement.addEventListener("loadedmetadata", handleMetadataLoaded);
+
+      return () => {
+        audioElement.removeEventListener(
+          "loadedmetadata",
+          handleMetadataLoaded
+        );
+      };
+    }
+  }, [isSafari]);
 
   useEffect(() => {
     // setAudioRef()
@@ -288,7 +332,7 @@ const PlayOfflinePage: React.FC = () => {
           </div>
         </div>
         <div className="flex justify-center items-center gap-2 mb-4 text-white">
-          <ShowLyricsIcon className="text-3xl cursor-pointer" />
+          {/* <ShowLyricsIcon className="text-3xl cursor-pointer" /> */}
           <RepeatShuffleButton className="text-3xl" />
         </div>
       </div>

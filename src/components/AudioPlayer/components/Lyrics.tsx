@@ -52,7 +52,7 @@ const Lyrics: React.FC<LyricsProps> = ({
         maskImage:
           "linear-gradient(to bottom, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%, rgba(0,0,0,0) 10%, rgba(0,0,0,1) 0%)",
       }}
-      className="absolute w-full text-center xl:text-left px-10 xl:px-0 xl:w-[1000px] max-h-[calc(100vh-480px)] no-scrollbar overflow-y-scroll z-50 scroll-smooth top-[150px] xl:top-[174px] xl:left-[120px] text-xl sm:text-2xl lg:text-4xl xl:text-5xl text-white leading-snug font-semibold"
+      className="absolute w-[90%] text-center xl:text-left mx-auto xl:px-0 xl:w-[1000px] max-h-[calc(100vh-480px)] no-scrollbar overflow-y-scroll z-50 scroll-smooth top-[150px] xl:top-[174px] xl:left-[120px] text-xl sm:text-2xl lg:text-4xl xl:text-5xl text-white leading-snug font-semibold"
     >
       {allLyrics.map((lyric) => (
         <p

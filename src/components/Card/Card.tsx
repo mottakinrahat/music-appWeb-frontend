@@ -139,7 +139,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
               onClick={handleSetIdtoLocalStorage}
               href={musicId ? `/music/${musicId}` : "/"}
             >
-              <div className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+              <div className="absolute inset-0 rounded-xl bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
                 {type !== "freelancer" && (
                   <Image
                     src={playBtn}

@@ -98,13 +98,13 @@ const Navbar = ({ blur = false }: NavInterface) => {
     <nav
       className={`${
         showNav || blur
-          ? "bg-white/10 fixed  z-[9999] w-full text-white"
+          ? "bg-white/10 fixed  z-[99] w-full text-white"
           : "bg-navigation"
       } h-16 md:h-20 lg:h-24 flex items-center`}
     >
       <div
         className={`${
-          blur || showNav ? "md:p-10 p-4  xl:px-[120px]" : "container"
+          blur || showNav ? "md:p-10 p-4 z-10  xl:px-[120px]" : "container"
         } w-full flex justify-between flex-wrap items-center`}
       >
         <div className="">
