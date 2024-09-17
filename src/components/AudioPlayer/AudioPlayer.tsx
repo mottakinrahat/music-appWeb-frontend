@@ -123,6 +123,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   }, [currentSong.favUsers, userId, isFavouriteUser, setAudioRef]);
 
   const [currentLyrics, setCurrentLyrics] = useState<string | any>(null);
+
+  const isKaroke = useSelector((state: RootState) => state.karaoke.karaoke);
+  const lyricsOn = useSelector((state: RootState) => state.player.showLyric);
+
   useEffect(() => {
     const getLyrics = async () => {
       try {
@@ -135,8 +139,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         setCurrentLyrics(response.data.data);
       } catch (error) {}
     };
-    getLyrics();
-  }, [currentTime, songData._id]);
+    if (lyricsOn) {
+      getLyrics();
+    }
+  }, [currentTime, songData._id, karaokeOn, lyricsOn]);
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
@@ -307,7 +313,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     favorite,
   });
 
-  const isKaroke = useSelector((state: RootState) => state.karaoke.karaoke);
   const isRecording = useSelector(
     (state: RootState) => state.karaoke.isKaraokeRecord
   );

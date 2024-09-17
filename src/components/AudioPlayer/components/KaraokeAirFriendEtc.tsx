@@ -7,6 +7,7 @@ import { RootState } from "@/redux/store";
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 import { FiSliders } from "react-icons/fi";
 import SongImportModalHandler from "./SongImportHandaler";
+import { showLyric } from "@/redux/slice/music/musicActionSlice";
 
 const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
 
   const karaokeHandler = () => {
     dispatch(karaoke());
+    dispatch(showLyric());
   };
   return (
     <div className="flex flex-wrap items-center gap-3 ">
