@@ -261,12 +261,21 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     }
   };
   const handleRandom = () => {
-    if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
+    if (currentTrackIndex) {
       const newIndex =
         currentTrackIndex + Math.floor(Math.random() * tracks.length - 1);
-      setCurrentTrackIndex(newIndex);
-      setCurrentSong(tracks[newIndex]);
-      if (showPlayer) router.push(`/music/${tracks[newIndex]?._id}`);
+      if (
+        currentTrackIndex !== null &&
+        currentTrackIndex !== undefined &&
+        currentTrackIndex < tracks.length - 1 &&
+        currentTrackIndex !== newIndex
+      ) {
+        setCurrentTrackIndex(newIndex);
+        setCurrentSong(tracks[newIndex]);
+        if (showPlayer) router.push(`/music/${tracks[newIndex]?._id}`);
+      } else if (currentTrackIndex === newIndex) {
+        handleRandom();
+      }
     }
   };
 
@@ -434,7 +443,9 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
               onTouchStart={handleTouchStart}
             ></div>
           )}
-          <AudioPlayerEqualizer audioRef={audioRef} />
+          <AudioPlayerEqualizer
+            // audioRef={audioRef}
+          />
         </div>
       </div>
     </div>
