@@ -100,16 +100,10 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
       if (audioContext && audioContext.state === "suspended") {
         audioContext.resume().then(() => {
           if (audioRef?.current) {
-            audioRef.current.play().catch((err: any) => {
-              dispatch(pauseSong());
-            });
             dispatch(playImport());
           }
         });
       } else if (audioRef?.current) {
-        audioRef.current.play().catch((err: any) => {
-          dispatch(pauseSong());
-        });
         dispatch(playImport());
       }
     }

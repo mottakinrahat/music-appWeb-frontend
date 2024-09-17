@@ -308,8 +308,6 @@ const AirPlayButton = () => {
       audioRef?.current &&
       "webkitplaybacktargetavailabilitychanged" in audioRef.current
     ) {
-      const video = audioRef.current;
-
       const handlePlaybackTargetAvailabilityChange = (event: Event) => {
         // Type guard to ensure correct event type
         if (event instanceof Event && "availability" in event) {
@@ -318,18 +316,6 @@ const AirPlayButton = () => {
           };
           setAirPlayVisible(e.availability === "available");
         }
-      };
-
-      video.addEventListener(
-        "webkitplaybacktargetavailabilitychanged",
-        handlePlaybackTargetAvailabilityChange
-      );
-
-      return () => {
-        video.removeEventListener(
-          "webkitplaybacktargetavailabilitychanged",
-          handlePlaybackTargetAvailabilityChange
-        );
       };
     } else {
       setAirPlayVisible(false);
@@ -400,9 +386,6 @@ const AirPlayButton = () => {
     // Play audio to prompt AirPlay options
     if (audioRef.current) {
       dispatch(playImport());
-      audioRef.current.play().catch((error) => {
-        console.error("Playback failed:", error);
-      });
     }
   };
 

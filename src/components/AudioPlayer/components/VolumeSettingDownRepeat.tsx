@@ -86,10 +86,6 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
       quality === "high" ? "medium" : quality === "medium" ? "low" : "high";
     setQuality(newQuality);
     localStorage.setItem("quality", newQuality);
-
-    if (audioRef.current) {
-      audioRef.current.load();
-    }
   };
 
   // handle playback speed
@@ -115,9 +111,9 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
     localStorage.setItem("speed", newDisplaySpeed.toString());
 
     // Set the actual playback speed in the audio element
-    if (audioRef.current) {
-      audioRef.current.playbackRate = newDisplaySpeed;
-    }
+    // if (audioRef.current) {
+    //   audioRef.current.playbackRate = newDisplaySpeed;
+    // }
   };
 
   const dispatch: AppDispatch = useDispatch();
