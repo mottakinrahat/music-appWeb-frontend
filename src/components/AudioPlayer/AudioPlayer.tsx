@@ -252,21 +252,28 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
     if (audioRef.current) {
       const currentAudio = audioRef.current;
-      const wasPlaying = currentAudio.props.playing; // Check if audio is playing
 
-      if (wasPlaying) {
-        dispatch(pauseSong()); // Pause the audio before seeking
-      }
+      // Pausing the playback if it's currently playing
+      if (currentAudio.getInternalPlayer) {
+        const player = currentAudio.getInternalPlayer();
+        const wasPlaying = player.paused === false; // Check if audio is playing
 
-      // currentAudio.props.onDuration() = newTime; // Set the new time
-      setCurrentTime(newTime); // Update the state with the new time
+        if (wasPlaying) {
+          dispatch(pauseSong()); // Pause the audio before seeking
+        }
 
-      if (wasPlaying) {
-        // currentAudio.play(); // Resume playback if it was playing before
-        dispatch(playImport());
+        // Seek to the new time
+        currentAudio.seekTo(newTime, "seconds");
+        setCurrentTime(newTime); // Update the state with the new time
+
+        if (wasPlaying) {
+          // Resume playback if it was playing before
+          dispatch(playImport());
+        }
       }
     }
   };
+
   const [isFavourite] = useIsFavouriteMutation();
 
   const handleAddtoFavourite = async () => {
@@ -448,6 +455,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             onTimeUpdate={(state: OnProgressProps) => {
               const currentTime = state.playedSeconds;
               const duration = state.loadedSeconds;
+              state.loaded = currentTime;
               handleProgress(currentTime, duration, setPlayed);
               setCurrentTime(currentTime);
             }}
