@@ -202,13 +202,13 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
       }
     };
 
-    document.addEventListener("click", resumeAudioContext);
-    document.addEventListener("touchstart", resumeAudioContext);
+    // document.addEventListener("click", resumeAudioContext);
+    // document.addEventListener("touchstart", resumeAudioContext);
 
-    return () => {
-      document.removeEventListener("click", resumeAudioContext);
-      document.removeEventListener("touchstart", resumeAudioContext);
-    };
+    // return () => {
+    //   document.removeEventListener("click", resumeAudioContext);
+    //   document.removeEventListener("touchstart", resumeAudioContext);
+    // };
   }, [audioContext, audioRef, dispatch]);
 
   return (

@@ -44,18 +44,18 @@ const AudioPlayer = () => {
         document.removeEventListener("touchstart", handleUserInteraction);
       };
 
-      audio.addEventListener("loadedmetadata", handleMetadataLoaded);
-      audio.addEventListener("timeupdate", handleTimeUpdate);
+      // audio.addEventListener("loadedmetadata", handleMetadataLoaded);
+      // audio.addEventListener("timeupdate", handleTimeUpdate);
 
-      document.addEventListener("click", handleUserInteraction);
-      document.addEventListener("touchstart", handleUserInteraction);
+      // document.addEventListener("click", handleUserInteraction);
+      // document.addEventListener("touchstart", handleUserInteraction);
 
-      return () => {
-        audio.removeEventListener("loadedmetadata", handleMetadataLoaded);
-        audio.removeEventListener("timeupdate", handleTimeUpdate);
-        document.removeEventListener("click", handleUserInteraction);
-        document.removeEventListener("touchstart", handleUserInteraction);
-      };
+      // return () => {
+      //   audio.removeEventListener("loadedmetadata", handleMetadataLoaded);
+      //   audio.removeEventListener("timeupdate", handleTimeUpdate);
+      //   document.removeEventListener("click", handleUserInteraction);
+      //   document.removeEventListener("touchstart", handleUserInteraction);
+      // };
     }
   }, [audioRef, dispatch, volume]);
 
