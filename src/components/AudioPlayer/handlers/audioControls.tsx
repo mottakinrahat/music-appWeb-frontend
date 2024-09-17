@@ -2,6 +2,7 @@ import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 import {
   audioVolume,
   pauseSong,
+  playImport,
   playSong,
 } from "@/redux/slice/music/musicActionSlice";
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
@@ -29,9 +30,7 @@ export const handlePlayPause = async ({
         JSON.stringify({ play: false, id: songId })
       );
     } else {
-      if (audioElement) {
-        await audioElement.play();
-      }
+      await audioElement?.play();
 
       dispatch(playSong(songId));
       localStorage.setItem(

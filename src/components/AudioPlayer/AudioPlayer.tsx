@@ -40,6 +40,7 @@ import { useIsFavouriteMutation } from "@/redux/api/audioPlayerApi";
 import { useAudio } from "@/lib/AudioProvider";
 import RecordingControlls from "./AudioRecording/RecordingControlls";
 import AudioRecordSlider from "./AudioRecording/AudioRecordSlider";
+import { OnProgressProps } from "react-player/base";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
@@ -231,7 +232,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
     localStorage.setItem("volume", JSON.stringify(newVolume));
-     dispatch(audioVolume(value[0]));
+    dispatch(audioVolume(value[0]));
 
     // Retrieve the volume from local storage immediately after setting it
     const oldVolume = localStorage.getItem("volume");
@@ -435,9 +436,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             ref={audioRef}
             src={importSongUrl ? importSongUrl : songLink}
             playbackRate={playbackSpeed}
-            onTimeUpdate={() => {
-              const currentTime = audioRef.current?.currentTime || 0;
-              const duration = audioRef.current?.duration || 0;
+            onTimeUpdate={(state: OnProgressProps) => {
+              const currentTime = state.playedSeconds || 0;
+              const duration = state.loadedSeconds;
               handleProgress(currentTime, duration, setPlayed);
               setCurrentTime(currentTime);
             }}
