@@ -491,8 +491,8 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
                   {preset.charAt(0).toUpperCase() + preset.slice(1)}
                 </button>
                 {selectedPreset === preset && (
-                  <div className="bg-accent w-6 h-6 text-white flex items-center justify-center rounded-full">
-                    <IoCheckmarkSharp size={12} />
+                  <div>
+                    <IoCheckmarkSharp className="text-accent" />
                   </div>
                 )}
               </li>

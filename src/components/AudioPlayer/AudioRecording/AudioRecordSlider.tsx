@@ -46,7 +46,7 @@ const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({
         normalize: true,
       });
 
-      waveSurferInstance.load(urlToLoad);
+      waveSurferInstance?.load(urlToLoad);
       setWaveSurfer(waveSurferInstance); // Store the instance in state
     }
 
@@ -64,7 +64,7 @@ const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({
 
   useEffect(() => {
     if (waveSurfer && waveSurfer.getDuration()) {
-      waveSurfer.seekTo(currentTime / waveSurfer.getDuration());
+      waveSurfer?.seekTo(currentTime / waveSurfer.getDuration());
     }
   }, [currentTime, waveSurfer]);
 
