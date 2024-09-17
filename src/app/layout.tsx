@@ -28,13 +28,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Providers>
-      <html data-theme="light" lang="en">
-        <body className={outfit.className}>
-          {children}
-          <Toaster position="bottom-center" />
-        </body>
-      </html>
-    </Providers>
+    <html data-theme="light" lang="en">
+      <body className={outfit.className}>
+        <Providers>{children}</Providers>
+        <Toaster position="bottom-center" />
+      </body>
+    </html>
   );
 }

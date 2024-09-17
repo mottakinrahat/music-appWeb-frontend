@@ -8,13 +8,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
 const AudioPlayer = () => {
-  const { audioRef } = useAudio();
+  // const { audioRef } = useAudio();
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.8); // Initial volume set to 50%
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioSrc =
     "https://res.cloudinary.com/dnzhxznox/video/upload/v1724405518/seg1edqe3t50ypfbrsr7.mp3"; // Replace with your audio source
 
@@ -34,10 +35,10 @@ const AudioPlayer = () => {
 
       // Listen for Safari-specific user interactions
       const handleUserInteraction = () => {
-        if (audio.paused) {
-          audio.play();
-           dispatch(playImport());
-        }
+        // if (audio.paused) {
+        //   audio.play();
+        //   dispatch(playImport());
+        // }
         audio.volume = volume; // Set initial volume
         document.removeEventListener("click", handleUserInteraction);
         document.removeEventListener("touchstart", handleUserInteraction);
@@ -62,7 +63,7 @@ const AudioPlayer = () => {
     if (audioRef?.current) {
       if (audioRef.current.paused) {
         audioRef.current.play();
-         dispatch(playImport());
+        dispatch(playImport());
         setIsPlaying(true);
       } else {
         audioRef.current.pause();

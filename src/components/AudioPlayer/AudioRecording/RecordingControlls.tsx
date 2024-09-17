@@ -7,7 +7,7 @@ import {
   playRecording,
   setRecordedUrl,
 } from "@/redux/slice/karaoke/karaokeActionSlice";
-import { pauseSong } from "@/redux/slice/music/musicActionSlice";
+import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import { openDB } from "idb";
 import React, { useEffect, useRef, useState } from "react";
@@ -104,10 +104,10 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
     try {
       playBeep();
 
+      // Step 1: Get microphone input
       const micStream = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
-
       micStreamRef.current = micStream;
 
       if (!audioRef.current) {
@@ -115,26 +115,35 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
         return;
       }
 
-      const mediaElement = audioRef.current;
-      if (mediaElement.paused) {
-        await mediaElement.play();
+      const mediaElement = audioRef.current.getInternalPlayer();
+      if (!mediaElement) {
+        console.warn("No internal media element in ReactPlayer.");
+        return;
       }
 
       if (audioContext) {
         await audioContext.resume();
 
+        // Step 2: Create audio destinations
         const recordingDestination =
           audioContext.createMediaStreamDestination();
         const monitoringDestination =
           audioContext.createMediaStreamDestination();
+
+        // Step 3: Microphone input (create MediaStreamSource from the mic)
         const micSource = audioContext.createMediaStreamSource(micStream);
 
-        micSource.connect(monitoringDestination);
-        // musicSource.connect(monitoringDestination);
+        // Step 4: Music from ReactPlayer (use the internal player of ReactPlayer)
 
+        // Step 5: Connect both mic and music to the recording destination
         micSource.connect(recordingDestination);
         musicSource.connect(recordingDestination);
 
+        // Optional: Also route mic and music to monitoringDestination for live feedback
+        micSource.connect(monitoringDestination);
+        musicSource.connect(monitoringDestination);
+
+        // Step 6: Initialize MediaRecorder with the mixed stream (mic + music)
         mediaRecorderRef.current = new MediaRecorder(
           recordingDestination.stream
         );
@@ -151,12 +160,14 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
           });
           const audioUrl = URL.createObjectURL(audioBlob);
           setAudioURL(audioUrl);
-          saveToIndexedDB(audioBlob);
+          saveToIndexedDB(audioBlob); // Save the recording to IndexedDB
         };
 
+        // Start the MediaRecorder
         mediaRecorderRef.current.start();
         setIsRecording(true);
 
+        // Play monitoring audio (so you can hear the mixed sound)
         monitoringAudio.srcObject = monitoringDestination.stream;
         monitoringAudio.play();
       }
@@ -164,6 +175,72 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
       console.error("Error accessing microphone or system audio:", err);
     }
   };
+  // const startRecording = async () => {
+  //   dispatch(isRecording(true));
+  //   dispatch(pauseSong());
+  //   try {
+  //     playBeep();
+
+  //     const micStream = await navigator.mediaDevices.getUserMedia({
+  //       audio: true,
+  //     });
+
+  //     micStreamRef.current = micStream;
+
+  //     if (!audioRef.current) {
+  //       console.warn("No audio element available.");
+  //       return;
+  //     }
+
+  //     const mediaElement = audioRef.current;
+  //     if (mediaElement) {
+  //       dispatch(playImport());
+  //     }
+
+  //     if (audioContext) {
+  //       await audioContext.resume();
+
+  //       const recordingDestination =
+  //         audioContext.createMediaStreamDestination();
+  //       const monitoringDestination =
+  //         audioContext.createMediaStreamDestination();
+  //       const micSource = audioContext.createMediaStreamSource(micStream);
+
+  //       micSource.connect(monitoringDestination);
+  //       // musicSource.connect(monitoringDestination);
+
+  //       micSource.connect(recordingDestination);
+  //       musicSource.connect(recordingDestination);
+
+  //       mediaRecorderRef.current = new MediaRecorder(
+  //         recordingDestination.stream
+  //       );
+
+  //       mediaRecorderRef.current.ondataavailable = (event) => {
+  //         if (event.data.size > 0) {
+  //           chunksRef.current.push(event.data);
+  //         }
+  //       };
+
+  //       mediaRecorderRef.current.onstop = async () => {
+  //         const audioBlob = new Blob(chunksRef.current, {
+  //           type: "audio/webm",
+  //         });
+  //         const audioUrl = URL.createObjectURL(audioBlob);
+  //         setAudioURL(audioUrl);
+  //         saveToIndexedDB(audioBlob);
+  //       };
+
+  //       mediaRecorderRef.current.start();
+  //       setIsRecording(true);
+
+  //       monitoringAudio.srcObject = monitoringDestination.stream;
+  //       monitoringAudio.play();
+  //     }
+  //   } catch (err) {
+  //     console.error("Error accessing microphone or system audio:", err);
+  //   }
+  // };
   // Pause recording, including mic input
   const pauseRecording = () => {
     if (
@@ -175,7 +252,7 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
       monitoringAudio.pause(); // Pause monitoring audio (voice)
 
       if (audioRef.current) {
-        audioRef.current.pause(); // Pause music playback
+        dispatch(pauseSong()); // Pause music playback
       }
 
       // Stop the mic stream (pause the mic)
@@ -201,7 +278,7 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
       monitoringAudio.play(); // Resume monitoring audio (voice)
 
       if (audioRef.current) {
-        audioRef.current.play(); // Resume music playback
+        dispatch(playImport()); // Resume music playback
       }
 
       // Restart the mic stream (resume the mic)
@@ -248,7 +325,7 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
       dispatch(pauseSong());
       const mediaElement = audioRef.current;
       if (mediaElement) {
-        mediaElement.pause();
+        dispatch(pauseSong());
       }
 
       dispatch(isRecording(false));

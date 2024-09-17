@@ -10,6 +10,8 @@ import useLocalSongData from "@/hooks/useLocalSongData";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { detectBPM } from "@/utils/bpmdetection";
+import { useAudio } from "@/lib/AudioProvider";
+import ReactPlayer from "react-player";
 
 interface PlayerInterface {
   params?: {
@@ -20,9 +22,7 @@ interface PlayerInterface {
 
 const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
-    null
-  );
+  const [audioElement, setAudioElement] = useState<ReactPlayer | null>(null);
   const [playing, setPlaying] = useState<boolean>(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
@@ -45,6 +45,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch();
+  const { audioContext: musicContext, audioRef } = useAudio();
 
   //  Router
   const router = useRouter();
@@ -177,6 +178,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   // console.log(bpm);
 
   useEffect(() => {
+    setAudioContext(musicContext);
     // const blobData = new Blob(currentSong.songLink);
     const initialTrackIndex = tracks?.findIndex(
       (track: any) => track?._id === params?.id
@@ -185,7 +187,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       setCurrentTrackIndex(initialTrackIndex);
     }
     setCurrentSong(tracks[initialTrackIndex]);
-  }, [params?.id, tracks]);
+  }, [musicContext, params?.id, tracks]);
 
   const songData = useLocalSongData();
   useEffect(() => {
@@ -306,7 +308,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
   const handleAudioContextReady = (
     audioContext: AudioContext,
-    audioElement: HTMLAudioElement
+    audioElement: ReactPlayer
   ) => {
     setAudioContext(audioContext);
     setAudioElement(audioElement);
@@ -432,10 +434,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
               onTouchStart={handleTouchStart}
             ></div>
           )}
-          <AudioPlayerEqualizer
-            audioContext={audioContext}
-            audioElement={audioElement}
-          />
+          <AudioPlayerEqualizer audioRef={audioRef} />
         </div>
       </div>
     </div>
