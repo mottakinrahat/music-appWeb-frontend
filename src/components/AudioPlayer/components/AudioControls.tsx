@@ -191,7 +191,7 @@ import { OnProgressProps } from "react-player/base";
 interface AudioControlsProps {
   src?: string;
   onTimeUpdate: (state: any) => void;
-  onLoadedMetadata?: () => void;
+  onLoadedMetadata: (state: number) => void;
   onEnded?: () => void;
   playbackRate?: number;
   volume?: number;
@@ -249,7 +249,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           playing={playing}
           volume={audioVolume}
           muted={audioVolume <= 0}
-          onDuration={onLoadedMetadata}
+          onDuration={(state: number) => onLoadedMetadata(state)}
           onProgress={(state: OnProgressProps) => onTimeUpdate(state)} // Correct onProgress callback
           onEnded={onEnded} // Correctly handling onEnded
         />

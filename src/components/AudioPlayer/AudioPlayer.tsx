@@ -441,13 +441,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             src={importSongUrl ? importSongUrl : songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={(state: OnProgressProps) => {
-              const currentTime = state.playedSeconds || 0;
+              const currentTime = state.playedSeconds;
               const duration = state.loadedSeconds;
               handleProgress(currentTime, duration, setPlayed);
               setCurrentTime(currentTime);
             }}
-            onLoadedMetadata={() => {
-              setDuration(audioRef.current?.duration || 0);
+            onLoadedMetadata={(state: number) => {
+              setDuration(state || 0);
             }}
             onEnded={() =>
               handleEnd(audioRef, repeat, handleNext, handleRandom)
