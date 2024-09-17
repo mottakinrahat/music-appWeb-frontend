@@ -252,6 +252,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           onDuration={(state: number) => onLoadedMetadata(state)}
           onProgress={(state: OnProgressProps) => onTimeUpdate(state)} // Correct onProgress callback
           onEnded={onEnded} // Correctly handling onEnded
+          
         />
       </div>
     );
