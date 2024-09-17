@@ -251,8 +251,8 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           volume={audioVolume}
           muted={audioVolume <= 0}
           onDuration={(state: number) => onLoadedMetadata(state)}
-          onProgress={(state: OnProgressProps) => onTimeUpdate(state)} // Correct onProgress callback
-          onEnded={onEnded} // Correctly handling onEnded
+          onProgress={(state: OnProgressProps) => onTimeUpdate(state)}
+          onEnded={onEnded}
         />
       </div>
     );

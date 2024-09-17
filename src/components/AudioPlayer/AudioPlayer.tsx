@@ -306,7 +306,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className="audio-controls relative">
-      {(isKaroke || isShowLyrics || !importSongUrl) && (
+      {(isKaroke || isShowLyrics) && (
         <Lyrics
           songData={songData}
           currentLyrics={currentLyrics}
