@@ -1,4 +1,4 @@
-import { pauseSong } from "@/redux/slice/music/musicActionSlice";
+import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
 import React, {
   createContext,
   useContext,

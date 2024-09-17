@@ -209,7 +209,6 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
     const dispatch = useDispatch();
     const { setAudioRef, audioRef } = useAudio();
     const playerRef = useRef<ReactPlayer>(null); // Using ref to access ReactPlayer instance
-    
 
     useEffect(() => {
       setAudioRef(ref);
@@ -249,10 +248,9 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           url={src}
           playing={playing}
           volume={audioVolume}
-          
           muted={audioVolume <= 0}
           onDuration={onLoadedMetadata}
-          onProgress={(state: OnProgressProps)=> onTimeUpdate(state)} // Correct onProgress callback
+          onProgress={(state: OnProgressProps) => onTimeUpdate(state)} // Correct onProgress callback
           onEnded={onEnded} // Correctly handling onEnded
         />
       </div>
