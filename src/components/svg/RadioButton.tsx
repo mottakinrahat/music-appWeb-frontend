@@ -10,7 +10,7 @@ const RadioButton = ({
   onClick?: () => void;
 }) => {
   const isRecording = useSelector(
-    (state: RootState) => state.karaoke.isRecording
+    (state: RootState) => state.karaoke.isKaraokeRecord
   );
 
   return (

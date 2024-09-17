@@ -29,7 +29,7 @@ import Lyrics from "./components/Lyrics";
 import {
   handleEnd,
   handleMute,
-  handleNextTenSecond,
+  handleNextTenSeconds,
   handleOpenLyrics,
   handlePlayPause,
   handlePreviousTenSecond,
@@ -42,11 +42,12 @@ import { useAudio } from "@/lib/AudioProvider";
 import RecordingControlls from "./AudioRecording/RecordingControlls";
 import AudioRecordSlider from "./AudioRecording/AudioRecordSlider";
 import { OnProgressProps } from "react-player/base";
+import ReactPlayer from "react-player";
 
 interface AudioPlayerProps {
   onAudioContextReady: (
     audioContext: AudioContext,
-    audioElement: HTMLAudioElement
+    audioElement: ReactPlayer
   ) => void;
   id?: any;
   handleNext: () => void;
@@ -73,7 +74,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   audioContext,
   loading,
 }) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<ReactPlayer | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
   const [currentTime, setCurrentTime] = useState<number>(0);
@@ -177,24 +178,24 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   }, [currentSong, dispatch, repeat, songData, speed, volume]);
 
-  useEffect(() => {
-    const handleInteraction = () => {
-      if (!audioContextRef.current) {
-        const audioContext = new (window.AudioContext ||
-          (window as any).webkitAudioContext)();
-        audioContextRef.current = audioContext;
-        onAudioContextReady(audioContext, audioRef.current as HTMLAudioElement);
-      } else if (audioContextRef.current.state === "suspended") {
-        audioContextRef.current.resume();
-      }
-    };
+  // useEffect(() => {
+  //   const handleInteraction = () => {
+  //     if (!audioContextRef.current) {
+  //       const audioContext = new (window.AudioContext ||
+  //         (window as any).webkitAudioContext)();
+  //       audioContextRef.current = audioContext;
+  //       onAudioContextReady(audioContext, audioRef.current as ReactPlayer);
+  //     } else if (audioContextRef.current.state === "suspended") {
+  //       audioContextRef.current.resume();
+  //     }
+  //   };
 
-    document.addEventListener("click", handleInteraction);
+  //   document.addEventListener("click", handleInteraction);
 
-    return () => {
-      document.removeEventListener("click", handleInteraction);
-    };
-  }, [onAudioContextReady]);
+  //   return () => {
+  //     document.removeEventListener("click", handleInteraction);
+  //   };
+  // }, [onAudioContextReady]);
 
   useEffect(() => {
     const storedRepeat = localStorage.getItem(
@@ -251,21 +252,28 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
     if (audioRef.current) {
       const currentAudio = audioRef.current;
-      const wasPlaying = !currentAudio.paused; // Check if audio is playing
 
-      if (wasPlaying) {
-        currentAudio.pause(); // Pause the audio before seeking
-      }
+      // Pausing the playback if it's currently playing
+      if (currentAudio.getInternalPlayer) {
+        const player = currentAudio.getInternalPlayer();
+        const wasPlaying = player.paused === false; // Check if audio is playing
 
-      currentAudio.currentTime = newTime; // Set the new time
-      setCurrentTime(newTime); // Update the state with the new time
+        if (wasPlaying) {
+          dispatch(pauseSong()); // Pause the audio before seeking
+        }
 
-      if (wasPlaying) {
-        currentAudio.play(); // Resume playback if it was playing before
-        dispatch(playImport());
+        // Seek to the new time
+        currentAudio.seekTo(newTime, "seconds");
+        setCurrentTime(newTime); // Update the state with the new time
+
+        if (wasPlaying) {
+          // Resume playback if it was playing before
+          dispatch(playImport());
+        }
       }
     }
   };
+
   const [isFavourite] = useIsFavouriteMutation();
 
   const handleAddtoFavourite = async () => {
@@ -320,7 +328,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           handleSeek={handleSeek}
           handleNext={handleNext}
           handleNextTenSecond={() =>
-            handleNextTenSecond(audioRef.current, duration)
+            handleNextTenSeconds(audioRef.current, duration, dispatch)
           }
           handlePlayPause={() =>
             handlePlayPause({
@@ -332,7 +340,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             })
           }
           handlePreviousTenSecond={() =>
-            handlePreviousTenSecond(audioRef.current, duration)
+            handlePreviousTenSecond(audioRef.current, duration, dispatch)
           }
           handlePrev={handlePrev}
           playing={playing}
@@ -405,10 +413,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 <PlayButtons
                   handleNext={handleNext}
                   handleNextTenSecond={() =>
-                    handleNextTenSecond(audioRef.current, duration)
+                    handleNextTenSeconds(audioRef.current, duration, dispatch)
                   }
                   handlePreviousTenSecond={() =>
-                    handlePreviousTenSecond(audioRef.current, duration)
+                    handlePreviousTenSecond(
+                      audioRef.current,
+                      duration,
+                      dispatch
+                    )
                   }
                   handlePlayPause={() =>
                     handlePlayPause({
@@ -443,6 +455,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             onTimeUpdate={(state: OnProgressProps) => {
               const currentTime = state.playedSeconds;
               const duration = state.loadedSeconds;
+              state.loaded = currentTime;
               handleProgress(currentTime, duration, setPlayed);
               setCurrentTime(currentTime);
             }}
@@ -488,10 +501,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               <PlayButtons
                 handleNext={handleNext}
                 handleNextTenSecond={() =>
-                  handleNextTenSecond(audioRef.current, duration)
+                  handleNextTenSeconds(audioRef.current, duration, dispatch)
                 }
                 handlePreviousTenSecond={() =>
-                  handlePreviousTenSecond(audioRef.current, duration)
+                  handlePreviousTenSecond(audioRef.current, duration, dispatch)
                 }
                 handlePlayPause={() =>
                   handlePlayPause({

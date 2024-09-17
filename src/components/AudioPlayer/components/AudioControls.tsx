@@ -198,7 +198,7 @@ interface AudioControlsProps {
   volume?: number;
 }
 
-const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
+const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
   (
     { src, onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume },
     ref
@@ -208,51 +208,57 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
       (state: RootState) => state.player.audioVolume
     );
     const dispatch = useDispatch();
-    const { setAudioRef } = useAudio();
-    const playerRef = useRef<ReactPlayer>(null); // Using ref to access ReactPlayer instance
+    const { setAudioRef, audioRef } = useAudio();
+    // const playerRef = useRef<ReactPlayer>(null); // Using ref to access ReactPlayer instance
+
+    // useEffect(() => {
+    //   setAudioRef(ref);
+
+    //   // Handle Safari-specific quirks like preserving pitch
+    //   const handleInteraction = () => {
+    //     // audioRef.current
+    //     //   ?.getInternalPlayer()
+    //     //   ?.play()
+    //     //   .catch(() => dispatch(pauseSong()));
+    //   };
+
+    //   // document.addEventListener("click", handleInteraction, { once: true });
+    //   // document.addEventListener("touchstart", handleInteraction, {
+    //   //   once: true,
+    //   // });
+
+    //   // return () => {
+    //   //   document.removeEventListener("click", handleInteraction);
+    //   //   document.removeEventListener("touchstart", handleInteraction);
+    //   // };
+    // }, [playing, dispatch, src, setAudioRef, ref, audioRef]);
 
     useEffect(() => {
-      setAudioRef(ref);
-
-      // Handle Safari-specific quirks like preserving pitch
-      const handleInteraction = () => {
-        playerRef.current
-          ?.getInternalPlayer()
-          ?.play()
-          .catch(() => dispatch(pauseSong()));
-      };
-
-      document.addEventListener("click", handleInteraction, { once: true });
-      document.addEventListener("touchstart", handleInteraction, {
-        once: true,
-      });
-
-      return () => {
-        document.removeEventListener("click", handleInteraction);
-        document.removeEventListener("touchstart", handleInteraction);
-      };
-    }, [playing, dispatch, src, setAudioRef, ref]);
-
-    useEffect(() => {
-      if (playerRef.current) {
-        const internalPlayer = playerRef.current.getInternalPlayer();
+      if (audioRef?.current) {
+        const internalPlayer = audioRef.current.getInternalPlayer();
         if (internalPlayer && playbackRate) {
           internalPlayer.playbackRate = playbackRate;
         }
       }
-      console.log(playbackRate);
-    }, [playbackRate]);
+    }, [audioRef, playbackRate]);
     return (
       <div className="hidden">
         <ReactPlayer
-          ref={playerRef}
+          ref={audioRef}
           url={src}
           playing={playing}
           volume={audioVolume}
           muted={audioVolume <= 0}
           onDuration={(state: number) => onLoadedMetadata(state)}
-          onProgress={(state: OnProgressProps) => onTimeUpdate(state)}
-          onEnded={onEnded}
+          onProgress={(state: OnProgressProps) => onTimeUpdate(state)} // Correct onProgress callback
+          onEnded={onEnded} // Correctly handling onEnded
+          config={{
+            file: {
+              attributes: {
+                crossOrigin: true,
+              },
+            },
+          }}
         />
       </div>
     );
