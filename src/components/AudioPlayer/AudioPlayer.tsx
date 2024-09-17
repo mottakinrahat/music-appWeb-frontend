@@ -16,6 +16,7 @@ import KaraokeAirFriendEtc from "./components/KaraokeAirFriendEtc";
 import { DropDownBtn } from "./components/DropDownBtn";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  audioVolume,
   pauseSong,
   PlayerState,
   playImport,
@@ -40,8 +41,8 @@ import { useIsFavouriteMutation } from "@/redux/api/audioPlayerApi";
 import { useAudio } from "@/lib/AudioProvider";
 import RecordingControlls from "./AudioRecording/RecordingControlls";
 import AudioRecordSlider from "./AudioRecording/AudioRecordSlider";
+import { OnProgressProps } from "react-player/base";
 
-interface TimeProps {}
 interface AudioPlayerProps {
   onAudioContextReady: (
     audioContext: AudioContext,
@@ -91,17 +92,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const isShowLyrics = useSelector(
     (state: RootState) => state.player.showLyric
   );
-  const isKaraokeRecord = useSelector(
-    (state: RootState) => state.karaoke.isKaraokeRecord
-  );
-  const isKaraokePlay = useSelector(
-    (state: RootState) => state.karaoke.playRecording
-  );
-  const recordedUrl = useSelector(
-    (state: RootState) => state.karaoke.recordedUrl
-  );
 
   const userId = userData?._id;
+  const importSongUrl = useSelector(
+    (state: RootState) => state.musicData.fileData
+  );
 
   const {
     songName,
@@ -131,7 +126,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     const getLyrics = async () => {
       try {
         const response = await axios.get(
-          `https://music-app-web.vercel.app/api/v1/songs/${songData._id}/${currentTime}`
+          `${process.env.NEXT_PUBLIC_API_URL}/songs/${songData._id}/${currentTime}`
         );
         if (response.status === 404) {
           setCurrentLyrics(null);
@@ -153,7 +148,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   // Seclectors
   const playing = useSelector((state: RootState) => state.player.playing);
   const repeat = useSelector((state: RootState) => state.player.repeat);
-  const importedSong = useSelector((state: RootState) => state.musicData);
 
   const speed = localStorage.getItem("speed");
   useEffect(() => {
@@ -170,16 +164,18 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (!volume) {
       localStorage.setItem("volume", "0.8");
       setVolume(0.8);
+      dispatch(audioVolume(0.8));
     }
     if (volume) {
       setVolume(parseFloat(volume));
+      dispatch(audioVolume(parseFloat(volume)));
     }
     setCurrentSong(songData);
     const getRepeat = localStorage.getItem("repeat");
     if (!getRepeat) {
       localStorage.setItem("repeat", repeat);
     }
-  }, [currentSong, repeat, songData, speed, volume]);
+  }, [currentSong, dispatch, repeat, songData, speed, volume]);
 
   useEffect(() => {
     const handleInteraction = () => {
@@ -239,12 +235,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
     localStorage.setItem("volume", JSON.stringify(newVolume));
+    dispatch(audioVolume(value[0]));
 
     // Retrieve the volume from local storage immediately after setting it
     const oldVolume = localStorage.getItem("volume");
     if (oldVolume !== null) {
       // Parse the volume correctly and set it
       setVolume(parseFloat(oldVolume));
+      dispatch(audioVolume(parseFloat(oldVolume)));
     }
   };
 
@@ -268,8 +266,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       }
     }
   };
-  const [isFavourite, { isLoading, data: getFavData }] =
-    useIsFavouriteMutation();
+  const [isFavourite] = useIsFavouriteMutation();
 
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
@@ -309,7 +306,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className="audio-controls relative">
-      {(isKaroke || isShowLyrics) && (
+      {(isKaroke || isShowLyrics || !importSongUrl) && (
         <Lyrics
           songData={songData}
           currentLyrics={currentLyrics}
@@ -343,7 +340,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           album={currentSong.songAlbum.albumName}
           artist={currentSong.songArtist}
           artwork={currentSong.artwork}
-          handleMute={() => handleMute(volume, setVolume)}
+          handleMute={() => {
+            handleMute(volume, dispatch, setVolume);
+            dispatch(audioVolume(volume));
+          }}
           id={currentSong?._id}
           title={currentSong.songName}
           volume={volume}
@@ -360,7 +360,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           className={`${
             !showPlayer
               ? "hidden"
-              : "absolute p-4 pt-32 lg:top-20 xl:px-[120px] right-0 text-white"
+              : "absolute right-0 text-white px-4 sm:px-6 md:px-8 lg:px-10 xl:px-[120px] bottom-[calc(100%-23%)] lg:bottom-[calc(100%-25%)]"
           } `}
         >
           <DropDownBtn
@@ -438,11 +438,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <AudioControls
             volume={volume}
             ref={audioRef}
-            src={songLink}
+            src={importSongUrl ? importSongUrl : songLink}
             playbackRate={playbackSpeed}
-            onTimeUpdate={() => {
-              const currentTime = audioRef.current?.currentTime || 0;
-              const duration = audioRef.current?.duration || 0;
+            onTimeUpdate={(state: OnProgressProps) => {
+              const currentTime = state.playedSeconds || 0;
+              const duration = state.loadedSeconds;
               handleProgress(currentTime, duration, setPlayed);
               setCurrentTime(currentTime);
             }}
@@ -524,11 +524,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 bpmLoading={loading}
                 songName={songName}
                 songUrl={songLink}
-                // audioRef={audioRef}
                 handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}
-                handleMute={() => handleMute(volume, setVolume)}
+                handleMute={() => {
+                  handleMute(volume, dispatch, setVolume);
+                  dispatch(audioVolume(volume));
+                }}
                 handleAddToFavorites={handleAddtoFavourite}
                 isfavorite={favorite}
               />

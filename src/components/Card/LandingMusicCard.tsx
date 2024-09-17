@@ -3,12 +3,11 @@
 
 import placeHolder from "@/assets/etc/png/song.jpg";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { FaPause, FaPlay } from "react-icons/fa6"; // Import the cross icon
 import { RxCross2 } from "react-icons/rx";
 import CurrentPlayingUsers from "../AudioPlayer/components/CurrentPlayingUsers";
-import useLocalSongData from "@/hooks/useLocalSongData";
 
 interface LandingMusicCardInterface {
   id: any;
@@ -34,22 +33,6 @@ const LandingMusicCard = ({
   setPlaying,
 }: LandingMusicCardInterface) => {
   const [currentId, setCurrenId] = useState("");
-  const [play, setPlay] = useState(playing);
-
-  // useEffect(() => {
-  //   const currentSongDataFromLocalStroage = JSON.parse(
-  //     localStorage.getItem("songData")!
-  //   );
-  //   if (!currentSongDataFromLocalStroage) {
-  //     localStorage.setItem(
-  //       "songData",
-  //       JSON.stringify({ play: true, id: id ? id : null })
-  //     );
-  //   } else {
-  //     setCurrenId(currentSongDataFromLocalStroage.id);
-  //   }
-  // }, [currentId, id]);
-  // useLocalSongData({play: true, id: id ? id : null});
 
   return (
     <div className="flex justify-between gap-4 py-2 items-center max-w-xl">
@@ -110,7 +93,6 @@ const LandingMusicCard = ({
                 }
               >
                 <Button
-                  // Check if setPlaying is defined
                   className="rounded-full w-11 h-11"
                 >
                   <FaPlay className="text-3xl" />

@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { detectBPM } from "@/utils/bpmdetection";
 
-
 interface PlayerInterface {
   params?: {
     id: any;
@@ -142,7 +141,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
 
   useEffect(() => {
     axios
-      .get("https://music-app-web.vercel.app/api/v1/songs")
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/songs`)
       .then((data) => setTraks(data.data.data.songs));
   }, []);
 
@@ -354,7 +353,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         backgroundPosition: "center",
       }}
     >
-      <div className="absolute w-full h-screen bg-black opacity-40 "></div>
+      <div className="absolute w-full h-screen bg-black opacity-60 "></div>
 
       <div className="flex z-10 flex-grow relative">
         <div className="flex-1 transition-all">
@@ -380,7 +379,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             onClick={handleOpenPlayList}
             className={`${
               playlistOpen <= 0
-                ? "fixed transition-colors duration-1000 bg-gradient-to-t from-black/40 h-full w-full top-0"
+                ? "fixed transition-colors duration-1000 bg-gradient-to-t from-black/90 h-full w-full top-0"
                 : "bg-transparent"
             } `}
           ></div>
@@ -412,7 +411,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             }}
             className={`${
               eqOpen <= 0
-                ? "fixed transition-colors duration-1000  bg-gradient-to-t from-black/40 h-full w-full top-0"
+                ? "fixed transition-colors duration-1000  bg-gradient-to-t from-black/90 h-full w-full top-0"
                 : "bg-transparent"
             } `}
           ></div>

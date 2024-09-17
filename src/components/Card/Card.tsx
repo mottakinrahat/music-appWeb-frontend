@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import playBtn from "@/assets/icons/play_circle.png";
 import Link from "next/link";
-// import { IoHeartOutline } from "react-icons/io5";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -159,7 +158,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
               onClick={handleSetIdtoLocalStorage}
               href={musicId ? `/music/${musicId}` : "/"}
             >
-              <div className="absolute inset-0 bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+              <div className="absolute inset-0 rounded-xl bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
                 {type !== "freelancer" && (
                   <Image
                     src={playBtn}

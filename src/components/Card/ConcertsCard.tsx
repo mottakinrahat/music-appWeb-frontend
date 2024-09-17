@@ -3,7 +3,6 @@ import Link from "next/link";
 import React from "react";
 import { FaRegBell } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
-import { GoLocation } from "react-icons/go";
 import { Url } from "url";
 
 interface ConcertCardInterface {

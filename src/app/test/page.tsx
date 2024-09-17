@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 const AudioPlayer = () => {
   const { audioRef } = useAudio();
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.5); // Initial volume set to 50%
+  const [volume, setVolume] = useState(0.8); // Initial volume set to 50%
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
     const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const AudioPlayer = () => {
     "https://res.cloudinary.com/dnzhxznox/video/upload/v1724405518/seg1edqe3t50ypfbrsr7.mp3"; // Replace with your audio source
 
   useEffect(() => {
-    if (audioRef.current) {
+    if (audioRef?.current) {
       const audio = audioRef.current;
 
       // Handle metadata loaded event
@@ -59,7 +59,7 @@ const AudioPlayer = () => {
   }, [audioRef, dispatch, volume]);
 
   const togglePlay = () => {
-    if (audioRef.current) {
+    if (audioRef?.current) {
       if (audioRef.current.paused) {
         audioRef.current.play();
          dispatch(playImport());
