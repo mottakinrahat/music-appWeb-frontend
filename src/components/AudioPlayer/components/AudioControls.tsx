@@ -179,9 +179,10 @@
 // AudioControls.displayName = "AudioControls";
 
 // export default AudioControls;
+
 "use client";
 import { useAudio } from "@/lib/AudioProvider";
-import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
+import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import React, { forwardRef, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -207,7 +208,7 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
       (state: RootState) => state.player.audioVolume
     );
     const dispatch = useDispatch();
-    const { setAudioRef, audioRef } = useAudio();
+    const { setAudioRef } = useAudio();
     const playerRef = useRef<ReactPlayer>(null); // Using ref to access ReactPlayer instance
 
     useEffect(() => {
@@ -252,7 +253,6 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           onDuration={(state: number) => onLoadedMetadata(state)}
           onProgress={(state: OnProgressProps) => onTimeUpdate(state)} // Correct onProgress callback
           onEnded={onEnded} // Correctly handling onEnded
-          
         />
       </div>
     );
