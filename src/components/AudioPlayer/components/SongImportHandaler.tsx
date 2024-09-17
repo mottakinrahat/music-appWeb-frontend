@@ -1,5 +1,5 @@
 import React, { useState, DragEvent } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import {
   setMusicData,
@@ -10,6 +10,7 @@ import ImportDevice from "@/components/svg/ImportDevice";
 import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 import ImportModal from "./ImportModal";
 import { TbDeviceIpadX } from "react-icons/tb";
+import { RootState } from "@/redux/store";
 
 interface SongImportModalHandlerProps {
   musicData: { fileData: string | null };
@@ -21,6 +22,7 @@ const SongImportModalHandler: React.FC<SongImportModalHandlerProps> = ({
   const [showModal, setShowModal] = useState(false);
   const [dragging, setDragging] = useState(false);
   const dispatch = useDispatch();
+  const isKaraoke = useSelector((state: RootState) => state.karaoke.karaoke);
 
   // Save file to IndexedDB
   const saveFileToIndexedDB = async (fileData: string, title: string) => {
@@ -54,6 +56,9 @@ const SongImportModalHandler: React.FC<SongImportModalHandlerProps> = ({
       setShowModal(false);
     };
     reader.readAsDataURL(file);
+    if (isKaraoke) {
+      dispatch(karaoke());
+    }
   };
   const handleDeleteSong = async () => {
     await deleteExistingSongFromIndexedDB();

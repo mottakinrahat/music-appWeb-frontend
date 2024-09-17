@@ -23,8 +23,9 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
   isfavorite,
   handleAddToFavorites,
 }) => {
-  const isKaraoke = useSelector(
-    (state: RootState) => state.karaoke.karaoke
+  const isKaraoke = useSelector((state: RootState) => state.karaoke.karaoke);
+  const importedUrl: any = useSelector(
+    (state: RootState) => state.musicData.fileData
   );
 
   return (
@@ -37,19 +38,22 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
             </>
           ) : (
             <>
-              <div
+              <button
+                disabled={importedUrl}
                 onClick={handleAddToFavorites}
-                className="cursor-pointer hidden min-[340px]:block transition text-white hover:text-accent"
+                className={`hidden min-[340px]:block transition text-white hover:text-accent ${
+                  importedUrl ? "cursor-not-allowed" : "cursor-pointer "
+                }`}
               >
                 {isfavorite ? (
                   <FaHeart className="p-[2px] sm:p-0" />
                 ) : (
                   <FaRegHeart className="p-[2px] sm:p-0" />
                 )}
-              </div>
-              <div className="">
+              </button>
+              <button className="" disabled={importedUrl}>
                 <ShowLyricsIcon handleOpenLyrics={handleOpenLyrics} />
-              </div>
+              </button>
               <ReapetShuffleButton />
             </>
           )}
