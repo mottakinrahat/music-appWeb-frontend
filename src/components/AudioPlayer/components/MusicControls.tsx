@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-
 import { FiSliders } from "react-icons/fi";
 import AirPlayButton from "./AirPlayButton";
 import FXFunctionality from "../FXFunctionality/FXFunctionality";

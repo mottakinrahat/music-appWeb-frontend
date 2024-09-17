@@ -179,9 +179,10 @@
 // AudioControls.displayName = "AudioControls";
 
 // export default AudioControls;
+
 "use client";
 import { useAudio } from "@/lib/AudioProvider";
-import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
+import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import React, { forwardRef, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
