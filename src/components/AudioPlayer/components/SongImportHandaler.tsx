@@ -11,6 +11,7 @@ import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 import ImportModal from "./ImportModal";
 import { TbDeviceIpadX } from "react-icons/tb";
 import { RootState } from "@/redux/store";
+import { showLyric } from "@/redux/slice/music/musicActionSlice";
 
 interface SongImportModalHandlerProps {
   musicData: { fileData: string | null };
@@ -44,6 +45,7 @@ const SongImportModalHandler: React.FC<SongImportModalHandlerProps> = ({
     });
     await tx.done;
     dispatch(clearMusicData()); // Dispatch Redux action to clear music data
+    dispatch(showLyric());
   };
 
   const handleFileSelect = async (file: File) => {

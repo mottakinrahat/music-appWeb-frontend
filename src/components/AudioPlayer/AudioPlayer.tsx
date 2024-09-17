@@ -139,10 +139,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         setCurrentLyrics(response.data.data);
       } catch (error) {}
     };
-    if (lyricsOn) {
+    if (lyricsOn && !importSongUrl) {
       getLyrics();
     }
-  }, [currentTime, songData._id, karaokeOn, lyricsOn]);
+  }, [currentTime, songData._id, karaokeOn, lyricsOn, importSongUrl]);
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
@@ -319,7 +319,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className="audio-controls relative">
-      {(isKaroke || isShowLyrics) && (
+      {(isKaroke || isShowLyrics) && !importSongUrl && (
         <Lyrics
           songData={songData}
           currentLyrics={currentLyrics}
