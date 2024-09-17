@@ -186,11 +186,12 @@ import { RootState } from "@/redux/store";
 import React, { forwardRef, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactPlayer from "react-player";
+import { OnProgressProps } from "react-player/base";
 
 interface AudioControlsProps {
   src?: string;
   onTimeUpdate: (state: any) => void;
-  onLoadedMetadata?: () => void;
+  onLoadedMetadata: (state: number) => void;
   onEnded?: () => void;
   playbackRate?: number;
   volume?: number;
@@ -248,9 +249,10 @@ const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
           playing={playing}
           volume={audioVolume}
           muted={audioVolume <= 0}
-          onDuration={onLoadedMetadata}
-          onProgress={onTimeUpdate} // Correct onProgress callback
+          onDuration={(state: number) => onLoadedMetadata(state)}
+          onProgress={(state: OnProgressProps) => onTimeUpdate(state)} // Correct onProgress callback
           onEnded={onEnded} // Correctly handling onEnded
+          
         />
       </div>
     );

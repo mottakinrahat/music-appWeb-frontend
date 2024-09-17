@@ -1,4 +1,4 @@
-import { pauseSong } from "@/redux/slice/music/musicActionSlice";
+import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
 import React, {
   createContext,
   useContext,
@@ -70,11 +70,12 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
     // Function to resume AudioContext on user interaction
     const resumeAudioContext = () => {
       if (audioContext && audioContext.state === "suspended") {
-        dispatch(pauseSong());
         audioContext
           .resume()
           .then(() => {
             console.log("AudioContext resumed after user interaction");
+            dispatch(playImport());
+            audioRef.current.play();
           })
           .catch((err) => {
             console.error("Failed to resume AudioContext:", err);
@@ -82,13 +83,14 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
       }
     };
     document.addEventListener("click", resumeAudioContext);
+    document.addEventListener("load", resumeAudioContext);
     document.addEventListener("touchstart", resumeAudioContext);
 
     return () => {
       document.removeEventListener("click", resumeAudioContext);
       document.removeEventListener("touchstart", resumeAudioContext);
     };
-  }, [audioContext, dispatch]);
+  }, [audioContext, audioRef, dispatch]);
 
   return (
     <CombinedAudioContext.Provider

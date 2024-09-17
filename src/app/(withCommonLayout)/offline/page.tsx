@@ -16,6 +16,8 @@ import { Slider } from "@/components/ui/slider";
 import { initDB } from "@/utils/initDB";
 import SongMarquee from "@/components/AudioPlayer/components/SongMarquee";
 import { useAudio } from "@/lib/AudioProvider";
+import { playImport } from "@/redux/slice/music/musicActionSlice";
+import { useDispatch } from "react-redux";
 
 // Function to retrieve a song Blob from IndexedDB
 const retrieveSongFromIndexedDB = async (id: string | number) => {
@@ -63,6 +65,7 @@ const PlayOfflinePage: React.FC = () => {
   const [duration, setDuration] = useState<number>(0);
   const [songIds, setSongIds] = useState<number[] | string>([]);
   const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
+  const dispatch = useDispatch()
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isSafari, setIsSafari] = useState(false);
@@ -149,8 +152,9 @@ const PlayOfflinePage: React.FC = () => {
       audioRef.current.src = audioUrl;
       audioRef.current.play();
       setPlaying(true);
+      dispatch(playImport())
     }
-  }, [audioRef, audioUrl]);
+  }, [audioRef, audioUrl, dispatch]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -174,6 +178,7 @@ const PlayOfflinePage: React.FC = () => {
         audioRef.current.pause();
       } else {
         audioRef.current.play();
+         dispatch(playImport());
       }
       setPlaying(!playing);
     }
