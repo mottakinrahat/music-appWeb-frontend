@@ -254,7 +254,7 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
           config={{
             file: {
               attributes: {
-                crossOrigin: "true",
+                crossOrigin: true,
               },
             },
           }}
