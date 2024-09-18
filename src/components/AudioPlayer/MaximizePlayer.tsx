@@ -444,7 +444,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             ></div>
           )}
           <AudioPlayerEqualizer
-            // audioRef={audioRef}
+          // audioRef={audioRef}
           />
         </div>
       </div>
