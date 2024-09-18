@@ -433,9 +433,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
               onTouchStart={handleTouchStart}
             ></div>
           )}
-          <AudioPlayerEqualizer
-           
-          />
+          <AudioPlayerEqualizer />
         </div>
       </div>
     </div>
