@@ -45,10 +45,6 @@ import { OnProgressProps } from "react-player/base";
 import ReactPlayer from "react-player";
 
 interface AudioPlayerProps {
-  onAudioContextReady: (
-    audioContext: AudioContext,
-    audioElement: ReactPlayer
-  ) => void;
   id?: any;
   handleNext: () => void;
   currentSong?: any;
@@ -63,7 +59,6 @@ interface AudioPlayerProps {
 }
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
-  onAudioContextReady,
   currentSong: songData,
   handleOpenEqualizer,
   handleNext,

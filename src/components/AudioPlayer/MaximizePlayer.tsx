@@ -22,7 +22,6 @@ interface PlayerInterface {
 
 const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [audioElement, setAudioElement] = useState<ReactPlayer | null>(null);
   const [playing, setPlaying] = useState<boolean>(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
@@ -315,14 +314,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     );
   }
 
-  const handleAudioContextReady = (
-    audioContext: AudioContext,
-    audioElement: ReactPlayer
-  ) => {
-    setAudioContext(audioContext);
-    setAudioElement(audioElement);
-  };
-
   const screenWidth = window.innerWidth;
   const handleOpenEqualizer = () => {
     if (width <= 0) {
@@ -376,7 +367,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             id={params?.id}
             setCurrentSong={setCurrentSong}
             currentSong={currentSong}
-            onAudioContextReady={handleAudioContextReady}
             handleOpenEqualizer={handleOpenEqualizer}
             handleOpenPlayList={handleOpenPlayList}
             handleRandom={handleRandom}
@@ -444,7 +434,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             ></div>
           )}
           <AudioPlayerEqualizer
-            // audioRef={audioRef}
+           
           />
         </div>
       </div>

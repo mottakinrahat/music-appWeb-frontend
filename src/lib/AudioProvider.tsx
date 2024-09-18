@@ -186,30 +186,30 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
   }, [audioContext]);
 
   // Add event listeners for user interaction to resume the AudioContext
-  useEffect(() => {
-    const resumeAudioContext = () => {
-      if (audioContext && audioContext.state === "suspended") {
-        audioContext
-          .resume()
-          .then(() => {
-            console.log("AudioContext resumed after user interaction");
-            dispatch(playImport());
-            audioRef?.getInternalPlayer()?.play();
-          })
-          .catch((err) => {
-            console.error("Failed to resume AudioContext:", err);
-          });
-      }
-    };
+  // useEffect(() => {
+  //   const resumeAudioContext = () => {
+  //     if (audioContext && audioContext.state === "suspended") {
+  //       audioContext
+  //         .resume()
+  //         .then(() => {
+  //           console.log("AudioContext resumed after user interaction");
+  //           dispatch(playImport());
+  //           audioRef?.getInternalPlayer()?.play();
+  //         })
+  //         .catch((err) => {
+  //           console.error("Failed to resume AudioContext:", err);
+  //         });
+  //     }
+  //   };
 
-    // document.addEventListener("click", resumeAudioContext);
-    // document.addEventListener("touchstart", resumeAudioContext);
+  // document.addEventListener("click", resumeAudioContext);
+  // document.addEventListener("touchstart", resumeAudioContext);
 
-    // return () => {
-    //   document.removeEventListener("click", resumeAudioContext);
-    //   document.removeEventListener("touchstart", resumeAudioContext);
-    // };
-  }, [audioContext, audioRef, dispatch]);
+  // return () => {
+  //   document.removeEventListener("click", resumeAudioContext);
+  //   document.removeEventListener("touchstart", resumeAudioContext);
+  // };
+  // }, [audioContext, audioRef, dispatch]);
 
   return (
     <CombinedAudioContext.Provider
