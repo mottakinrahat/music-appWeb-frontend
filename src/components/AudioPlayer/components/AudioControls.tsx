@@ -181,85 +181,72 @@
 // export default AudioControls;
 
 "use client";
+
 import { useAudio } from "@/lib/AudioProvider";
-import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
-import React, { forwardRef, useEffect, useRef } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactPlayer from "react-player";
 import { OnProgressProps } from "react-player/base";
 
 interface AudioControlsProps {
-  src?: string;
-  onTimeUpdate: (state: any) => void;
-  onLoadedMetadata: (state: number) => void;
+  onTimeUpdate: (state: OnProgressProps) => void;
+  onLoadedMetadata: (duration: number) => void;
   onEnded?: () => void;
   playbackRate?: number;
   volume?: number;
+  src: string;
 }
 
 const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
-  (
-    { src, onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume },
-    ref
-  ) => {
+  ({ onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume }, ref) => {
     const playing = useSelector((state: RootState) => state.player.playing);
     const audioVolume = useSelector(
       (state: RootState) => state.player.audioVolume
     );
     const dispatch = useDispatch();
-    const { setAudioRef, audioRef } = useAudio();
-    // const playerRef = useRef<ReactPlayer>(null); // Using ref to access ReactPlayer instance
+    const { setAudioRef, audioRef } = useAudio(); // Assuming this provides a ref
 
-    // useEffect(() => {
-    //   setAudioRef(ref);
+    const [songs, setSongs] = useState<
+      { id: number; title: string; url: string }[]
+    >([]);
+    const [currentSongUrl, setCurrentSongUrl] = useState<string | null>(null);
 
-    //   // Handle Safari-specific quirks like preserving pitch
-    //   const handleInteraction = () => {
-    //     // audioRef.current
-    //     //   ?.getInternalPlayer()
-    //     //   ?.play()
-    //     //   .catch(() => dispatch(pauseSong()));
-    //   };
-
-    //   // document.addEventListener("click", handleInteraction, { once: true });
-    //   // document.addEventListener("touchstart", handleInteraction, {
-    //   //   once: true,
-    //   // });
-
-    //   // return () => {
-    //   //   document.removeEventListener("click", handleInteraction);
-    //   //   document.removeEventListener("touchstart", handleInteraction);
-    //   // };
-    // }, [playing, dispatch, src, setAudioRef, ref, audioRef]);
+    useEffect(() => {
+      // Fetch the list of songs from the API
+      fetch("/api/music")
+        .then((res) => res.json())
+        .then((data) => {
+          setSongs(data);
+          if (data.length > 0) {
+            setCurrentSongUrl(data[0].url); // Set the URL of the first song or any default song
+          }
+        })
+        .catch((err) => console.error(err));
+    }, []);
 
     useEffect(() => {
       if (audioRef?.current) {
         const internalPlayer = audioRef.current.getInternalPlayer();
-        if (internalPlayer && playbackRate) {
+        if (internalPlayer && playbackRate !== undefined) {
           internalPlayer.playbackRate = playbackRate;
         }
       }
     }, [audioRef, playbackRate]);
+
     return (
       <div className="hidden">
-        <ReactPlayer
-          ref={audioRef}
-          url={src}
-          playing={playing}
-          volume={audioVolume}
-          muted={audioVolume <= 0}
-          onDuration={(state: number) => onLoadedMetadata(state)}
-          onProgress={(state: OnProgressProps) => onTimeUpdate(state)} // Correct onProgress callback
-          onEnded={onEnded} // Correctly handling onEnded
-          config={{
-            file: {
-              attributes: {
-                crossOrigin: "*",
-              },
-            },
-          }}
-        />
+        {currentSongUrl && (
+          <ReactPlayer
+            ref={audioRef}
+            url={currentSongUrl} // Use the URL from the state
+            playing={playing}
+            volume={volume}
+            onDuration={onLoadedMetadata}
+            onProgress={onTimeUpdate}
+            onEnded={onEnded}
+          />
+        )}
       </div>
     );
   }
