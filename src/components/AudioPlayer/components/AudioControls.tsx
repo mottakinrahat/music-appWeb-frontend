@@ -242,7 +242,7 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
         {currentSongUrl && (
           <ReactPlayer
             ref={audioRef}
-            url={currentSongUrl} // Use the URL from the state
+            url={src} // Use the URL from the state
             playing={playing}
             volume={audioVolume}
             onDuration={onLoadedMetadata}
