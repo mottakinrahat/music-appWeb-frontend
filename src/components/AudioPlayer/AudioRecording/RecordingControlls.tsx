@@ -13,6 +13,8 @@ import { openDB } from "idb";
 import React, { useEffect, useRef, useState } from "react";
 import { FaCirclePause, FaCirclePlay } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
+import { startRecording } from "./handlers/startRecording";
+import { pauseRecording, stopRecording } from "./handlers/utilsRecording";
 
 interface RecordingProps {
   songDuration: number | any;
@@ -78,114 +80,147 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
 
   const monitoringAudio = new Audio();
 
-  const playBeep = () => {
-    if (audioContext) {
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+  //   dispatch(isRecording(true));
 
-      oscillator.type = "sine";
-      oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
-      gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+  //   try {
+  //     playBeep();
 
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+  //     // Get microphone stream with minimal noise suppression, focusing only on voice clarity
+  //     const micStream = await navigator.mediaDevices.getUserMedia({
+  //       audio: {
+  //         sampleRate: 48000, // High-quality studio rate
+  //         channelCount: 2, // Stereo input for better sound
+  //         echoCancellation: true, // Echo cancellation to minimize feedback loops
+  //         noiseSuppression: false, // Disable aggressive noise suppression
+  //         autoGainControl: false, // Manual gain control for better handling
+  //       },
+  //     });
 
-      oscillator.start();
-      oscillator.stop(audioContext.currentTime + 0.2);
-    }
-  };
+  //     micStreamRef.current = micStream;
 
-  const startRecording = async () => {
-    dispatch(isRecording(true));
-    try {
-      playBeep();
+  //     if (!audioRef.current) {
+  //       console.warn("No audio element available.");
+  //       return;
+  //     }
 
-      const micStream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-      });
+  //     const mediaElement = audioRef.current;
+  //     if (mediaElement) {
+  //       dispatch(playImport());
+  //     }
 
-      micStreamRef.current = micStream;
+  //     if (audioContext) {
+  //       await audioContext.resume();
 
-      if (!audioRef.current) {
-        console.warn("No audio element available.");
-        return;
-      }
+  //       // Create audio nodes
+  //       const recordingDestination =
+  //         audioContext.createMediaStreamDestination();
+  //       const monitoringDestination =
+  //         audioContext.createMediaStreamDestination();
 
-      const mediaElement = audioRef.current;
-      if (mediaElement) {
-        dispatch(playImport());
-      }
+  //       const micSource = audioContext.createMediaStreamSource(micStream);
 
-      if (audioContext) {
-        await audioContext.resume();
+  //       // Gain Node for moderate volume boost
+  //       const gainNode = audioContext.createGain();
+  //       gainNode.gain.value = 3.5; // Boost microphone volume to improve vocal capture
 
-        const recordingDestination =
-          audioContext.createMediaStreamDestination();
-        const monitoringDestination =
-          audioContext.createMediaStreamDestination();
-        const micSource = audioContext.createMediaStreamSource(micStream);
+  //       // EQ Node to slightly enhance vocal clarity (1kHz band boost)
+  //       const eqNode = audioContext.createBiquadFilter();
+  //       eqNode.type = "peaking";
+  //       eqNode.frequency.setValueAtTime(1000, audioContext.currentTime); // Boost vocal frequencies around 1kHz
+  //       eqNode.gain.setValueAtTime(5, audioContext.currentTime); // Small boost for clarity
 
-        micSource.connect(monitoringDestination);
-        // musicSource.connect(monitoringDestination);
+  //       // Reverb Node for depth (optional, not affecting noise)
+  //       const convolver = audioContext.createConvolver();
+  //       try {
+  //         convolver.buffer = await fetchReverbBuffer(audioContext); // Pre-recorded reverb buffer
+  //       } catch (error) {
+  //         console.error("Error fetching or decoding reverb buffer:", error);
+  //         // Handle error, maybe disable reverb if needed
+  //       }
 
-        micSource.connect(recordingDestination);
-        musicSource.connect(recordingDestination);
+  //       // Light Compressor to balance volume and handle subtle noise
+  //       const compressor = audioContext.createDynamicsCompressor();
+  //       compressor.threshold.setValueAtTime(-40, audioContext.currentTime); // Allow softer sounds through
+  //       compressor.knee.setValueAtTime(40, audioContext.currentTime); // Smooth knee for natural compression
+  //       compressor.ratio.setValueAtTime(3, audioContext.currentTime); // Low ratio to maintain vocal dynamics
+  //       compressor.attack.setValueAtTime(0.05, audioContext.currentTime); // Slightly slower attack for sustained sounds
+  //       compressor.release.setValueAtTime(0.75, audioContext.currentTime); // Moderate release to preserve sound trails
 
-        mediaRecorderRef.current = new MediaRecorder(
-          recordingDestination.stream
-        );
+  //       // High-pass Filter to remove low-frequency hum (around 60Hz to remove background voltage noise)
+  //       const highPassFilter = audioContext.createBiquadFilter();
+  //       highPassFilter.type = "highpass";
+  //       highPassFilter.frequency.setValueAtTime(60, audioContext.currentTime); // Removes low-end hums like voltage noise
 
-        mediaRecorderRef.current.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            chunksRef.current.push(event.data);
-          }
-        };
+  //       // Low-pass Filter to slightly roll off very high frequencies (prevent extreme high-pitched noises)
+  //       const lowPassFilter = audioContext.createBiquadFilter();
+  //       lowPassFilter.type = "lowpass";
+  //       lowPassFilter.frequency.setValueAtTime(14000, audioContext.currentTime); // Allow vocal clarity but remove ultra-high noise
 
-        mediaRecorderRef.current.onstop = async () => {
-          const audioBlob = new Blob(chunksRef.current, {
-            type: "audio/webm",
-          });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          setAudioURL(audioUrl);
-          saveToIndexedDB(audioBlob);
-        };
+  //       // Limiter to prevent clipping or distortion of loud sounds
+  //       const limiter = audioContext.createDynamicsCompressor();
+  //       limiter.threshold.setValueAtTime(-3, audioContext.currentTime); // Keep peaks from distorting
+  //       limiter.ratio.setValueAtTime(15, audioContext.currentTime); // High ratio for limiting loud peaks
+  //       limiter.attack.setValueAtTime(0.05, audioContext.currentTime); // Slow attack for smooth limiting
+  //       limiter.release.setValueAtTime(0.5, audioContext.currentTime); // Moderate release for natural fading
 
-        mediaRecorderRef.current.start();
-        setIsRecording(true);
+  //       // Connect the audio nodes: mic -> gain -> EQ -> compressor -> high-pass filter -> low-pass filter -> limiter -> destinations
+  //       micSource
+  //         .connect(gainNode)
+  //         .connect(eqNode)
+  //         .connect(compressor)
+  //         .connect(highPassFilter)
+  //         .connect(lowPassFilter)
+  //         .connect(limiter)
+  //         .connect(recordingDestination); // For recording
 
-        monitoringAudio.srcObject = monitoringDestination.stream;
-        monitoringAudio.play();
-      }
-    } catch (err) {
-      console.error("Error accessing microphone or system audio:", err);
-    }
-  };
+  //       // Ensure monitoring stream does not include recorded audio
+  //       micSource.connect(monitoringDestination); // Live monitoring
 
-  const pauseRecording = () => {
-    if (
-      mediaRecorderRef.current &&
-      mediaRecorderRef.current.state === "recording"
-    ) {
-      // Pause the recording
-      mediaRecorderRef.current.pause();
-      monitoringAudio.pause(); // Pause monitoring audio (voice)
+  //       // Check if recordingDestination.stream is available
+  //       if (!recordingDestination.stream) {
+  //         throw new Error("Recording destination stream is not available.");
+  //       }
 
-      if (audioRef.current) {
-        dispatch(pauseSong()); // Pause music playback
-      }
+  //       // Initialize MediaRecorder
+  //       mediaRecorderRef.current = new MediaRecorder(
+  //         recordingDestination.stream
+  //       );
 
-      // Stop the mic stream (pause the mic)
-      if (micStreamRef.current) {
-        micStreamRef.current.getTracks().forEach((track) => track.stop());
-        micStreamRef.current = null;
-      }
+  //       mediaRecorderRef.current.ondataavailable = (event) => {
+  //         if (event.data.size > 0) {
+  //           chunksRef.current.push(event.data);
+  //         }
+  //       };
 
-      dispatch(isRecording("pause")); // Update Redux state to "pause"
-      console.log("Recording paused, music, and mic paused");
-    } else {
-      console.warn("MediaRecorder not recording");
-    }
-  };
+  //       mediaRecorderRef.current.onstop = async () => {
+  //         const audioBlob = new Blob(chunksRef.current, { type: "audio/wav" });
+  //         const audioUrl = URL.createObjectURL(audioBlob);
+  //         setAudioURL(audioUrl);
+  //         saveToIndexedDB(audioBlob);
+  //       };
+
+  //       mediaRecorderRef.current.start();
+  //       setIsRecording(true);
+
+  //       // Monitor live audio during recording
+  //       monitoringAudio.srcObject = monitoringDestination.stream;
+  //       monitoringAudio.play();
+  //     } else {
+  //       throw new Error("Audio context is not initialized.");
+  //     }
+  //   } catch (err) {
+  //     console.error("Error accessing microphone or system audio:", err);
+  //     // Handle additional cleanup if needed
+  //     dispatch(isRecording(false)); // Reset recording state in case of error
+  //   }
+  // };
+
+  // Helper function to fetch reverb impulse response buffer (optional)
+  async function fetchReverbBuffer(audioContext: AudioContext) {
+    const response = await fetch("/path/to/reverb-impulse-response.wav");
+    const arrayBuffer = await response.arrayBuffer();
+    return await audioContext.decodeAudioData(arrayBuffer);
+  }
 
   // Resume recording, including mic input
   const resumeRecording = async () => {
@@ -235,40 +270,32 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
     }
   };
 
-  const stopRecording = () => {
-    if (
-      getIsRecordingState === true ||
-      getIsRecordingState === "pause" ||
-      getIsRecordingState === "play"
-    ) {
-      dispatch(isRecording(false));
-      dispatch(pauseSong());
-      const mediaElement = audioRef.current;
-      if (mediaElement) {
-        dispatch(pauseSong());
-      }
-
-      dispatch(isRecording(false));
-      if (mediaRecorderRef.current) {
-        mediaRecorderRef.current.stop();
-        monitoringAudio.pause();
-        setIsRecording(false);
-      }
-
-      if (micStreamRef.current) {
-        micStreamRef.current.getTracks().forEach((track) => track.stop());
-        micStreamRef.current = null;
-      }
-    }
-  };
-
   const handleRecordingState = () => {
     if (getIsRecordingState === false) {
       dispatch(isRecording(true));
-      startRecording();
+      startRecording({
+        audioContext,
+        audioRef,
+        chunksRef,
+        dispatch,
+        fetchReverbBuffer,
+        mediaRecorderRef,
+        micStreamRef,
+        monitoringAudio,
+        saveToIndexedDB,
+        setAudioURL,
+        setIsRecording,
+      });
     } else if (getIsRecordingState === true || getIsRecordingState === "play") {
       dispatch(isRecording("pause"));
-      pauseRecording();
+      pauseRecording(
+        mediaRecorderRef,
+        micStreamRef,
+        monitoringAudio,
+        audioRef,
+        dispatch,
+        pauseSong
+      );
     } else {
       dispatch(isRecording("play"));
       resumeRecording();
@@ -333,7 +360,19 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
           }`}
           title="Start recording first."
         >
-          <RadioButton onClick={stopRecording} className="w-6 h-6 text-white" />
+          <RadioButton
+            onClick={() =>
+              stopRecording(
+                mediaRecorderRef,
+                micStreamRef,
+                monitoringAudio,
+                audioRef,
+                dispatch,
+                getIsRecordingState
+              )
+            }
+            className="w-6 h-6 text-white"
+          />
         </div>
       </div>
       <div className="flex items-center text-white max-lg:items-center">
