@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import PlayButtons from "./components/PlayButtons";
@@ -12,6 +12,7 @@ import Volumn from "./components/Volumn";
 import AirPlayButton from "./components/AirPlayButton";
 import RepeatShuffleButton from "./components/ReapetShuffleButton";
 import SongMarquee from "./components/SongMarquee";
+import Image from "next/image";
 
 interface MiniPlayerProps {
   handleNext: () => void;
@@ -89,7 +90,10 @@ MiniPlayerProps) => {
             <div className="lg:flex hidden flex-col justify-end h-full gap-2 lg:gap-[24px]">
               <div className="w-full flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <img
+                  <Image
+                    width={64}
+                    height={64}
+                    style={{width: 'auto', height: 'auto'}}
                     src={artwork ? artwork : placeHolder.src}
                     alt="Album Art"
                     className="w-10 h-10 md:h-16 md:w-16 rounded-lg object-cover"
