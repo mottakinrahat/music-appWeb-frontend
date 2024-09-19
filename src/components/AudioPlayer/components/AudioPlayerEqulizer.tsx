@@ -271,7 +271,7 @@ import { IoCheckmarkSharp } from "react-icons/io5";
 import ReactPlayer from "react-player";
 
 interface EqualizerProps {
-  audioRef?: React.RefObject<ReactPlayer>;
+  audioRef: React.RefObject<ReactPlayer>;
 }
 
 const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({audioRef}) => {
