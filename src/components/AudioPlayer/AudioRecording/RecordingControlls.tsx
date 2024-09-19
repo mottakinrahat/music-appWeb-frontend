@@ -1,5 +1,3 @@
-import RadioButton from "@/components/svg/RadioButton";
-import RecordingSVG from "@/components/svg/RecordingSVG";
 import { useAudio } from "@/lib/AudioProvider";
 import {
   isRecording,
@@ -10,14 +8,10 @@ import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
 import { openDB } from "idb";
 import React, { useEffect, useRef, useState } from "react";
-import { FaCirclePause, FaCirclePlay } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { startRecording } from "./handlers/startRecording";
-import {
-  pauseRecording,
-  resumeRecording,
-  stopRecording,
-} from "./handlers/utilsRecording";
+import { pauseRecording, resumeRecording } from "./handlers/utilsRecording";
+import RecordingControlDesign from "./RecordingControlDesign";
 
 interface RecordingProps {
   songDuration: number | any;
@@ -152,54 +146,18 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
 
   return (
     <div className="absolute bottom-[6.5rem] min-[310px]:bottom-[6.5rem] min-[340px]:bottom-[7rem] min-[347px]:bottom-[6.5rem] min-[370px]:bottom-[5.5rem] min-[420px]:bottom-[5rem] min-[768px]:bottom-[7.5rem] min-[860px]:bottom-[5rem] min-[1024px]:bottom-[10rem] w-full left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 max-lg:gap-2">
-      <div className="flex gap-6 items-center">
-        <div
-          className={`${
-            getSongLink.length > 1 && getIsRecordingState === false
-              ? "cursor-pointer text-white"
-              : "text-[#aaaaaa] cursor-not-allowed"
-          }`}
-          title={
-            getSongLink.length > 1 ? "Play/Pause" : "Start recording first."
-          }
-          onClick={() =>
-            getSongLink.length > 1 &&
-            getIsRecordingState === false &&
-            dispatch(playRecording())
-          }
-        >
-          <button onClick={togglePlayPause} disabled={!recordedUrl}>
-            {isPlaying && playRecord ? (
-              <FaCirclePause className="w-6 h-6" />
-            ) : (
-              <FaCirclePlay className="w-6 h-6" />
-            )}
-          </button>
-        </div>
-        <div title="Recording">
-          <RecordingSVG onClick={handleRecordingState} />
-        </div>
-        <div
-          className={`${
-            getIsRecordingState ? "cursor-pointer" : "cursor-not-allowed"
-          }`}
-          title="Start recording first."
-        >
-          <RadioButton
-            onClick={() =>
-              stopRecording(
-                mediaRecorderRef,
-                micStreamRef,
-                monitoringAudio,
-                audioRef,
-                dispatch,
-                getIsRecordingState
-              )
-            }
-            className="w-6 h-6 text-white"
-          />
-        </div>
-      </div>
+      <RecordingControlDesign
+        audioRef={audioRef}
+        getIsRecordingState={getIsRecordingState}
+        handleRecordingState={handleRecordingState}
+        playRecord={playRecord}
+        togglePlayPause={togglePlayPause}
+        isPlaying={isPlaying}
+        mediaRecorderRef={mediaRecorderRef}
+        micStreamRef={micStreamRef}
+        monitoringAudio={monitoringAudio}
+        getSongLink={getSongLink}
+      />
       <div className="flex items-center text-white max-lg:items-center">
         <p className="">{formatTime(recordingTime)}</p>
         <span className="mx-1"> / </span>
