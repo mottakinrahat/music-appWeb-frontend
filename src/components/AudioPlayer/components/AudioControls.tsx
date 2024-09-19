@@ -195,7 +195,6 @@ interface AudioControlsProps {
   onEnded?: () => void;
   playbackRate?: number;
   volume?: number;
-  src: string;
 }
 
 const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
@@ -205,24 +204,26 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
       (state: RootState) => state.player.audioVolume
     );
     const dispatch = useDispatch();
-    const { setAudioRef, audioRef } = useAudio(); // Assuming this provides a ref
+    const { setAudioRef, audioRef } = useAudio();
 
-    const [songs, setSongs] = useState<
-      { id: number; title: string; url: string }[]
-    >([]);
     const [currentSongUrl, setCurrentSongUrl] = useState<string | null>(null);
 
     useEffect(() => {
-      // Fetch the list of songs from the API
-      fetch("/api/music")
-        .then((res) => res.json())
-        .then((data) => {
-          setSongs(data);
+      // Fetch the song list from the API
+      const fetchMusic = async () => {
+        try {
+          const res = await fetch("/api/music");
+          const data = await res.json();
           if (data.length > 0) {
-            setCurrentSongUrl(data[0].url); // Set the URL of the first song or any default song
+            // Set the src of the first song in the list
+            setCurrentSongUrl(data[0].url);
           }
-        })
-        .catch((err) => console.error(err));
+        } catch (err) {
+          console.error("Failed to fetch music:", err);
+        }
+      };
+
+      fetchMusic();
     }, []);
 
     useEffect(() => {
@@ -239,7 +240,7 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
         {currentSongUrl && (
           <ReactPlayer
             ref={audioRef}
-            url={currentSongUrl} // Use the URL from the state
+            url={currentSongUrl} // Use the dynamically fetched URL from API
             playing={playing}
             volume={volume}
             onDuration={onLoadedMetadata}
@@ -255,3 +256,4 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
 AudioControls.displayName = "AudioControls";
 
 export default AudioControls;
+
