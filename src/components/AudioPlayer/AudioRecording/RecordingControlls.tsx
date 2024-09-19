@@ -21,6 +21,15 @@ interface RecordingProps {
 }
 
 const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
+  const [isRecordingOn, setIsRecording] = useState(false);
+  const [audioURL, setAudioURL] = useState<string | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const micStreamRef = useRef<MediaStream | null>(null);
+  const dispatch = useDispatch();
+  const { audioRef, audioContext, musicSource } = useAudio();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const recordedAudioRef = useRef<HTMLAudioElement | null>(null);
   const recordedUrl = useSelector(
     (state: RootState) => state.karaoke.recordedUrl
   );
@@ -61,14 +70,6 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
       }
     };
   }, [getIsRecordingState]);
-
-  const [isRecordingOn, setIsRecording] = useState(false);
-  const [audioURL, setAudioURL] = useState<string | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
-  const micStreamRef = useRef<MediaStream | null>(null);
-  const dispatch = useDispatch();
-  const { audioRef, audioContext, musicSource } = useAudio();
 
   useEffect(() => {
     if (audioURL) {
@@ -310,9 +311,6 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
     });
     await db.put("audio", { blob });
   };
-
-  const [isPlaying, setIsPlaying] = useState(false);
-  const recordedAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const togglePlayPause = () => {
     if (recordedAudioRef.current) {
