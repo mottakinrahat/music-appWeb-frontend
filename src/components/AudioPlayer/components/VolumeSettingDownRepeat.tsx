@@ -1,19 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-
 import { IoSettingsOutline } from "react-icons/io5";
-
 import { LucideMinimize2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Volumn from "@/components/AudioPlayer/components/Volumn";
-
 import { DropDownBtn } from "@/components/AudioPlayer/components/DropDownBtn";
 import DownloadOffline from "./DownloadOffline";
 import { useDispatch, useSelector } from "react-redux";
 import { handleMinimize } from "@/redux/slice/music/musicAsyncTunk";
 import { AppDispatch, RootState } from "@/redux/store";
 import { PiPlaylistBold } from "react-icons/pi";
-import { useAudio } from "@/lib/AudioProvider";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import AddSVG from "@/components/svg/AddSVG";
 
@@ -51,7 +47,6 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   handleAddToFavorites,
 }) => {
   const router = useRouter();
-  const { audioRef } = useAudio();
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
   const [quality, setQuality] = useState<any>("high");
   const [isEqOn, setEqOn] = useState(false);
@@ -89,30 +84,16 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
 
   // handle playback speed
   const handlePlaybackSpeed = () => {
-    // Displayed values
     const displaySpeedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-    // Actual speed values
-    // const actualSpeedOptions = [0.45, 0.65, 0.8, 1, 1.25, 1.5, 1.75, 2];
-
-    // Find the next index based on the current displayed speed
     const nextIndex =
       (displaySpeedOptions.indexOf(playbackSpeed) + 1) %
       displaySpeedOptions.length;
-
     // Get the new display speed and the actual speed
     const newDisplaySpeed = displaySpeedOptions[nextIndex];
-    // const newActualSpeed = actualSpeedOptions[nextIndex];
-
     // Update the state with the new display speed
     setPlaybackSpeed(newDisplaySpeed);
-
     // Store the actual speed in localStorage
     localStorage.setItem("speed", newDisplaySpeed.toString());
-
-    // Set the actual playback speed in the audio element
-    // if (audioRef.current) {
-    //   audioRef.current.playbackRate = newDisplaySpeed;
-    // }
   };
 
   const dispatch: AppDispatch = useDispatch();
