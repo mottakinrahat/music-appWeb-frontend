@@ -185,7 +185,7 @@
 import { useAudio } from "@/lib/AudioProvider";
 import { RootState } from "@/redux/store";
 import React, { forwardRef, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ReactPlayer from "react-player";
 import { OnProgressProps } from "react-player/base";
 
@@ -207,8 +207,10 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
     const audioVolume = useSelector(
       (state: RootState) => state.player.audioVolume
     );
-    const dispatch = useDispatch();
-    const { setAudioRef, audioRef } = useAudio();
+    const { audioRef } = useAudio();
+    const importedUrl = useSelector(
+      (state: RootState) => state.musicData.fileData
+    );
 
     const [currentSongUrl, setCurrentSongUrl] = useState<string | null>(null);
 
@@ -244,7 +246,7 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
         {currentSongUrl && (
           <ReactPlayer
             ref={audioRef}
-            url={src} // Use the URL from the state
+            url={importedUrl ? importedUrl : currentSongUrl} // Use the URL from the state
             playing={playing}
             volume={audioVolume}
             onDuration={onLoadedMetadata}
@@ -260,4 +262,3 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
 AudioControls.displayName = "AudioControls";
 
 export default AudioControls;
-
