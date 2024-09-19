@@ -195,10 +195,14 @@ interface AudioControlsProps {
   onEnded?: () => void;
   playbackRate?: number;
   volume?: number;
+  src?: string;
 }
 
 const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
-  ({ onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume }, ref) => {
+  (
+    { onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume, src },
+    ref
+  ) => {
     const playing = useSelector((state: RootState) => state.player.playing);
     const audioVolume = useSelector(
       (state: RootState) => state.player.audioVolume
@@ -240,7 +244,7 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
         {currentSongUrl && (
           <ReactPlayer
             ref={audioRef}
-            url={currentSongUrl} // Use the dynamically fetched URL from API
+            url={src} // Use the URL from the state
             playing={playing}
             volume={volume}
             onDuration={onLoadedMetadata}

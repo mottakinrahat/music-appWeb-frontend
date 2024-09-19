@@ -270,16 +270,16 @@ import React, { useRef, useState, useEffect } from "react";
 import { IoCheckmarkSharp } from "react-icons/io5";
 import ReactPlayer from "react-player";
 
-// interface EqualizerProps {
-//   audioRef: React.RefObject<ReactPlayer>;
-// }
+interface EqualizerProps {
+  audioRef?: React.RefObject<ReactPlayer>;
+}
 
-const AudioPlayerEqualizer: React.FC = () => {
+const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({audioRef}) => {
   const gainNodesRef = useRef<GainNode[]>([]);
   const [gains, setGains] = useState<number[]>([]);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
   const [isOn, setIsOn] = useState(false);
-  const { audioContext, audioRef } = useAudio(); // Assuming audioContext is provided by the AudioProvider
+  const { audioContext } = useAudio(); // Assuming audioContext is provided by the AudioProvider
 
   // Frequencies for the equalizer
   const frequencyLabels = [`60Hz`, "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
