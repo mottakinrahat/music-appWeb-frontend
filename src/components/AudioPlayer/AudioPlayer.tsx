@@ -53,8 +53,7 @@ interface AudioPlayerProps {
   play: boolean;
   handleOpenPlayList: () => void;
   handleRandom: () => void;
-  setCurrentSong: (value: any) => void;
-  audioContext: AudioContext;
+  setCurrentSong: (value: any) => void;  
   loading: boolean;
 }
 
@@ -66,11 +65,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   play,
   handleOpenPlayList,
   handleRandom,
-  audioContext,
   loading,
 }) => {
   const audioRef = useRef<ReactPlayer | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
+
 
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [favorite, setFavorite] = useState<boolean>(false);
@@ -88,7 +86,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const isShowLyrics = useSelector(
     (state: RootState) => state.player.showLyric
   );
-
+  const { setAudioRef } = useAudio();
   const userId = userData?._id;
   const importSongUrl = useSelector(
     (state: RootState) => state.musicData.fileData
@@ -105,7 +103,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   } = currentSong;
 
   const isFavouriteUser = currentSong.favUsers.includes(userId);
-  const { setAudioRef } = useAudio();
 
   useEffect(() => {
     setAudioRef(audioRef);
@@ -178,25 +175,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       localStorage.setItem("repeat", repeat);
     }
   }, [currentSong, dispatch, repeat, songData, speed, volume]);
-
-  // useEffect(() => {
-  //   const handleInteraction = () => {
-  //     if (!audioContextRef.current) {
-  //       const audioContext = new (window.AudioContext ||
-  //         (window as any).webkitAudioContext)();
-  //       audioContextRef.current = audioContext;
-  //       onAudioContextReady(audioContext, audioRef.current as ReactPlayer);
-  //     } else if (audioContextRef.current.state === "suspended") {
-  //       audioContextRef.current.resume();
-  //     }
-  //   };
-
-  //   document.addEventListener("click", handleInteraction);
-
-  //   return () => {
-  //     document.removeEventListener("click", handleInteraction);
-  //   };
-  // }, [onAudioContextReady]);
 
   useEffect(() => {
     const storedRepeat = localStorage.getItem(

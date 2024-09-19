@@ -7,21 +7,18 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Playlist from "./components/Playlist";
 import useLocalSongData from "@/hooks/useLocalSongData";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { detectBPM } from "@/utils/bpmdetection";
 import { useAudio } from "@/lib/AudioProvider";
-import ReactPlayer from "react-player";
 
 interface PlayerInterface {
   params?: {
     id: any;
   };
-  play: boolean;
 }
 
-const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   const [playing, setPlaying] = useState<boolean>(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
@@ -29,7 +26,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [eqOpen, setEqOpen] = useState(0);
   const [playlistOpen, setPlaylistOpen] = useState(0);
   const [tracks, setTraks] = useState<any>([]);
-  // resize ref
   const [width, setWidth] = useState(0); // Initial width
   const [listWidth, setListWidth] = useState(0); // Initial width
   const resizingRef = useRef<HTMLDivElement | null>(null);
@@ -38,21 +34,15 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [playListStartX, setPlayListStartX] = useState<number>(0);
   const [startWidth, setStartWidth] = useState<number>(0);
   const [playListWidth, setPlayListWidth] = useState<number>(0);
-
   const importedSong = useSelector((state: RootState) => state.musicData);
   const [bpm, setBpm] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const dispatch = useDispatch();
   const { audioContext: musicContext, audioRef } = useAudio();
-
-  //  Router
   const router = useRouter();
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
-      // e.preventDefault();
-
       // Determine the starting X position and width
       const x =
         e instanceof MouseEvent
@@ -174,11 +164,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     fetchBPM();
   }, [currentSong]);
 
-  // console.log(bpm);
-
   useEffect(() => {
-    setAudioContext(musicContext);
-    // const blobData = new Blob(currentSong.songLink);
     const initialTrackIndex = tracks?.findIndex(
       (track: any) => track?._id === params?.id
     );
@@ -218,7 +204,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const handlePrev = () => {
     if (currentTrackIndex !== null) {
       let newIndex = currentTrackIndex - 1;
-
       if (newIndex < 0) {
         if (repeat === "repeat-all") {
           newIndex = tracks.length - 1;
@@ -226,7 +211,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
           return; // Stop if no repeat is set and we are at the first track.
         }
       }
-
       if (repeat === "shuffle") {
         newIndex = Math.floor(Math.random() * tracks.length);
       }
@@ -236,7 +220,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       if (showPlayer) router.push(`/music/${tracks[newIndex]?._id}`);
     }
   };
-
   // Handles next track
   const handleNext = () => {
     if (currentTrackIndex !== null) {
@@ -360,7 +343,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       <div className="flex z-10 flex-grow relative">
         <div className="flex-1 transition-all">
           <AudioPlayer
-            audioContext={audioContext!}
             play={playing}
             handleNext={handleNext}
             handlePrev={handlePrev}
@@ -370,8 +352,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             handleOpenEqualizer={handleOpenEqualizer}
             handleOpenPlayList={handleOpenPlayList}
             handleRandom={handleRandom}
-            // bpm={bpm!}
-            // error={error}
             loading={loading}
           />
         </div>
