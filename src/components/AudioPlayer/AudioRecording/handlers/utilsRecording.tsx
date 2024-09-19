@@ -47,78 +47,60 @@ export const pauseRecording = (
   }
 };
 
+// Define the function and its parameters
 export const resumeRecording = async (
   mediaRecorderRef: MutableRefObject<MediaRecorder | null>,
   micStreamRef: MutableRefObject<MediaStream | null>,
   monitoringAudio: HTMLAudioElement,
   audioContext: AudioContext | null,
   dispatch: (action: any) => void,
-  musicSource: AudioNode // Ensure `musicSource` is provided as an argument
+  musicSource: AudioNode
 ) => {
   if (mediaRecorderRef.current && mediaRecorderRef.current.state === "paused") {
     // Resume the recording
     mediaRecorderRef.current.resume();
     monitoringAudio.play(); // Resume monitoring audio (voice)
 
-    if (audioContext) {
-      if (audioContext.state === "suspended") {
-        await audioContext.resume();
+    // Resume music playback
+    dispatch(playImport());
+
+    // Restart the mic stream (resume the mic)
+    try {
+      const micStream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+      micStreamRef.current = micStream;
+
+      // Connect mic stream to the audio context and recording again
+      if (audioContext) {
+        const micSource = audioContext.createMediaStreamSource(micStream);
+        const recordingDestination =
+          audioContext.createMediaStreamDestination();
+        micSource.connect(recordingDestination);
+        musicSource.connect(recordingDestination);
+
+        // Create a new MediaRecorder instance
+        const newMediaRecorder = new MediaRecorder(recordingDestination.stream);
+        newMediaRecorder.start(); // Restart recording
+
+        // Update mediaRecorderRef
+        mediaRecorderRef.current = newMediaRecorder;
+
+        monitoringAudio.srcObject = micStream; // Update monitoring audio
+        monitoringAudio.play();
       }
-
-      // Restart the mic stream (resume the mic)
-      try {
-        const micStream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-        });
-        micStreamRef.current = micStream;
-
-        // Connect mic stream to the audio context and recording again
-        if (audioContext) {
-          const micSource = audioContext.createMediaStreamSource(micStream);
-          const recordingDestination =
-            audioContext.createMediaStreamDestination();
-
-          micSource.connect(recordingDestination);
-          musicSource.connect(recordingDestination); // Ensure `musicSource` is connected
-
-          // Initialize a new MediaRecorder instance
-          const newMediaRecorder = new MediaRecorder(
-            recordingDestination.stream
-          );
-
-          // Setup event handlers for the new MediaRecorder instance
-          newMediaRecorder.ondataavailable = (event) => {
-            if (event.data.size > 0) {
-              // Handle the recorded data (e.g., save to a blob or process)
-            }
-          };
-
-          newMediaRecorder.onstop = () => {
-            // Handle the stop event (e.g., finalize recording)
-          };
-
-          // Start recording with the new MediaRecorder instance
-          newMediaRecorder.start();
-
-          // Update the ref to the new MediaRecorder instance
-          mediaRecorderRef.current = newMediaRecorder;
-
-          // Update monitoring audio
-          monitoringAudio.srcObject = micStream;
-          monitoringAudio.play();
-        }
-      } catch (err) {
-        console.error("Error accessing microphone:", err);
-      }
+    } catch (err) {
+      console.error("Error accessing microphone:", err);
     }
 
-    dispatch(playImport()); // Resume music playback
-    dispatch(isRecording("play")); // Update Redux state to "play"
+    // Update Redux state to "play"
+    dispatch(isRecording("play"));
     console.log("Recording resumed, music and mic resumed");
   } else {
-    console.warn("MediaRecorder not paused or not available");
+    console.warn("MediaRecorder not paused");
   }
 };
+
 export const stopRecording = (
   mediaRecorderRef: React.RefObject<MediaRecorder>,
   micStreamRef: MutableRefObject<MediaStream | null>,
