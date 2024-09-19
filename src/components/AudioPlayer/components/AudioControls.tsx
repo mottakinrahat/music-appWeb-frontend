@@ -1,7 +1,7 @@
 import { useAudio } from "@/lib/AudioProvider";
 import { RootState } from "@/redux/store";
 import React, { forwardRef, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ReactPlayer from "react-player";
 import { OnProgressProps } from "react-player/base";
 
