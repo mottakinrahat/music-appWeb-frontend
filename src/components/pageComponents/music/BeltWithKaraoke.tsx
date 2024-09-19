@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import bgImg from "@/assets/images/musicpagebg.png";
 import bgImg2 from "@/assets/etc/banner/Decoration.png";
@@ -7,6 +5,7 @@ import Heading from "@/components/ui/heading";
 import image from "@/assets/images/img.png";
 import LandingMusicCard from "@/components/Card/LandingMusicCard";
 import Link from "next/link";
+import Image from "next/image";
 const BeltWithKaraoke = () => {
   const data = {
     id: 1,
@@ -30,7 +29,11 @@ const BeltWithKaraoke = () => {
       className="relative overflow-hidden sm:bg-fixed py-5 md:py-20 bg-cover sm:bg-auto"
     >
       <div className="container">
-        <img
+        <Image
+          alt=""
+          width={bgImg2.width}
+          height={bgImg2.height}
+          style={{ width: "auto", height: "auto" }}
           className="absolute w-[100%] left-0 sm:w-[48%] sm:left-28 opacity-25 z-10 sm:-top-[20%]"
           src={bgImg2.src}
         />

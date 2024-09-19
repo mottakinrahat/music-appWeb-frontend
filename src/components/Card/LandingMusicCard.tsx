@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
 import placeHolder from "@/assets/etc/png/song.jpg";
 import Link from "next/link";
@@ -8,6 +7,7 @@ import { Button } from "../ui/button";
 import { FaPause, FaPlay } from "react-icons/fa6"; // Import the cross icon
 import { RxCross2 } from "react-icons/rx";
 import CurrentPlayingUsers from "../AudioPlayer/components/CurrentPlayingUsers";
+import Image from "next/image";
 
 interface LandingMusicCardInterface {
   id: any;
@@ -38,7 +38,10 @@ const LandingMusicCard = ({
     <div className="flex justify-between gap-4 py-2 items-center max-w-xl">
       <div className="flex items-center gap-3">
         <div>
-          <img
+          <Image
+            width={64}
+            height={64}
+            style={{ width: "auto", height: "auto" }}
             src={artwork ? artwork : placeHolder.src}
             alt="Album Art"
             className="w-16 h-16 object-cover aspect-square rounded-lg"
@@ -92,9 +95,7 @@ const LandingMusicCard = ({
                   )
                 }
               >
-                <Button
-                  className="rounded-full w-11 h-11"
-                >
+                <Button className="rounded-full w-11 h-11">
                   <FaPlay className="text-3xl" />
                 </Button>
               </Link>
