@@ -12,6 +12,7 @@ import { RootState } from "@/redux/store";
 import { detectBPM } from "@/utils/bpmdetection";
 import { useAudio } from "@/lib/AudioProvider";
 import baseApiHandler from "@/utils/baseApiHandler";
+import Loading from "@/app/(withCommonLayout)/music/loading";
 
 interface PlayerInterface {
   params?: {
@@ -137,7 +138,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
 
   const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
 
-  // if (!currentSong?.songLink) return <Loading />;
   useEffect(() => {
     const fetchBPM = async () => {
       try {
@@ -174,14 +174,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
     setCurrentSong(tracks[initialTrackIndex]);
   }, [musicContext, params?.id, tracks]);
 
-  const songData = useLocalSongData();
-  useEffect(() => {
-    if (currentTrackIndex !== null && songData?.play === true) {
-      setPlaying(true);
-    } else {
-      setPlaying(false);
-    }
-  }, [currentSong, currentTrackIndex, songData?.play]);
   // show controls
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(false);
@@ -297,6 +289,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
     );
   }
 
+  if (!currentSong?.songLink) return <Loading />;
   const screenWidth = window.innerWidth;
   const handleOpenEqualizer = () => {
     if (width <= 0) {

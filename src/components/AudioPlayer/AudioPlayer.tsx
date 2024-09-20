@@ -37,12 +37,13 @@ import {
   toggleRepeat,
 } from "./handlers/audioControls";
 import { handleFavorite } from "./handlers/handleFavorite";
-import { useIsFavouriteMutation } from "@/redux/api/audioPlayerApi";
 import { useAudio } from "@/lib/AudioProvider";
 import RecordingControlls from "./AudioRecording/RecordingControlls";
 import AudioRecordSlider from "./AudioRecording/AudioRecordSlider";
 import { OnProgressProps } from "react-player/base";
 import ReactPlayer from "react-player";
+import baseApiHandler from "@/utils/baseApiHandler";
+import { useIsFavouriteMutation } from "@/redux/api/songApi";
 
 interface AudioPlayerProps {
   id?: any;
@@ -53,7 +54,7 @@ interface AudioPlayerProps {
   play: boolean;
   handleOpenPlayList: () => void;
   handleRandom: () => void;
-  setCurrentSong: (value: any) => void;  
+  setCurrentSong: (value: any) => void;
   loading: boolean;
 }
 
@@ -67,9 +68,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   handleRandom,
   loading,
 }) => {
+  const dispatch = useDispatch();
+  const baseApiUrl = baseApiHandler();
+  const { setAudioRef } = useAudio();
+  const pathname = usePathname();
   const audioRef = useRef<ReactPlayer | null>(null);
-
-
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [favorite, setFavorite] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
@@ -78,20 +81,20 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [playbackSpeed, setPlaybackSpeed] = useState<any>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
   const [userData, setUserData] = useState<any>();
-  const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState<boolean>(false);
   const [currentSong, setCurrentSong] = useState<any>(songData);
   const [userClickedPlay, setUserClickedPlay] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const [currentLyrics, setCurrentLyrics] = useState<string | any>(null);
   const isShowLyrics = useSelector(
     (state: RootState) => state.player.showLyric
   );
-  const { setAudioRef } = useAudio();
+  const isKaroke = useSelector((state: RootState) => state.karaoke.karaoke);
+  const lyricsOn = useSelector((state: RootState) => state.player.showLyric);
   const userId = userData?._id;
   const importSongUrl = useSelector(
     (state: RootState) => state.musicData.fileData
   );
-
+  const isFavouriteUser = currentSong.favUsers.includes(userId);
   const {
     songName,
     bpm,
@@ -101,29 +104,20 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     songAlbum,
     _id: songId,
   } = currentSong;
-
-  const isFavouriteUser = currentSong.favUsers.includes(userId);
-
   useEffect(() => {
     setAudioRef(audioRef);
     setFavorite(isFavouriteUser);
-
     const user = localStorage.getItem("user");
     if (user) {
       setUserData(JSON.parse(user));
     }
   }, [currentSong.favUsers, userId, isFavouriteUser, setAudioRef]);
 
-  const [currentLyrics, setCurrentLyrics] = useState<string | any>(null);
-
-  const isKaroke = useSelector((state: RootState) => state.karaoke.karaoke);
-  const lyricsOn = useSelector((state: RootState) => state.player.showLyric);
-
   useEffect(() => {
     const getLyrics = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/songs/${songData._id}/${currentTime}`
+          `${baseApiUrl}/songs/${songData?._id}/${currentTime}`
         );
         if (response.status === 404) {
           setCurrentLyrics(null);
@@ -134,7 +128,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (lyricsOn && !importSongUrl) {
       getLyrics();
     }
-  }, [currentTime, songData._id, karaokeOn, lyricsOn, importSongUrl]);
+  }, [
+    currentTime,
+    songData?._id,
+    karaokeOn,
+    lyricsOn,
+    importSongUrl,
+    baseApiUrl,
+  ]);
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
@@ -200,7 +201,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         "songData",
         JSON.stringify({ play: true, id: songId })
       );
-      dispatch(playSong(songId));
     } else if (!playing && songId) {
       localStorage.setItem(
         "songData",

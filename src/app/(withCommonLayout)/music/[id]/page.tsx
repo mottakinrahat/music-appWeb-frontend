@@ -1,72 +1,39 @@
 "use client";
-import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
-import useLocalSongData from "@/hooks/useLocalSongData";
-import axios from "axios";
+
+import { RootState } from "@/redux/store";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import Loading from "../loading"; // Assuming you have a loading component
 
 interface PlayerInterface {
   params?: {
-    id: any;
+    id: string | undefined;
   };
 }
 
 const Player: React.FC<PlayerInterface> = ({ params }) => {
-  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
-    null
-  );
-  // const [eqOpen, setEqOpen] = useState(false);
-  const [tracks, setTracks] = useState<any>([]);
-  const [currentSong, setCurrentSong] = useState<any>(null);
+  const playing = useSelector((state: RootState) => state.player.playing);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  // Fetch tracks on mount
   useEffect(() => {
-    axios
-      .get("https://music-app-web.vercel.app/api/v1/songs")
-      .then((response) => {
-        setTracks(response.data.data.songs);
-      })
-      .catch((error) => {
-        console.error("Error fetching tracks:", error);
-      });
-  }, []);
+    // Check if both playing and songId are available
+    const songId = params?.id;
 
-  // Set the current track based on params.id
-  useEffect(() => {
-    if (tracks.length > 0 && params?.id) {
-      const initialTrackIndex = tracks.findIndex(
-        (track: any) => track._id === params?.id
+    if (songId && typeof playing !== "undefined") {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ play: playing, id: songId })
       );
-
-      if (initialTrackIndex !== -1) {
-        setCurrentTrackIndex(initialTrackIndex);
-        setCurrentSong(tracks[initialTrackIndex]);
-
-        // Ensure the song data is set in localStorage
-        const storedSongData = localStorage.getItem("songData");
-        let songData;
-
-        try {
-          songData = JSON.parse(storedSongData!);
-        } catch (error) {
-          songData = null;
-        }
-      }
+      setIsDataLoaded(true); // Mark as loaded once localStorage is set
     }
-  }, [params?.id, tracks]);
+  }, [params?.id, playing]);
 
-  // Synchronize play state with localStorage data
-  const songData = useLocalSongData();
-
-  // Display loading animation if current song is not set
-  if (!currentSong) {
-    return (
-      <div>
-        <LoadingAnimation />
-      </div>
-    );
+  if (!isDataLoaded) {
+    // Display a loading spinner or some placeholder content
+    return <Loading />;
   }
 
-  return <div>{/* Your player UI goes here */}</div>;
+  return null; // Return nothing if localStorage is set
 };
 
 export default Player;

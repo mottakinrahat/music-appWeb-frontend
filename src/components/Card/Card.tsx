@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import playBtn from "@/assets/icons/play_circle.png";
 import Link from "next/link";
@@ -13,6 +13,7 @@ import { initDB } from "@/utils/initDB";
 import { RootState } from "@/redux/store";
 import { useAudio } from "@/lib/AudioProvider";
 import { Skeleton } from "../ui/skeleton";
+import CardLoading from "../common/loading/CardLoading";
 
 interface BaseCard {
   type: string;
@@ -25,6 +26,7 @@ interface BaseCard {
   albumRouteLink?: string;
   freelancerType?: string;
   freelancerName?: string;
+  refetch?: () => void;
 }
 
 interface MusicCard extends BaseCard {
@@ -56,6 +58,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   isFavourite,
   album,
   albumRouteLink,
+  refetch,
 }) => {
   const location = usePathname();
   const dispatch = useDispatch();
@@ -73,13 +76,12 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
     await tx.done;
     dispatch(clearMusicData()); // Dispatch Redux action to clear music data
   };
+  const { audioContext, audioRef } = useAudio();
   const handleDeleteSong = async () => {
     await deleteExistingSongFromIndexedDB();
     dispatch(clearMusicData());
     toast.success("Imported song removed.");
   };
-
-  const { audioContext, audioRef } = useAudio();
 
   const handleSetIdtoLocalStorage = () => {
     // Store the song ID and play state in localStorage
@@ -96,11 +98,11 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
       if (audioContext && audioContext.state === "suspended") {
         audioContext.resume().then(() => {
           if (audioRef?.current) {
-            dispatch(playImport());
+            dispatch(playSong(musicId));
           }
         });
       } else if (audioRef?.current) {
-        dispatch(playImport());
+        dispatch(playSong(musicId));
       }
     }
 
@@ -110,118 +112,119 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   };
 
   return (
-    <div
-      className={`rounded-lg mx-auto max-w-md ${className ? className : ""}`}
-    >
-      {/* Image Container */}
-      <div className="relative w-fit drop-shadow  mb-4">
-        {imageUrl ? (
-          <div className="rounded-xl flex w-full h-full relative cursor-pointer overflow-hidden group">
-            {imgloading && (
-              <Skeleton
-                className="w-full rounded-lg"
-                style={{
-                  aspectRatio: "1 / 1",
-                  objectFit: "cover",
-                  width: "100%",
-                  height: "280px",
-                }}
-              />
-            )}
-            <Image
-              priority
-              src={imageUrl}
-              alt={title || "Card image"}
-              width={280}
-              height={280}
-              style={{
-                width: "280px",
-                height: "auto",
-                aspectRatio: "1 / 1",
-                objectFit: "cover",
-              }}
-              className="rounded-lg"
-              onLoad={() => setImgLoading(false)}
-            />
+    <>
+      {!imageUrl ? (
+        <CardLoading />
+      ) : (
+        <div
+          className={`rounded-lg mx-auto max-w-md ${
+            className ? className : ""
+          }`}
+        >
+          {/* Image Container */}
+          <div className="relative w-fit drop-shadow  mb-4">
+            {imageUrl ? (
+              <div className="rounded-xl flex w-full h-full relative cursor-pointer overflow-hidden group">
+                <Image
+                  priority
+                  src={imageUrl}
+                  alt={title || "Card image"}
+                  width={280}
+                  height={280}
+                  style={{
+                    width: "280px",
+                    height: "auto",
+                    aspectRatio: "1 / 1",
+                    objectFit: "cover",
+                  }}
+                  className="rounded-lg"
+                  onLoad={() => setImgLoading(false)}
+                />
 
-            <Link
-              onClick={handleSetIdtoLocalStorage}
-              href={musicId ? `/music/${musicId}` : "/"}
-            >
-              <div className="absolute inset-0 rounded-xl bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                <Link
+                  onClick={handleSetIdtoLocalStorage}
+                  href={musicId ? `/music/${musicId}` : "/"}
+                >
+                  <div className="absolute inset-0 rounded-xl bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                    {type !== "freelancer" && (
+                      <Image
+                        priority
+                        src={playBtn}
+                        alt={playBtn.src || "Card image"}
+                        width={100}
+                        height={100}
+                        style={{ width: "40px", height: "40px" }}
+                        className="rounded-lg"
+                      />
+                    )}
+                  </div>
+                </Link>
                 {type !== "freelancer" && (
-                  <Image
-                    priority
-                    src={playBtn}
-                    alt={playBtn.src || "Card image"}
-                    width={100}
-                    height={100}
-                    style={{ width: "40px", height: "40px" }}
-                    className="rounded-lg"
-                  />
+                  <div className="absolute w-10 h-10 sm:w-12 sm:h-12 flex justify-center items-center bg-black/10 backdrop-blur-sm  rounded-md sm:rounded-lg top-2 right-2 sm:top-4 sm:right-4">
+                    <button
+                      className="text-background text-xl"
+                      aria-label="Mark as favorite"
+                    >
+                      {isFavourite ? (
+                        <FaHeart className="text-accent" />
+                      ) : (
+                        <FaRegHeart />
+                      )}
+                    </button>
+                  </div>
                 )}
               </div>
-            </Link>
-            {type !== "freelancer" && (
-              <div className="absolute w-10 h-10 sm:w-12 sm:h-12 flex justify-center items-center backdrop-blur-sm bg-white/10 rounded-md sm:rounded-lg top-2 right-2 sm:top-4 sm:right-4">
-                <button
-                  className="text-background text-xl"
-                  aria-label="Mark as favorite"
+            ) : (
+              <div className="h-full w-full bg-gray-200  flex items-center justify-center">
+                No Image
+              </div>
+            )}
+          </div>
+
+          {/* Card Content */}
+          <div className="">
+            {title && (
+              <Link href={musicId ? `/music/${musicId}` : "/"} className="">
+                <h2 className="text-xl lg:text-2xl sm:text-2xl text-textPrimary hover:text-textSecondary cursor-pointer font-semibold mb-2">
+                  {title.length > 22 ? `${title.slice(0, 20)}...` : title}
+                </h2>
+              </Link>
+            )}
+            {artistName && (
+              <p className="text-sm text-textPrimary hover:text-textSecondary">
+                {artistName}
+              </p>
+            )}
+
+            {album && (
+              <p className="text-sm text-textPrimary hover:text-textSecondary ">
+                Album:{" "}
+                <Link
+                  href={albumRouteLink ? albumRouteLink : "/"}
+                  className="underline"
                 >
-                  {isFavourite ? <FaHeart /> : <FaRegHeart />}
-                </button>
-              </div>
+                  {album}
+                </Link>
+              </p>
+            )}
+            {type === "freelancer" && freelancerType && (
+              <p>
+                {rating !== undefined && (
+                  <div className="mt-2  text-xl sm:text-2xl">
+                    <span className="text-yellow-500">★</span>
+                    <span className="ml-1 text-sm">{rating}</span>
+                  </div>
+                )}
+                <p className="text-xl text-textSecondary font-semibold">
+                  {freelancerName}
+                </p>
+                <p className="text-base text-textPrimary ">{freelancerType}</p>
+              </p>
             )}
           </div>
-        ) : (
-          <div className="h-full w-full bg-gray-200  flex items-center justify-center">
-            No Image
-          </div>
-        )}
-      </div>
-
-      {/* Card Content */}
-      <div className="">
-        {title && (
-          <Link href={musicId ? `/music/${musicId}` : "/"} className="">
-            <h2 className="text-xl lg:text-2xl sm:text-2xl text-textPrimary hover:text-textSecondary cursor-pointer font-semibold mb-2">
-              {title.length > 22 ? `${title.slice(0, 22)}...` : title}
-            </h2>
-          </Link>
-        )}
-        {artistName && (
-          <p className="text-sm text-textPrimary hover:text-textSecondary">
-            {artistName}
-          </p>
-        )}
-
-        {album && (
-          <p className="text-sm text-textPrimary hover:text-textSecondary ">
-            Album:{" "}
-            <Link
-              href={albumRouteLink ? albumRouteLink : "/"}
-              className="underline"
-            >
-              {album}
-            </Link>
-          </p>
-        )}
-        {type === "freelancer" && freelancerType && (
-          <>
-            {rating !== undefined && (
-              <div className="mt-2  text-xl sm:text-2xl">
-                <span className="text-yellow-500">★</span>
-                <span className="ml-1 text-sm">{rating}</span>
-              </div>
-            )}
-            <p className="text-xl text-textSecondary font-semibold">
-              {freelancerName}
-            </p>
-            <p className="text-base text-textPrimary ">{freelancerType}</p>
-          </>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 
