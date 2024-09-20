@@ -12,7 +12,7 @@ const audioPlayerApi = baseApi.injectEndpoints({
       providesTags: ["allSongs"],
     }),
 
-    isFavourite: build.mutation({
+    isFavouriteUser: build.mutation({
       query: ({
         songId,
         userId,
@@ -26,7 +26,7 @@ const audioPlayerApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["Favorite"],
+      invalidatesTags: ["Favorite", "allSongs"],
     }),
     getFavourite: build.query({
       query: ({
@@ -67,7 +67,7 @@ const audioPlayerApi = baseApi.injectEndpoints({
 
 export const {
   useAllSongQuery,
-  useIsFavouriteMutation,
+  useIsFavouriteUserMutation,
   useAddToPlayListMutation,
   useCreatePlayListMutation,
   useGetFavouriteQuery,

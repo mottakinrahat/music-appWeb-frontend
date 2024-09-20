@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import placeHolder from "@/assets/etc/png/song.jpg";
+
 import LyricsIcon from "@/assets/icons/lyrics.svg";
 import { formatTime } from "@/utils/FormatTime";
 import AudioControls from "./components/AudioControls";
@@ -43,7 +43,8 @@ import AudioRecordSlider from "./AudioRecording/AudioRecordSlider";
 import { OnProgressProps } from "react-player/base";
 import ReactPlayer from "react-player";
 import baseApiHandler from "@/utils/baseApiHandler";
-import { useIsFavouriteMutation } from "@/redux/api/songApi";
+import { useIsFavouriteUserMutation } from "@/redux/api/songApi";
+
 
 interface AudioPlayerProps {
   id?: any;
@@ -253,7 +254,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
-  const [isFavourite] = useIsFavouriteMutation();
+  const [isFavouriteFn] = useIsFavouriteUserMutation();
 
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
@@ -267,15 +268,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     } else {
       setFavorite((prev: boolean) => !prev);
       handleFavorite(
-        isFavourite,
+        isFavouriteFn,
         favorite,
         songId, // songId
         userId, // userId
         playListData,
         artwork, // Replace with dynamic artwork URL
         songName,
-        { albumName: songAlbum }, // Replace with dynamic album name
-        { src: placeHolder.src } // Replace with dynamic placeholder URL
       );
     }
   };

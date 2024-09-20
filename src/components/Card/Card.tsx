@@ -1,19 +1,20 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";  
 import Image from "next/image";
 import playBtn from "@/assets/icons/play_circle.png";
 import Link from "next/link";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { playImport, playSong } from "@/redux/slice/music/musicActionSlice";
+import { playSong } from "@/redux/slice/music/musicActionSlice";
 import { toast } from "sonner";
 import { clearMusicData } from "@/redux/slice/music/musicDataSlice";
 import { initDB } from "@/utils/initDB";
 import { RootState } from "@/redux/store";
 import { useAudio } from "@/lib/AudioProvider";
-import { Skeleton } from "../ui/skeleton";
 import CardLoading from "../common/loading/CardLoading";
+import { handleFavorite } from "../AudioPlayer/handlers/handleFavorite";
+import { useIsFavouriteUserMutation } from "@/redux/api/songApi";
 
 interface BaseCard {
   type: string;
@@ -58,12 +59,11 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   isFavourite,
   album,
   albumRouteLink,
-  refetch,
 }) => {
   const location = usePathname();
   const dispatch = useDispatch();
   const importedSong = useSelector((state: RootState) => state.musicData);
-  const [imgloading, setImgLoading] = useState(true);
+  const [favorite, setFavorite] = useState<boolean>(false);
 
   const deleteExistingSongFromIndexedDB = async () => {
     const db = await initDB("MusicDB", 1, "songs");
@@ -81,6 +81,29 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
     await deleteExistingSongFromIndexedDB();
     dispatch(clearMusicData());
     toast.success("Imported song removed.");
+  };
+
+  const [isFavouriteFn] = useIsFavouriteUserMutation();
+
+  const handleAddtoFavourite = async () => {
+    const user = JSON.parse(localStorage?.getItem("user")!);
+    const userId = user?._id;
+    const playListData = {
+      userId: userId,
+    };
+    if (!userId) {
+      toast.warning("Please login first!");
+    } else {
+      handleFavorite(
+        isFavouriteFn,
+        favorite,
+        musicId ? musicId : "", // songId
+        userId, // userId
+        playListData.userId,
+        imageUrl, // Replace with dynamic artwork URL
+        title ? title : "" // Replace with dynamic placeholder URL
+      );
+    }
   };
 
   const handleSetIdtoLocalStorage = () => {
@@ -138,7 +161,6 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
                     objectFit: "cover",
                   }}
                   className="rounded-lg"
-                  onLoad={() => setImgLoading(false)}
                 />
 
                 <Link
@@ -160,8 +182,9 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
                   </div>
                 </Link>
                 {type !== "freelancer" && (
-                  <div className="absolute w-10 h-10 sm:w-12 sm:h-12 flex justify-center items-center bg-black/10 backdrop-blur-sm  rounded-md sm:rounded-lg top-2 right-2 sm:top-4 sm:right-4">
+                  <div className="absolute w-10 h-10 sm:w-12 sm:h-12 flex justify-center items-center hover:bg-black/20 transition-colors bg-black/10 backdrop-blur-sm  rounded-md sm:rounded-lg top-2 right-2 sm:top-4 sm:right-4">
                     <button
+                      onClick={handleAddtoFavourite}
                       className="text-background text-xl"
                       aria-label="Mark as favorite"
                     >
