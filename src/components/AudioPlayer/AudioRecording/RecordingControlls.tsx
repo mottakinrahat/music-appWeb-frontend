@@ -157,6 +157,7 @@ const RecordingControlls: React.FC<RecordingProps> = ({ songDuration }) => {
         micStreamRef={micStreamRef}
         monitoringAudio={monitoringAudio}
         getSongLink={getSongLink}
+        recordedUrl={recordedUrl}
       />
       <div className="flex items-center text-white max-lg:items-center">
         <p className="">{formatTime(recordingTime)}</p>

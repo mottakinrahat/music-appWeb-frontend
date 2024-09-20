@@ -6,11 +6,7 @@ import Link from "next/link";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  pauseSong,
-  playImport,
-  playSong,
-} from "@/redux/slice/music/musicActionSlice";
+import { playImport, playSong } from "@/redux/slice/music/musicActionSlice";
 import { toast } from "sonner";
 import { clearMusicData } from "@/redux/slice/music/musicDataSlice";
 import { initDB } from "@/utils/initDB";
@@ -123,11 +119,11 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
           <div className="rounded-xl flex w-full h-full relative cursor-pointer overflow-hidden group">
             {imgloading && (
               <Skeleton
-                className="w-full h-full rounded-lg"
+                className="w-full rounded-lg"
                 style={{
                   aspectRatio: "1 / 1",
                   objectFit: "cover",
-                  width: "280px",
+                  width: "100%",
                   height: "280px",
                 }}
               />
@@ -155,6 +151,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
               <div className="absolute inset-0 rounded-xl bg-black flex justify-center items-center bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
                 {type !== "freelancer" && (
                   <Image
+                    priority
                     src={playBtn}
                     alt={playBtn.src || "Card image"}
                     width={100}

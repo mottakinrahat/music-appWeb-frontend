@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { detectBPM } from "@/utils/bpmdetection";
 import { useAudio } from "@/lib/AudioProvider";
+import baseApiHandler from "@/utils/baseApiHandler";
 
 interface PlayerInterface {
   params?: {
@@ -40,6 +41,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   const [error, setError] = useState<string | null>(null);
   const { audioContext: musicContext, audioRef } = useAudio();
   const router = useRouter();
+  const apiUrl = baseApiHandler();
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
@@ -130,10 +132,8 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   };
 
   useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/songs`)
-      .then((data) => setTraks(data.data.data.songs));
-  }, []);
+    axios.get(`${apiUrl}/songs`).then((data) => setTraks(data.data.data.songs));
+  }, [apiUrl]);
 
   const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
 
