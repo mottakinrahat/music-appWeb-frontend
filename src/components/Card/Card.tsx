@@ -208,7 +208,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
               </p>
             )}
             {type === "freelancer" && freelancerType && (
-              <p>
+              <>
                 {rating !== undefined && (
                   <div className="mt-2  text-xl sm:text-2xl">
                     <span className="text-yellow-500">★</span>
@@ -219,7 +219,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
                   {freelancerName}
                 </p>
                 <p className="text-base text-textPrimary ">{freelancerType}</p>
-              </p>
+              </>
             )}
           </div>
         </div>
