@@ -7,20 +7,30 @@ import ToggleMenu from "./ToggleMenu";
 import Link from "next/link";
 import AlertCard from "@/components/Card/AlertCard";
 import ToastCard from "@/components/Card/ToastCard";
-import { Toaster } from "@/components/ui/sonner";
 import { MdOutlineCancel } from "react-icons/md";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { usePathname } from "next/navigation";
 
 interface NavInterface {
-  blur?: boolean; // blur the background image? default is false.
+  blur?: boolean;
 }
 
 const Navbar = ({ blur = false }: NavInterface) => {
+  const [blurNav, setBlurNav] = useState(true);
+  const pathname = usePathname();
   const [user, setUser] = useState(null);
 
-  const musicData = useSelector((state: RootState) => state.musicData);
+  const [showNav, setShowNav] = useState(false);
+
+  useEffect(() => {
+    if (pathname.startsWith("/music/")) {
+      setShowNav(true);
+    } else if (pathname.startsWith("/offline")) {
+      setShowNav(true);
+    } else {
+      setShowNav(false);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -45,6 +55,16 @@ const Navbar = ({ blur = false }: NavInterface) => {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
+
+  useEffect(() => {
+    if (pathname.startsWith("/music/")) {
+      setBlurNav(true);
+    } else if (pathname.startsWith("/offline/")) {
+      setBlurNav(true);
+    } else {
+      setBlurNav(false);
+    }
+  }, [pathname]);
 
   const [isAlertOpen, setAlertOpen] = useState(false);
 
@@ -77,21 +97,27 @@ const Navbar = ({ blur = false }: NavInterface) => {
   return (
     <nav
       className={`${
-        blur ? "bg-white/10 fixed  z-[9999] w-full text-white" : "bg-navigation"
+        showNav || blur
+          ? "bg-white/10 fixed  z-[99] w-full text-white"
+          : "bg-navigation"
       } h-16 md:h-20 lg:h-24 flex items-center`}
     >
       <div
         className={`${
-          blur ? "md:p-10 p-4  xl:px-[120px]" : "container"
+          blur || showNav ? "md:p-10 p-4 z-10  xl:px-[120px]" : "container"
         } w-full flex justify-between flex-wrap items-center`}
       >
         <div className="">
           <Logo />
         </div>
         <div>
-          <ul className={`flex gap-10 ${blur ? "text-white z-40" : "text-base"} max-lg:hidden`}>
+          <div
+            className={`flex gap-10 ${
+              blur || showNav ? "text-white z-40" : "text-base"
+            } max-lg:hidden`}
+          >
             <Routes />
-          </ul>
+          </div>
         </div>
         <div className="max-lg:hidden">
           {!user ? (
@@ -104,8 +130,13 @@ const Navbar = ({ blur = false }: NavInterface) => {
             </Button>
           )}
         </div>
-        <div className="lg:hidden">
-          <ToggleMenu blur={blur} />
+        <div className="lg:hidden ">
+          <ToggleMenu
+            showNav={showNav}
+            handleLogout={handleLogout}
+            user={user}
+            blur={blur}
+          />
         </div>
       </div>
 

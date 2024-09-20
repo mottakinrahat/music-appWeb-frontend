@@ -14,7 +14,14 @@ interface PlansCardProps {
   billingCycle: string;
 }
 
-const PlansCard: React.FC<PlansCardProps> = ({ features, saving, popular = false, title, price, billingCycle }) => {
+const PlansCard: React.FC<PlansCardProps> = ({
+  features,
+  saving,
+  popular = false,
+  title,
+  price,
+  billingCycle,
+}) => {
   // Function to handle the next page
   const router = useRouter();
   const nextPageData = { title, price, billingCycle };
@@ -29,7 +36,9 @@ const PlansCard: React.FC<PlansCardProps> = ({ features, saving, popular = false
       <div className="grid grid-rows-[auto_1fr_auto] p-6 items-start gap-6 rounded-xl border border-[#E6E6E6] bg-[#F7F7F7] min-h-[482px] ">
         <div>
           <div className="flex items-center justify-between">
-            <h2 className="text-[#262626] text-2xl font-semibold leading-normal">{title}</h2>
+            <h2 className="text-[#262626]  text-xl sm:text-2xl font-semibold leading-normal">
+              {title}
+            </h2>
             {popular && (
               <p className="flex p-[8px_24px] w-[150px] justify-center items-center gap-2 rounded-full bg-[rgba(217,17,141,0.08)] text-[#D9118D] text-base font-semibold leading-normal">
                 Popular
@@ -50,7 +59,9 @@ const PlansCard: React.FC<PlansCardProps> = ({ features, saving, popular = false
           {features.map((feature, index) => (
             <div key={index} className="flex items-center gap-2">
               <FaCheck className="text-[#00E45B]" />
-              <p className="text-[#262626] text-base font-normal leading-normal tracking-[-0.32px]">{feature}</p>
+              <p className="text-[#262626] text-base font-normal leading-normal tracking-[-0.32px]">
+                {feature}
+              </p>
             </div>
           ))}
         </div>

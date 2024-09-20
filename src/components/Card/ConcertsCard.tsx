@@ -3,7 +3,6 @@ import Link from "next/link";
 import React from "react";
 import { FaRegBell } from "react-icons/fa";
 import { FaBell } from "react-icons/fa6";
-import { GoLocation } from "react-icons/go";
 import { Url } from "url";
 
 interface ConcertCardInterface {
@@ -22,7 +21,11 @@ const ConcertsCard: React.FC<ConcertCardInterface> = ({
   isNotify,
 }) => {
   return (
-    <div className={`rounded-lg w-full max-w-md ${className ? className : ""}`}>
+    <div
+      className={`rounded-lg w-full mx-auto max-w-md ${
+        className ? className : ""
+      }`}
+    >
       {/* Image Container */}
       <div className="relative w-fit drop-shadow  mb-4">
         {imageUrl ? (
@@ -61,7 +64,9 @@ const ConcertsCard: React.FC<ConcertCardInterface> = ({
       {/* Card Content */}
 
       <div>
-        <h2 className="text-2xl flex-1 font-semibold mb-2">{title}</h2>
+        <h2 className=" text-xl sm:text-2xl flex-1 font-semibold mb-2">
+          {title}
+        </h2>
         <div className="text-textPrimary text-base ">January 4, 5 p.m. PT</div>
       </div>
     </div>

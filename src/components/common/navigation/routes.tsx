@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-// import path from "path";
 import React from "react";
 
 const Routes = () => {
@@ -13,6 +12,7 @@ const Routes = () => {
     { route: "/sounds", name: "Sounds" },
     { route: "/talents", name: "Talents" },
     { route: "/vr-concerts", name: "VR Concerts" },
+    { route: "/offline", name: "Offline Downloads" },
   ];
 
   return routes.map((route, idx) => (

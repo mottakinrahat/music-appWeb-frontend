@@ -1,0 +1,19 @@
+# Modern browsers with wider coverage
+> 0.5%
+last 5 versions
+not dead
+Safari >= 10
+iOS >= 10
+Chrome >= 60
+Firefox >= 50
+Edge >= 18
+Opera >= 50
+Samsung >= 10.1
+Android >= 7.0
+
+# Explicit support for older versions
+Safari >= 9
+Chrome >= 49
+Firefox >= 45
+Opera >= 42
+Edge >= 16

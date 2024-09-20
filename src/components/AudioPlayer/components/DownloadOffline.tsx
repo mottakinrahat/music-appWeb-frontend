@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { LucideDownload, LucideCheckCircle } from "lucide-react"; // Import an additional icon
+import { LucideDownload, LucideCheckCircle } from "lucide-react";
 import { openDB } from "idb";
 import { toast } from "sonner";
 
@@ -33,7 +33,15 @@ const checkIfSongExists = async (songName: string) => {
 };
 
 // Function to save the song data to IndexedDB
-const saveSongToIndexedDB = async (songUrl: string, songName: string) => {
+const saveSongToIndexedDB = async (
+  songUrl: string,
+  songName: string,
+  artwork: string,
+  songAlbum: string,
+  songArtist: string,
+  onProgress: (percentage: number) => void,
+  onCancel: () => boolean
+) => {
   try {
     const songExists = await checkIfSongExists(songName);
 
@@ -42,35 +50,76 @@ const saveSongToIndexedDB = async (songUrl: string, songName: string) => {
       return; // Exit the function if the song already exists
     }
 
-    // console.log(`Fetching song from URL: ${songUrl}`);
     const response = await fetch(songUrl);
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const blob = await response.blob(); // Convert the response to a Blob object
-    // console.log(`Blob received with size: ${blob.size} bytes`);
+    const reader = response.body?.getReader();
+    const contentLength = +response.headers.get("Content-Length")!; // Get the content length
+    let receivedLength = 0;
+    const chunks = [];
 
+    while (true) {
+      const { done, value } = await reader?.read()!;
+      if (done || onCancel()) break;
+
+      chunks.push(value);
+      receivedLength += value.length;
+
+      const percentage = Math.round((receivedLength / contentLength) * 100);
+      onProgress(percentage); // Update progress
+    }
+
+    if (onCancel()) {
+      toast("Download canceled.");
+      return;
+    }
+
+    const blob = new Blob(chunks);
     const db = await initDB();
+
     // Save the song Blob to IndexedDB
-    await db.put("offlineSongs", { name: songName, data: blob });
+    await db.put("offlineSongs", {
+      name: songName,
+      data: blob,
+      artwork,
+      songAlbum,
+      songArtist,
+    });
+
     toast.success(`${songName} downloaded successfully.`);
   } catch (error) {
     console.error("Failed to save the song:", error);
+    toast.error("Download failed.");
   }
 };
 
 interface DownloadButtonProps {
   songUrl: string;
   songName: string;
+  artwork: string;
+  songId: number;
+  songAlbum: string;
+  songArtist: string;
 }
 
 const DownloadOffline: React.FC<DownloadButtonProps> = ({
   songUrl,
   songName,
+  artwork,
+  songAlbum,
+  songArtist,
+  songId,
 }) => {
   const [isDownloaded, setIsDownloaded] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentDownloadId, setCurrentDownloadId] = useState<number | null>(
+    null
+  );
+  const [progress, setProgress] = useState<number>(0);
+  const [isCanceled, setIsCanceled] = useState<boolean>(false);
 
   useEffect(() => {
     const checkDownloadStatus = async () => {
@@ -85,21 +134,70 @@ const DownloadOffline: React.FC<DownloadButtonProps> = ({
     if (isDownloaded) {
       toast.warning(`${songName} already exists in offline download.`);
     } else {
-      saveSongToIndexedDB(songUrl, songName).then(() => setIsDownloaded(true));
+      setIsLoading(true);
+      setCurrentDownloadId(songId);
+      setIsCanceled(false);
+      setProgress(0);
+
+      const onCancel = () => isCanceled;
+      const onProgress = (percentage: number) => setProgress(percentage);
+
+      saveSongToIndexedDB(
+        songUrl,
+        songName,
+        artwork,
+        songAlbum,
+        songArtist,
+        onProgress,
+        onCancel
+      )
+        .then(() => {
+          if (!isCanceled) {
+            setIsDownloaded(true);
+            setIsLoading(false);
+            setCurrentDownloadId(null);
+            setProgress(100);
+          }
+        })
+        .catch(() => {
+          setIsLoading(false);
+          setCurrentDownloadId(null);
+          setProgress(0);
+        });
+    }
+  };
+
+  const handleCancelDownload = () => {
+    if (isLoading && currentDownloadId === songId) {
+      setIsCanceled(true);
+      setIsLoading(false);
+      setCurrentDownloadId(null);
+      setProgress(0);
     }
   };
 
   return (
     <a
-      onClick={handleDownload}
-      className="cursor-pointer"
+      onClick={
+        isLoading && currentDownloadId === songId
+          ? handleCancelDownload
+          : handleDownload
+      }
+      className="cursor-pointer relative"
       role="button"
       aria-label={`Download ${songName}`}
     >
       {isDownloaded ? (
-        <LucideCheckCircle className="text-white text-2xl" />
+        <LucideCheckCircle className="text-white  p-[2px] sm:p-0 text-xl sm:text-2xl" />
+      ) : isLoading && currentDownloadId === songId ? (
+        <div className="relative flex items-center justify-center">
+          <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          <span className="absolute text-white text-[10px] sm:text-xs">
+            {progress}%
+          </span>
+        </div>
       ) : (
-        <LucideDownload className="active:text-accent group-hover:text-accent transition hover:text-accent text-white focus-within:text-accent focus:text-accent focus-visible:text-accent text-2xl" />
+        <LucideDownload className="active:text-accent group-hover:text-accent transition hover:text-accent text-white focus-within:text-accent focus:text-accent focus-visible:text-accent  p-[2px] sm:p-0 sm:text-2xl" />
       )}
     </a>
   );

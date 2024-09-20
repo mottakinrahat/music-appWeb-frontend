@@ -25,7 +25,7 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
   };
   // console.log(tracks);
   return (
-    <div className="p-2 min-w-0 bg-white  overflow-hidden lg:p-6 xl:p-8">
+    <div className="p-2 min-w-0 bg-white  overflow-hidden z-50 lg:p-6 xl:p-8">
       {/* play list */}
       <div className="flex justify-between">
         <h2 className="text-3xl font-semibold">Next Queue</h2>
@@ -40,7 +40,7 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
         Song credit
       </div>
       <div className="">
-        <div className="max-h-[calc(100vh-15rem)] 2xl:max-h-[calc(100vh-23rem)] overflow-y-auto">
+        <div className="max-h-[calc(100vh-20rem)] 2xl:max-h-[calc(100vh-23rem)] overflow-y-auto">
           {currentTracks?.map((track: any, idx) => (
             <div key={idx} className="gap-2 w-full items-center mb-4">
               <LandingMusicCard

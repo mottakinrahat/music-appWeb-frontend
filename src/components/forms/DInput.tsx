@@ -44,13 +44,20 @@ const DInput = ({
       render={({ field, fieldState: { error } }) => (
         <div className="w-full relative">
           {label && (
-            <Label htmlFor={name} className={cn(labelTextColor, "block mb-2 font-semibold text-lg w-full")}>
+            <Label
+              htmlFor={name}
+              className={cn(
+                labelTextColor,
+                "block mb-2 font-semibold text-lg w-full"
+              )}
+            >
               {label}
             </Label>
           )}
           <Input
             {...field}
             {...props}
+            name={name}
             id={name}
             disabled={disabled}
             required={required}
@@ -65,10 +72,16 @@ const DInput = ({
               onClick={handleTogglePassword}
               className="absolute inset-y-0 top-9 right-0 flex items-center px-3"
             >
-              {showPassword ? <HiEye className="text-gray-500" /> : <HiEyeOff className="text-gray-500" />}
+              {showPassword ? (
+                <HiEye className="text-gray-500" />
+              ) : (
+                <HiEyeOff className="text-gray-500" />
+              )}
             </button>
           )}
-          {error && <span className="text-red-500 text-sm mt-1">{error.message}</span>}
+          {error && (
+            <span className="text-red-500 text-sm mt-1">{error.message}</span>
+          )}
         </div>
       )}
     />

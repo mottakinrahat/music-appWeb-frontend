@@ -67,7 +67,9 @@ const EventCard: React.FC<EventCardInterface> = ({
           <div>Apr</div>
         </div>
         <div>
-          <h2 className="text-2xl flex-1 font-semibold mb-2">{title}</h2>
+          <h2 className=" text-xl sm:text-2xl flex-1 font-semibold mb-2">
+            {title}
+          </h2>
           <div className="text-textPrimary text-base flex gap-2 items-center">
             <GoLocation /> Los Angeles, CA
           </div>

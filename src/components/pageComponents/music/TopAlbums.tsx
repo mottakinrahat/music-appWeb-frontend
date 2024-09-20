@@ -131,10 +131,10 @@ const TopAlbums = () => {
       </Heading>
       <div className="justify-between lg:flex gap-5">
         <div className="flex flex-col mt-10 justify-center">
-          <h2 className="text-2xl mb-5 md:text-4xl max-w-md font-semibold">
+          <h2 className=" text-xl sm:text-2xl mb-5 md:text-4xl max-w-md font-semibold">
             No.1 On charts
           </h2>
-          <div className="rounded-xl relative flex w-full h-fit cursor-pointer overflow-hidden group">
+          <div className="rounded-xl relative flex w-fit h-fit cursor-pointer overflow-hidden group">
             <Image
               priority
               src={data[0].imageUrl}

@@ -2,6 +2,8 @@ import React from "react";
 import ShowLyricsIcon from "./PlayLIstIcon";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import ReapetShuffleButton from "./ReapetShuffleButton";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 // inrerface
 export interface RepeatActionButtonProps {
@@ -16,52 +18,45 @@ export interface RepeatActionButtonProps {
 const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
   toggleRepeat,
   src,
-  repeat,
+  // repeat,
   handleOpenLyrics,
   isfavorite,
   handleAddToFavorites,
 }) => {
+  const isKaraoke = useSelector((state: RootState) => state.karaoke.karaoke);
+  const importedUrl: any = useSelector(
+    (state: RootState) => state.musicData.fileData
+  );
+
   return (
     <div>
-      <div className="text-white text-2xl mx-2 ">
-        <div className="flex justify-start items-center gap-[24px]">
-          <div
-            onClick={handleAddToFavorites}
-            className="cursor-pointer transition text-white hover:text-accent"
-          >
-            {isfavorite ? <FaHeart /> : <FaRegHeart />}
-          </div>
-          <div className="hidden lg:block">
-            <ShowLyricsIcon handleOpenLyrics={handleOpenLyrics} />
-          </div>
-          <ReapetShuffleButton repeat={repeat} toggleRepeat={toggleRepeat} />
-          {/* <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <div
-                  className="active:text-gray-300 transition hover:text-accent"
-                  onClick={toggleRepeat}
-                >
-                  {repeat === "repeat-one" ? (
-                    <LucideRepeat1 />
-                  ) : repeat === "repeat-all" ? (
-                    <LucideRepeat />
-                  ) : (
-                    <PiShuffle />
-                  )}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{`Repeat ${
-                  repeat === "repeat-one"
-                    ? "on"
-                    : repeat === "repeat-all"
-                    ? "all"
-                    : "off"
-                }`}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider> */}
+      <div className="text-white mt-4 min-[400px]:mt-0 text-2xl mx-2 ">
+        <div className="flex justify-start items-center gap-4 sm:gap-[24px]">
+          {isKaraoke ? (
+            <>
+              <ReapetShuffleButton />
+            </>
+          ) : (
+            <>
+              <button
+                disabled={importedUrl}
+                onClick={handleAddToFavorites}
+                className={`hidden min-[340px]:block transition text-white hover:text-accent ${
+                  importedUrl ? "cursor-not-allowed" : "cursor-pointer "
+                }`}
+              >
+                {isfavorite ? (
+                  <FaHeart className="p-[2px] sm:p-0" />
+                ) : (
+                  <FaRegHeart className="p-[2px] sm:p-0" />
+                )}
+              </button>
+              <button className="" disabled={importedUrl}>
+                <ShowLyricsIcon handleOpenLyrics={handleOpenLyrics} />
+              </button>
+              <ReapetShuffleButton />
+            </>
+          )}
         </div>
       </div>
     </div>

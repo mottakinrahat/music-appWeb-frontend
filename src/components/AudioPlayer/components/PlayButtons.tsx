@@ -10,6 +10,8 @@ import {
 } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface PlayButtonsFace {
   handlePreviousTenSecond?: () => void;
@@ -30,6 +32,7 @@ const PlayButtons = ({
 }: PlayButtonsFace) => {
   const pathname = usePathname();
   const [showControl, setShowControl] = useState(true);
+  const play = useSelector((state: RootState) => state.player.playing);
 
   useEffect(() => {
     // Show the player only if the path matches `/music/:id`
@@ -52,7 +55,7 @@ const PlayButtons = ({
         {showControl && (
           <button
             onClick={handlePreviousTenSecond}
-            className="text-white group text-3xl mx-2 transition hover:text-gray-300 flex items-center gap-1"
+            className="text-white group text-3xl mx-4 sm:mx-2 transition active:text-gray-300 flex items-center gap-1"
           >
             <Image
               width={100}
@@ -60,7 +63,7 @@ const PlayButtons = ({
               style={{ width: "auto", height: "auto" }}
               src={PreviousIcon.src}
               alt="PreviousIcon"
-              className="group-hover:opacity-70"
+              className="group-active:opacity-70"
             />{" "}
             <span className="text-[16px]">10s</span>
           </button>
@@ -69,32 +72,32 @@ const PlayButtons = ({
           onClick={handlePrev}
           className={` text-lg  ${
             showControl
-              ? "text-white transition hover:text-gray-300"
-              : "text-[#828282] transition hover:text-textPrimary"
+              ? "text-white transition active:text-gray-300"
+              : "text-[#828282] transition active:text-textPrimary"
           }`}
         >
           <MdOutlineSkipPrevious className="h-7 w-7" />
         </button>
         <button
           onClick={handlePlayPause}
-          className={` text-lg  flex items-center justify-center mx-4  ${
+          className={` text-lg  flex items-center justify-center mx-5 sm:mx-4  ${
             showControl
-              ? "text-white transition hover:text-gray-300"
-              : "text-[#828282] transition hover:text-textPrimary"
+              ? "text-white transition active:text-gray-300"
+              : "text-[#828282] transition active:text-textPrimary"
           }`}
         >
-          {playing ? (
-            <MdPauseCircle className="h-10 w-10" />
+          {play ? (
+            <MdPauseCircle className="h-12 w-12 sm:h-10 sm:w-10" />
           ) : (
-            <IoMdPlayCircle className="h-10 w-10" />
+            <IoMdPlayCircle className="h-12 w-12 sm:h-10 sm:w-10" />
           )}
         </button>
         <button
           onClick={handleNext}
           className={` text-lg  ${
             showControl
-              ? "text-white transition hover:text-gray-300"
-              : "text-[#828282] transition hover:text-textPrimary"
+              ? "text-white transition active:text-gray-300"
+              : "text-[#828282] transition active:text-textPrimary"
           }`}
         >
           <MdOutlineSkipNext className="h-7 w-7" />
@@ -102,7 +105,7 @@ const PlayButtons = ({
         {showControl && (
           <button
             onClick={handleNextTenSecond}
-            className="text-white group text-3xl mx-2 transition hover:text-gray-300 flex items-center gap-1"
+            className="text-white group text-3xl mx-4 sm:mx-2 transition active:text-gray-300 flex items-center gap-1"
           >
             <span className="text-[16px]">10s</span>{" "}
             <Image
@@ -111,7 +114,7 @@ const PlayButtons = ({
               style={{ width: "auto", height: "auto" }}
               src={NextIcon.src}
               alt="NextIcon"
-              className="group-hover:opacity-70"
+              className="group-active:opacity-70"
             />
           </button>
         )}

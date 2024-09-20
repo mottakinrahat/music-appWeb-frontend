@@ -1,59 +1,77 @@
-"use client";
-import React, { forwardRef, useEffect, RefObject } from "react";
+import { useAudio } from "@/lib/AudioProvider";
+import { RootState } from "@/redux/store";
+import React, { forwardRef, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import ReactPlayer from "react-player";
+import { OnProgressProps } from "react-player/base";
 
 interface AudioControlsProps {
-  src: string;
-  onTimeUpdate?: React.ChangeEventHandler<HTMLAudioElement>;
-  autoPlay?: boolean;
-  onLoadedMetadata?: React.ReactEventHandler<HTMLAudioElement>;
-  onEnded?: React.ReactEventHandler<HTMLAudioElement>;
+  onTimeUpdate: (state: OnProgressProps) => void;
+  onLoadedMetadata: (duration: number) => void;
+  onEnded?: () => void;
   playbackRate?: number;
-  volume?: number; // Volume should be between 0.0 and 1.0
+  volume?: number;
+  src?: string;
 }
 
-const AudioControls = forwardRef<HTMLAudioElement, AudioControlsProps>(
+const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
   (
-    {
-      src,
-      onTimeUpdate,
-      autoPlay,
-      onLoadedMetadata,
-      onEnded,
-      playbackRate = 1.0,
-      volume = 1.0, // Default volume is 1.0 (100%)
-    },
+    { onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume, src },
     ref
   ) => {
-    useEffect(() => {
-      if (ref && "current" in ref && ref.current) {
-        const audioElement = ref.current;
-        audioElement.playbackRate = playbackRate;
-      }
-    }, [playbackRate, ref]);
+    const playing = useSelector((state: RootState) => state.player.playing);
+    const audioVolume = useSelector(
+      (state: RootState) => state.player.audioVolume
+    );
+
+    const { setAudioRef, audioRef } = useAudio();
+
+    const [currentSongUrl, setCurrentSongUrl] = useState<string | null>(null);
 
     useEffect(() => {
-      if (ref && "current" in ref && ref.current) {
-        const audioElement = ref.current;
-        const clampedVolume = Math.max(0, Math.min(volume, 1));
-        if (audioElement.volume !== clampedVolume) {
-          // console.log(`Setting volume to ${clampedVolume}`);
-          audioElement.volume = clampedVolume;
+      if (!audioRef) {
+        setAudioRef(ref);
+      }
+      // Fetch the song list from the API
+      const fetchMusic = async () => {
+        try {
+          const res = await fetch("/api/music");
+          const data = await res.json();
+          if (data.length > 0) {
+            // Set the src of the first song in the list
+            setCurrentSongUrl(data[0].url);
+          }
+        } catch (err) {
+          console.error("Failed to fetch music:", err);
+        }
+      };
+
+      fetchMusic();
+    }, [audioRef, ref, setAudioRef]);
+
+    useEffect(() => {
+      if (audioRef?.current) {
+        const internalPlayer = audioRef.current.getInternalPlayer();
+        if (internalPlayer && playbackRate !== undefined) {
+          internalPlayer.playbackRate = playbackRate;
         }
       }
-    }, [volume, ref]);
+    }, [audioRef, playbackRate]);
 
     return (
-      <audio
-        crossOrigin="anonymous"
-        ref={ref}
-        src={src}
-        onTimeUpdate={onTimeUpdate}
-        autoPlay={autoPlay}
-        onLoadedMetadata={onLoadedMetadata}
-        onEnded={onEnded}
-      >
-        Your browser does not support the audio element.
-      </audio>
+      <div className="hidden">
+        {currentSongUrl && (
+          <ReactPlayer
+            ref={audioRef}
+            url={src} // Use the URL from the state
+            playing={playing}
+            volume={audioVolume}
+            onDuration={onLoadedMetadata}
+            onProgress={onTimeUpdate}
+            onEnded={onEnded}
+          />
+        )}
+      </div>
     );
   }
 );

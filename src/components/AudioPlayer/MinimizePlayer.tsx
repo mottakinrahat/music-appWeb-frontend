@@ -3,7 +3,8 @@
 import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import MaximizePlayer from "./MaximizePlayer";
-import useLocalSongData from "@/hooks/useLocalSongData";
+import { useDispatch } from "react-redux";
+import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 
 const MinimizePlayer = () => {
   const [playMusicById, setPlayMusicById] = useState<string>();
@@ -11,18 +12,21 @@ const MinimizePlayer = () => {
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(true);
   // const [play, setPlay] = useState(true);
-  const [height, setHeight] = useState(7); // Initial height
+  const [height, setHeight] = useState(0); // Initial height
   const resizingRef = useRef<HTMLDivElement | null>(null);
   const [startY, setStartY] = useState<number>(0);
   const [startHeight, setStartHeight] = useState<number>(0);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Function to update the height based on window width
     const updateHeight = () => {
-      if (window.innerWidth < 768) {
-        setHeight(6);
-      } else {
-        setHeight(7);
+      if (height > 0) {
+        if (window.innerWidth < 768) {
+          setHeight(6);
+        } else {
+          setHeight(7);
+        }
       }
     };
 
@@ -33,7 +37,7 @@ const MinimizePlayer = () => {
 
     // Cleanup the event listener on component unmount
     return () => window.removeEventListener("resize", updateHeight);
-  }, [pathname]);
+  }, [height, pathname]);
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
@@ -75,26 +79,28 @@ const MinimizePlayer = () => {
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     startResizing(e as unknown as MouseEvent);
+    dispatch(pauseSong());
   };
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     startResizing(e as unknown as TouchEvent);
+    dispatch(pauseSong());
   };
 
-  const isPlay = useLocalSongData();
-  const play = isPlay?.play;
-
   useEffect(() => {
-    // if (showPlayer === false) {
-    //   setPlay(false);
-    // } else {
-    //   setPlay(true);
-    // }
-    // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
+      // document.body.classList.add("hide-scrollbar");
       setHeight(7);
+    } else if (pathname.startsWith("/offline")) {
+      localStorage.setItem(
+        "songData",
+        JSON.stringify({ id: null, play: false })
+      );
+      setHeight(0);
+      setShowPlayer(false);
     } else {
+      // document.body.classList.remove("hide-scrollbar");
       setShowPlayer(false);
     }
     const getSongDataFromLocalStroage = JSON.parse(
@@ -114,6 +120,7 @@ const MinimizePlayer = () => {
       document.removeEventListener("mouseup", () => {});
       document.removeEventListener("touchmove", () => {});
       document.removeEventListener("touchend", () => {});
+      // document.body.classList.remove("hide-scrollbar");
     };
   }, [pathname, showPlayer]);
 
@@ -123,7 +130,7 @@ const MinimizePlayer = () => {
     <div
       className={`${
         showPlayer ? "block h-[100vh]" : "border-t min-w-0"
-      } transition-all duration-300 relative`}
+      } transition-all duration-300 relative overflow-hidden`}
       style={{
         minHeight: 0,
         minWidth: 0,
@@ -134,9 +141,9 @@ const MinimizePlayer = () => {
       <div
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
-        className="absolute w-full h-4 z-50 top-0 bg-transparent cursor-ns-resize"
+        className="absolute w-full overflow-hidden h-4 z-50 top-0 bg-transparent cursor-ns-resize"
       ></div>
-      <MaximizePlayer play={play!} params={{ id: playMusicById }} />
+      <MaximizePlayer  params={{ id: playMusicById }} />
     </div>
   );
 };

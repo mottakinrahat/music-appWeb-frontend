@@ -1,7 +1,6 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
@@ -98,6 +97,7 @@ const BannerContent: React.FC<BannerContentProps> = ({
     {/* Banner image part */}
     <div className=" w-full lg:-mx-10 mt-20 relative max-xl:-my-10 xl:pt-24 pt-0 p-0 flex justify-end ">
       <Image
+        priority
         src={image}
         height={full.height}
         alt="full"
@@ -110,37 +110,5 @@ const BannerContent: React.FC<BannerContentProps> = ({
     </div>
   </>
 );
-// const BannerContent2 = () => (
-//   <>
-//     {/* Banner Action */}
-//     <>
-//       {/* Banner Action */}
-//       <div className=" max-w-xl text-center xl:text-left my-5 py-10 ">
-//         <h1 className="text-[2.1rem] sm:text-5xl leading-tight lg:text-[3.7rem] font-bold text-textSecondary lg:leading-[4.75rem]">
-//           Revolutionize the way you <span className="text-secondary inline-block"> experience</span> music
-//         </h1>
-//         <p className="mb-8 mt-6 sm:mb-12 sm:mt-8 text-textPrimary">
-//           Discover a universe of sound that ignites your passions and fuels your creativity. Explore millions of songs,
-//           from chart-topping hits to underground gems, and lose yourself in a sonic adventure.
-//         </p>
-//         <div className="flex justify-center flex-wrap xl:justify-normal gap-6">
-//           <Button>Join Now</Button>
-//           <OutlineButton>Discover more</OutlineButton>
-//         </div>
-//       </div>
-//       {/* Banner image part */}
-//       <div className=" w-full lg:-mx-10 mt-20 relative max-xl:-my-10 xl:pt-24 pt-0 p-0 flex justify-end ">
-//         <Image
-//           src={full2}
-//           height={full2.height}
-//           alt="full2"
-//           width={full2.width}
-//           style={{ width: "100%", height: "auto", objectFit: "cover" }}
-//           className="xl:absolute scale-75 -left-20 -bottom-20  "
-//         />
-//       </div>
-//     </>
-//   </>
-// );
 
 export default Banner;

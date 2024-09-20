@@ -1,8 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
+
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import PlayButtons from "./components/PlayButtons";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {useEffect, useState } from "react";
 import { FiMaximize2 } from "react-icons/fi";
 import Link from "next/link";
 import placeHolder from "@/assets/etc/png/song.jpg";
@@ -10,11 +10,9 @@ import { GradientRange } from "../ui/slider";
 import { formatTime } from "@/utils/FormatTime";
 import Volumn from "./components/Volumn";
 import AirPlayButton from "./components/AirPlayButton";
-import ShowLyricsIcon from "./components/PlayLIstIcon";
-import RepeatShuffleButton, {
-  RepeatShuffleProps,
-} from "./components/ReapetShuffleButton";
+import RepeatShuffleButton from "./components/ReapetShuffleButton";
 import SongMarquee from "./components/SongMarquee";
+import Image from "next/image";
 
 interface MiniPlayerProps {
   handleNext: () => void;
@@ -34,8 +32,6 @@ interface MiniPlayerProps {
   duration: number;
   currentTime: number;
   handleSeek: (value: number[]) => void;
-  repeat: RepeatShuffleProps["repeat"];
-  toggleRepeat: RepeatShuffleProps["toggleRepeat"];
 }
 
 const MiniPlayer = ({
@@ -56,19 +52,20 @@ const MiniPlayer = ({
   currentTime,
   duration,
   handleSeek,
-  repeat,
-  toggleRepeat,
-}: MiniPlayerProps) => {
+}:
+
+MiniPlayerProps) => {
   const [artWork, setArtwork] = useState(artwork);
   const pathname = usePathname();
   const router = useRouter();
   const [showControl, setShowControl] = useState(true);
+  // console.log(currentSong);
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
-      setShowControl(true);
-    } else {
       setShowControl(false);
+    } else {
+      setShowControl(true);
     }
 
     if (artwork.length > 0) {
@@ -76,13 +73,13 @@ const MiniPlayer = ({
     } else {
       setArtwork(placeHolder.src);
     }
-  }, [pathname, artwork]);
+  }, [pathname, artwork, id]);
 
   const handleSetPathHistory = () => {
     localStorage.setItem("pathHistory", pathname);
   };
 
-  if (!showControl)
+  if (showControl)
     return (
       <div
         onDoubleClick={() => router.replace(`/music/${id}`)}
@@ -93,7 +90,10 @@ const MiniPlayer = ({
             <div className="lg:flex hidden flex-col justify-end h-full gap-2 lg:gap-[24px]">
               <div className="w-full flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <img
+                  <Image
+                    width={64}
+                    height={64}
+                    style={{width: 'auto', height: 'auto'}}
                     src={artwork ? artwork : placeHolder.src}
                     alt="Album Art"
                     className="w-10 h-10 md:h-16 md:w-16 rounded-lg object-cover"
@@ -131,14 +131,15 @@ const MiniPlayer = ({
               handlePrev={handlePrev}
               playing={playing}
             />
-            <div className="absolute w-1/2 flex-col px-5 md:max-w-sm lg:max-w-lg justify-center flex -translate-y-8 sm:-translate-y-7 mb-2 max-lg:w-full  top-[5.8rem] left-1/2 -translate-x-1/2 items-center">
+            <div className="absolute w-1/2 flex-col px-5 md:max-w-sm xl:max-w-md justify-center flex -translate-y-8 sm:-translate-y-7 mb-2 max-lg:w-full  top-[5.8rem] left-1/2 -translate-x-1/2 items-center">
               <GradientRange
                 defaultValue={[currentTime]}
+                step={0.01}
                 max={duration}
                 min={0}
                 value={[currentTime]}
                 onValueChange={handleSeek}
-                className="w-full md:max-w-sm lg:max-w-lg"
+                className="w-full md:max-w-xs lg:max-w-sm xl:max-w-lg"
               />
               <div className="w-full">
                 <div className="flex justify-between mt-2 gap-3 items-center font-semibold">
@@ -152,7 +153,7 @@ const MiniPlayer = ({
               </div>
             </div>
           </div>
-          <div className="flex z-10  [@media(min-width:320px)]:gap-3  [@media(min-width:640px)]:gap-6 mb-10 md:mb-0 items-center">
+          <div className="flex z-10 gap-0 [@media(min-width:300px)]:gap-1 [@media(min-width:400px)]:gap-3  [@media(min-width:640px)]:gap-6 mb-8 sm:mb-10 lg:mb-0  items-center">
             <div className="hidden md:flex">
               <Volumn
                 handleMute={handleMute}
@@ -160,11 +161,9 @@ const MiniPlayer = ({
                 volume={volume}
               />
             </div>
-            <div>
+            <div className="hidden [@media(min-width:300px)]:flex items-center">
               {/* <PlayLIstIcon /> */}
               <RepeatShuffleButton
-                repeat={repeat}
-                toggleRepeat={toggleRepeat}
               />
             </div>
             <div className="hidden [@media(min-width:380px)]:flex items-center">
