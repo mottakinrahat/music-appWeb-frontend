@@ -1,8 +1,7 @@
-
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import PlayButtons from "./components/PlayButtons";
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FiMaximize2 } from "react-icons/fi";
 import Link from "next/link";
 import placeHolder from "@/assets/etc/png/song.jpg";
@@ -52,14 +51,13 @@ const MiniPlayer = ({
   currentTime,
   duration,
   handleSeek,
-}:
-
-MiniPlayerProps) => {
+}: MiniPlayerProps) => {
   const [artWork, setArtwork] = useState(artwork);
   const pathname = usePathname();
+  const query = useSearchParams();
   const router = useRouter();
   const [showControl, setShowControl] = useState(true);
-  // console.log(currentSong);
+
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
@@ -76,7 +74,7 @@ MiniPlayerProps) => {
   }, [pathname, artwork, id]);
 
   const handleSetPathHistory = () => {
-    localStorage.setItem("pathHistory", pathname);
+    localStorage.setItem("pathHistory", `${pathname}?${query.toString()}`);
   };
 
   if (showControl)
@@ -93,7 +91,7 @@ MiniPlayerProps) => {
                   <Image
                     width={64}
                     height={64}
-                    style={{width: 'auto', height: 'auto'}}
+                    style={{ width: "auto", height: "auto" }}
                     src={artwork ? artwork : placeHolder.src}
                     alt="Album Art"
                     className="w-10 h-10 md:h-16 md:w-16 rounded-lg object-cover"
@@ -163,8 +161,7 @@ MiniPlayerProps) => {
             </div>
             <div className="hidden [@media(min-width:300px)]:flex items-center">
               {/* <PlayLIstIcon /> */}
-              <RepeatShuffleButton
-              />
+              <RepeatShuffleButton />
             </div>
             <div className="hidden [@media(min-width:380px)]:flex items-center">
               <AirPlayButton />

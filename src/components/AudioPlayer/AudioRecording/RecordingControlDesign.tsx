@@ -36,6 +36,7 @@ const RecordingControlDesign: React.FC<MediaControlsProps> = ({
   audioRef,
 }) => {
   const dispatch = useDispatch();
+  
 
   return (
     <div className="flex gap-6 items-center">

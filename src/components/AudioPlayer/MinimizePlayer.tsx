@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import MaximizePlayer from "./MaximizePlayer";
-import useLocalSongData from "@/hooks/useLocalSongData";
 import { useDispatch } from "react-redux";
 import { pauseSong } from "@/redux/slice/music/musicActionSlice";
 
@@ -88,9 +87,6 @@ const MinimizePlayer = () => {
     dispatch(pauseSong());
   };
 
-  const isPlay = useLocalSongData();
-  const play = isPlay?.play;
-
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
@@ -147,7 +143,7 @@ const MinimizePlayer = () => {
         onTouchStart={handleTouchStart}
         className="absolute w-full overflow-hidden h-4 z-50 top-0 bg-transparent cursor-ns-resize"
       ></div>
-      <MaximizePlayer play={play!} params={{ id: playMusicById }} />
+      <MaximizePlayer  params={{ id: playMusicById }} />
     </div>
   );
 };

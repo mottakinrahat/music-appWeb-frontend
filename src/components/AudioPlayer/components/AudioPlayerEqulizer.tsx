@@ -58,11 +58,6 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
       classical: [2, 3, 4, 5, 6, 2],
     };
     const defaultPreset = "flat";
-    const applyPreset = (preset: number[]) => {
-      preset.forEach((gain, index) => {
-        adjustGain(index, gain);
-      });
-    };
     // Load the EQ state from localStorage on component mount
     const savedSettings = localStorage.getItem("eqSettings");
     const savedIsEqOn = localStorage.getItem("isEqOn");
@@ -214,7 +209,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
       return newGains;
     });
   };
-  const defaultPreset = "flat";
+ 
   const applyPreset = (preset: number[]) => {
     preset.forEach((gain, index) => {
       adjustGain(index, gain);
