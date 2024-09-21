@@ -208,6 +208,9 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
     const { setAudioRef, audioRef } = useAudio();
     const [currentSongUrl, setCurrentSongUrl] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null); // State for handling errors
+    const importedUrl = useSelector(
+      (state: RootState) => state.musicData.fileData
+    );
 
     useEffect(() => {
       if (!audioRef) {
@@ -257,7 +260,7 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
         {currentSongUrl && (
           <ReactPlayer
             ref={audioRef}
-            url={src || currentSongUrl}
+            url={importedUrl ? importedUrl : src} // Use the URL from the state
             playing={playing}
             volume={audioVolume}
             onDuration={onLoadedMetadata}

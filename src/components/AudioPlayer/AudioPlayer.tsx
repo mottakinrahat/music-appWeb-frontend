@@ -25,7 +25,7 @@ import {
 import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
 import ImportSong from "./components/ImportSong";
-import Lyrics from "./components/Lyrics";
+import Lyrics from "./Lyrics/Lyrics";
 import {
   handleEnd,
   handleMute,
@@ -325,6 +325,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       {(isKaroke || isShowLyrics) && !importSongUrl && (
         <Lyrics
           songData={songData}
+          currentTime={currentTime}
           currentLyrics={currentLyrics}
           setCurrentLyrics={setCurrentLyrics}
         />
