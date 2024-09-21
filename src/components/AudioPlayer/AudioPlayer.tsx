@@ -136,6 +136,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     importSongUrl,
     baseApiUrl,
   ]);
+
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
@@ -225,8 +226,40 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
+  // const handleSeek = (value: number[]) => {
+  //   const newTime = value[0];
+
+  //   if (audioRef.current) {
+  //     const currentAudio = audioRef.current;
+
+  //     // Pausing the playback if it's currently playing
+  //     if (currentAudio.getInternalPlayer) {
+  //       const player = currentAudio.getInternalPlayer();
+  //       const wasPlaying = player.paused === false; // Check if audio is playing
+
+  //       if (wasPlaying) {
+  //         dispatch(pauseSong()); // Pause the audio before seeking
+  //       }
+
+  //       // Seek to the new time
+  //       currentAudio?.seekTo(newTime, "seconds");
+  //       setCurrentTime(newTime); // Update the state with the new time
+
+  //       if (wasPlaying) {
+  //         // Resume playback if it was playing before
+  //         dispatch(playImport());
+  //       }
+  //     }
+  //   }
+  // };
   const handleSeek = (value: number[]) => {
     const newTime = value[0];
+
+    // Check if newTime is a finite number
+    if (!isFinite(newTime)) {
+      console.error("Invalid time value:", newTime);
+      return; // Exit early if newTime is not valid
+    }
 
     if (audioRef.current) {
       const currentAudio = audioRef.current;
@@ -234,7 +267,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       // Pausing the playback if it's currently playing
       if (currentAudio.getInternalPlayer) {
         const player = currentAudio.getInternalPlayer();
-        const wasPlaying = player.paused === false; // Check if audio is playing
+        const wasPlaying = !player.paused; // Check if audio is playing
 
         if (wasPlaying) {
           dispatch(pauseSong()); // Pause the audio before seeking

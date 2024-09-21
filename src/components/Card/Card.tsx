@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Image from "next/image";
 import playBtn from "@/assets/icons/play_circle.png";
 import Link from "next/link";
@@ -62,7 +62,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
 }) => {
   const pathname = usePathname();
   const dispatch = useDispatch();
-  const query = useSearchParams();
+  // const query = useSearchParams();
   const importedSong = useSelector((state: RootState) => state.musicData);
 
   const deleteExistingSongFromIndexedDB = async () => {
@@ -112,7 +112,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
       "songData",
       JSON.stringify({ play: true, id: musicId })
     );
-    localStorage.setItem("pathHistory", `${pathname}?${query.toString()}`);
+    localStorage.setItem("pathHistory", `${pathname}`);
 
     if (musicId) {
       dispatch(playSong(musicId));
