@@ -9,7 +9,7 @@ import Playlist from "./components/Playlist";
 import useLocalSongData from "@/hooks/useLocalSongData";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { detectBPM } from "@/utils/bpmdetection";
+// import { detectBPM } from "@/utils/bpmdetection";
 import { useAudio } from "@/lib/AudioProvider";
 import baseApiHandler from "@/utils/baseApiHandler";
 import Loading from "@/app/(withCommonLayout)/music/loading";
@@ -138,31 +138,31 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
 
   const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
 
-  useEffect(() => {
-    const fetchBPM = async () => {
-      try {
-        const url = currentSong?.songLink;
+  // useEffect(() => {
+  //   const fetchBPM = async () => {
+  //     try {
+  //       const url = currentSong?.songLink;
 
-        if (url) {
-          const detectedBPM = await detectBPM(url);
-          if (detectedBPM === null) {
-            setError(
-              "Unable to detect BPM. Please check the audio file and detection logic."
-            );
-          } else {
-            setBpm(detectedBPM);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching or processing audio:", error);
-        setError("Failed to detect BPM");
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       if (url) {
+  //         const detectedBPM = await detectBPM(url);
+  //         if (detectedBPM === null) {
+  //           setError(
+  //             "Unable to detect BPM. Please check the audio file and detection logic."
+  //           );
+  //         } else {
+  //           setBpm(detectedBPM);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching or processing audio:", error);
+  //       setError("Failed to detect BPM");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchBPM();
-  }, [currentSong]);
+  //   fetchBPM();
+  // }, [currentSong]);
 
   useEffect(() => {
     const initialTrackIndex = tracks?.findIndex(

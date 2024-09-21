@@ -14,13 +14,22 @@ import {
 } from "@/components/ui/pagination";
 import { useAllSongQuery } from "@/redux/api/songApi";
 // Import the SkeletonCard component
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CardLoading from "@/components/common/loading/CardLoading";
 import { getUserInfo } from "@/service/actions/auth.service";
+import { useRouter } from "next/navigation";
 
 const NewReleases = () => {
   const [page, setPage] = useState<number>(1);
   const user = getUserInfo();
+  const router = useRouter(); // Initialize the router
+  const [queryParam, setQueryParam] = useState<number>(1); // State to hold query param value
+
+  useEffect(() => {
+    router.push(`/music?new-release=${encodeURIComponent(queryParam)}`);
+  }, [queryParam, router]);
+  // Add or update a query parameter
+
   // Fetch songs with the current page number, `isLoading` tracks if data is being fetched
   const { data: tracks, isLoading } = useAllSongQuery({
     page: page,
@@ -29,7 +38,6 @@ const NewReleases = () => {
 
   const totalPage = tracks?.data?.pagination?.totalPages;
   const currentPage = tracks?.data?.pagination?.currentPage;
-  console.log(tracks?.data?.songs?.favUsers);
   return (
     <Container bgGray={true}>
       <Heading type="primary" heading={"New release"}>
@@ -76,7 +84,10 @@ const NewReleases = () => {
               <PaginationLink key={index}>
                 <button
                   disabled={index + 1 === currentPage}
-                  onClick={() => setPage(index + 1)} // Set page and trigger data loading
+                  onClick={() => {
+                    setPage(index + 1);
+                    setQueryParam(index + 1);
+                  }} // Set page and trigger data loading
                   className="w-full h-full mx-1 text-base font-semibold text-textPrimary "
                 >
                   {index + 1} {/* Display page numbers starting from 1 */}

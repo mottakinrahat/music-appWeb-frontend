@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from "react";  
+import React, { useState } from "react";
 import Image from "next/image";
 import playBtn from "@/assets/icons/play_circle.png";
 import Link from "next/link";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { playSong } from "@/redux/slice/music/musicActionSlice";
 import { toast } from "sonner";
@@ -60,10 +60,10 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   album,
   albumRouteLink,
 }) => {
-  const location = usePathname();
+  const pathname = usePathname();
   const dispatch = useDispatch();
+  const query = useSearchParams();
   const importedSong = useSelector((state: RootState) => state.musicData);
-  const [favorite, setFavorite] = useState<boolean>(false);
 
   const deleteExistingSongFromIndexedDB = async () => {
     const db = await initDB("MusicDB", 1, "songs");
@@ -96,7 +96,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
     } else {
       handleFavorite(
         isFavouriteFn,
-        favorite,
+        isFavourite,
         musicId ? musicId : "", // songId
         userId, // userId
         playListData.userId,
@@ -112,7 +112,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
       "songData",
       JSON.stringify({ play: true, id: musicId })
     );
-    localStorage.setItem("pathHistory", location);
+    localStorage.setItem("pathHistory", `${pathname}?${query.toString()}`);
 
     if (musicId) {
       dispatch(playSong(musicId));

@@ -45,7 +45,6 @@ import ReactPlayer from "react-player";
 import baseApiHandler from "@/utils/baseApiHandler";
 import { useIsFavouriteUserMutation } from "@/redux/api/songApi";
 
-
 interface AudioPlayerProps {
   id?: any;
   handleNext: () => void;
@@ -137,7 +136,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     importSongUrl,
     baseApiUrl,
   ]);
-
+  console.log(currentSong);
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
@@ -274,7 +273,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         userId, // userId
         playListData,
         artwork, // Replace with dynamic artwork URL
-        songName,
+        songName
       );
     }
   };
@@ -322,15 +321,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           handlePrev={handlePrev}
           playing={playing}
           handleVolumeChange={handleVolumeChange}
-          album={currentSong.songAlbum.albumName}
-          artist={currentSong.songArtist}
-          artwork={currentSong.artwork}
+          album={currentSong?.songAlbum?.albumName}
+          artist={currentSong?.songArtist}
+          artwork={currentSong?.artwork}
           handleMute={() => {
             handleMute(volume, dispatch, setVolume);
             dispatch(audioVolume(volume));
           }}
           id={currentSong?._id}
-          title={currentSong.songName}
+          title={currentSong?.songName}
           volume={volume}
         />
       </div>
