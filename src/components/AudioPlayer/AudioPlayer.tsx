@@ -25,7 +25,7 @@ import {
 import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
 import ImportSong from "./components/ImportSong";
-import Lyrics from "./components/Lyrics";
+import Lyrics from "./Lyrics/Lyrics";
 import {
   handleEnd,
   handleMute,
@@ -136,7 +136,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     importSongUrl,
     baseApiUrl,
   ]);
-  console.log(currentSong);
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
