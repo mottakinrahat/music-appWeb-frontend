@@ -292,6 +292,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       {(isKaroke || isShowLyrics) && !importSongUrl && (
         <Lyrics
           songData={songData}
+          currentTime={currentTime}
           currentLyrics={currentLyrics}
           setCurrentLyrics={setCurrentLyrics}
         />

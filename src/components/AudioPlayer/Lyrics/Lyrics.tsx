@@ -12,17 +12,20 @@ interface LyricsProps {
     lyrics: Lyric[];
   };
   currentLyrics: Lyric | null; // Use Lyric type or null
+  currentTime: number;
   setCurrentLyrics: (value: Lyric | null) => void;
 }
 
 const Lyrics: React.FC<LyricsProps> = ({
   songData,
   currentLyrics,
+  currentTime,
   setCurrentLyrics,
 }) => {
   const lyricsDivRef = useRef<HTMLDivElement>(null);
   const currentLyricsRef = useRef<HTMLParagraphElement>(null);
   const [duration, setDuration] = useState(0);
+  // const [lineTime, setLineTime] = useState(0);
 
   const convertToSeconds = (time: string): number => {
     const parts = time.split(":").map(Number);
@@ -31,6 +34,8 @@ const Lyrics: React.FC<LyricsProps> = ({
     const hours = parts.pop() || 0;
     return hours * 3600 + minutes * 60 + seconds;
   };
+
+  // const currentTimeSeconds = Math.floor(currentTime);
 
   useEffect(() => {
     if (currentLyrics) {
