@@ -76,11 +76,7 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
         setMusicSource,
       }}
     >
-      <audio
-        ref={audioElementRef}
-        crossOrigin="anonymous"
-        style={{ display: "none" }}
-      />
+      <audio ref={audioElementRef} style={{ display: "none" }} />
       {children}
     </CombinedAudioContext.Provider>
   );
