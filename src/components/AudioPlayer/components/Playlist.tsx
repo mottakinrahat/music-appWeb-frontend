@@ -44,7 +44,7 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
           {currentTracks?.map((track: any, idx) => (
             <div key={idx} className="gap-2 w-full items-center mb-4">
               <LandingMusicCard
-                album={track?.songAlbum.albumName}
+                album={track?.songAlbum?.albumName}
                 artist={track?.songArtist}
                 artwork={track?.artwork}
                 id={track?._id}

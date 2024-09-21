@@ -102,6 +102,7 @@ const DFileUploader = ({
           >
             {/* Display cloud upload image */}
             <Image
+              style={{ width: "auto", height: "auto" }}
               src={cloudUpoadImage}
               alt="cloud upload"
               width={50}

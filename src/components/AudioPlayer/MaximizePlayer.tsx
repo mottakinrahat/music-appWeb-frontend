@@ -9,8 +9,10 @@ import Playlist from "./components/Playlist";
 import useLocalSongData from "@/hooks/useLocalSongData";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { detectBPM } from "@/utils/bpmdetection";
+// import { detectBPM } from "@/utils/bpmdetection";
 import { useAudio } from "@/lib/AudioProvider";
+import baseApiHandler from "@/utils/baseApiHandler";
+import Loading from "@/app/(withCommonLayout)/music/loading";
 
 interface PlayerInterface {
   params?: {
@@ -40,6 +42,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   const [error, setError] = useState<string | null>(null);
   const { audioContext: musicContext, audioRef } = useAudio();
   const router = useRouter();
+  const apiUrl = baseApiHandler();
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
@@ -130,39 +133,36 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   };
 
   useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/songs`)
-      .then((data) => setTraks(data.data.data.songs));
-  }, []);
+    axios.get(`${apiUrl}/songs`).then((data) => setTraks(data.data.data.songs));
+  }, [apiUrl]);
 
   const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
 
-  // if (!currentSong?.songLink) return <Loading />;
-  useEffect(() => {
-    const fetchBPM = async () => {
-      try {
-        const url = currentSong?.songLink;
+  // useEffect(() => {
+  //   const fetchBPM = async () => {
+  //     try {
+  //       const url = currentSong?.songLink;
 
-        if (url) {
-          const detectedBPM = await detectBPM(url);
-          if (detectedBPM === null) {
-            setError(
-              "Unable to detect BPM. Please check the audio file and detection logic."
-            );
-          } else {
-            setBpm(detectedBPM);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching or processing audio:", error);
-        setError("Failed to detect BPM");
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       if (url) {
+  //         const detectedBPM = await detectBPM(url);
+  //         if (detectedBPM === null) {
+  //           setError(
+  //             "Unable to detect BPM. Please check the audio file and detection logic."
+  //           );
+  //         } else {
+  //           setBpm(detectedBPM);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching or processing audio:", error);
+  //       setError("Failed to detect BPM");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchBPM();
-  }, [currentSong]);
+  //   fetchBPM();
+  // }, [currentSong]);
 
   useEffect(() => {
     const initialTrackIndex = tracks?.findIndex(
@@ -174,14 +174,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
     setCurrentSong(tracks[initialTrackIndex]);
   }, [musicContext, params?.id, tracks]);
 
-  const songData = useLocalSongData();
-  useEffect(() => {
-    if (currentTrackIndex !== null && songData?.play === true) {
-      setPlaying(true);
-    } else {
-      setPlaying(false);
-    }
-  }, [currentSong, currentTrackIndex, songData?.play]);
   // show controls
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(false);
@@ -297,6 +289,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
     );
   }
 
+  if (!currentSong?.songLink) return <Loading />;
   const screenWidth = window.innerWidth;
   const handleOpenEqualizer = () => {
     if (width <= 0) {

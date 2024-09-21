@@ -55,7 +55,7 @@ const PlayButtons = ({
         {showControl && (
           <button
             onClick={handlePreviousTenSecond}
-            className="text-white group text-3xl mx-4 sm:mx-2 transition hover:text-gray-300 flex items-center gap-1"
+            className="text-white group text-3xl mx-4 sm:mx-2 transition active:text-gray-300 flex items-center gap-1"
           >
             <Image
               width={100}
@@ -63,7 +63,7 @@ const PlayButtons = ({
               style={{ width: "auto", height: "auto" }}
               src={PreviousIcon.src}
               alt="PreviousIcon"
-              className="group-hover:opacity-70"
+              className="group-active:opacity-70"
             />{" "}
             <span className="text-[16px]">10s</span>
           </button>
@@ -72,8 +72,8 @@ const PlayButtons = ({
           onClick={handlePrev}
           className={` text-lg  ${
             showControl
-              ? "text-white transition hover:text-gray-300"
-              : "text-[#828282] transition hover:text-textPrimary"
+              ? "text-white transition active:text-gray-300"
+              : "text-[#828282] transition active:text-textPrimary"
           }`}
         >
           <MdOutlineSkipPrevious className="h-7 w-7" />
@@ -82,8 +82,8 @@ const PlayButtons = ({
           onClick={handlePlayPause}
           className={` text-lg  flex items-center justify-center mx-5 sm:mx-4  ${
             showControl
-              ? "text-white transition hover:text-gray-300"
-              : "text-[#828282] transition hover:text-textPrimary"
+              ? "text-white transition active:text-gray-300"
+              : "text-[#828282] transition active:text-textPrimary"
           }`}
         >
           {play ? (
@@ -96,8 +96,8 @@ const PlayButtons = ({
           onClick={handleNext}
           className={` text-lg  ${
             showControl
-              ? "text-white transition hover:text-gray-300"
-              : "text-[#828282] transition hover:text-textPrimary"
+              ? "text-white transition active:text-gray-300"
+              : "text-[#828282] transition active:text-textPrimary"
           }`}
         >
           <MdOutlineSkipNext className="h-7 w-7" />
@@ -105,7 +105,7 @@ const PlayButtons = ({
         {showControl && (
           <button
             onClick={handleNextTenSecond}
-            className="text-white group text-3xl mx-4 sm:mx-2 transition hover:text-gray-300 flex items-center gap-1"
+            className="text-white group text-3xl mx-4 sm:mx-2 transition active:text-gray-300 flex items-center gap-1"
           >
             <span className="text-[16px]">10s</span>{" "}
             <Image
@@ -114,7 +114,7 @@ const PlayButtons = ({
               style={{ width: "auto", height: "auto" }}
               src={NextIcon.src}
               alt="NextIcon"
-              className="group-hover:opacity-70"
+              className="group-active:opacity-70"
             />
           </button>
         )}

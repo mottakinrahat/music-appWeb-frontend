@@ -4,24 +4,15 @@ const audioPlayerApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // Define mutation with dynamic parameters
     // Getting all songs
-    getAllSong: build.mutation({
-      query: ({
-        page,
-        limit,
-        data,
-      }: {
-        page: number;
-        limit: number;
-        data: any;
-      }) => ({
-        url: `/songs?page=${page}&limit=${limit}`,
+    allSong: build.query({
+      query: ({ page, limit }: { page: number; limit: number }) => ({
+        url: `/songs?page=${page}&limit=${limit}`, // No body in GET request
         method: "GET",
-        body: data,
       }),
-      invalidatesTags: ["allSongs"],
+      providesTags: ["allSongs"],
     }),
 
-    isFavourite: build.mutation({
+    isFavouriteUser: build.mutation({
       query: ({
         songId,
         userId,
@@ -35,9 +26,9 @@ const audioPlayerApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["Favorite"],
+      invalidatesTags: ["Favorite", "allSongs"],
     }),
-    getFavourite: build.mutation({
+    getFavourite: build.query({
       query: ({
         userId,
         data,
@@ -50,7 +41,7 @@ const audioPlayerApi = baseApi.injectEndpoints({
         method: "GET",
         body: data,
       }),
-      invalidatesTags: ["Favorite"],
+      providesTags: ["Favorite"],
     }),
 
     // Other endpoints...
@@ -75,8 +66,9 @@ const audioPlayerApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useIsFavouriteMutation,
+  useAllSongQuery,
+  useIsFavouriteUserMutation,
   useAddToPlayListMutation,
   useCreatePlayListMutation,
-  useGetFavouriteMutation,
+  useGetFavouriteQuery,
 } = audioPlayerApi;
