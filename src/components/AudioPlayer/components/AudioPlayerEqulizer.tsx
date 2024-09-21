@@ -163,6 +163,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
         audioRef.current.getInternalPlayer() as HTMLAudioElement;
 
       if (audioElement) {
+        audioElement.crossOrigin = "anonymous";
         let audioSource = (audioElement as any)._sourceNode;
 
         if (!audioSource) {
@@ -209,7 +210,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
       return newGains;
     });
   };
- 
+
   const applyPreset = (preset: number[]) => {
     preset.forEach((gain, index) => {
       adjustGain(index, gain);
