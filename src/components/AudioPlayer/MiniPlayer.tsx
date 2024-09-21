@@ -1,7 +1,7 @@
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import PlayButtons from "./components/PlayButtons";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { FiMaximize2 } from "react-icons/fi";
 import Link from "next/link";
 import placeHolder from "@/assets/etc/png/song.jpg";
@@ -54,10 +54,9 @@ const MiniPlayer = ({
 }: MiniPlayerProps) => {
   const [artWork, setArtwork] = useState(artwork);
   const pathname = usePathname();
-  const query = useSearchParams();
+  // const query = useSearchParams();
   const router = useRouter();
   const [showControl, setShowControl] = useState(true);
-
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
@@ -74,7 +73,7 @@ const MiniPlayer = ({
   }, [pathname, artwork, id]);
 
   const handleSetPathHistory = () => {
-    localStorage.setItem("pathHistory", `${pathname}?${query.toString()}`);
+    localStorage.setItem("pathHistory", `${pathname}`);
   };
 
   if (showControl)
