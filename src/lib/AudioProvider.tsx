@@ -15,7 +15,6 @@ interface AudioContextProps {
   musicSource: MediaElementAudioSourceNode | null | any;
   setMusicSource: (source: MediaElementAudioSourceNode | null | any) => void;
   setAudioRef: (value: ReactPlayer | null | any) => void;
-  initializeAudioContext: () => void; // Added to trigger initialization
 }
 
 const CombinedAudioContext = createContext<AudioContextProps | undefined>(
@@ -32,12 +31,25 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
     useState<MediaElementAudioSourceNode | null>(null);
   const dispatch = useDispatch();
 
-  const initializeAudioContext = () => {
-    if (!audioContext) {
+  useEffect(() => {
+    const initializeAudioContext = async () => {
       const context = new AudioContext();
       setAudioContext(context);
-    }
-  };
+
+      // Cleanup function
+      return () => {
+        context.close();
+      };
+    };
+
+    const cleanup = initializeAudioContext();
+
+    return () => {
+      if (cleanup instanceof Promise) {
+        cleanup.then(() => {});
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (audioContext && audioElementRef.current) {
@@ -62,10 +74,13 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
         musicSource,
         setAudioRef,
         setMusicSource,
-        initializeAudioContext, // Expose the function to trigger audio context creation
       }}
     >
-      <audio ref={audioElementRef} style={{ display: "none" }} />
+      <audio
+        ref={audioElementRef}
+        crossOrigin="anonymous"
+        style={{ display: "none" }}
+      />
       {children}
     </CombinedAudioContext.Provider>
   );

@@ -266,7 +266,7 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
             onDuration={onLoadedMetadata}
             onProgress={onTimeUpdate}
             onEnded={onEnded}
-            crossorigin="anonymous"
+            
             // config={{
             //   file: {
             //     attributes: {
