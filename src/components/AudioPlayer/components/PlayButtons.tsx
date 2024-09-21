@@ -57,7 +57,7 @@ const PlayButtons = ({
         {showControl && (
           <button
             onClick={handlePreviousTenSecond}
-            className="text-white group text-3xl mx-4 sm:mx-2 transition active:text-gray-300 flex items-center"
+            className="text-white group gap-1 text-3xl mx-4 sm:mx-2 transition active:text-gray-300 flex items-center"
           >
             <Image
               width={100}
@@ -109,7 +109,7 @@ const PlayButtons = ({
         {showControl && (
           <button
             onClick={handleNextTenSecond}
-            className="text-white group text-3xl mx-4 sm:mx-2 transition active:text-gray-300 flex items-center"
+            className="text-white group gap-1 text-3xl mx-4 sm:mx-2 transition active:text-gray-300 flex items-center"
           >
             <span className="text-[16px]">10s</span>{" "}
             <Image
