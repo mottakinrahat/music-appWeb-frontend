@@ -266,14 +266,13 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
             onDuration={onLoadedMetadata}
             onProgress={onTimeUpdate}
             onEnded={onEnded}
-            
-            // config={{
-            //   file: {
-            //     attributes: {
-            //       crossOrigin: "anonymous", // Ensure this is set for the player
-            //     },
-            //   },
-            // }}
+            config={{
+              file: {
+                attributes: {
+                  crossOrigin: "anonymous", // Ensure this is set for the player
+                },
+              },
+            }}
             onError={handleError} // Use the error handling function
           />
         )}
