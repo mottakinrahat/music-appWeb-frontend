@@ -29,7 +29,6 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
   const [audioRef, setAudioRef] = useState<ReactPlayer | null | any>(null);
   const [musicSource, setMusicSource] =
     useState<MediaElementAudioSourceNode | null>(null);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const initializeAudioContext = async () => {

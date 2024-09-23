@@ -204,10 +204,9 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
     const audioVolume = useSelector(
       (state: RootState) => state.player.audioVolume
     );
-
     const { setAudioRef, audioRef } = useAudio();
     const [currentSongUrl, setCurrentSongUrl] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null); // State for handling errors
+    const [error, setError] = useState<string | null>(null);
     const importedUrl = useSelector(
       (state: RootState) => state.musicData.fileData
     );
@@ -222,7 +221,6 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
           const res = await fetch("/api/music");
           const data = await res.json();
           if (data?.length > 0) {
-            // Set the src of the first song in the list
             setCurrentSongUrl(data[0].url);
           }
         } catch (err) {
@@ -237,20 +235,19 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
     useEffect(() => {
       if (audioRef?.current) {
         const internalPlayer = audioRef.current.getInternalPlayer();
-        if (internalPlayer && playbackRate !== undefined) {
-          internalPlayer.playbackRate = playbackRate;
+        if (internalPlayer) {
+          // Set playback rate and volume
+          internalPlayer.playbackRate = playbackRate ?? 1;
+          internalPlayer.volume = audioVolume ?? 1;
         }
       }
-    }, [audioRef, playbackRate]);
+    }, [audioRef, playbackRate, audioVolume]);
 
-    // Fallback to a CORS proxy for the audio URL if needed
     const handleError = (e: any) => {
       console.error("Error loading audio:", e);
-      // You can use a public CORS proxy here if necessary
-      const corsProxy = "https://cors-anywhere.herokuapp.com/"; // Example proxy
+      const corsProxy = "https://cors-anywhere.herokuapp.com/";
       const fallbackUrl = corsProxy + (src || currentSongUrl);
-
-      setCurrentSongUrl(fallbackUrl); // Attempt loading via proxy
+      setCurrentSongUrl(fallbackUrl);
       setError("Error loading audio. Trying a fallback URL.");
     };
 
@@ -260,7 +257,7 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
         {currentSongUrl && (
           <ReactPlayer
             ref={audioRef}
-            url={importedUrl ? importedUrl : src} // Use the URL from the state
+            url={importedUrl ? importedUrl : src}
             playing={playing}
             volume={audioVolume}
             onDuration={onLoadedMetadata}
@@ -269,11 +266,11 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
             config={{
               file: {
                 attributes: {
-                  crossOrigin: "anonymous", // Ensure this is set for the player
+                  crossOrigin: "anonymous",
                 },
               },
             }}
-            onError={handleError} // Use the error handling function
+            onError={handleError}
           />
         )}
       </div>
