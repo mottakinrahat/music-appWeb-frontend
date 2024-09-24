@@ -226,32 +226,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
-  // const handleSeek = (value: number[]) => {
-  //   const newTime = value[0];
-
-  //   if (audioRef.current) {
-  //     const currentAudio = audioRef.current;
-
-  //     // Pausing the playback if it's currently playing
-  //     if (currentAudio.getInternalPlayer) {
-  //       const player = currentAudio.getInternalPlayer();
-  //       const wasPlaying = player.paused === false; // Check if audio is playing
-
-  //       if (wasPlaying) {
-  //         dispatch(pauseSong()); // Pause the audio before seeking
-  //       }
-
-  //       // Seek to the new time
-  //       currentAudio?.seekTo(newTime, "seconds");
-  //       setCurrentTime(newTime); // Update the state with the new time
-
-  //       if (wasPlaying) {
-  //         // Resume playback if it was playing before
-  //         dispatch(playImport());
-  //       }
-  //     }
-  //   }
-  // };
   const handleSeek = (value: number[]) => {
     const newTime = value[0];
 

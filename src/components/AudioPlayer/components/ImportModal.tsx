@@ -53,7 +53,7 @@ const ImportModal: React.FC<ImportModalProps> = ({
               name="importAudio"
               type="file"
               id="importAudio"
-              accept="audio/*"
+              accept="audio/*,video/*"
               onChange={(e) => {
                 e.target.files && handleFileSelect(e.target.files[0]);
                 dispatch(playImport());
