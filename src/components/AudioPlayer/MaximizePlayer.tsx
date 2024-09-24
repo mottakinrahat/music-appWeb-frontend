@@ -143,6 +143,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
 
   const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
 
+
   // useEffect(() => {
   //   const fetchBPM = async () => {
   //     try {

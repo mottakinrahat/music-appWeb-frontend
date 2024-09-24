@@ -140,9 +140,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     baseApiUrl,
   ]);
 
-  const params: { id: any } = useParams();
-  const { data } = useSingleSongQuery(params.id);
-
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
@@ -439,7 +436,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <AudioControls
             volume={volume}
             ref={audioRef}
-            src={importSongUrl ? importSongUrl : data?.data?.songLink}
+            src={importSongUrl ? importSongUrl : songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={(state: OnProgressProps) => {
               const currentTime = state.playedSeconds;
@@ -460,7 +457,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             {isRecording ? (
               <AudioRecordSlider
                 currentTime={currentTime}
-                audioUrl={data?.data?.songLink}
+                audioUrl={songLink}
               />
             ) : (
               <Slider
@@ -525,7 +522,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 bpm={bpm}
                 bpmLoading={loading}
                 songName={songName}
-                songUrl={data?.data?.songLink}
+                songUrl={songLink}
                 handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}
