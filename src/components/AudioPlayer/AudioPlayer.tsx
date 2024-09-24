@@ -8,7 +8,7 @@ import PlayButtons from "./components/PlayButtons";
 import MusicControls from "./components/MusicControls";
 import axios from "axios";
 import { toast } from "sonner";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import MiniPlayer from "./MiniPlayer";
 import { Slider } from "../ui/slider";
 import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
@@ -43,7 +43,10 @@ import AudioRecordSlider from "./AudioRecording/AudioRecordSlider";
 import { OnProgressProps } from "react-player/base";
 import ReactPlayer from "react-player";
 import baseApiHandler from "@/utils/baseApiHandler";
-import { useIsFavouriteUserMutation } from "@/redux/api/songApi";
+import {
+  useIsFavouriteUserMutation,
+  useSingleSongQuery,
+} from "@/redux/api/songApi";
 
 interface AudioPlayerProps {
   id?: any;
@@ -137,6 +140,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     baseApiUrl,
   ]);
 
+  const params: { id: any } = useParams();
+  const { data } = useSingleSongQuery(params.id);
+
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
@@ -226,32 +232,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
-  // const handleSeek = (value: number[]) => {
-  //   const newTime = value[0];
-
-  //   if (audioRef.current) {
-  //     const currentAudio = audioRef.current;
-
-  //     // Pausing the playback if it's currently playing
-  //     if (currentAudio.getInternalPlayer) {
-  //       const player = currentAudio.getInternalPlayer();
-  //       const wasPlaying = player.paused === false; // Check if audio is playing
-
-  //       if (wasPlaying) {
-  //         dispatch(pauseSong()); // Pause the audio before seeking
-  //       }
-
-  //       // Seek to the new time
-  //       currentAudio?.seekTo(newTime, "seconds");
-  //       setCurrentTime(newTime); // Update the state with the new time
-
-  //       if (wasPlaying) {
-  //         // Resume playback if it was playing before
-  //         dispatch(playImport());
-  //       }
-  //     }
-  //   }
-  // };
   const handleSeek = (value: number[]) => {
     const newTime = value[0];
 
@@ -459,7 +439,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <AudioControls
             volume={volume}
             ref={audioRef}
-            src={importSongUrl ? importSongUrl : songLink}
+            src={importSongUrl ? importSongUrl : data?.data?.songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={(state: OnProgressProps) => {
               const currentTime = state.playedSeconds;
@@ -480,7 +460,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             {isRecording ? (
               <AudioRecordSlider
                 currentTime={currentTime}
-                audioUrl={songLink}
+                audioUrl={data?.data?.songLink}
               />
             ) : (
               <Slider
@@ -545,7 +525,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 bpm={bpm}
                 bpmLoading={loading}
                 songName={songName}
-                songUrl={songLink}
+                songUrl={data?.data?.songLink}
                 handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}
