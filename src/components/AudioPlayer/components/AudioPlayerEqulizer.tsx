@@ -133,50 +133,6 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
     }
   }, [isOn, presets]);
 
-<<<<<<< HEAD
-useEffect(() => {
-  if (audioContext && audioRef?.current?.getInternalPlayer()) {
-    const audioElement =
-      audioRef.current.getInternalPlayer() as HTMLAudioElement;
-    if (audioElement) {
-      audioElement.crossOrigin = "anonymous"; // Ensures cross-origin requests can be made
-      let audioSource = (audioElement as any)._sourceNode;
-
-      if (!audioSource) {
-        audioSource = audioContext.createMediaElementSource(audioElement);
-        (audioElement as any)._sourceNode = audioSource;
-      }
-
-      const filters = frequencies.map((frequency, index) => {
-        const filter = audioContext.createBiquadFilter();
-        filter.type = "peaking";
-        filter.frequency.value = frequency;
-        filter.Q.value = 1;
-        filter.gain.value = isOn ? gains[index] : 0;
-        return filter;
-      });
-
-      // Chain filters together and connect to destination
-      filters.reduce((prev, current) => {
-        prev.connect(current);
-        return current;
-      });
-
-      filters[filters.length - 1].connect(audioContext.destination);
-      audioSource.connect(filters[0]);
-
-      gainNodesRef.current = filters;
-
-      return () => {
-        filters.forEach((filter) => filter.disconnect());
-        audioSource.disconnect();
-      };
-    }
-  }
-}, [audioContext, audioRef, isOn, gains, frequencies]);
-
-=======
->>>>>>> 9e175b9d0fc0a27c26814ea9e88060f84a56df1f
   const adjustGain = (index: number, value: number) => {
     if (gainNodesRef.current[index]) {
       gainNodesRef.current[index].gain.value = value;
