@@ -1,6 +1,6 @@
 "use client";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
-import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
+// import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
@@ -13,7 +13,12 @@ import { RootState } from "@/redux/store";
 import { useAudio } from "@/lib/AudioProvider";
 import baseApiHandler from "@/utils/baseApiHandler";
 import Loading from "@/app/(withCommonLayout)/music/loading";
-
+import dynamic from "next/dynamic";
+import AudioPlayerEqualizer from "./components/AudioPlayerEqulizer";
+// const AudioPlayerEqualizer = dynamic(
+//   () => import("@/components/AudioPlayer/components/AudioPlayerEqulizer"),
+//   { ssr: false }
+// );
 interface PlayerInterface {
   params?: {
     id: any;

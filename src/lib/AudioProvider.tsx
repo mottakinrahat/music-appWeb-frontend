@@ -7,7 +7,6 @@ import React, {
   useEffect,
 } from "react";
 import ReactPlayer from "react-player";
-import { useDispatch } from "react-redux";
 
 interface AudioContextProps {
   audioContext: AudioContext | null;
@@ -15,6 +14,7 @@ interface AudioContextProps {
   musicSource: MediaElementAudioSourceNode | null | any;
   setMusicSource: (source: MediaElementAudioSourceNode | null | any) => void;
   setAudioRef: (value: ReactPlayer | null | any) => void;
+  setAudioContext: (value: AudioContext | null) => void;
 }
 
 const CombinedAudioContext = createContext<AudioContextProps | undefined>(
@@ -73,6 +73,7 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
         musicSource,
         setAudioRef,
         setMusicSource,
+        setAudioContext,
       }}
     >
       <audio ref={audioElementRef} style={{ display: "none" }} />

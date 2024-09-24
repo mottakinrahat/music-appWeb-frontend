@@ -11,11 +11,11 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  return <Provider store={store}>
-    <AudioProvider>
-    {children}
-  </AudioProvider>
-  </Provider>;
+  return (
+    <Provider store={store}>
+      <AudioProvider>{children}</AudioProvider>
+    </Provider>
+  );
 };
 
 export default Providers;
