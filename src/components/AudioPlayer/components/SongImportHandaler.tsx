@@ -49,6 +49,12 @@ const SongImportModalHandler: React.FC<SongImportModalHandlerProps> = ({
   };
 
   const handleFileSelect = async (file: File) => {
+    // Check if the file is an audio file
+    if (!file.type.startsWith("audio/")) {
+      toast.error("Please select a valid audio file.");
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = async () => {
       const base64Data = reader.result as string;
@@ -62,6 +68,7 @@ const SongImportModalHandler: React.FC<SongImportModalHandlerProps> = ({
       dispatch(karaoke());
     }
   };
+
   const handleDeleteSong = async () => {
     await deleteExistingSongFromIndexedDB();
     dispatch(clearMusicData());
@@ -71,8 +78,13 @@ const SongImportModalHandler: React.FC<SongImportModalHandlerProps> = ({
   const handleFileDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     setDragging(false);
-    if (event.dataTransfer.files.length > 0) {
-      handleFileSelect(event.dataTransfer.files[0]);
+    const file = event.dataTransfer.files[0];
+
+    // Check if the dropped file is an audio file
+    if (file && file.type.startsWith("audio/")) {
+      handleFileSelect(file);
+    } else {
+      toast.error("Please drop a valid audio file.");
     }
   };
 

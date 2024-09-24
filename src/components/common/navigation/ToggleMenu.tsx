@@ -62,14 +62,11 @@ const ToggleMenu: React.FC<ToggleMenuProps> = ({
       <Drawer open={isOpen} onOpenChange={setIsOpen} direction="left">
         <DrawerContent className="w-[70%] z-[99999]  max-w-md h-[100%] -top-2">
           <DrawerHeader>
-            <DrawerTitle>
-              <Logo />
-            </DrawerTitle>
             <DrawerDescription>
-              <span className="space-y-3 block mt-5">
+              <span onClick={toggleMenu} className="space-y-3 block">
                 <Routes />
               </span>
-              <div className="mt-3">
+              <div onClick={toggleMenu} className="mt-3">
                 {!user ? (
                   <Link href="/login">
                     <div className="hover:font-semibold">Login/Sign up</div>

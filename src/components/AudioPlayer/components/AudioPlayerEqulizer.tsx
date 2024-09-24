@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Chart } from "@/components/chart/Chart";
@@ -27,6 +26,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
   const frequencyLabels = ["60Hz", "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
 
   const frequencies = useMemo(() => [60, 160, 400, 1000, 2400, 15000], []);
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   // Presets for the equalizer
   const presets = useMemo(
@@ -46,73 +46,75 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
 
   // Load saved equalizer settings from localStorage
   useEffect(() => {
-    const applyAudioProcessing = (audioElement: HTMLAudioElement) => {
-      const volume = audioRef?.current?.getInternalPlayer()?.volume ?? 1;
-      const playbackRate =
-        audioRef?.current?.getInternalPlayer()?.playbackRate ?? 1;
+    if (!isSafari) {
+      const applyAudioProcessing = (audioElement: HTMLAudioElement) => {
+        const volume = audioRef?.current?.getInternalPlayer()?.volume ?? 1;
+        const playbackRate =
+          audioRef?.current?.getInternalPlayer()?.playbackRate ?? 1;
 
-      // Ensure volume and speed are set after equalizer processing
-      audioElement.volume = volume;
-      audioElement.playbackRate = playbackRate;
-    };
-
-    if (audioContext && audioRef?.current?.getInternalPlayer()) {
-      const audioElement =
-        audioRef.current.getInternalPlayer() as HTMLAudioElement;
-
-      // Resume the audio context if suspended (Safari quirk)
-      if (audioContext.state === "suspended") {
-        audioContext.resume().catch((err) => {
-          console.error("Failed to resume AudioContext:", err);
-        });
-      }
-
-      // Handle CORS restrictions
-      audioElement.crossOrigin = "anonymous";
-
-      // Create or re-use the MediaElementSourceNode
-      let audioSource = (audioElement as any)._sourceNode;
-      if (!audioSource) {
-        audioSource = audioContext.createMediaElementSource(audioElement);
-        (audioElement as any)._sourceNode = audioSource;
-      }
-
-      // Disconnect existing filters
-      gainNodesRef.current.forEach((filter) => filter.disconnect());
-
-      // Create and connect new filters
-      const filters = frequencies.map((frequency, index) => {
-        const filter = audioContext.createBiquadFilter();
-        filter.type = "peaking";
-        filter.frequency.value = frequency;
-        filter.Q.value = 1;
-        filter.gain.value = isOn ? gains[index] : 0;
-        return filter;
-      });
-
-      // Chain filters and connect to destination
-      filters
-        .reduce((prev, current) => {
-          prev.connect(current);
-          return current;
-        })
-        .connect(audioContext.destination);
-
-      audioSource.connect(filters[0]);
-
-      // Store the filters for later use
-      gainNodesRef.current = filters;
-
-      // Apply volume and playback speed
-      applyAudioProcessing(audioElement);
-
-      // Cleanup on unmount
-      return () => {
-        filters.forEach((filter) => filter.disconnect());
-        audioSource.disconnect();
+        // Ensure volume and speed are set after equalizer processing
+        audioElement.volume = volume;
+        audioElement.playbackRate = playbackRate;
       };
+
+      if (audioContext && audioRef?.current?.getInternalPlayer()) {
+        const audioElement =
+          audioRef.current.getInternalPlayer() as HTMLAudioElement;
+
+        // Resume the audio context if suspended (Safari quirk)
+        if (audioContext.state === "suspended") {
+          audioContext.resume().catch((err) => {
+            console.error("Failed to resume AudioContext:", err);
+          });
+        }
+
+        // Handle CORS restrictions
+        audioElement.crossOrigin = "anonymous";
+
+        // Create or re-use the MediaElementSourceNode
+        let audioSource = (audioElement as any)._sourceNode;
+        if (!audioSource) {
+          audioSource = audioContext.createMediaElementSource(audioElement);
+          (audioElement as any)._sourceNode = audioSource;
+        }
+
+        // Disconnect existing filters
+        gainNodesRef.current.forEach((filter) => filter.disconnect());
+
+        // Create and connect new filters
+        const filters = frequencies.map((frequency, index) => {
+          const filter = audioContext.createBiquadFilter();
+          filter.type = "peaking";
+          filter.frequency.value = frequency;
+          filter.Q.value = 1;
+          filter.gain.value = isOn ? gains[index] : 0;
+          return filter;
+        });
+
+        // Chain filters and connect to destination
+        filters
+          .reduce((prev, current) => {
+            prev.connect(current);
+            return current;
+          })
+          .connect(audioContext.destination);
+
+        audioSource.connect(filters[0]);
+
+        // Store the filters for later use
+        gainNodesRef.current = filters;
+
+        // Apply volume and playback speed
+        applyAudioProcessing(audioElement);
+
+        // Cleanup on unmount
+        return () => {
+          filters.forEach((filter) => filter.disconnect());
+          audioSource.disconnect();
+        };
+      }
     }
-  }, [audioContext, audioRef, isOn, gains, frequencies]);
+  }, [audioContext, audioRef, isOn, gains, frequencies, isSafari]);
 
   // Toggle the equalizer on or off
   const toggleSwitch = useCallback(() => {

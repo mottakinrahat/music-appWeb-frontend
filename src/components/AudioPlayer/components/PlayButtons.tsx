@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import PreviousIcon from "@/assets/icons/arrow_back (1).svg";
 import NextIcon from "@/assets/icons/arrow_back.svg";
@@ -39,6 +38,8 @@ const PlayButtons = ({
   useEffect(() => {
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
+      setShowControl(true);
+    } else if (pathname.startsWith("/offline")) {
       setShowControl(true);
     } else {
       setShowControl(false);

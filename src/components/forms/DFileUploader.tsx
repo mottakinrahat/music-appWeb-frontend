@@ -113,11 +113,11 @@ const DFileUploader = ({
               Drag & Drop or{" "}
               <span className="underline">Upload your files</span>
             </span>
-            <Input
+            <Input 
               {...field}
               type="file"
               name={name}
-              accept={accept} // Accept only audio files
+              accept=".mp3,.wav,.aac,.flac,.ogg,.m4a,.wma"
               multiple // Enable multiple file selection
               onChange={(e) =>
                 onChange(Array.from((e.target as HTMLInputElement).files || []))

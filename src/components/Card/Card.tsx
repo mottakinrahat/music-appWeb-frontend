@@ -63,6 +63,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   const pathname = usePathname();
   const dispatch = useDispatch();
   // const query = useSearchParams();
+  // console.log(query.get("new-release"));
   const importedSong = useSelector((state: RootState) => state.musicData);
 
   const deleteExistingSongFromIndexedDB = async () => {

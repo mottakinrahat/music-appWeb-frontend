@@ -48,7 +48,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
 }) => {
   const router = useRouter();
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
-  const [quality, setQuality] = useState<any>("high");
+  const [quality, setQuality] = useState<any>("low");
   const [isEqOn, setEqOn] = useState(false);
   const [currentBpm, setCurrentBpm] = useState<number>(bpm);
 
@@ -77,9 +77,9 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
   // toggle quality
   const toggleQuality = () => {
     const newQuality =
-      quality === "high" ? "medium" : quality === "medium" ? "low" : "high";
+      quality === "low" ? "medium" : quality === "medium" ? "high" : "low";
     setQuality(newQuality);
-    // localStorage.setItem("quality", newQuality);
+    localStorage.setItem("quality", newQuality);
   };
 
   // handle playback speed
@@ -126,11 +126,11 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
             onClick={toggleQuality}
             className="font-semibold select-none cursor-pointer"
           >
-            {quality === "high"
-              ? "High"
+            {quality === "low"
+              ? "low"
               : quality === "medium"
               ? "Medium"
-              : "Low"}
+              : "High"}
           </span>
         </li>
       </ul>

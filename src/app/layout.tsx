@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import Providers from "@/lib/Providers";
 import { Toaster } from "sonner";
+import { AudioProvider } from "@/lib/AudioProvider";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -27,12 +28,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
+  return (<Providers>
     <html data-theme="light" lang="en">
       <body className={outfit.className}>
-        <Providers>{children}</Providers>
+        <AudioProvider>
+
+        {children}
         <Toaster position="bottom-center" />
+        </AudioProvider>
       </body>
     </html>
+  </Providers>
   );
 }
