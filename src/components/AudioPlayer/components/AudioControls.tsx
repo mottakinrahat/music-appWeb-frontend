@@ -354,6 +354,15 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
       setError("Error loading audio. Trying a fallback URL.");
     };
 
+    // Function to detect if the browser is Safari
+    const isSafari = () => {
+      const ua = navigator.userAgent;
+      return ua.includes("Safari") && !ua.includes("Chrome");
+    };
+
+    // Conditionally set crossOrigin attribute based on browser
+    const crossOriginValue = isSafari() ? undefined : "anonymous";
+
     return (
       <div className="hidden">
         {error && <div className="error-message">{error}</div>}

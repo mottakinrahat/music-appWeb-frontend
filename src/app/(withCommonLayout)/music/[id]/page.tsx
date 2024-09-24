@@ -14,26 +14,37 @@ interface PlayerInterface {
 const Player: React.FC<PlayerInterface> = ({ params }) => {
   const playing = useSelector((state: RootState) => state.player.playing);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [hasReloaded, setHasReloaded] = useState(false);
 
   useEffect(() => {
-    // Check if both playing and songId are available
-    const songId = params?.id;
+    // Check if the code is running in the browser
+    if (typeof window !== "undefined") {
+      const songId = params?.id;
+      const reloaded = localStorage.getItem("hasReloaded") === "true";
 
-    if (songId && typeof playing !== "undefined") {
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: playing, id: songId })
-      );
-      setIsDataLoaded(true); // Mark as loaded once localStorage is set
+      if (songId && typeof playing !== "undefined" && !reloaded) {
+        // Store the song data in localStorage
+        localStorage.setItem(
+          "songData",
+          JSON.stringify({ play: playing, id: songId })
+        );
+        setIsDataLoaded(true); // Mark as loaded
+
+        // Trigger a page reload only once
+        localStorage.setItem("hasReloaded", "true"); // Persist reload state
+        setHasReloaded(true);
+        window.location.reload(); // Reload the page
+      } else if (reloaded) {
+        setIsDataLoaded(true); // Mark as loaded if already reloaded
+      }
     }
   }, [params?.id, playing]);
 
   if (!isDataLoaded) {
-    // Display a loading spinner or some placeholder content
-    return <Loading />;
+    return <Loading />; // Display a loading component if data isn't loaded yet
   }
 
-  return null; // Return nothing if localStorage is set
+  return null; // No need to render anything once data is set and the reload is triggered
 };
 
 export default Player;
