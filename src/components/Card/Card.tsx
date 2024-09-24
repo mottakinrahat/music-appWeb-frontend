@@ -88,9 +88,6 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
     const userId = user?._id;
-    const playListData = {
-      userId: userId,
-    };
     if (!userId) {
       toast.warning("Please login first!");
     } else {
@@ -99,7 +96,6 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
         isFavourite,
         musicId ? musicId : "", // songId
         userId, // userId
-        playListData.userId,
         imageUrl, // Replace with dynamic artwork URL
         title ? title : "" // Replace with dynamic placeholder URL
       );
