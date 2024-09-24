@@ -7,7 +7,6 @@ import React, {
   useEffect,
 } from "react";
 import ReactPlayer from "react-player";
-import { useDispatch } from "react-redux";
 
 interface AudioContextProps {
   audioContext: AudioContext | null;
@@ -29,11 +28,12 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
   const [audioRef, setAudioRef] = useState<ReactPlayer | null | any>(null);
   const [musicSource, setMusicSource] =
     useState<MediaElementAudioSourceNode | null>(null);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const initializeAudioContext = async () => {
-      const context = new AudioContext();
+      const AudioCtx = (window.AudioContext ||
+        (window as any).webkitAudioContext) as typeof AudioContext;
+      const context = new AudioCtx();
       setAudioContext(context);
 
       // Cleanup function
