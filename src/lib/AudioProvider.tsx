@@ -52,19 +52,31 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   useEffect(() => {
-    if (audioContext && audioElementRef.current) {
-      const newMusicSource = audioContext.createMediaElementSource(
-        audioElementRef.current // Using the native <audio> element
-      );
-      setMusicSource(newMusicSource);
+    const initializeAudioContext = async () => {
+      const AudioCtx = (window.AudioContext ||
+        (window as any).webkitAudioContext) as typeof AudioContext;
+      const context = new AudioCtx();
+      setAudioContext(context);
 
+      // Resume the context if it's suspended
+      if (context.state === "suspended") {
+        await context.resume();
+      }
+
+      // Cleanup function
       return () => {
-        if (newMusicSource) {
-          newMusicSource.disconnect();
-        }
+        context.close();
       };
-    }
-  }, [audioContext]);
+    };
+
+    const cleanup = initializeAudioContext();
+
+    return () => {
+      if (cleanup instanceof Promise) {
+        cleanup.then(() => {});
+      }
+    };
+  }, []);
 
   return (
     <CombinedAudioContext.Provider
