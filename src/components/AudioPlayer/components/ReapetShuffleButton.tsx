@@ -31,23 +31,22 @@ const RepeatShuffleButton: React.FC<RepeatShuffleProps> = ({ className }) => {
     <div className={`${className}  flex items-center justify-center`}>
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger>
-            <button
-              disabled={importedUrl ? true : false}
-              className=" transition flex items-center disabled:text-gray-400 disabled:cursor-not-allowed justify-center"
-              onClick={handleToggleRepeat}
-            >
-              {repeat === "repeat-one" ? (
-                <LucideRepeat1 className="text-xs p-[2px] sm:p-0" />
-              ) : repeat === "repeat-all" ? (
-                <LucideRepeat className="text-sm p-[2px] sm:p-0" />
-              ) : repeat === "shuffle" ? (
-                <PiShuffle className=" text-xl sm:text-2xl " />
-              ) : (
-                <TbRepeatOff className=" text-xl sm:text-2xl " />
-              )}
-            </button>
-          </TooltipTrigger>
+          <button
+            disabled={importedUrl ? true : false}
+            className=" transition flex items-center disabled:text-gray-400 disabled:cursor-not-allowed justify-center"
+            onClick={handleToggleRepeat}
+          >
+            {repeat === "repeat-one" ? (
+              <LucideRepeat1 className="text-xs p-[2px] sm:p-0" />
+            ) : repeat === "repeat-all" ? (
+              <LucideRepeat className="text-sm p-[2px] sm:p-0" />
+            ) : repeat === "shuffle" ? (
+              <PiShuffle className=" text-xl sm:text-2xl " />
+            ) : (
+              <TbRepeatOff className=" text-xl sm:text-2xl " />
+            )}
+          </button>
+
           <TooltipContent>
             <p>
               {repeat === "repeat-one"

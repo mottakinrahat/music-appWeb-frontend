@@ -8,7 +8,7 @@ import PlayButtons from "./components/PlayButtons";
 import MusicControls from "./components/MusicControls";
 import axios from "axios";
 import { toast } from "sonner";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import MiniPlayer from "./MiniPlayer";
 import { Slider } from "../ui/slider";
 import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
@@ -140,7 +140,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     baseApiUrl,
   ]);
 
-  const { data } = useSingleSongQuery(songId);
+  const params: { id: any } = useParams();
+  const { data } = useSingleSongQuery(params.id);
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
