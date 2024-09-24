@@ -317,10 +317,8 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
   const { audioContext } = useAudio();
 
   const frequencyLabels = ["60Hz", "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
-
   const frequencies = useMemo(() => [60, 160, 400, 1000, 2400, 15000], []);
 
-  // Move presets outside of the effect for reusability and performance
   const presets = useMemo(
     () => ({
       flat: [0, 0, 0, 0, 0, 0],
@@ -352,7 +350,6 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
     setIsOn(savedIsEqOn === "true");
   }, [presets]);
 
-  // Toggle EQ state
   const toggleSwitch = useCallback(() => {
     setIsOn((prevIsOn) => {
       const newIsOn = !prevIsOn;
@@ -371,46 +368,53 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
     }
   }, [isOn, presets]);
 
-useEffect(() => {
-  if (audioContext && audioRef?.current?.getInternalPlayer()) {
+  useEffect(() => {
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+  }, [audioContext]);
+
+  useEffect(() => {
+    if (!audioRef?.current?.getInternalPlayer || !audioContext) return;
+
     const audioElement =
       audioRef.current.getInternalPlayer() as HTMLAudioElement;
-    if (audioElement) {
-      audioElement.crossOrigin = "anonymous"; // Ensures cross-origin requests can be made
-      let audioSource = (audioElement as any)._sourceNode;
+    if (!audioElement) return;
 
-      if (!audioSource) {
-        audioSource = audioContext.createMediaElementSource(audioElement);
-        (audioElement as any)._sourceNode = audioSource;
-      }
+    audioElement.crossOrigin = "anonymous";
+    let audioSource = (audioElement as any)._sourceNode;
 
-      const filters = frequencies.map((frequency, index) => {
-        const filter = audioContext.createBiquadFilter();
-        filter.type = "peaking";
-        filter.frequency.value = frequency;
-        filter.Q.value = 1;
-        filter.gain.value = isOn ? gains[index] : 0;
-        return filter;
-      });
-
-      // Chain filters together and connect to destination
-      filters.reduce((prev, current) => {
-        prev.connect(current);
-        return current;
-      });
-
-      filters[filters.length - 1].connect(audioContext.destination);
-      audioSource.connect(filters[0]);
-
-      gainNodesRef.current = filters;
-
-      return () => {
-        filters.forEach((filter) => filter.disconnect());
-        audioSource.disconnect();
-      };
+    if (!audioSource) {
+      audioSource = audioContext.createMediaElementSource(audioElement);
+      (audioElement as any)._sourceNode = audioSource;
     }
-  }
-}, [audioContext, audioRef, isOn, gains, frequencies]);
+
+    const filters = frequencies.map((frequency, index) => {
+      const filter = audioContext.createBiquadFilter();
+      filter.type = "peaking";
+      filter.frequency.value = frequency;
+      filter.Q.value = 1;
+      filter.gain.value = isOn ? gains[index] : 0;
+      return filter;
+    });
+
+    filters.reduce((prev, current) => {
+      prev.connect(current);
+      return current;
+    });
+
+    filters[filters.length - 1].connect(audioContext.destination);
+    audioSource.connect(filters[0]);
+
+    gainNodesRef.current = filters;
+
+    return () => {
+      filters.forEach((filter) => filter.disconnect());
+      if (audioSource) {
+        audioSource.disconnect();
+      }
+    };
+  }, [audioContext, audioRef, isOn, gains, frequencies]);
 
   const adjustGain = (index: number, value: number) => {
     if (gainNodesRef.current[index]) {
