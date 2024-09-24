@@ -43,7 +43,10 @@ import AudioRecordSlider from "./AudioRecording/AudioRecordSlider";
 import { OnProgressProps } from "react-player/base";
 import ReactPlayer from "react-player";
 import baseApiHandler from "@/utils/baseApiHandler";
-import { useIsFavouriteUserMutation } from "@/redux/api/songApi";
+import {
+  useIsFavouriteUserMutation,
+  useSingleSongQuery,
+} from "@/redux/api/songApi";
 
 interface AudioPlayerProps {
   id?: any;
@@ -136,6 +139,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     importSongUrl,
     baseApiUrl,
   ]);
+
+  const { data } = useSingleSongQuery(songId);
 
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
@@ -433,7 +438,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           <AudioControls
             volume={volume}
             ref={audioRef}
-            src={importSongUrl ? importSongUrl : songLink}
+            src={importSongUrl ? importSongUrl : data?.data?.songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={(state: OnProgressProps) => {
               const currentTime = state.playedSeconds;
@@ -454,7 +459,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             {isRecording ? (
               <AudioRecordSlider
                 currentTime={currentTime}
-                audioUrl={songLink}
+                audioUrl={data?.data?.songLink}
               />
             ) : (
               <Slider
@@ -519,7 +524,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 bpm={bpm}
                 bpmLoading={loading}
                 songName={songName}
-                songUrl={songLink}
+                songUrl={data?.data?.songLink}
                 handleOpenPlayList={handleOpenPlayList}
                 volume={volume}
                 handleVolumeChange={handleVolumeChange}

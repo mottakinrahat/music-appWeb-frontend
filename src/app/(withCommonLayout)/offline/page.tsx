@@ -10,12 +10,10 @@ import {
   MdOutlineSkipPrevious,
   MdPauseCircle,
 } from "react-icons/md";
-import ShowLyricsIcon from "@/components/AudioPlayer/components/PlayLIstIcon";
 import RepeatShuffleButton from "@/components/AudioPlayer/components/ReapetShuffleButton";
 import { Slider } from "@/components/ui/slider";
 import { initDB } from "@/utils/initDB";
 import SongMarquee from "@/components/AudioPlayer/components/SongMarquee";
-import { useAudio } from "@/lib/AudioProvider";
 import { playImport } from "@/redux/slice/music/musicActionSlice";
 import { useDispatch } from "react-redux";
 

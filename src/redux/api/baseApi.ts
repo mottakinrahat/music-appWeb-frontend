@@ -28,5 +28,6 @@ export const baseApi = createApi({
     "Favorite",
     "Playlist",
     "allSongs",
+    "singleSong",
   ],
 });

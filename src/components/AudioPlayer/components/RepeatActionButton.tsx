@@ -16,9 +16,6 @@ export interface RepeatActionButtonProps {
 }
 
 const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
-  toggleRepeat,
-  src,
-  // repeat,
   handleOpenLyrics,
   isfavorite,
   handleAddToFavorites,
@@ -41,7 +38,7 @@ const RepeatActionButton: React.FC<RepeatActionButtonProps> = ({
               <button
                 disabled={importedUrl}
                 onClick={handleAddToFavorites}
-                className={`hidden min-[340px]:block transition text-white hover:text-accent ${
+                className={`hidden min-[340px]:block transition text-white disabled:text-gray-400 hover:text-accent ${
                   importedUrl ? "cursor-not-allowed" : "cursor-pointer "
                 }`}
               >
