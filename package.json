@@ -55,6 +55,7 @@
     "swiper": "^11.1.10",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "tone": "^15.0.4",
     "vaul": "^0.9.1",
     "wavesurfer.js": "^7.8.6",
     "xsound": "^3.11.1",
