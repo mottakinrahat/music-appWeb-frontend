@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import { Chart } from "@/components/chart/Chart";
@@ -221,6 +223,9 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
 };
 
 export default AudioPlayerEqualizer;
+
+// Equlizer 3
+
 // import { Chart } from "@/components/chart/Chart";
 // import { useAudio } from "@/lib/AudioProvider";
 // import React, {
