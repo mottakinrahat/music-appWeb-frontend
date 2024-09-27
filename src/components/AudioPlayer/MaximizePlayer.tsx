@@ -41,7 +41,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   const [playListWidth, setPlayListWidth] = useState<number>(0);
   const importedSong = useSelector((state: RootState) => state.musicData);
   const [loading, setLoading] = useState<boolean>(true);
-  const { audioContext: musicContext, audioRef } = useAudio();
+  // const { musicContext} = useAudio();
   const router = useRouter();
   const apiUrl = baseApiHandler();
 
@@ -173,7 +173,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
       setCurrentTrackIndex(initialTrackIndex);
     }
     setCurrentSong(tracks[initialTrackIndex]);
-  }, [musicContext, params?.id, tracks]);
+  }, [ params?.id, tracks]);
 
   // show controls
   const pathname = usePathname();
@@ -407,7 +407,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
               onTouchStart={handleTouchStart}
             ></div>
           )}
-          <AudioPlayerEqualizer audioRef={audioRef} />
+          <AudioPlayerEqualizer />
         </div>
       </div>
     </div>

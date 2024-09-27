@@ -14,33 +14,38 @@ export const handlePlayPause = async ({
   playing,
   songId,
   setUserClickedPlay,
-  audioElement,
+  howl, // Changed from audioElement to howl
 }: {
   dispatch: Dispatch<any>;
   playing: boolean;
   songId: string;
   setUserClickedPlay: Dispatch<SetStateAction<boolean>>;
-  audioElement: ReactPlayer | null;
+  howl: Howl | null; // Expecting howl instance instead of ReactPlayer
 }) => {
   setUserClickedPlay((state) => !state);
 
   try {
-    if (playing) {
-      dispatch(pauseSong());
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: false, id: songId })
-      );
+    if (howl) {
+      if (playing) {
+        howl.pause(); // Pause playback with Howler
+        dispatch(pauseSong());
+        localStorage.setItem(
+          "songData",
+          JSON.stringify({ play: false, id: songId })
+        );
+      } else {
+        howl.play(); // Play the song with Howler
+        dispatch(playSong(songId));
+        localStorage.setItem(
+          "songData",
+          JSON.stringify({ play: true, id: songId })
+        );
+      }
     } else {
-     
-      dispatch(playSong(songId));
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: true, id: songId })
-      );
+      console.error("Howl instance is null.");
     }
   } catch (error) {
-    // console.clear();
+    console.error("Error during playback control:", error);
   }
 };
 
@@ -97,39 +102,103 @@ export const handleProgress = (
   setPlayed(playedPercentage);
 };
 
+// export const handleEnd = (
+//   audioRef: MutableRefObject<ReactPlayer | null>,
+//   repeat: string,
+//   handleNext: () => void,
+//   handleRandom: () => void
+// ) => {
+//   const audioElement = audioRef.current;
+
+//   if (audioElement) {
+//     if (repeat === "repeat-all") {
+//       handleNext(); // Move to the next track
+//     } else if (repeat === "repeat-one") {
+//       // Restart the track by seeking to the start and playing again
+//       audioElement.seekTo(0, "seconds");
+//     } else if (repeat === "repeat-off" || repeat === "shuffle") {
+//       handleRandom(); // Handle random track selection or normal track progression
+//     }
+//   }
+// };
+
 
 export const handleEnd = (
-  audioRef: MutableRefObject<ReactPlayer | null>,
+  howl: Howl | null, // Expecting a Howl instance instead of audioRef
   repeat: string,
   handleNext: () => void,
   handleRandom: () => void
 ) => {
-  const audioElement = audioRef.current;
-
-  if (audioElement) {
+  if (howl) {
     if (repeat === "repeat-all") {
       handleNext(); // Move to the next track
     } else if (repeat === "repeat-one") {
       // Restart the track by seeking to the start and playing again
-      audioElement.seekTo(0, "seconds");
+      howl.seek(0); // Seek to the start
+      howl.play(); // Play the track again
     } else if (repeat === "repeat-off" || repeat === "shuffle") {
       handleRandom(); // Handle random track selection or normal track progression
     }
+  } else {
+    console.error("Howl instance is null.");
   }
 };
+// export const handlePreviousTenSecond = (
+//   audioElement: ReactPlayer | null,
+//   duration: number,
+//   dispatch: AppDispatch
+// ) => {
+//   if (audioElement && audioElement.getCurrentTime && audioElement.seekTo) {
+//     const currentTime = audioElement.getCurrentTime();
+//     const wasPlaying = audioElement.props.playing;
+
+//     // Skip the current time by 10 seconds, or to the end if duration is exceeded
+//     const newTime = Math.min(currentTime - 10, duration);
+//     audioElement.seekTo(newTime, "seconds");
+
+//     // If the audio was playing, set the playback state accordingly
+//     if (wasPlaying) {
+//       dispatch(playImport()); // Continue playing
+//     } else {
+//       dispatch(pauseSong()); // Pause
+//     }
+//   }
+// };
+
+// export const handleNextTenSeconds = (
+//   audioElement: ReactPlayer | null,
+//   duration: number,
+//   dispatch: AppDispatch
+// ) => {
+//   if (audioElement && audioElement.getCurrentTime && audioElement.seekTo) {
+//     const currentTime = audioElement.getCurrentTime();
+//     const wasPlaying = audioElement.props.playing;
+
+//     // Skip the current time by 10 seconds, or to the end if duration is exceeded
+//     const newTime = Math.min(currentTime + 10, duration);
+//     audioElement.seekTo(newTime, "seconds");
+
+//     // If the audio was playing, set the playback state accordingly
+//     if (wasPlaying) {
+//       dispatch(playImport()); // Continue playing
+//     } else {
+//       dispatch(pauseSong()); // Pause
+//     }
+//   }
+// };
 
 export const handlePreviousTenSecond = (
-  audioElement: ReactPlayer | null,
+  howl: Howl | null,
   duration: number,
   dispatch: AppDispatch
 ) => {
-  if (audioElement && audioElement.getCurrentTime && audioElement.seekTo) {
-    const currentTime = audioElement.getCurrentTime();
-    const wasPlaying = audioElement.props.playing;
+  if (howl) {
+    const currentTime = howl.seek(); // Get current playback time
+    const wasPlaying = howl.playing(); // Check if the audio is currently playing
 
     // Skip the current time by 10 seconds, or to the end if duration is exceeded
     const newTime = Math.min(currentTime - 10, duration);
-    audioElement.seekTo(newTime, "seconds");
+    howl.seek(newTime); // Seek to the new time
 
     // If the audio was playing, set the playback state accordingly
     if (wasPlaying) {
@@ -137,21 +206,22 @@ export const handlePreviousTenSecond = (
     } else {
       dispatch(pauseSong()); // Pause
     }
+  } else {
+    console.error("Howl instance is null.");
   }
 };
-
 export const handleNextTenSeconds = (
-  audioElement: ReactPlayer | null,
+  howl: Howl | null,
   duration: number,
   dispatch: AppDispatch
 ) => {
-  if (audioElement && audioElement.getCurrentTime && audioElement.seekTo) {
-    const currentTime = audioElement.getCurrentTime();
-    const wasPlaying = audioElement.props.playing;
+  if (howl) {
+    const currentTime = howl.seek(); // Get current playback time
+    const wasPlaying = howl.playing(); // Check if the audio is currently playing
 
     // Skip the current time by 10 seconds, or to the end if duration is exceeded
     const newTime = Math.min(currentTime + 10, duration);
-    audioElement.seekTo(newTime, "seconds");
+    howl.seek(newTime); // Seek to the new time
 
     // If the audio was playing, set the playback state accordingly
     if (wasPlaying) {
@@ -159,5 +229,7 @@ export const handleNextTenSeconds = (
     } else {
       dispatch(pauseSong()); // Pause
     }
+  } else {
+    console.error("Howl instance is null.");
   }
 };

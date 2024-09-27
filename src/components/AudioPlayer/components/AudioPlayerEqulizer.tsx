@@ -10,23 +10,16 @@ import React, {
   useMemo,
 } from "react";
 import { IoCheckmarkSharp } from "react-icons/io5";
-import ReactPlayer from "react-player";
 
-interface EqualizerProps {
-  audioRef: React.RefObject<ReactPlayer>;
-}
-
-const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
+const AudioPlayerEqualizer: React.FC = () => {
   const gainNodesRef = useRef<GainNode[]>([]);
-  const [gains, setGains] = useState<number[]>([]);
+  const [gains, setGains] = useState<number[]>(Array(6).fill(0));
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
   const [isOn, setIsOn] = useState(false);
-  const { audioContext } = useAudio();
+  const { howl } = useAudio();
 
   const frequencyLabels = ["60Hz", "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
-
   const frequencies = useMemo(() => [60, 160, 400, 1000, 2400, 15000], []);
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   // Presets for the equalizer
   const presets = useMemo(
@@ -45,83 +38,28 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
   );
 
   useEffect(() => {
-    const applyAudioProcessing = (audioElement: HTMLAudioElement) => {
-      const volume = audioRef?.current?.getInternalPlayer()?.volume ?? 1;
-      const playbackRate =
-        audioRef?.current?.getInternalPlayer()?.playbackRate ?? 1;
-
-      // Ensure volume and speed are set after equalizer processing
-      audioElement.volume = volume;
-      audioElement.playbackRate = playbackRate;
-    };
-
-    if (audioContext && audioRef?.current?.getInternalPlayer()) {
-      const audioElement =
-        audioRef.current.getInternalPlayer() as HTMLAudioElement;
-
-      // Resume the audio context if suspended (Safari quirk)
-      if (audioContext.state === "suspended") {
-        audioContext.resume().catch((err) => {
-          console.error("Failed to resume AudioContext:", err);
-        });
-      }
-
-      // Create or re-use the MediaElementSourceNode
-      let audioSource = (audioElement as any)._sourceNode;
-      if (!audioSource) {
-        audioSource = audioContext.createMediaElementSource(audioElement);
-        (audioElement as any)._sourceNode = audioSource;
-      }
-
-      // Disconnect existing filters
-      gainNodesRef.current.forEach((filter) => filter.disconnect());
-
-      // Create and connect new filters
-      const filters = frequencies.map((frequency, index) => {
-        const filter = audioContext.createBiquadFilter();
-        filter.type = "peaking";
-        filter.frequency.value = frequency;
-        filter.Q.value = 1;
-        filter.gain.value = isOn ? gains[index] : 0;
-        return filter;
-      });
-
-      // Chain filters and connect to destination
-      filters
-        .reduce((prev, current) => {
-          prev.connect(current);
-          return current;
-        })
-        .connect(audioContext.destination);
-
-      audioSource.connect(filters[0]);
-
-      // Store the filters for later use
-      gainNodesRef.current = filters;
-
-      // Apply volume and playback speed
-      applyAudioProcessing(audioElement);
-
-      // Cleanup on unmount
-      return () => {
-        filters.forEach((filter) => filter.disconnect());
-        audioSource.disconnect();
-      };
+    if (howl) {
+      howl.on("play", () => {});
     }
-  }, [audioContext, audioRef, isOn, gains, frequencies, isSafari]);
+
+    return () => {
+      if (howl) {
+        howl.off("play");
+      }
+    };
+  }, [howl]);
 
   // Toggle the equalizer on or off
-  const toggleSwitch = useCallback(() => {
+  const toggleSwitch = () => {
     setIsOn((prevIsOn) => {
       const newIsOn = !prevIsOn;
-      localStorage.setItem("isEqOn", newIsOn.toString());
       if (!newIsOn) {
         setGains(presets.flat);
         setSelectedPreset("flat");
       }
       return newIsOn;
     });
-  }, [presets]);
+  };
 
   useEffect(() => {
     if (!isOn) {
@@ -130,14 +68,15 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
   }, [isOn, presets]);
 
   const adjustGain = (index: number, value: number) => {
-    if (gainNodesRef.current[index]) {
-      gainNodesRef.current[index].gain.value = value;
-    }
     setGains((prevGains) => {
       const newGains = [...prevGains];
       newGains[index] = value;
       return newGains;
     });
+    // Update Howler volume if needed
+    if (howl) {
+      howl.volume(value); // Simplified example, adapt for each frequency
+    }
   };
 
   const applyPreset = (preset: number[]) => {
@@ -161,7 +100,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
       >
         <Chart data={data} />
       </div>
-      <div style={{ marginTop: "0px" }}>
+      <div>
         <div className="flex justify-between">
           <h3 className="font-semibold">Equalizer</h3>
           <div
@@ -185,13 +124,6 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
                   if (isOn) {
                     setSelectedPreset(preset);
                     applyPreset(presets[preset as keyof typeof presets]);
-                    localStorage.setItem(
-                      "eqSettings",
-                      JSON.stringify({
-                        gains: presets[preset as keyof typeof presets],
-                        preset,
-                      })
-                    );
                   }
                 }}
                 key={index}
@@ -215,6 +147,224 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
 };
 
 export default AudioPlayerEqualizer;
+
+// "use client";
+
+// import { Chart } from "@/components/chart/Chart";
+// import { useAudio } from "@/lib/AudioProvider";
+// import React, {
+//   useRef,
+//   useState,
+//   useEffect,
+//   useCallback,
+//   useMemo,
+// } from "react";
+// import { IoCheckmarkSharp } from "react-icons/io5";
+// import ReactPlayer from "react-player";
+
+// interface EqualizerProps {
+//   audioRef: React.RefObject<ReactPlayer>;
+// }
+
+// const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
+//   const gainNodesRef = useRef<GainNode[]>([]);
+//   const [gains, setGains] = useState<number[]>([]);
+//   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
+//   const [isOn, setIsOn] = useState(false);
+//   const { audioContext } = useAudio();
+
+//   const frequencyLabels = ["60Hz", "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
+
+//   const frequencies = useMemo(() => [60, 160, 400, 1000, 2400, 15000], []);
+//   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+//   // Presets for the equalizer
+//   const presets = useMemo(
+//     () => ({
+//       flat: [0, 0, 0, 0, 0, 0],
+//       rock: [5, 3, 0, -3, -5, -7],
+//       jazz: [0, 2, 5, 3, 0, -2],
+//       dance: [4, 5, 2, -1, -2, -4],
+//       deep: [6, 4, 2, 0, -2, -4],
+//       electronic: [5, 4, 3, 1, -1, -3],
+//       acoustic: [3, 2, 1, 0, 0, 2],
+//       "bass booster": [7, 5, 3, 1, -1, -5],
+//       classical: [2, 3, 4, 5, 6, 2],
+//     }),
+//     []
+//   );
+
+//   useEffect(() => {
+//     const applyAudioProcessing = (audioElement: HTMLAudioElement) => {
+//       const volume = audioRef?.current?.getInternalPlayer()?.volume ?? 1;
+//       const playbackRate =
+//         audioRef?.current?.getInternalPlayer()?.playbackRate ?? 1;
+
+//       // Ensure volume and speed are set after equalizer processing
+//       audioElement.volume = volume;
+//       audioElement.playbackRate = playbackRate;
+//     };
+
+//     if (audioContext && audioRef?.current?.getInternalPlayer()) {
+//       const audioElement =
+//         audioRef.current.getInternalPlayer() as HTMLAudioElement;
+
+//       // Resume the audio context if suspended (Safari quirk)
+//       if (audioContext.state === "suspended") {
+//         audioContext.resume().catch((err) => {
+//           console.error("Failed to resume AudioContext:", err);
+//         });
+//       }
+
+//       // Create or re-use the MediaElementSourceNode
+//       let audioSource = (audioElement as any)._sourceNode;
+//       if (!audioSource) {
+//         audioSource = audioContext.createMediaElementSource(audioElement);
+//         (audioElement as any)._sourceNode = audioSource;
+//       }
+
+//       // Disconnect existing filters
+//       gainNodesRef.current.forEach((filter) => filter.disconnect());
+
+//       // Create and connect new filters
+//       const filters = frequencies.map((frequency, index) => {
+//         const filter = audioContext.createBiquadFilter();
+//         filter.type = "peaking";
+//         filter.frequency.value = frequency;
+//         filter.Q.value = 1;
+//         filter.gain.value = isOn ? gains[index] : 0;
+//         return filter;
+//       });
+
+//       // Chain filters and connect to destination
+//       filters
+//         .reduce((prev, current) => {
+//           prev.connect(current);
+//           return current;
+//         })
+//         .connect(audioContext.destination);
+
+//       audioSource.connect(filters[0]);
+
+//       // Store the filters for later use
+//       gainNodesRef.current = filters;
+
+//       // Apply volume and playback speed
+//       applyAudioProcessing(audioElement);
+
+//       // Cleanup on unmount
+//       return () => {
+//         filters.forEach((filter) => filter.disconnect());
+//         audioSource.disconnect();
+//       };
+//     }
+//   }, [audioContext, audioRef, isOn, gains, frequencies, isSafari]);
+
+//   // Toggle the equalizer on or off
+//   const toggleSwitch = useCallback(() => {
+//     setIsOn((prevIsOn) => {
+//       const newIsOn = !prevIsOn;
+//       localStorage.setItem("isEqOn", newIsOn.toString());
+//       if (!newIsOn) {
+//         setGains(presets.flat);
+//         setSelectedPreset("flat");
+//       }
+//       return newIsOn;
+//     });
+//   }, [presets]);
+
+//   useEffect(() => {
+//     if (!isOn) {
+//       setGains(presets.flat);
+//     }
+//   }, [isOn, presets]);
+
+//   const adjustGain = (index: number, value: number) => {
+//     if (gainNodesRef.current[index]) {
+//       gainNodesRef.current[index].gain.value = value;
+//     }
+//     setGains((prevGains) => {
+//       const newGains = [...prevGains];
+//       newGains[index] = value;
+//       return newGains;
+//     });
+//   };
+
+//   const applyPreset = (preset: number[]) => {
+//     preset.forEach((gain, index) => {
+//       adjustGain(index, gain);
+//     });
+//   };
+
+//   const data = frequencies.map((freq, index) => ({
+//     frequency: frequencyLabels[index],
+//     gain: gains[index],
+//   }));
+
+//   return (
+//     <div className="p-4 md:p-5 lg:p-10 bg-white relative z-[9999] overflow-auto w-[300] md:w-[500px] sm:w-[400px]">
+//       <h3 className="text-3xl font-semibold mb-5 md:mb-8">EQ Settings</h3>
+//       <div
+//         className={`transition-opacity duration-300 w-full ${
+//           !isOn ? "opacity-40" : "opacity-100"
+//         }`}
+//       >
+//         <Chart data={data} />
+//       </div>
+//       <div style={{ marginTop: "0px" }}>
+//         <div className="flex justify-between">
+//           <h3 className="font-semibold">Equalizer</h3>
+//           <div
+//             onClick={toggleSwitch}
+//             className={`w-10 h-6 flex items-center rounded-full duration-300 p-1 cursor-pointer mb-4 md:mb-6 ${
+//               isOn ? "bg-accent" : "bg-gray-300"
+//             }`}
+//           >
+//             <div
+//               className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${
+//                 isOn ? "translate-x-4" : ""
+//               }`}
+//             ></div>
+//           </div>
+//         </div>
+//         {isOn ? (
+//           <ul>
+//             {Object.keys(presets).map((preset, index) => (
+//               <li
+//                 onClick={() => {
+//                   if (isOn) {
+//                     setSelectedPreset(preset);
+//                     applyPreset(presets[preset as keyof typeof presets]);
+//                     localStorage.setItem(
+//                       "eqSettings",
+//                       JSON.stringify({
+//                         gains: presets[preset as keyof typeof presets],
+//                         preset,
+//                       })
+//                     );
+//                   }
+//                 }}
+//                 key={index}
+//                 className="flex cursor-pointer justify-between w-[8rem] items-center"
+//               >
+//                 <button className="my-1 md:my-[6px]">
+//                   {preset.charAt(0).toUpperCase() + preset.slice(1)}
+//                 </button>
+//                 {selectedPreset === preset && (
+//                   <IoCheckmarkSharp className="text-accent" />
+//                 )}
+//               </li>
+//             ))}
+//           </ul>
+//         ) : (
+//           <div className="text-gray-500 text-sm italic">Equalizer is off</div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default AudioPlayerEqualizer;
 
 // Equlizer 3
 

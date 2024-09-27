@@ -73,9 +73,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 }) => {
   const dispatch = useDispatch();
   const baseApiUrl = baseApiHandler();
-  const { setAudioRef } = useAudio();
+  // const { setAudioRef } = useAudio();
   const pathname = usePathname();
-  const audioRef = useRef<ReactPlayer | null>(null);
+  // const audioRef = useRef<ReactPlayer | null>(null);
+  const { howl } = useAudio();
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [favorite, setFavorite] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
@@ -108,13 +109,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     _id: songId,
   } = currentSong;
   useEffect(() => {
-    setAudioRef(audioRef);
+    // setAudioRef(audioRef);
     setFavorite(isFavouriteUser);
     const user = localStorage.getItem("user");
     if (user) {
       setUserData(JSON.parse(user));
     }
-  }, [currentSong.favUsers, userId, isFavouriteUser, setAudioRef]);
+  }, [currentSong.favUsers, userId, isFavouriteUser]);
 
   useEffect(() => {
     const getLyrics = async () => {
@@ -229,6 +230,39 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
+  // const handleSeek = (value: number[]) => {
+  //   const newTime = value[0];
+
+  //   // Check if newTime is a finite number
+  //   if (!isFinite(newTime)) {
+  //     console.error("Invalid time value:", newTime);
+  //     return; // Exit early if newTime is not valid
+  //   }
+
+  //   if (howl.current) {
+  //     const currentAudio = audioRef.current;
+
+  //     // Pausing the playback if it's currently playing
+  //     if (currentAudio.getInternalPlayer) {
+  //       const player = currentAudio.getInternalPlayer();
+  //       const wasPlaying = !player.paused; // Check if audio is playing
+
+  //       if (wasPlaying) {
+  //         dispatch(pauseSong()); // Pause the audio before seeking
+  //       }
+
+  //       // Seek to the new time
+  //       currentAudio.seekTo(newTime, "seconds");
+  //       setCurrentTime(newTime); // Update the state with the new time
+
+  //       if (wasPlaying) {
+  //         // Resume playback if it was playing before
+  //         dispatch(playImport());
+  //       }
+  //     }
+  //   }
+  // };
+
   const handleSeek = (value: number[]) => {
     const newTime = value[0];
 
@@ -238,26 +272,22 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       return; // Exit early if newTime is not valid
     }
 
-    if (audioRef.current) {
-      const currentAudio = audioRef.current;
+    // Ensure the howl instance is initialized and playing
+    if (howl) {
+      // Check if the audio is currently playing
+      const wasPlaying = howl.playing(); // Check if audio is playing
 
-      // Pausing the playback if it's currently playing
-      if (currentAudio.getInternalPlayer) {
-        const player = currentAudio.getInternalPlayer();
-        const wasPlaying = !player.paused; // Check if audio is playing
+      if (wasPlaying) {
+        dispatch(pauseSong()); // Pause the audio before seeking
+      }
 
-        if (wasPlaying) {
-          dispatch(pauseSong()); // Pause the audio before seeking
-        }
+      // Seek to the new time
+      howl.seek(newTime); // Use Howler.js to seek to the new time
+      setCurrentTime(newTime); // Update the state with the new time
 
-        // Seek to the new time
-        currentAudio.seekTo(newTime, "seconds");
-        setCurrentTime(newTime); // Update the state with the new time
-
-        if (wasPlaying) {
-          // Resume playback if it was playing before
-          dispatch(playImport());
-        }
+      if (wasPlaying) {
+        // Resume playback if it was playing before
+        dispatch(playImport());
       }
     }
   };
@@ -305,7 +335,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           handleSeek={handleSeek}
           handleNext={handleNext}
           handleNextTenSecond={() =>
-            handleNextTenSeconds(audioRef.current, duration, dispatch)
+            handleNextTenSeconds(howl, duration, dispatch)
           }
           handlePlayPause={() =>
             handlePlayPause({
@@ -313,11 +343,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               playing,
               songId,
               setUserClickedPlay,
-              audioElement: audioRef.current,
+              howl,
             })
           }
           handlePreviousTenSecond={() =>
-            handlePreviousTenSecond(audioRef.current, duration, dispatch)
+            handlePreviousTenSecond(howl, duration, dispatch)
           }
           handlePrev={handlePrev}
           playing={playing}
@@ -390,14 +420,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 <PlayButtons
                   handleNext={handleNext}
                   handleNextTenSecond={() =>
-                    handleNextTenSeconds(audioRef.current, duration, dispatch)
+                    handleNextTenSeconds(howl, duration, dispatch)
                   }
                   handlePreviousTenSecond={() =>
-                    handlePreviousTenSecond(
-                      audioRef.current,
-                      duration,
-                      dispatch
-                    )
+                    handlePreviousTenSecond(howl, duration, dispatch)
                   }
                   handlePlayPause={() =>
                     handlePlayPause({
@@ -405,7 +431,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                       playing,
                       songId,
                       setUserClickedPlay,
-                      audioElement: audioRef.current,
+                      howl,
                     })
                   }
                   handlePrev={handlePrev}
@@ -424,9 +450,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             />
           </div>
 
-          <AudioControls
+          {/* <AudioControls
             volume={volume}
-            ref={audioRef}
+            ref={howl}
             src={importSongUrl ? importSongUrl : songLink}
             playbackRate={playbackSpeed}
             onTimeUpdate={(state: OnProgressProps) => {
@@ -440,8 +466,22 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               setDuration(state || 0);
             }}
             onEnded={() =>
-              handleEnd(audioRef, repeat, handleNext, handleRandom)
+              handleEnd(howl, repeat, handleNext, handleRandom)
             }
+          /> */}
+
+          <AudioControls
+            volume={volume}
+            playbackRate={playbackSpeed}
+            onTimeUpdate={(currentTime: number, duration: number) => {
+              handleProgress(currentTime, duration, setPlayed);
+              setCurrentTime(currentTime); // Update current time
+            }}
+            onLoadedMetadata={(duration: number) => {
+              setDuration(duration || 0); // Set the duration if available
+            }}
+            onEnded={() => handleEnd(howl, repeat, handleNext, handleRandom)}
+            src={songLink}
           />
 
           <div className="w-full cursor-pointer  lg:mb-0 py-1 flex items-center">
@@ -478,10 +518,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
               <PlayButtons
                 handleNext={handleNext}
                 handleNextTenSecond={() =>
-                  handleNextTenSeconds(audioRef.current, duration, dispatch)
+                  handleNextTenSeconds(howl, duration, dispatch)
                 }
                 handlePreviousTenSecond={() =>
-                  handlePreviousTenSecond(audioRef.current, duration, dispatch)
+                  handlePreviousTenSecond(howl, duration, dispatch)
                 }
                 handlePlayPause={() =>
                   handlePlayPause({
@@ -489,7 +529,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                     playing,
                     songId,
                     setUserClickedPlay,
-                    audioElement: audioRef.current,
+                    howl,
                   })
                 }
                 handlePrev={handlePrev}
