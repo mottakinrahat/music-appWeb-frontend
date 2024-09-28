@@ -8,6 +8,7 @@ interface SafariWarningModalProps {
 const SafariWarningModal: React.FC<SafariWarningModalProps> = ({ onClose }) => {
   const [codeToCopy] = useState(window.location.href); // Replace with your actual code
 
+
   // Function to copy code to clipboard
   const handleCopyClick = () => {
     navigator.clipboard

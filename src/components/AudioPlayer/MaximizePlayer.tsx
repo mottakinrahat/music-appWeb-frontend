@@ -49,6 +49,8 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   const isSafariBrowser = isSafari();
   const [showSafariWarning, setShowSafariWarning] = useState(false);
 
+  console.log(isSafariBrowser);
+
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
       // Determine the starting X position and width
@@ -340,7 +342,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
         backgroundPosition: "center",
       }}
     >
-      {!showSafariWarning && (
+      {showSafariWarning && (
         <SafariModal onClose={() => setShowSafariWarning(false)} />
       )}
       <div className="absolute w-full h-screen bg-black opacity-60 "></div>
