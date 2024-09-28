@@ -8,6 +8,10 @@ import { karaoke } from "@/redux/slice/karaoke/karaokeActionSlice";
 import { FiSliders } from "react-icons/fi";
 import SongImportModalHandler from "./SongImportHandaler";
 import { showLyric } from "@/redux/slice/music/musicActionSlice";
+import MicSVG from "@/components/svg/MicSVG";
+import EqualizerSVG from "@/components/svg/EqualizerSVG";
+import ArtistSVG from "@/components/svg/ArtistSVG";
+import AirPlayButton from "./AirPlayButton";
 
 const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
   const dispatch = useDispatch();
@@ -29,7 +33,7 @@ const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
       >
         {isKaraoke ? (
           <button disabled={isRecording} className="flex gap-[8px] text-accent">
-            <MdOutlineMicExternalOn className="text-2xl" />
+            <MicSVG />
             <h2 className="hidden sm:block">Karaoke mode (On)</h2>
           </button>
         ) : (
@@ -39,7 +43,7 @@ const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
               musicData.fileData && "text-white/70"
             }  items-center gap-[8px]`}
           >
-            <MdOutlineMicExternalOn className="text-2xl" />
+            <MicSVG />
             <h2 className="hidden sm:block">Karaoke mode (Off)</h2>
           </button>
         )}
@@ -49,9 +53,12 @@ const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
           onClick={handleOpenEqualizer}
           className="cursor-pointer text-xl select-none text-white"
         >
-          <FiSliders className="hover:text-accent transition p-[2px] sm:p-0 text-xl sm:text-2xl cursor-pointer" />
+          <EqualizerSVG />
         </div>
-        <SongImportModalHandler musicData={musicData} />
+        <div className="flex sm:text-2xl items-center">
+          <AirPlayButton />
+        </div>
+        <ArtistSVG />
       </div>
       <div>
         <CurrentPlayingUsers addFriends />

@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import ShareCard from "@/components/Card/ShareCard";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import ArtistSVG from "@/components/svg/ArtistSVG";
 
 interface SongType {
   songName: string;

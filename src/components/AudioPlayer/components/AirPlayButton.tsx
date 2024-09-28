@@ -230,6 +230,7 @@ import { usePathname } from "next/navigation";
 import { useAudio } from "@/lib/AudioProvider";
 import { useDispatch } from "react-redux";
 import { playImport } from "@/redux/slice/music/musicActionSlice";
+import AirPlay from "@/components/svg/AirPlay";
 
 // Define types for devices
 interface BluetoothDeviceType extends BluetoothDevice {
@@ -454,16 +455,11 @@ const AirPlayButton = () => {
   );
 
   return (
-    <div onClick={handleScan}>
+    <div onClick={handleScan} className="mt-2">
       <DropDownBtn
         dropDownContent={airplayControls}
         buttonContent={
-          <Airplay
-            className={`${
-              showPlayer
-                ? "text-white hover:text-accent"
-                : "text-textPrimary hover:text-textSecondary transition"
-            } my-auto p-[2px] sm:p-0 inline-block transition`}
+          <AirPlay
           />
         }
       />
