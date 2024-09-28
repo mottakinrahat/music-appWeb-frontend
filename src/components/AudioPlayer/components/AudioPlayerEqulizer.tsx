@@ -2,6 +2,7 @@
 
 import { Chart } from "@/components/chart/Chart";
 import { useAudio } from "@/lib/AudioProvider";
+import { isSafari } from "@/utils/checkSarari";
 import React, {
   useRef,
   useState,
@@ -22,12 +23,11 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
   const [isOn, setIsOn] = useState(false);
   const { audioContext } = useAudio();
-
   const frequencyLabels = ["60Hz", "160Hz", "400Hz", "1kHz", "2.4kHz", "15kHz"];
 
   const frequencies = useMemo(() => [60, 160, 400, 1000, 2400, 15000], []);
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+ 
   // Presets for the equalizer
   const presets = useMemo(
     () => ({
@@ -43,6 +43,8 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
     }),
     []
   );
+
+  
 
   useEffect(() => {
     const applyAudioProcessing = (audioElement: HTMLAudioElement) => {
@@ -108,20 +110,23 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
         audioSource.disconnect();
       };
     }
-  }, [audioContext, audioRef, isOn, gains, frequencies, isSafari]);
+  }, [audioContext, audioRef, isOn, gains, frequencies]);
 
+    const isSafariBrowser = isSafari();
   // Toggle the equalizer on or off
   const toggleSwitch = useCallback(() => {
-    setIsOn((prevIsOn) => {
-      const newIsOn = !prevIsOn;
-      localStorage.setItem("isEqOn", newIsOn.toString());
-      if (!newIsOn) {
-        setGains(presets.flat);
-        setSelectedPreset("flat");
-      }
-      return newIsOn;
-    });
-  }, [presets]);
+
+      setIsOn((prevIsOn) => {
+        const newIsOn = !prevIsOn;
+        localStorage.setItem("isEqOn", newIsOn.toString());
+        if (!newIsOn) {
+          setGains(presets.flat);
+          setSelectedPreset("flat");
+        }
+        return newIsOn;
+      });
+  
+  }, [presets.flat]);
 
   useEffect(() => {
     if (!isOn) {
@@ -153,6 +158,7 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
 
   return (
     <div className="p-4 md:p-5 lg:p-10 bg-white relative z-[9999] overflow-auto w-[300] md:w-[500px] sm:w-[400px]">
+    
       <h3 className="text-3xl font-semibold mb-5 md:mb-8">EQ Settings</h3>
       <div
         className={`transition-opacity duration-300 w-full ${
@@ -207,7 +213,11 @@ const AudioPlayerEqualizer: React.FC<EqualizerProps> = ({ audioRef }) => {
             ))}
           </ul>
         ) : (
-          <div className="text-gray-500 text-sm italic">Equalizer is off</div>
+          <div className="text-gray-500 text-sm italic">
+            {!isSafariBrowser
+              ? "Safari doesn't support this feature"
+              : "Equalizer is off"}
+          </div>
         )}
       </div>
     </div>
