@@ -91,7 +91,11 @@
 
 import React, { useState } from "react";
 
-const Mixer = () => {
+interface MixerProps {
+  showModal: boolean; // boolean type for showModal prop
+}
+
+const Mixer: React.FC<MixerProps> = ({ showModal }) => {
   const [hovered, setHovered] = useState(false);
 
   return (

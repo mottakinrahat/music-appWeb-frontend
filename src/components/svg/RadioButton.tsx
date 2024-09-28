@@ -45,13 +45,17 @@
 
 // export default RadioButton;
 
+import React from "react";
 
+interface RadioProps {
+  onClick: () => void;
+  className?: string;
+}
 
-import React from 'react'
-
-const RadioButton = () => {
+const RadioButton: React.FC<RadioProps> = ({ onClick, className }) => {
   return (
     <svg
+      onClick={onClick}
       width={24}
       height={24}
       viewBox="0 0 24 24"
@@ -74,6 +78,6 @@ const RadioButton = () => {
       />
     </svg>
   );
-}
+};
 
-export default RadioButton
+export default RadioButton;
