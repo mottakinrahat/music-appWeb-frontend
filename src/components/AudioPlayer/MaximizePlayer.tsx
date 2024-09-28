@@ -297,7 +297,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   if (!currentSong?.songLink) return <Loading />;
   const screenWidth = window.innerWidth;
   const handleOpenEqualizer = () => {
-    if (!isSafariBrowser) {
+    if (isSafariBrowser) {
       setShowSafariWarning(true); // Show warning modal for Safari users
     } else {
       if (width <= 0) {

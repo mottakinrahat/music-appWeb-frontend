@@ -5,15 +5,29 @@ interface SafariWarningModalProps {
 }
 const SafariModal: React.FC<SafariWarningModalProps> = ({ onClose }) => {
   // Function to open Chrome with the current link
-  const openInChrome = () => {
+  const handleOkayClick = () => {
     const currentUrl = window.location.href;
-    const chromeUrl = `googlechrome://${currentUrl}`;
-    window.location.href = chromeUrl; // Attempt to open in Chrome
 
-    // Fallback in case Chrome doesn't open
-    setTimeout(() => {
-      window.location.href = currentUrl; // Reload the current page as fallback
-    }, 500);
+    // Attempt to open the current URL in Chrome
+    const chromeUrl = `googlechrome://${currentUrl}`;
+
+    // Create a new window for the Chrome URL to avoid blocking
+    const newWindow = window.open(chromeUrl);
+
+    // Check if the new window was blocked
+    if (newWindow) {
+      // Fallback to download Chrome if it's not installed
+      setTimeout(() => {
+        const chromeDownloadUrl =
+          "https://apps.apple.com/us/app/google-chrome/id535886823"; // Apple Store link for Chrome
+        window.open(chromeDownloadUrl, "_blank"); // Open Chrome download page in a new tab
+      }, 500); // Delay to give Chrome time to open
+    } else {
+      // If the new window was blocked, open the download link immediately
+      const chromeDownloadUrl =
+        "https://apps.apple.com/us/app/google-chrome/id535886823"; // Apple Store link for Chrome
+      window.open(chromeDownloadUrl, "_blank"); // Open Chrome download page in a new tab
+    }
   };
 
   return (
@@ -32,7 +46,7 @@ const SafariModal: React.FC<SafariWarningModalProps> = ({ onClose }) => {
           Safari. Please use Chrome or another browser for the best experience.
         </p>
         <button
-          onClick={openInChrome}
+          onClick={handleOkayClick}
           className="bg-primary text-white px-4 py-2 rounded"
         >
           Okay
