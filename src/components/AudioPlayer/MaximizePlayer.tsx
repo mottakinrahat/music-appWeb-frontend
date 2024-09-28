@@ -13,6 +13,8 @@ import baseApiHandler from "@/utils/baseApiHandler";
 import Loading from "@/app/(withCommonLayout)/music/loading";
 import dynamic from "next/dynamic";
 import AudioPlayerEqualizer from "./components/AudioPlayerEqulizer";
+import SafariModal from "./components/SafariModal";
+import { isSafari } from "@/utils/checkSarari";
 // const AudioPlayerEqualizer = dynamic(
 //   () => import("@/components/AudioPlayer/components/AudioPlayerEqulizer"),
 //   { ssr: false }
@@ -44,6 +46,8 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   const { audioContext: musicContext, audioRef } = useAudio();
   const router = useRouter();
   const apiUrl = baseApiHandler();
+  const isSafariBrowser = isSafari();
+  const [showSafariWarning, setShowSafariWarning] = useState(false);
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
@@ -293,18 +297,22 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   if (!currentSong?.songLink) return <Loading />;
   const screenWidth = window.innerWidth;
   const handleOpenEqualizer = () => {
-    if (width <= 0) {
-      if (screenWidth < 480) {
-        setWidth(300);
-      } else if (screenWidth < 768) {
-        setWidth(400);
-      } else {
-        setWidth(500);
-      }
+    if (isSafariBrowser) {
+      setShowSafariWarning(true); // Show warning modal for Safari users
     } else {
-      setWidth(0);
+      if (width <= 0) {
+        if (screenWidth < 480) {
+          setWidth(300);
+        } else if (screenWidth < 768) {
+          setWidth(400);
+        } else {
+          setWidth(500);
+        }
+      } else {
+        setWidth(0);
+      }
+      setListWidth(0);
     }
-    setListWidth(0);
   };
   // PlayListOperations
   const handleOpenPlayList = () => {
@@ -332,6 +340,9 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
         backgroundPosition: "center",
       }}
     >
+      {!showSafariWarning && (
+        <SafariModal onClose={() => setShowSafariWarning(false)} />
+      )}
       <div className="absolute w-full h-screen bg-black opacity-60 "></div>
 
       <div className="flex z-10 flex-grow relative">
@@ -372,7 +383,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
         >
           {playlistOpen <= 0 && listWidth <= 0 && (
             <div
-              className="absolute left-0 top-0 h-full  w-2 bg-white z-[99999] cursor-ew-resize"
+              className="absolute left-0 top-0 h-full  w-2 bg-white z-[99955] cursor-ew-resize"
               onMouseDown={handleMouseDownPlayList}
               onTouchStart={handleTouchStartPlayList}
             ></div>
@@ -394,7 +405,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
           ""
         )}
         <div
-          className={`bg-white 2xl:relative h-full mt-[96px] top-[-2rem] md:top-[-1rem] lg:top-0  absolute transition-all duration-500 ${
+          className={`bg-white 2xl:relative h-full z-10 mt-[96px] top-[-2rem] md:top-[-1rem] lg:top-0  absolute transition-all duration-500 ${
             eqOpen <= 0 ? " right-0 bottom-0" : "w-0 -right-full bottom-0"
           }`}
           style={{ width }}
