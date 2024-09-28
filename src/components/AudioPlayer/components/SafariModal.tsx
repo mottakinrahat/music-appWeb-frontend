@@ -1,37 +1,27 @@
-import React from "react";
-
+import React, { useState } from "react";
+import { IoMdCopy } from "react-icons/io";
+import { toast } from "sonner";
 interface SafariWarningModalProps {
   onClose: () => void;
 }
-const SafariModal: React.FC<SafariWarningModalProps> = ({ onClose }) => {
-  // Function to open Chrome with the current link
-  const handleOkayClick = () => {
-    const currentUrl = window.location.href;
 
-    // Attempt to open the current URL in Chrome
-    const chromeUrl = `googlechrome://${currentUrl}`;
+const SafariWarningModal: React.FC<SafariWarningModalProps> = ({ onClose }) => {
+  const [codeToCopy] = useState(window.location.href); // Replace with your actual code
 
-    // Create a new window for the Chrome URL to avoid blocking
-    const newWindow = window.open(chromeUrl);
-
-    // Check if the new window was blocked
-    if (newWindow) {
-      // Fallback to download Chrome if it's not installed
-      setTimeout(() => {
-        const chromeDownloadUrl =
-          "https://apps.apple.com/us/app/google-chrome/id535886823"; // Apple Store link for Chrome
-        window.open(chromeDownloadUrl, "_blank"); // Open Chrome download page in a new tab
-      }, 500); // Delay to give Chrome time to open
-    } else {
-      // If the new window was blocked, open the download link immediately
-      const chromeDownloadUrl =
-        "https://apps.apple.com/us/app/google-chrome/id535886823"; // Apple Store link for Chrome
-      window.open(chromeDownloadUrl, "_blank"); // Open Chrome download page in a new tab
-    }
+  // Function to copy code to clipboard
+  const handleCopyClick = () => {
+    navigator.clipboard
+      .writeText(codeToCopy)
+      .then(() => {
+        toast.success("Link copied."); // Optionally show a success message
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
   };
 
   return (
-    <div className="fixed  top-0 left-0 h-screen w-full flex items-center justify-center bg-black bg-opacity-50 z-[99999]">
+    <div className="fixed top-0 left-0 h-screen w-full flex items-center justify-center bg-black bg-opacity-50 z-[99999]">
       <div className="bg-white rounded-lg p-4 w-80 shadow-lg text-center relative">
         <button
           onClick={onClose}
@@ -42,18 +32,40 @@ const SafariModal: React.FC<SafariWarningModalProps> = ({ onClose }) => {
         <div className="text-3xl mb-2">⚠️</div> {/* Warning icon */}
         <h2 className="text-lg font-semibold mb-2">Feature Unsupported</h2>
         <p className="text-sm mb-4">
-          Unfortunately, <strong>Equlizer</strong> feature is not supported on
+          Unfortunately, <strong>Equalizer</strong> feature is not supported on
           Safari. Please use Chrome or another browser for the best experience.
         </p>
-        <button
-          onClick={handleOkayClick}
-          className="bg-primary text-white px-4 py-2 rounded"
+        {/* Input field for code */}
+        <div className="flex">
+          <input
+            type="text"
+            value={codeToCopy}
+            readOnly
+            className="border rounded-l px-2 py-1 mb-2 w-full"
+          />
+          {/* Copy button */}
+          <button
+            onClick={handleCopyClick}
+            className="bg-primary text-white px-4 py-2 rounded-r mb-2"
+          >
+            <IoMdCopy />
+          </button>
+        </div>
+        {/* Okay button */}
+        <a
+          href="https://apps.apple.com/us/app/google-chrome/id535886823"
+          target="_blank"
         >
-          Okay
-        </button>
+          <button
+            // onClick={onClose}
+            className="bg-primary text-white px-4 mt-2 py-2 rounded"
+          >
+            Okay
+          </button>
+        </a>
       </div>
     </div>
   );
 };
 
-export default SafariModal;
+export default SafariWarningModal;
