@@ -49,8 +49,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   const isSafariBrowser = isSafari();
   const [showSafariWarning, setShowSafariWarning] = useState(false);
 
-  console.log(isSafariBrowser);
-
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
       // Determine the starting X position and width

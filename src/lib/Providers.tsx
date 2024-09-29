@@ -2,7 +2,6 @@
 import { store } from "@/redux/store";
 import { useEffect } from "react";
 import { Provider } from "react-redux";
-import { AudioProvider } from "./AudioProvider";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
@@ -10,13 +9,13 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
       navigator.serviceWorker
         .register("/service-worker.js")
         .then((registration) => {
-          console.log(
-            "ServiceWorker registration successful with scope: ",
-            registration.scope
-          );
+          // console.log(
+          //   "ServiceWorker registration successful with scope: ",
+          //   registration.scope
+          // );
         })
         .catch((error) => {
-          console.error("ServiceWorker registration failed: ", error);
+          // console.error("ServiceWorker registration failed: ", error);
         });
     }
   }, []);
