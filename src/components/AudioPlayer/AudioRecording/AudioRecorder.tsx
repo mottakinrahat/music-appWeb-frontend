@@ -1,7 +1,7 @@
-import RadioButton from "@/components/svg/RadioButton";
 import { useDispatch, useSelector } from "react-redux";
 import { isKaraokeRecord } from "@/redux/slice/karaoke/karaokeActionSlice";
 import { RootState } from "@/redux/store";
+import { PiRadioButtonLight } from "react-icons/pi";
 
 const AudioRecorder = () => {
   const dispatch = useDispatch();
@@ -16,14 +16,14 @@ const AudioRecorder = () => {
             onClick={() => dispatch(isKaraokeRecord(false))}
             className="cursor-pointer"
           >
-            <RadioButton className="fill-accent" />
+            <PiRadioButtonLight className="text-white w-6 h-6 hover:text-accent" />
           </button>
         ) : (
           <button
             onClick={() => dispatch(isKaraokeRecord(true))}
             className="cursor-pointer"
           >
-            <RadioButton className="fill-white group-hover:fill-accent" />
+            <PiRadioButtonLight className="text-white w-6 h-6 hover:text-accent" />
           </button>
         )}
       </div>

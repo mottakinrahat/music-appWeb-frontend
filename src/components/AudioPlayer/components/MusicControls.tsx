@@ -6,6 +6,9 @@ import MixerFunctionality from "../MixerFunctionality/MixerFunctionality";
 import AudioRecorder from "../AudioRecording/AudioRecorder";
 import SongImportModalHandler from "./SongImportHandaler";
 import { RootState } from "@/redux/store";
+import EqualizerSVG from "@/components/svg/EqualizerSVG";
+import ArtistSVG from "@/components/svg/ArtistSVG";
+import PlayListSVG from "@/components/svg/PlayListSVG";
 
 interface MusicControlsFace {
   handleOpenEqualizer: () => void;
@@ -25,16 +28,22 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
       >
         <div
           onClick={handleOpenEqualizer}
-          className="cursor-pointer max-sm:hidden text-xl select-none text-white"
+          className="cursor-pointer max-sm:hidden"
         >
-          <FiSliders className="hover:text-accent transition p-[2px] sm:p-0 text-xl sm:text-2xl cursor-pointer" />
+          <EqualizerSVG />
         </div>
         <div className="flex sm:text-2xl items-center">
           <AirPlayButton />
         </div>
-        <div className="hidden sm:block">
+        {/* <div className="hidden sm:block cursor-pointer">
           <SongImportModalHandler musicData={musicData} />
-        </div>
+        </div> */}
+        <button className="cursor-pointer">
+          <ArtistSVG />
+        </button>
+        <button className="cursor-pointer">
+          <PlayListSVG />
+        </button>
         {isKaraoke && (
           <>
             <FXFunctionality />

@@ -45,7 +45,6 @@ import ReactPlayer from "react-player";
 import baseApiHandler from "@/utils/baseApiHandler";
 import {
   useIsFavouriteUserMutation,
-  useSingleSongQuery,
 } from "@/redux/api/songApi";
 
 interface AudioPlayerProps {
@@ -66,7 +65,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   handleOpenEqualizer,
   handleNext,
   handlePrev,
-  play,
   handleOpenPlayList,
   handleRandom,
   loading,

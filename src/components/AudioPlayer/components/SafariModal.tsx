@@ -8,24 +8,6 @@ interface SafariWarningModalProps {
 const SafariWarningModal: React.FC<SafariWarningModalProps> = ({ onClose }) => {
   const [codeToCopy] = useState(window.location.href); // Replace with your actual code
 
-  const handleOkayClick = () => {
-    const currentUrl = window.location.href;
-
-    const chromeUrl = `googlechrome://${currentUrl}`;
-    const newWindow = window.open(chromeUrl);
-
-    setTimeout(() => {
-      if (
-        !newWindow ||
-        newWindow.closed ||
-        typeof newWindow.closed === "undefined"
-      ) {
-        const chromeDownloadUrl =
-          "https://apps.apple.com/us/app/google-chrome/id535886823";
-        window.open(chromeDownloadUrl, "_blank");
-      }
-    }, 500);
-  };
 
   // Function to copy code to clipboard
   const handleCopyClick = () => {
