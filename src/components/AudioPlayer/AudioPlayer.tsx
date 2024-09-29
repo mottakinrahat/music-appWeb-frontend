@@ -43,9 +43,7 @@ import AudioRecordSlider from "./AudioRecording/AudioRecordSlider";
 import { OnProgressProps } from "react-player/base";
 import ReactPlayer from "react-player";
 import baseApiHandler from "@/utils/baseApiHandler";
-import {
-  useIsFavouriteUserMutation,
-} from "@/redux/api/songApi";
+import { useIsFavouriteUserMutation } from "@/redux/api/songApi";
 
 interface AudioPlayerProps {
   id?: any;
@@ -351,11 +349,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             buttonContent={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
+                fill="white"
                 viewBox="0 0 20 20"
                 strokeWidth={1.5}
-                stroke="white"
-                className="size-6"
+                stroke="current"
+                className="size-6 hover:stroke-accent transition stroke-white"
               >
                 <path
                   strokeLinecap="round"
@@ -460,7 +458,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             )}
           </div>
           <div className="w-full">
-            <div className="flex justify-between gap-3 mb-14 lg:mb-0 items-center ">
+            <div className="flex justify-between gap-3 mb-16 lg:mb-0 items-center ">
               <span className="text-white text-sm">
                 {formatTime(currentTime)}
               </span>
