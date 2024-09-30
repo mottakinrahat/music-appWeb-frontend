@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import PreviousIcon from "@/assets/icons/arrow_back (1).svg";
 import NextIcon from "@/assets/icons/arrow_back.svg";
@@ -27,16 +26,20 @@ const PlayButtons = ({
   handlePlayPause,
   handlePrev,
   handlePreviousTenSecond,
-  playing,
   handleNextTenSecond,
 }: PlayButtonsFace) => {
   const pathname = usePathname();
   const [showControl, setShowControl] = useState(true);
   const play = useSelector((state: RootState) => state.player.playing);
+  const importSong = useSelector(
+    (state: RootState) => state.musicData.fileData
+  );
 
   useEffect(() => {
     // Show the player only if the path matches `/music/:id`
     if (pathname.startsWith("/music/")) {
+      setShowControl(true);
+    } else if (pathname.startsWith("/offline")) {
       setShowControl(true);
     } else {
       setShowControl(false);
@@ -51,11 +54,11 @@ const PlayButtons = ({
           : "-translate-y-[60px] lg:-translate-y-12"
       } max-lg:w-full flex left-1/2 -translate-x-1/2 items-center`}
     >
-      <div className="flex justify-center items-center">
+      <div className="flex md:gap-4 justify-center items-center">
         {showControl && (
           <button
             onClick={handlePreviousTenSecond}
-            className="text-white group text-3xl mx-4 sm:mx-2 transition active:text-gray-300 flex items-center gap-1"
+            className="text-white group gap-1 text-3xl mx-4 sm:mx-2 transition active:text-gray-300 flex items-center"
           >
             <Image
               width={100}
@@ -69,8 +72,9 @@ const PlayButtons = ({
           </button>
         )}
         <button
+          disabled={importSong ? true : false}
           onClick={handlePrev}
-          className={` text-lg  ${
+          className={` text-lg disabled:text-gray-400 ${
             showControl
               ? "text-white transition active:text-gray-300"
               : "text-[#828282] transition active:text-textPrimary"
@@ -93,8 +97,9 @@ const PlayButtons = ({
           )}
         </button>
         <button
+          disabled={importSong ? true : false}
           onClick={handleNext}
-          className={` text-lg  ${
+          className={` text-lg disabled:text-gray-400 ${
             showControl
               ? "text-white transition active:text-gray-300"
               : "text-[#828282] transition active:text-textPrimary"
@@ -105,7 +110,7 @@ const PlayButtons = ({
         {showControl && (
           <button
             onClick={handleNextTenSecond}
-            className="text-white group text-3xl mx-4 sm:mx-2 transition active:text-gray-300 flex items-center gap-1"
+            className="text-white group gap-1 text-3xl mx-4 sm:mx-2 transition active:text-gray-300 flex items-center"
           >
             <span className="text-[16px]">10s</span>{" "}
             <Image

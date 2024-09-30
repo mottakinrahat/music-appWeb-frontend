@@ -11,6 +11,13 @@ const audioPlayerApi = baseApi.injectEndpoints({
       }),
       providesTags: ["allSongs"],
     }),
+    singleSong: build.query({
+      query: (songId: string | number) => ({
+        url: `/songs/${songId}`, // No body in GET request
+        method: "GET",
+      }),
+      providesTags: ["allSongs", 'singleSong'],
+    }),
 
     isFavouriteUser: build.mutation({
       query: ({
@@ -67,6 +74,7 @@ const audioPlayerApi = baseApi.injectEndpoints({
 
 export const {
   useAllSongQuery,
+  useSingleSongQuery,
   useIsFavouriteUserMutation,
   useAddToPlayListMutation,
   useCreatePlayListMutation,

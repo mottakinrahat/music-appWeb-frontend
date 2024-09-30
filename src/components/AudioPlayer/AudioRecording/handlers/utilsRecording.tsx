@@ -2,7 +2,7 @@ import { isRecording } from "@/redux/slice/karaoke/karaokeActionSlice";
 import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
 import { MutableRefObject, RefObject } from "react";
 import ReactPlayer from "react-player";
-
+import * as Tone from "tone";
 // audioUtils.ts
 export async function fetchReverbBuffer(audioContext: AudioContext) {
   const response = await fetch("/path/to/reverb-impulse-response.wav");
@@ -39,11 +39,11 @@ export const pauseRecording = (
     }
 
     dispatch(isRecording("pause")); // Update Redux state to "pause"
-    console.log("Recording paused, music, and mic paused");
+    // console.log("Recording paused, music, and mic paused");
   } else if (mediaRecorderRef.current.state === "paused") {
-    console.warn("MediaRecorder is already paused");
+    // console.warn("MediaRecorder is already paused");
   } else {
-    console.warn("MediaRecorder is not in a recording state");
+    // console.warn("MediaRecorder is not in a recording state");
   }
 };
 
@@ -102,7 +102,7 @@ export const resumeRecording = async (
 };
 
 export const stopRecording = (
-  mediaRecorderRef: React.RefObject<MediaRecorder>,
+  mediaRecorderRef: React.RefObject<Tone.Recorder>,
   micStreamRef: MutableRefObject<MediaStream | null>,
   monitoringAudio: HTMLAudioElement,
   audioRef: React.RefObject<ReactPlayer | null>,

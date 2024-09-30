@@ -12,13 +12,14 @@ interface LyricsProps {
     lyrics: Lyric[];
   };
   currentLyrics: Lyric | null; // Use Lyric type or null
+  currentTime: number;
   setCurrentLyrics: (value: Lyric | null) => void;
 }
 
 const Lyrics: React.FC<LyricsProps> = ({
   songData,
   currentLyrics,
-
+  currentTime,
   setCurrentLyrics,
 }) => {
   const lyricsDivRef = useRef<HTMLDivElement>(null);
@@ -92,7 +93,7 @@ const Lyrics: React.FC<LyricsProps> = ({
         key={index}
         style={{
           animation: currentLyrics
-            ? `fadeIn ${duration / 2 / words.length}s linear ${
+            ? `fadeIn ${duration / words.length}s linear ${
                 index * (duration / words.length)
               }s forwards`
             : "none",

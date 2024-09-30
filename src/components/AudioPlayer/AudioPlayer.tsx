@@ -8,7 +8,7 @@ import PlayButtons from "./components/PlayButtons";
 import MusicControls from "./components/MusicControls";
 import axios from "axios";
 import { toast } from "sonner";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import MiniPlayer from "./MiniPlayer";
 import { Slider } from "../ui/slider";
 import VolumeSettingDownRepeat from "./components/VolumeSettingDownRepeat";
@@ -25,7 +25,7 @@ import {
 import { RootState } from "@/redux/store";
 import ThreeDotContent from "./components/ThreeDotContent";
 import ImportSong from "./components/ImportSong";
-import Lyrics from "./components/Lyrics";
+import Lyrics from "./Lyrics/Lyrics";
 import {
   handleEnd,
   handleMute,
@@ -63,7 +63,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   handleOpenEqualizer,
   handleNext,
   handlePrev,
-  play,
   handleOpenPlayList,
   handleRandom,
   loading,
@@ -136,7 +135,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     importSongUrl,
     baseApiUrl,
   ]);
-  console.log(currentSong);
+
   useEffect(() => {
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
@@ -229,13 +228,19 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleSeek = (value: number[]) => {
     const newTime = value[0];
 
+    // Check if newTime is a finite number
+    if (!isFinite(newTime)) {
+      console.error("Invalid time value:", newTime);
+      return; // Exit early if newTime is not valid
+    }
+
     if (audioRef.current) {
       const currentAudio = audioRef.current;
 
       // Pausing the playback if it's currently playing
       if (currentAudio.getInternalPlayer) {
         const player = currentAudio.getInternalPlayer();
-        const wasPlaying = player.paused === false; // Check if audio is playing
+        const wasPlaying = !player.paused; // Check if audio is playing
 
         if (wasPlaying) {
           dispatch(pauseSong()); // Pause the audio before seeking
@@ -258,24 +263,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
     const userId = user?._id;
-    const playListData = {
-      id: songId,
-      userId: userId,
-    };
-    if (!userId) {
-      toast.warning("Please login first!");
-    } else {
-      setFavorite((prev: boolean) => !prev);
-      handleFavorite(
-        isFavouriteFn,
-        favorite,
-        songId, // songId
-        userId, // userId
-        playListData,
-        artwork, // Replace with dynamic artwork URL
-        songName
-      );
-    }
+    setFavorite((prev: boolean) => !prev);
+    handleFavorite(
+      isFavouriteFn,
+      favorite,
+      songId, // songId
+      userId, // userId
+      artwork, // Replace with dynamic artwork URL
+      songName
+    );
   };
 
   const threeDotContent = ThreeDotContent({
@@ -293,6 +289,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       {(isKaroke || isShowLyrics) && !importSongUrl && (
         <Lyrics
           songData={songData}
+          currentTime={currentTime}
           currentLyrics={currentLyrics}
           setCurrentLyrics={setCurrentLyrics}
         />
@@ -352,11 +349,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             buttonContent={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
+                fill="white"
                 viewBox="0 0 20 20"
                 strokeWidth={1.5}
-                stroke="white"
-                className="size-6"
+                stroke="current"
+                className="size-6 hover:stroke-accent transition stroke-white"
               >
                 <path
                   strokeLinecap="round"
@@ -461,7 +458,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             )}
           </div>
           <div className="w-full">
-            <div className="flex justify-between gap-3 mb-14 lg:mb-0 items-center ">
+            <div className="flex justify-between gap-3 mb-16 lg:mb-0 items-center ">
               <span className="text-white text-sm">
                 {formatTime(currentTime)}
               </span>

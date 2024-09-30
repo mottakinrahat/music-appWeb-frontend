@@ -7,6 +7,7 @@ import { FaCirclePause, FaCirclePlay } from "react-icons/fa6";
 import ReactPlayer from "react-player";
 import { useDispatch } from "react-redux";
 import { stopRecording } from "./handlers/utilsRecording";
+import * as Tone from "tone";
 
 interface MediaControlsProps {
   getSongLink: string;
@@ -16,7 +17,7 @@ interface MediaControlsProps {
   recordedUrl?: string;
   togglePlayPause: () => void;
   handleRecordingState: () => void;
-  mediaRecorderRef: React.RefObject<MediaRecorder>;
+  mediaRecorderRef: React.RefObject<Tone.Recorder>;
   micStreamRef: React.RefObject<MediaStream>;
   monitoringAudio: HTMLAudioElement;
   audioRef: React.RefObject<ReactPlayer>;

@@ -23,26 +23,28 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
     const audioVolume = useSelector(
       (state: RootState) => state.player.audioVolume
     );
-
     const { setAudioRef, audioRef } = useAudio();
-
     const [currentSongUrl, setCurrentSongUrl] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const importedUrl = useSelector(
+      (state: RootState) => state.musicData.fileData
+    );
 
     useEffect(() => {
       if (!audioRef) {
         setAudioRef(ref);
       }
-      // Fetch the song list from the API
+
       const fetchMusic = async () => {
         try {
           const res = await fetch("/api/music");
           const data = await res.json();
-          if (data.length > 0) {
-            // Set the src of the first song in the list
+          if (data?.length > 0) {
             setCurrentSongUrl(data[0].url);
           }
         } catch (err) {
           console.error("Failed to fetch music:", err);
+          setError("Failed to fetch music. Please try again later.");
         }
       };
 
@@ -52,31 +54,42 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
     useEffect(() => {
       if (audioRef?.current) {
         const internalPlayer = audioRef.current.getInternalPlayer();
-        if (internalPlayer && playbackRate !== undefined) {
-          internalPlayer.playbackRate = playbackRate;
+        if (internalPlayer) {
+          // Set playback rate and volume
+          internalPlayer.playbackRate = playbackRate ?? 1;
+          internalPlayer.volume = audioVolume ?? 1;
         }
       }
-    }, [audioRef, playbackRate]);
+    }, [audioRef, playbackRate, audioVolume]);
+
+    // const handleError = (e: any) => {
+    //   console.error("Error loading audio:", e);
+    //   const corsProxy = "https://cors-anywhere.herokuapp.com/";
+    //   const fallbackUrl = corsProxy + (src || currentSongUrl);
+    //   setCurrentSongUrl(fallbackUrl);
+    //   setError("Error loading audio. Trying a fallback URL.");
+    // };
 
     return (
       <div className="hidden">
+        {error && <div className="error-message">{error}</div>}
         {currentSongUrl && (
           <ReactPlayer
             ref={audioRef}
-            
-            url={src} // Use the URL from the state
+            url={importedUrl ? importedUrl : src}
             playing={playing}
             volume={audioVolume}
             onDuration={onLoadedMetadata}
             onProgress={onTimeUpdate}
             onEnded={onEnded}
-            // config={{
-            //   file: {
-            //     attributes: {
-            //       crossOrigin: "anonymous",
-            //     },
-            //   },
-            // }}
+            config={{
+              file: {
+                attributes: {
+                  crossOrigin: "anonymous",
+                },
+              },
+            }}
+            // onError={handleError}
           />
         )}
       </div>

@@ -9,7 +9,8 @@ import AlertCard from "@/components/Card/AlertCard";
 import ToastCard from "@/components/Card/ToastCard";
 import { MdOutlineCancel } from "react-icons/md";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { logoutUser } from "@/service/actions/logoutUser";
 
 interface NavInterface {
   blur?: boolean;
@@ -19,7 +20,7 @@ const Navbar = ({ blur = false }: NavInterface) => {
   const [blurNav, setBlurNav] = useState(true);
   const pathname = usePathname();
   const [user, setUser] = useState(null);
-
+  const router = useRouter();
   const [showNav, setShowNav] = useState(false);
 
   useEffect(() => {
@@ -92,6 +93,7 @@ const Navbar = ({ blur = false }: NavInterface) => {
 
   const handleLogout = () => {
     setAlertOpen(true);
+    logoutUser(router);
   };
 
   return (

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Image from "next/image";
 import playBtn from "@/assets/icons/play_circle.png";
 import Link from "next/link";
@@ -62,7 +62,8 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
 }) => {
   const pathname = usePathname();
   const dispatch = useDispatch();
-  const query = useSearchParams();
+  // const query = useSearchParams();
+  // console.log(query.get("new-release"));
   const importedSong = useSelector((state: RootState) => state.musicData);
 
   const deleteExistingSongFromIndexedDB = async () => {
@@ -88,9 +89,6 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
     const userId = user?._id;
-    const playListData = {
-      userId: userId,
-    };
     if (!userId) {
       toast.warning("Please login first!");
     } else {
@@ -99,7 +97,6 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
         isFavourite,
         musicId ? musicId : "", // songId
         userId, // userId
-        playListData.userId,
         imageUrl, // Replace with dynamic artwork URL
         title ? title : "" // Replace with dynamic placeholder URL
       );
@@ -112,7 +109,7 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
       "songData",
       JSON.stringify({ play: true, id: musicId })
     );
-    localStorage.setItem("pathHistory", `${pathname}?${query.toString()}`);
+    localStorage.setItem("pathHistory", `${pathname}`);
 
     if (musicId) {
       dispatch(playSong(musicId));

@@ -15,6 +15,9 @@ import Image from "next/image";
 import placeHolder from "@/assets/etc/png/song.jpg";
 import { useRouter } from "next/navigation";
 import ShareCard from "@/components/Card/ShareCard";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import ArtistSVG from "@/components/svg/ArtistSVG";
 
 interface SongType {
   songName: string;
@@ -31,11 +34,16 @@ interface SongPropsType {
   favorite: boolean;
 }
 
-const ThreeDotContent: React.FC<SongPropsType> = ({ currentSong, handleAddtoFavourite, favorite }) => {
+const ThreeDotContent: React.FC<SongPropsType> = ({
+  currentSong,
+  handleAddtoFavourite,
+  favorite,
+}) => {
   const [share, setShare] = useState<boolean>(false);
-
+  const importSong = useSelector(
+    (state: RootState) => state.musicData.fileData
+  );
   const router = useRouter();
-
   const { songName, artwork, songAlbum, _id: songId } = currentSong;
 
   // handle playlist add
@@ -55,7 +63,10 @@ const ThreeDotContent: React.FC<SongPropsType> = ({ currentSong, handleAddtoFavo
       duration: 1000,
     });
     await axios
-      .put(`https://music-app-web.vercel.app/api/v1/songs/play-list/${songId}/${userId}`, playListData)
+      .put(
+        `${process.env.NEXT_PUBLIC_PROD_API_URL}/songs/play-list/${songId}/${userId}`,
+        playListData
+      )
       .then((res) => {
         if (res.data)
           toast.success(
@@ -89,41 +100,81 @@ const ThreeDotContent: React.FC<SongPropsType> = ({ currentSong, handleAddtoFavo
       <ShareCard
         open={share}
         setOpen={setShare}
-        shareUrl={`https://music-web-liangu.vercel.app//music/66c99c0a36fe71b995557d6b`}
+        shareUrl={`https://music-web-liangu.vercel.app/music/${songId}`}
       />
-      <h2
+      <button
+        disabled={importSong ? true : false}
         onClick={handleAddtoPlayList}
-        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
+        className={`flex ${
+          importSong
+            ? "text-gray-400"
+            : "hover:text-textPrimary text-textSecondary"
+        }  transition cursor-pointer justify-start items-center gap-2`}
       >
         <PlusCircleIcon className="h-6 w-6" />
         <span>Add to playlist</span>
-      </h2>
-      <h2
+      </button>
+      <button
+        disabled={importSong ? true : false}
         onClick={handleAddtoFavourite}
-        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
+        className={`flex ${
+          importSong
+            ? "text-gray-400"
+            : "hover:text-textPrimary text-textSecondary"
+        }  transition cursor-pointer justify-start items-center gap-2`}
       >
-        {!favorite ? <HeartIcon className="h-6 w-6" /> : <FaHeart className="h-6 w-6 text-cyan-500" />}
+        {!favorite ? (
+          <HeartIcon className="h-6 w-6" />
+        ) : (
+          <FaHeart className="h-6 w-6 text-cyan-500" />
+        )}
         <span>Add to favorites</span>
-      </h2>
-      <h2
+      </button>
+      <button
+        disabled={importSong ? true : false}
         onClick={() => setShare(!share)}
-        className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2"
+        className={`flex ${
+          importSong
+            ? "text-gray-400"
+            : "hover:text-textPrimary text-textSecondary"
+        }  transition cursor-pointer justify-start items-center gap-2`}
       >
         <ShareIcon className="h-6 w-6" />
         <span>Share</span>
-      </h2>
-      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
+      </button>
+      <button
+        disabled={importSong ? true : false}
+        className={`flex ${
+          importSong
+            ? "text-gray-400"
+            : "hover:text-textPrimary text-textSecondary"
+        }  transition cursor-pointer justify-start items-center gap-2`}
+      >
         <CircleStackIcon className="h-6 w-6" />
         <span>Go album</span>
-      </h2>
-      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
+      </button>
+      <button
+        disabled={importSong ? true : false}
+        className={`flex ${
+          importSong
+            ? "text-gray-400"
+            : "hover:text-textPrimary text-textSecondary"
+        }  transition cursor-pointer justify-start items-center gap-2`}
+      >
         <UserCircleIcon className="h-6 w-6" />
         <span>Go artist</span>
-      </h2>
-      <h2 className="flex hover:text-textPrimary transition cursor-pointer justify-start items-center gap-2">
+      </button>
+      <button
+        disabled={importSong ? true : false}
+        className={`flex ${
+          importSong
+            ? "text-gray-400"
+            : "hover:text-textPrimary text-textSecondary"
+        }  transition cursor-pointer justify-start items-center gap-2`}
+      >
         <MusicalNoteIcon className="h-6 w-6" />
         <span>Song credit</span>
-      </h2>
+      </button>
     </div>
   );
 };
