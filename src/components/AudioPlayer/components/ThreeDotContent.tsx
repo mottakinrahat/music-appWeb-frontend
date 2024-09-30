@@ -64,7 +64,7 @@ const ThreeDotContent: React.FC<SongPropsType> = ({
     });
     await axios
       .put(
-        `https://music-app-web.vercel.app/api/v1/songs/play-list/${songId}/${userId}`,
+        `${process.env.NEXT_PUBLIC_PROD_API_URL}/songs/play-list/${songId}/${userId}`,
         playListData
       )
       .then((res) => {
