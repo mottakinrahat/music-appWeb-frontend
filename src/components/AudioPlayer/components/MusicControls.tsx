@@ -26,22 +26,22 @@ const MusicControls = ({ handleOpenEqualizer }: MusicControlsFace) => {
           isKaraoke ? "justify-between" : "justify-end"
         } sm:justify-between items-center gap-2 lg:gap-4`}
       >
-        <div
+        <div title="EQ"
           onClick={handleOpenEqualizer}
           className="cursor-pointer max-sm:hidden"
         >
           <EqualizerSVG />
         </div>
-        <div className="flex sm:text-2xl items-center">
+        <div title="Air Play" className="flex sm:text-2xl items-center">
           <AirPlayButton />
         </div>
-        {/* <div className="hidden sm:block cursor-pointer">
+        <div title="Import Song" className="hidden sm:block cursor-pointer">
           <SongImportModalHandler musicData={musicData} />
-        </div> */}
-        <button className="cursor-pointer">
+        </div>
+        <button title="Artist" className="cursor-pointer hidden sm:block">
           <ArtistSVG />
         </button>
-        <button className="cursor-pointer">
+        <button title="Play List" className="cursor-pointer hidden sm:block">
           <PlayListSVG />
         </button>
         {isKaraoke && (
