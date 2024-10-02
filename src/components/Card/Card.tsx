@@ -105,11 +105,11 @@ const Card: React.FC<MusicCard | FreelancerCard> = ({
 
   const handleSetIdtoLocalStorage = () => {
     // Store the song ID and play state in localStorage
-    localStorage.setItem(
-      "songData",
-      JSON.stringify({ play: true, id: musicId })
-    );
-    localStorage.setItem("pathHistory", `${pathname}`);
+    // localStorage.setItem(
+    //   "songData",
+    //   JSON.stringify({ play: true, id: musicId })
+    // );
+    // localStorage.setItem("pathHistory", `${pathname}`);
 
     if (musicId) {
       dispatch(playSong(musicId));

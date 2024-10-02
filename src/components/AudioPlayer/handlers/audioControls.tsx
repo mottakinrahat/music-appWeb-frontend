@@ -27,17 +27,17 @@ export const handlePlayPause = async ({
   try {
     if (playing) {
       dispatch(pauseSong());
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: false, id: songId })
-      );
+      // localStorage.setItem(
+      //   "songData",
+      //   JSON.stringify({ play: false, id: songId })
+      // );
     } else {
      
       dispatch(playSong(songId));
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: true, id: songId })
-      );
+      // localStorage.setItem(
+      //   "songData",
+      //   JSON.stringify({ play: true, id: songId })
+      // );
     }
   } catch (error) {
     // console.clear();

@@ -89,6 +89,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   );
   const isKaroke = useSelector((state: RootState) => state.karaoke.karaoke);
   const lyricsOn = useSelector((state: RootState) => state.player.showLyric);
+  const id = useSelector((state: RootState) => state.music.id);
   const userId = userData?._id;
   const importSongUrl = useSelector(
     (state: RootState) => state.musicData.fileData
@@ -183,28 +184,26 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     if (!storedRepeat) {
       localStorage.setItem("repeat", "repeat-all");
     }
-    const storedSongData = localStorage.getItem("songData");
-    if (storedSongData) {
-      const { play, id } = JSON.parse(storedSongData);
-      if (play && userClickedPlay) {
-        dispatch(playSong(id));
-      } else {
-        dispatch(pauseSong());
-      }
+    // const storedSongData = localStorage.getItem("songData");
+    if (id && userClickedPlay) {
+      // const { play, id } = JSON.parse(storedSongData);
+      dispatch(playSong(id));
+    } else {
+      dispatch(pauseSong());
     }
-  }, [dispatch, userClickedPlay]);
+  }, [dispatch, id, userClickedPlay]);
 
   useEffect(() => {
     if (playing && songId) {
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: true, id: songId })
-      );
+      // localStorage.setItem(
+      //   "songData",
+      //   JSON.stringify({ play: true, id: songId })
+      // );
     } else if (!playing && songId) {
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: false, id: songId })
-      );
+      // localStorage.setItem(
+      //   "songData",
+      //   JSON.stringify({ play: false, id: songId })
+      // );
       dispatch(pauseSong());
     }
 

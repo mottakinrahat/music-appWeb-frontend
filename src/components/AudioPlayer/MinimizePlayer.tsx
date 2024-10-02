@@ -3,20 +3,23 @@
 import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import MaximizePlayer from "./MaximizePlayer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { pauseSong } from "@/redux/slice/music/musicActionSlice";
+import { setMusicData } from "@/redux/slice/music/musicDataSlice";
+import { setSongId } from "@/redux/slice/music/musicSlice";
+import { RootState } from "@/redux/store";
 
 const MinimizePlayer = () => {
   const [playMusicById, setPlayMusicById] = useState<string>();
   const [readyPlayer, setReadyPlayer] = useState(false);
   const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(true);
-  // const [play, setPlay] = useState(true);
   const [height, setHeight] = useState(0); // Initial height
   const resizingRef = useRef<HTMLDivElement | null>(null);
   const [startY, setStartY] = useState<number>(0);
   const [startHeight, setStartHeight] = useState<number>(0);
   const dispatch = useDispatch();
+  const songid = useSelector((state: RootState) => state.music.id);
 
   useEffect(() => {
     // Function to update the height based on window width
@@ -88,31 +91,28 @@ const MinimizePlayer = () => {
   };
 
   useEffect(() => {
+    // if (!songid) dispatch(setSongId(id));
     if (pathname.startsWith("/music/")) {
       setShowPlayer(true);
       // document.body.classList.add("hide-scrollbar");
       setHeight(7);
     } else if (pathname.startsWith("/offline")) {
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ id: null, play: false })
-      );
       setHeight(0);
       setShowPlayer(false);
     } else {
       // document.body.classList.remove("hide-scrollbar");
       setShowPlayer(false);
     }
-    const getSongDataFromLocalStroage = JSON.parse(
-      localStorage.getItem("songData")!
-    );
-    if (getSongDataFromLocalStroage && getSongDataFromLocalStroage !== null) {
-      setPlayMusicById(getSongDataFromLocalStroage.id);
+
+    if (songid) {
+      setPlayMusicById(songid);
       setReadyPlayer(true);
     } else {
       setReadyPlayer(false);
     }
-
+    if (songid) {
+      setPlayMusicById(songid);
+    }
     // Clean up event listeners on unmount
     return () => {
       // Ensure cleanup only if functions are defined
@@ -122,7 +122,8 @@ const MinimizePlayer = () => {
       document.removeEventListener("touchend", () => {});
       // document.body.classList.remove("hide-scrollbar");
     };
-  }, [pathname, showPlayer]);
+  }, [dispatch, pathname, showPlayer, songid]);
+
 
   if (!readyPlayer) return <></>;
 
@@ -143,7 +144,7 @@ const MinimizePlayer = () => {
         onTouchStart={handleTouchStart}
         className="absolute w-full overflow-hidden h-4 z-50 top-0 bg-transparent cursor-ns-resize"
       ></div>
-      <MaximizePlayer  params={{ id: playMusicById }} />
+      <MaximizePlayer params={{ id: playMusicById }} />
     </div>
   );
 };

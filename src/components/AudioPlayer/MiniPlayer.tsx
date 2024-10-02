@@ -12,6 +12,8 @@ import AirPlayButton from "./components/AirPlayButton";
 import RepeatShuffleButton from "./components/ReapetShuffleButton";
 import SongMarquee from "./components/SongMarquee";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface MiniPlayerProps {
   handleNext: () => void;
@@ -25,7 +27,7 @@ interface MiniPlayerProps {
   artist: string;
   handleMute: () => void;
   artwork: string;
-  id: any;
+  id: string;
   title: string;
   volume: number;
   duration: number;
@@ -54,7 +56,9 @@ const MiniPlayer = ({
 }: MiniPlayerProps) => {
   const [artWork, setArtwork] = useState(artwork);
   const pathname = usePathname();
+  const songId = useSelector((state: RootState) => state.music.id);
   // const query = useSearchParams();
+  console.log("working");
   const router = useRouter();
   const [showControl, setShowControl] = useState(true);
 
@@ -73,13 +77,13 @@ const MiniPlayer = ({
   }, [pathname, artwork, id]);
 
   const handleSetPathHistory = () => {
-    localStorage.setItem("pathHistory", `${pathname}`);
+    // localStorage.setItem("pathHistory", `${pathname}`);
   };
 
   if (showControl)
     return (
       <div
-        onDoubleClick={() => router.replace(`/music/${id}`)}
+        onDoubleClick={() => router.replace(`/music/${songId}`)}
         className="bg-[#E8E8E8] relative h-24 sm:h-28 w-full"
       >
         <div className="h-full px-4 justify-between flex items-center">
@@ -166,7 +170,7 @@ const MiniPlayer = ({
               <AirPlayButton />
             </div>
             <Link
-              href={`/music/${id}`}
+              href={`/music/${songId}`}
               onClick={handleSetPathHistory}
               className="h-10 w-10 flex z-50 hover:text-textPrimary justify-center items-center cursor-pointer"
             >

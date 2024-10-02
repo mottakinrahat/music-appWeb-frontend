@@ -31,10 +31,10 @@ const Login = () => {
 
       localStorage.setItem("token", res.data?.token);
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: false, id: songId })
-      );
+      // localStorage.setItem(
+      //   "songData",
+      //   JSON.stringify({ play: false, id: songId })
+      // );
       dispatch(pauseSong());
       toast.success("Login successful");
       router.push("/");
