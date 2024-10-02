@@ -12,6 +12,7 @@ import MicSVG from "@/components/svg/MicSVG";
 import EqualizerSVG from "@/components/svg/EqualizerSVG";
 import ArtistSVG from "@/components/svg/ArtistSVG";
 import AirPlayButton from "./AirPlayButton";
+import ImportDevice from "@/components/svg/ImportDevice";
 
 const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
   const dispatch = useDispatch();
@@ -55,8 +56,11 @@ const KaraokeAirFriendEtc = ({ handleOpenEqualizer }: any) => {
         >
           <EqualizerSVG />
         </div>
-        <div className="flex sm:text-2xl items-center">
+        <div className="sm:text-2xl items-center hidden sm:block">
           <AirPlayButton />
+        </div>
+        <div title="Import Song" className="cursor-pointer">
+          <SongImportModalHandler musicData={musicData} />
         </div>
         <ArtistSVG />
       </div>
