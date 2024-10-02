@@ -176,7 +176,7 @@ const VolumeSettingDownRepeat: React.FC<VolumeSettingDownRepeatProps> = ({
           </>
         ) : (
           <>
-            <div className="max-md:hidden">
+            <div className="max-lg:hidden">
               <Volumn
                 handleMute={handleMute}
                 handleVolumeChange={handleVolumeChange}
