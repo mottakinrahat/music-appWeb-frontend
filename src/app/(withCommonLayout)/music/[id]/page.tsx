@@ -2,8 +2,9 @@
 
 import { RootState } from "@/redux/store";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loading from "../loading"; // Assuming you have a loading component
+import { setSongId } from "@/redux/slice/music/musicSlice";
 
 interface PlayerInterface {
   params?: {
@@ -15,19 +16,20 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
   const playing = useSelector((state: RootState) => state.player.playing);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [hasReloaded, setHasReloaded] = useState(false);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     // Check if the code is running in the browser
     if (typeof window !== "undefined") {
       const songId = params?.id;
       const reloaded = localStorage.getItem("hasReloaded") === "true";
+      if (songId) dispatch(setSongId(songId));
 
-      if (songId && typeof playing !== "undefined" && !reloaded) {
+      if (songId && !reloaded) {
         // Store the song data in localStorage
-        localStorage.setItem(
-          "songData",
-          JSON.stringify({ play: playing, id: songId })
-        );
+        // localStorage.setItem(
+        //   "songData",
+        //   JSON.stringify({ play: playing, id: songId })
+        // );
         setIsDataLoaded(true); // Mark as loaded
 
         // Trigger a page reload only once
@@ -38,11 +40,11 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
         setIsDataLoaded(true); // Mark as loaded if already reloaded
       }
     }
-  }, [params?.id, playing]);
+  }, [dispatch, params?.id, playing]);
 
-  if (!isDataLoaded) {
-    return <Loading />; // Display a loading component if data isn't loaded yet
-  }
+  // if (!isDataLoaded) {
+  //   return <Loading />; // Display a loading component if data isn't loaded yet
+  // }
 
   return null; // No need to render anything once data is set and the reload is triggered
 };

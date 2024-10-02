@@ -1,24 +1,18 @@
 "use client";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
-// import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Playlist from "./components/Playlist";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useAudio } from "@/lib/AudioProvider";
 import baseApiHandler from "@/utils/baseApiHandler";
-import Loading from "@/app/(withCommonLayout)/music/loading";
-import dynamic from "next/dynamic";
 import AudioPlayerEqualizer from "./components/AudioPlayerEqulizer";
 import SafariModal from "./components/SafariModal";
 import { isSafari } from "@/utils/checkSarari";
-// const AudioPlayerEqualizer = dynamic(
-//   () => import("@/components/AudioPlayer/components/AudioPlayerEqulizer"),
-//   { ssr: false }
-// );
+
 interface PlayerInterface {
   params?: {
     id: any;
@@ -48,6 +42,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   const apiUrl = baseApiHandler();
   const isSafariBrowser = isSafari();
   const [showSafariWarning, setShowSafariWarning] = useState(false);
+  const dispatch = useDispatch();
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
@@ -168,6 +163,8 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
 
   //   fetchBPM();
   // }, [currentSong]);
+  const pathname = usePathname();
+
 
   useEffect(() => {
     const initialTrackIndex = tracks?.findIndex(
@@ -180,7 +177,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   }, [musicContext, params?.id, tracks]);
 
   // show controls
-  const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(false);
 
   useEffect(() => {
@@ -258,16 +254,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
     }
   };
 
-  // Sync localStorage and routing with currentSong updates
-  useEffect(() => {
-    if (currentSong) {
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: false, id: currentSong._id })
-      );
-      // router.replace(`/music/${currentSong._id}`);
-    }
-  }, [currentSong, router]);
   const [backgroundImage, setBackgroundImage] = useState(
     "https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png"
   );
@@ -294,7 +280,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
     );
   }
 
-  if (!currentSong?.songLink) return <Loading />;
   const screenWidth = window.innerWidth;
   const handleOpenEqualizer = () => {
     if (isSafariBrowser) {

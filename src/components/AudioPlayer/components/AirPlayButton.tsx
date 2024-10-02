@@ -225,7 +225,6 @@ import React, { useState, useEffect } from "react";
 import { MdAirplay } from "react-icons/md";
 import { RiSignalTowerLine } from "react-icons/ri";
 import { DropDownBtn } from "./DropDownBtn";
-import { Airplay } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useAudio } from "@/lib/AudioProvider";
 import { useDispatch } from "react-redux";

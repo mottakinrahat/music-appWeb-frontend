@@ -8,6 +8,9 @@ import { FaPause, FaPlay } from "react-icons/fa6"; // Import the cross icon
 import { RxCross2 } from "react-icons/rx";
 import CurrentPlayingUsers from "../AudioPlayer/components/CurrentPlayingUsers";
 import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setSongId } from "@/redux/slice/music/musicSlice";
 
 interface LandingMusicCardInterface {
   id: any;
@@ -33,6 +36,8 @@ const LandingMusicCard = ({
   setPlaying,
 }: LandingMusicCardInterface) => {
   const [currentId, setCurrenId] = useState("");
+  const dispatch = useDispatch();
+  const songId = useSelector((state: RootState) => state.music.id);
 
   return (
     <div className="flex justify-between gap-4 py-2 items-center max-w-xl">
@@ -88,12 +93,7 @@ const LandingMusicCard = ({
             ) : (
               <Link
                 href={`/music/${id}`}
-                onClick={() =>
-                  localStorage.setItem(
-                    "songData",
-                    JSON.stringify({ play: true, id: id })
-                  )
-                }
+                onClick={() => dispatch(setSongId(id))}
               >
                 <Button className="rounded-full w-11 h-11">
                   <FaPlay className="text-3xl" />
