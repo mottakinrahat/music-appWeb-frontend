@@ -42,9 +42,9 @@ const Player: React.FC<PlayerInterface> = ({ params }) => {
     }
   }, [dispatch, params?.id, playing]);
 
-  // if (!isDataLoaded) {
-  //   return <Loading />; // Display a loading component if data isn't loaded yet
-  // }
+  if (!isDataLoaded) {
+    return <Loading />; // Display a loading component if data isn't loaded yet
+  }
 
   return null; // No need to render anything once data is set and the reload is triggered
 };
