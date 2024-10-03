@@ -28,16 +28,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (<Providers>
-    <html data-theme="light" lang="en">
-      <body className={outfit.className}>
-        <AudioProvider>
-
-        {children}
-        <Toaster position="bottom-center" />
-        </AudioProvider>
-      </body>
-    </html>
-  </Providers>
+  return (
+    <Providers>
+      <html data-theme="light" lang="en">
+        <body className={outfit.className}>
+          <AudioProvider>
+            {children}
+            <Toaster duration={1500} position="bottom-center" />
+          </AudioProvider>
+        </body>
+      </html>
+    </Providers>
   );
 }
