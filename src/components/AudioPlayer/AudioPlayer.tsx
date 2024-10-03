@@ -262,15 +262,19 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const handleAddtoFavourite = async () => {
     const user = JSON.parse(localStorage?.getItem("user")!);
     const userId = user?._id;
-    setFavorite((prev: boolean) => !prev);
-    handleFavorite(
-      isFavouriteFn,
-      favorite,
-      songId, // songId
-      userId, // userId
-      artwork, // Replace with dynamic artwork URL
-      songName
-    );
+    if (!userId) {
+      toast.warning("Please login first.");
+    } else {
+      setFavorite((prev: boolean) => !prev);
+      handleFavorite(
+        isFavouriteFn,
+        favorite,
+        songId, // songId
+        userId, // userId
+        artwork, // Replace with dynamic artwork URL
+        songName
+      );
+    }
   };
 
   const threeDotContent = ThreeDotContent({

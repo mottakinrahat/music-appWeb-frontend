@@ -59,7 +59,8 @@ const Lyrics: React.FC<LyricsProps> = ({
             if (!startTime) startTime = currentTime;
             const timeElapsed = currentTime - startTime;
             const progress = Math.min(timeElapsed / duration, 1);
-            lyricsDivRef.current!.scrollTop = start + change * progress;
+            if (lyricsDivRef.current)
+              lyricsDivRef.current!.scrollTop = start + change * progress;
 
             if (timeElapsed < duration) {
               requestAnimationFrame(animateScroll);
