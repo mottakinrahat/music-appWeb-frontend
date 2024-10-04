@@ -63,7 +63,7 @@ const AudioRecordSlider: React.FC<AudioVisualizerProps> = ({
   }, [urlToLoad]); // Recreate WaveSurfer instance when urlToLoad changes
 
   useEffect(() => {
-    if (waveSurfer && waveSurfer.getDuration()) {
+    if (waveSurfer && waveSurfer.getDuration() && waveSurfer?.seekTo) {
       waveSurfer?.seekTo(currentTime / waveSurfer.getDuration());
     }
   }, [currentTime, waveSurfer]);

@@ -11,6 +11,7 @@ import { openDB } from "idb";
 import { useDispatch, useSelector } from "react-redux";
 import * as Tone from "tone";
 import RecordingControlDesign from "@/components/AudioPlayer/AudioRecording/RecordingControlDesign";
+import { encodeAndSaveAudio } from "./handlers/encodeRecordingAudio";
 
 interface RecordingProps {
   songDuration: number | any;
@@ -29,7 +30,7 @@ const AdvancedAudioRecorder: React.FC<RecordingProps> = ({ songDuration }) => {
   const recordedAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const dispatch = useDispatch();
-  const { audioRef, audioContext, musicSource } = useAudio();
+  const { audioRef, currentSongBlob } = useAudio();
   const recordedUrl = useSelector(
     (state: RootState) => state.karaoke.recordedUrl
   );
@@ -78,20 +79,29 @@ const AdvancedAudioRecorder: React.FC<RecordingProps> = ({ songDuration }) => {
   const stopRecording = useMemo(
     () => async () => {
       if (isRecording && recorderRef.current) {
-
-        dispatch(pauseSong())
+        dispatch(pauseSong());
         try {
           const recording = await recorderRef.current.stop();
           setIsRecording(false);
-          const url = URL.createObjectURL(recording);
-          setRecordedAudioUrl(url);
-          await encodeAndSaveAudio(recording);
+          // const url = URL.createObjectURL(recording);
+          // setRecordedAudioUrl(url);
+          const startTime = 0; // Set the actual start time of the recording
+          const endTime = 10;
+          if (currentSongBlob) {
+            await encodeAndSaveAudio(
+              recording,
+              currentSongBlob,
+              setRecordedAudioUrl,
+              startTime,
+              endTime
+            );
+          }
         } catch (error) {
           console.error("Error stopping the recorder:", error);
         }
       }
     },
-    [dispatch, isRecording]
+    [currentSongBlob, dispatch, isRecording]
   );
 
   useEffect(() => {
@@ -129,25 +139,29 @@ const AdvancedAudioRecorder: React.FC<RecordingProps> = ({ songDuration }) => {
     }
   }, [recordedAudioUrl, dispatch]);
 
-  const encodeAndSaveAudio = async (recording: Blob) => {
-    const arrayBuffer = await recording.arrayBuffer();
-    const audioBlob = new Blob([arrayBuffer], { type: "audio/wav" });
+  // const encodeAndSaveAudio = async (recording: Blob) => {
+  //   const arrayBuffer = await recording.arrayBuffer();
 
-    const url = URL.createObjectURL(audioBlob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "recorded_audio.wav";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link); // Clean up the link element
-  };
+  //   // *********************** Needed audio blob ************************* //
+  //   const audioBlob = new Blob([arrayBuffer], { type: "audio/wav" });
+
+  //   const url = URL.createObjectURL(audioBlob);
+  //   const link = document.createElement("a");
+  //   link.href = url;
+  //   link.download = "recorded_audio.wav";
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link); // Clean up the link element
+  // };
+
+  // encodeAndSaveAudio(recording)
 
   const initializeAudioNodes = async () => {
     await Tone.start(); // Ensure Tone.js is started
     sourceNodeRef.current = new Tone.UserMedia();
     gainNodeRef.current = new Tone.Gain(1).toDestination();
-    reverbNodeRef.current = new Tone.Reverb({ decay: 2.0 }).toDestination();
-    echoNodeRef.current = new Tone.FeedbackDelay(0.4, 0.5).toDestination();
+    reverbNodeRef.current = new Tone.Reverb({ decay: 1.0 }).toDestination();
+    echoNodeRef.current = new Tone.FeedbackDelay(0.2, 0.5).toDestination();
     distortionNodeRef.current = new Tone.Distortion(0.8).toDestination();
     sourceNodeRef.current
       .connect(gainNodeRef.current)

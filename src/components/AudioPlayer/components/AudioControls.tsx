@@ -23,8 +23,8 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
     const audioVolume = useSelector(
       (state: RootState) => state.player.audioVolume
     );
-    const { setAudioRef, audioRef } = useAudio();
-    const [currentSongUrl, setCurrentSongUrl] = useState<string | null>(null);
+    const { setAudioRef, audioRef, setCurrentSongBlob } = useAudio();
+    const [currentSong, setCurrentSongUrl] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const importedUrl = useSelector(
       (state: RootState) => state.musicData.fileData
@@ -36,20 +36,34 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
       }
 
       const fetchMusic = async () => {
-        try {
-          const res = await fetch("/api/music");
-          const data = await res.json();
-          if (data?.length > 0) {
-            setCurrentSongUrl(data[0].url);
+        if (src)
+          try {
+            // Fetch the raw audio data from the music URL
+            const res = await fetch(src);
+
+            // Ensure the response is OK
+            if (!res.ok) {
+              throw new Error("Failed to fetch the music file");
+            }
+
+            // Retrieve the data as a blob
+            const blob = await res.blob();
+            setCurrentSongBlob(blob);
+
+            // You can now set the Blob URL for playback or further processing
+            const musicUrl = URL.createObjectURL(blob);
+
+            setCurrentSongUrl(musicUrl);
+          } catch (err) {
+            console.error("Failed to fetch music:", err);
+            setError("Failed to fetch music. Please try again later.");
           }
-        } catch (err) {
-          console.error("Failed to fetch music:", err);
-          setError("Failed to fetch music. Please try again later.");
-        }
       };
 
       fetchMusic();
-    }, [audioRef, ref, setAudioRef]);
+    }, [audioRef, ref, setAudioRef, setCurrentSongBlob, src]);
+
+    console.log(currentSong);
 
     useEffect(() => {
       if (audioRef?.current) {
@@ -73,22 +87,22 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
     return (
       <div className="hidden">
         {error && <div className="error-message">{error}</div>}
-        {currentSongUrl && (
+        {currentSong && (
           <ReactPlayer
             ref={audioRef}
-            url={importedUrl ? importedUrl : src}
+            url={importedUrl ? importedUrl : currentSong}
             playing={playing}
             volume={audioVolume}
             onDuration={onLoadedMetadata}
             onProgress={onTimeUpdate}
             onEnded={onEnded}
-            config={{
-              file: {
-                attributes: {
-                  crossOrigin: "anonymous",
-                },
-              },
-            }}
+            // config={{
+            //   file: {
+            //     attributes: {
+            //       crossOrigin: "anonymous",
+            //     },
+            //   },
+            // }}
             // onError={handleError}
           />
         )}
