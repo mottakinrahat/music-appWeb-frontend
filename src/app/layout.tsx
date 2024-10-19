@@ -4,7 +4,10 @@ import "./globals.css";
 import Providers from "@/lib/Providers";
 import { Toaster } from "sonner";
 import { AudioProvider } from "@/lib/AudioProvider";
-
+import "core-js/features/array/reverse";
+import "core-js/features/promise/finally";
+import "core-js";
+import Script from "next/script";
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

@@ -76,7 +76,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [favorite, setFavorite] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
   const [played, setPlayed] = useState<number>(0);
-  const [volume, setVolume] = useState<number>(0.8);
+  const [volume, setVolume] = useState<number>(0.8); // Default volume set to 0.8
   const [playbackSpeed, setPlaybackSpeed] = useState<any>(1);
   const [karaokeOn, setKaraokeOn] = useState<boolean>(false);
   const [userData, setUserData] = useState<any>();
@@ -145,7 +145,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   }, [dispatch, pathname, songId]);
 
-  // Seclectors
   const playing = useSelector((state: RootState) => state.player.playing);
   const repeat = useSelector((state: RootState) => state.player.repeat);
 
@@ -170,12 +169,33 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setVolume(parseFloat(volume));
       dispatch(audioVolume(parseFloat(volume)));
     }
+
     setCurrentSong(songData);
     const getRepeat = localStorage.getItem("repeat");
     if (!getRepeat) {
       localStorage.setItem("repeat", repeat);
     }
   }, [currentSong, dispatch, repeat, songData, speed, volume]);
+
+
+  useEffect(() => {
+    const handleInteraction = () => {
+      if (!audioContextRef.current) {
+        const audioContext = new (window.AudioContext ||
+          (window as any).webkitAudioContext)();
+        audioContextRef.current = audioContext;
+        onAudioContextReady(audioContext, audioRef.current as HTMLAudioElement);
+      } else if (audioContextRef.current.state === "suspended") {
+        audioContextRef.current.resume();
+      }
+    };
+
+    document.addEventListener("click", handleInteraction);
+
+    return () => {
+      document.removeEventListener("click", handleInteraction);
+    };
+  }, [onAudioContextReady]);
 
   useEffect(() => {
     const storedRepeat = localStorage.getItem(
@@ -210,6 +230,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     localStorage.setItem("repeat", repeat); // Save repeat mode
   }, [playing, songId, repeat, dispatch]);
 
+  // Volume Change Handler
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
     localStorage.setItem("volume", JSON.stringify(newVolume));
@@ -224,8 +245,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
+  // Seek Handler
   const handleSeek = (value: number[]) => {
     const newTime = value[0];
+
 
     // Check if newTime is a finite number
     if (!isFinite(newTime)) {
@@ -253,6 +276,28 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           // Resume playback if it was playing before
           dispatch(playImport());
         }
+    if (audioRef.current) {
+      const wasPlaying = !audioRef.current.paused;
+      if (wasPlaying) {
+        audioRef.current.pause();
+      }
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+      if (wasPlaying) {
+        audioRef.current.play();
+      }
+    }
+  };
+
+  // Mute Handler
+  const handleMute = () => {
+    if (audioRef.current) {
+      if (volume > 0) {
+        setVolume(0);
+        audioRef.current.volume = 0;
+      } else {
+        setVolume(0.8);
+        audioRef.current.volume = 0.8;
       }
     }
   };

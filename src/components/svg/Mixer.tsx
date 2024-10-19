@@ -98,6 +98,7 @@ interface MixerProps {
 const Mixer: React.FC<MixerProps> = ({ showModal }) => {
   const [hovered, setHovered] = useState(false);
 
+
   return (
     <svg
       width="24"

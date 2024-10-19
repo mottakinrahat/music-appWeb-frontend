@@ -113,4 +113,5 @@ const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
 
 AudioControls.displayName = "AudioControls";
 
+
 export default AudioControls;
