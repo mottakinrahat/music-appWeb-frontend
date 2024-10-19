@@ -1,9 +1,9 @@
-import LoadingAnimation from "@/component/LoadingAnimation/LoadingAnimation";
+import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import React from "react";
 const Loading = () => {
   return (
     <div>
-      <LoadingAnimation/>
+      <LoadingAnimation />
     </div>
   );
 };
