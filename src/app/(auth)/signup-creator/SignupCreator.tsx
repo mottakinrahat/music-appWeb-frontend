@@ -84,7 +84,7 @@ const SignupCreatorComponenet: React.FC = () => {
           {/* File Uploader */}
 
           <DFileUploader
-            accept="audio/*"
+            accept=".mp3,.wav,.aac,.flac,.ogg,.m4a,.wma"
             name="music"
             label="Do you have any sample work?"
           />

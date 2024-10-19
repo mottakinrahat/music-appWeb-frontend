@@ -12,14 +12,14 @@ const useLocalSongData = (data?: SongData) => {
   useEffect(() => {
     if (data) {
       // If data is provided, store it in localStorage
-      localStorage.setItem("songData", JSON.stringify(data));
+      // localStorage.setItem("songData", JSON.stringify(data));
       setStoredData(data);
     } else {
       // If no data is provided, retrieve it from localStorage
-      const localData = localStorage.getItem("songData");
-      if (localData) {
-        setStoredData(JSON.parse(localData));
-      }
+      // const localData = localStorage.getItem("songData");
+      // if (localData) {
+      //   setStoredData(JSON.parse(localData));
+      // }
     }
   }, [data]);
 

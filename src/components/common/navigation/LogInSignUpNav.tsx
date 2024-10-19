@@ -3,9 +3,6 @@ import React from "react";
 import Logo from "../logo/Logo";
 import DForm from "@/components/forms/DForm";
 import { z } from "zod";
-
-// Import flag images
-
 import LanguageSelector from "./LanguageSelector";
 
 const navSchema = z.object({});

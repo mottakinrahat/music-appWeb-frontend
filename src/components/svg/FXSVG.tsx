@@ -7,11 +7,10 @@ interface FXProps {
 const FXSVG = ({ showModal }: FXProps) => {
   return (
     <svg
-      className="group cursor-pointer"
+      className="group cursor-pointer hover:stroke-accent transition duration-75 stroke-white"
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
@@ -20,15 +19,15 @@ const FXSVG = ({ showModal }: FXProps) => {
         className={`group-hover:stroke-accent stroke-white transition ${
           showModal && "stroke-accent"
         }`}
-        strokeWidth="1.5"
+
       />
       <path
         d="M6 15V9H11"
         stroke="current"
+        strokeWidth="1"
         className={`group-hover:stroke-accent stroke-white transition ${
           showModal && "stroke-accent"
         }`}
-        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -38,7 +37,6 @@ const FXSVG = ({ showModal }: FXProps) => {
         className={`group-hover:stroke-accent stroke-white transition ${
           showModal && "stroke-accent"
         }`}
-        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -48,7 +46,7 @@ const FXSVG = ({ showModal }: FXProps) => {
         className={`group-hover:stroke-accent stroke-white transition ${
           showModal && "stroke-accent"
         }`}
-        strokeWidth="1.5"
+
         strokeLinecap="round"
         strokeLinejoin="round"
       />

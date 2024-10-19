@@ -1,29 +1,25 @@
 "use client";
 import AudioPlayer from "@/components/AudioPlayer/AudioPlayer";
-import AudioPlayerEqualizer from "@/components/AudioPlayer/components/AudioPlayerEqulizer";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Playlist from "./components/Playlist";
-import useLocalSongData from "@/hooks/useLocalSongData";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { detectBPM } from "@/utils/bpmdetection";
-
+import { useAudio } from "@/lib/AudioProvider";
+import baseApiHandler from "@/utils/baseApiHandler";
+import AudioPlayerEqualizer from "./components/AudioPlayerEqulizer";
+import SafariModal from "./components/SafariModal";
+import { isSafari } from "@/utils/checkSarari";
 
 interface PlayerInterface {
   params?: {
     id: any;
   };
-  play: boolean;
 }
 
-const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
-    null
-  );
+const MaximizePlayer: React.FC<PlayerInterface> = ({ params }) => {
   const [playing, setPlaying] = useState<boolean>(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
     null
@@ -31,7 +27,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [eqOpen, setEqOpen] = useState(0);
   const [playlistOpen, setPlaylistOpen] = useState(0);
   const [tracks, setTraks] = useState<any>([]);
-  // resize ref
   const [width, setWidth] = useState(0); // Initial width
   const [listWidth, setListWidth] = useState(0); // Initial width
   const resizingRef = useRef<HTMLDivElement | null>(null);
@@ -40,20 +35,17 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const [playListStartX, setPlayListStartX] = useState<number>(0);
   const [startWidth, setStartWidth] = useState<number>(0);
   const [playListWidth, setPlayListWidth] = useState<number>(0);
-
   const importedSong = useSelector((state: RootState) => state.musicData);
-  const [bpm, setBpm] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const dispatch = useDispatch();
-
-  //  Router
+  const { audioContext: musicContext, audioRef } = useAudio();
   const router = useRouter();
+  const apiUrl = baseApiHandler();
+  const isSafariBrowser = isSafari();
+  const [showSafariWarning, setShowSafariWarning] = useState(false);
+  const dispatch = useDispatch();
 
   const startResizing = useCallback(
     (e: MouseEvent | TouchEvent) => {
-      // e.preventDefault();
-
       // Determine the starting X position and width
       const x =
         e instanceof MouseEvent
@@ -141,44 +133,40 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   };
 
   useEffect(() => {
-    axios
-      .get("https://music-app-web.vercel.app/api/v1/songs")
-      .then((data) => setTraks(data.data.data.songs));
-  }, []);
+    axios.get(`${apiUrl}/songs`).then((data) => setTraks(data.data.data.songs));
+  }, [apiUrl]);
 
   const [currentSong, setCurrentSong] = useState<any>(tracks[0]);
 
-  // if (!currentSong?.songLink) return <Loading />;
+  // useEffect(() => {
+  //   const fetchBPM = async () => {
+  //     try {
+  //       const url = currentSong?.songLink;
+
+  //       if (url) {
+  //         const detectedBPM = await detectBPM(url);
+  //         if (detectedBPM === null) {
+  //           setError(
+  //             "Unable to detect BPM. Please check the audio file and detection logic."
+  //           );
+  //         } else {
+  //           setBpm(detectedBPM);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching or processing audio:", error);
+  //       setError("Failed to detect BPM");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchBPM();
+  // }, [currentSong]);
+  const pathname = usePathname();
+
+
   useEffect(() => {
-    const fetchBPM = async () => {
-      try {
-        const url = currentSong?.songLink;
-
-        if (url) {
-          const detectedBPM = await detectBPM(url);
-          if (detectedBPM === null) {
-            setError(
-              "Unable to detect BPM. Please check the audio file and detection logic."
-            );
-          } else {
-            setBpm(detectedBPM);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching or processing audio:", error);
-        setError("Failed to detect BPM");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBPM();
-  }, [currentSong]);
-
-  // console.log(bpm);
-
-  useEffect(() => {
-    // const blobData = new Blob(currentSong.songLink);
     const initialTrackIndex = tracks?.findIndex(
       (track: any) => track?._id === params?.id
     );
@@ -186,18 +174,9 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       setCurrentTrackIndex(initialTrackIndex);
     }
     setCurrentSong(tracks[initialTrackIndex]);
-  }, [params?.id, tracks]);
+  }, [musicContext, params?.id, tracks]);
 
-  const songData = useLocalSongData();
-  useEffect(() => {
-    if (currentTrackIndex !== null && songData?.play === true) {
-      setPlaying(true);
-    } else {
-      setPlaying(false);
-    }
-  }, [currentSong, currentTrackIndex, songData?.play]);
   // show controls
-  const pathname = usePathname();
   const [showPlayer, setShowPlayer] = useState(false);
 
   useEffect(() => {
@@ -218,7 +197,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
   const handlePrev = () => {
     if (currentTrackIndex !== null) {
       let newIndex = currentTrackIndex - 1;
-
       if (newIndex < 0) {
         if (repeat === "repeat-all") {
           newIndex = tracks.length - 1;
@@ -226,7 +204,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
           return; // Stop if no repeat is set and we are at the first track.
         }
       }
-
       if (repeat === "shuffle") {
         newIndex = Math.floor(Math.random() * tracks.length);
       }
@@ -236,7 +213,6 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
       if (showPlayer) router.push(`/music/${tracks[newIndex]?._id}`);
     }
   };
-
   // Handles next track
   const handleNext = () => {
     if (currentTrackIndex !== null) {
@@ -260,25 +236,24 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     }
   };
   const handleRandom = () => {
-    if (currentTrackIndex !== null && currentTrackIndex < tracks.length - 1) {
+    if (currentTrackIndex) {
       const newIndex =
         currentTrackIndex + Math.floor(Math.random() * tracks.length - 1);
-      setCurrentTrackIndex(newIndex);
-      setCurrentSong(tracks[newIndex]);
-      if (showPlayer) router.push(`/music/${tracks[newIndex]?._id}`);
+      if (
+        currentTrackIndex !== null &&
+        currentTrackIndex !== undefined &&
+        currentTrackIndex < tracks.length - 1 &&
+        currentTrackIndex !== newIndex
+      ) {
+        setCurrentTrackIndex(newIndex);
+        setCurrentSong(tracks[newIndex]);
+        if (showPlayer) router.push(`/music/${tracks[newIndex]?._id}`);
+      } else if (currentTrackIndex === newIndex) {
+        handleRandom();
+      }
     }
   };
 
-  // Sync localStorage and routing with currentSong updates
-  useEffect(() => {
-    if (currentSong) {
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: false, id: currentSong._id })
-      );
-      // router.replace(`/music/${currentSong._id}`);
-    }
-  }, [currentSong, router]);
   const [backgroundImage, setBackgroundImage] = useState(
     "https://res.cloudinary.com/dse4w3es9/image/upload/v1723971237/i7vujjbuvidfqpmoqfpz.png"
   );
@@ -305,28 +280,24 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
     );
   }
 
-  const handleAudioContextReady = (
-    audioContext: AudioContext,
-    audioElement: HTMLAudioElement
-  ) => {
-    setAudioContext(audioContext);
-    setAudioElement(audioElement);
-  };
-
   const screenWidth = window.innerWidth;
   const handleOpenEqualizer = () => {
-    if (width <= 0) {
-      if (screenWidth < 480) {
-        setWidth(300);
-      } else if (screenWidth < 768) {
-        setWidth(400);
-      } else {
-        setWidth(500);
-      }
+    if (isSafariBrowser) {
+      setShowSafariWarning(true); // Show warning modal for Safari users
     } else {
-      setWidth(0);
+      if (width <= 0) {
+        if (screenWidth < 480) {
+          setWidth(300);
+        } else if (screenWidth < 768) {
+          setWidth(400);
+        } else {
+          setWidth(500);
+        }
+      } else {
+        setWidth(0);
+      }
+      setListWidth(0);
     }
-    setListWidth(0);
   };
   // PlayListOperations
   const handleOpenPlayList = () => {
@@ -354,24 +325,23 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         backgroundPosition: "center",
       }}
     >
-      <div className="absolute w-full h-screen bg-black opacity-40 "></div>
+      {showSafariWarning && (
+        <SafariModal onClose={() => setShowSafariWarning(false)} />
+      )}
+      <div className="absolute w-full h-screen bg-black opacity-60 "></div>
 
       <div className="flex z-10 flex-grow relative">
         <div className="flex-1 transition-all">
           <AudioPlayer
-            audioContext={audioContext!}
             play={playing}
             handleNext={handleNext}
             handlePrev={handlePrev}
             id={params?.id}
             setCurrentSong={setCurrentSong}
             currentSong={currentSong}
-            onAudioContextReady={handleAudioContextReady}
             handleOpenEqualizer={handleOpenEqualizer}
             handleOpenPlayList={handleOpenPlayList}
             handleRandom={handleRandom}
-            // bpm={bpm!}
-            // error={error}
             loading={loading}
           />
         </div>
@@ -380,7 +350,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             onClick={handleOpenPlayList}
             className={`${
               playlistOpen <= 0
-                ? "fixed transition-colors duration-1000 bg-gradient-to-t from-black/40 h-full w-full top-0"
+                ? "fixed transition-colors duration-1000 bg-gradient-to-t from-black/90 h-full w-full top-0"
                 : "bg-transparent"
             } `}
           ></div>
@@ -398,7 +368,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
         >
           {playlistOpen <= 0 && listWidth <= 0 && (
             <div
-              className="absolute left-0 top-0 h-full  w-2 bg-white z-[99999] cursor-ew-resize"
+              className="absolute left-0 top-0 h-full  w-2 bg-white z-[99955] cursor-ew-resize"
               onMouseDown={handleMouseDownPlayList}
               onTouchStart={handleTouchStartPlayList}
             ></div>
@@ -412,7 +382,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
             }}
             className={`${
               eqOpen <= 0
-                ? "fixed transition-colors duration-1000  bg-gradient-to-t from-black/40 h-full w-full top-0"
+                ? "fixed transition-colors duration-1000  bg-gradient-to-t from-black/90 h-full w-full top-0"
                 : "bg-transparent"
             } `}
           ></div>
@@ -420,7 +390,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
           ""
         )}
         <div
-          className={`bg-white 2xl:relative h-full mt-[96px] top-[-2rem] md:top-[-1rem] lg:top-0  absolute transition-all duration-500 ${
+          className={`bg-white 2xl:relative h-full z-10 mt-[96px] top-[-2rem] md:top-[-1rem] lg:top-0  absolute transition-all duration-500 ${
             eqOpen <= 0 ? " right-0 bottom-0" : "w-0 -right-full bottom-0"
           }`}
           style={{ width }}
@@ -433,10 +403,7 @@ const MaximizePlayer: React.FC<PlayerInterface> = ({ params, play }) => {
               onTouchStart={handleTouchStart}
             ></div>
           )}
-          <AudioPlayerEqualizer
-            audioContext={audioContext}
-            audioElement={audioElement}
-          />
+          <AudioPlayerEqualizer audioRef={audioRef} />
         </div>
       </div>
     </div>

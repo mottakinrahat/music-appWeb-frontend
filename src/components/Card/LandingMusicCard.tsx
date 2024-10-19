@@ -1,14 +1,16 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
 import placeHolder from "@/assets/etc/png/song.jpg";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { FaPause, FaPlay } from "react-icons/fa6"; // Import the cross icon
 import { RxCross2 } from "react-icons/rx";
 import CurrentPlayingUsers from "../AudioPlayer/components/CurrentPlayingUsers";
-import useLocalSongData from "@/hooks/useLocalSongData";
+import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setSongId } from "@/redux/slice/music/musicSlice";
 
 interface LandingMusicCardInterface {
   id: any;
@@ -34,28 +36,17 @@ const LandingMusicCard = ({
   setPlaying,
 }: LandingMusicCardInterface) => {
   const [currentId, setCurrenId] = useState("");
-  const [play, setPlay] = useState(playing);
-
-  // useEffect(() => {
-  //   const currentSongDataFromLocalStroage = JSON.parse(
-  //     localStorage.getItem("songData")!
-  //   );
-  //   if (!currentSongDataFromLocalStroage) {
-  //     localStorage.setItem(
-  //       "songData",
-  //       JSON.stringify({ play: true, id: id ? id : null })
-  //     );
-  //   } else {
-  //     setCurrenId(currentSongDataFromLocalStroage.id);
-  //   }
-  // }, [currentId, id]);
-  // useLocalSongData({play: true, id: id ? id : null});
+  const dispatch = useDispatch();
+  const songId = useSelector((state: RootState) => state.music.id);
 
   return (
     <div className="flex justify-between gap-4 py-2 items-center max-w-xl">
       <div className="flex items-center gap-3">
         <div>
-          <img
+          <Image
+            width={64}
+            height={64}
+            style={{ width: "auto", height: "auto" }}
             src={artwork ? artwork : placeHolder.src}
             alt="Album Art"
             className="w-16 h-16 object-cover aspect-square rounded-lg"
@@ -102,17 +93,9 @@ const LandingMusicCard = ({
             ) : (
               <Link
                 href={`/music/${id}`}
-                onClick={() =>
-                  localStorage.setItem(
-                    "songData",
-                    JSON.stringify({ play: true, id: id })
-                  )
-                }
+                onClick={() => dispatch(setSongId(id))}
               >
-                <Button
-                  // Check if setPlaying is defined
-                  className="rounded-full w-11 h-11"
-                >
+                <Button className="rounded-full w-11 h-11">
                   <FaPlay className="text-3xl" />
                 </Button>
               </Link>

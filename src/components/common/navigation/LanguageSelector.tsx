@@ -31,6 +31,7 @@ const LanguageSelector = () => {
               width={16} // Setting width to 16px
               height={16} // Setting height to 16px
               className="inline-block mr-2"
+              style={{ width: "auto", height: "auto" }}
             />
             US
           </SelectItem>
@@ -41,6 +42,7 @@ const LanguageSelector = () => {
               width={16}
               height={16}
               className="inline-block mr-2"
+              style={{ width: "auto", height: "auto" }}
             />
             UK
           </SelectItem>
@@ -50,6 +52,7 @@ const LanguageSelector = () => {
               alt="AUS"
               width={16}
               height={16}
+              style={{ width: "auto", height: "auto" }}
               className="inline-block mr-2"
             />
             AUS

@@ -12,7 +12,6 @@ type DSelectProps = {
   options: Option[];
   className?: string;
   required?: boolean;
-  // Additional props specific to Select component
   [key: string]: any;
 };
 

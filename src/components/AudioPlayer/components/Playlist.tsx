@@ -25,7 +25,7 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
   };
   // console.log(tracks);
   return (
-    <div className="p-2 min-w-0 bg-white  overflow-hidden lg:p-6 xl:p-8">
+    <div className="p-2 min-w-0 bg-white  overflow-hidden z-50 lg:p-6 xl:p-8">
       {/* play list */}
       <div className="flex justify-between">
         <h2 className="text-3xl font-semibold">Next Queue</h2>
@@ -44,7 +44,7 @@ const Playlist = ({ tracks, playing, setPlaying }: PlayListOpenProps) => {
           {currentTracks?.map((track: any, idx) => (
             <div key={idx} className="gap-2 w-full items-center mb-4">
               <LandingMusicCard
-                album={track?.songAlbum.albumName}
+                album={track?.songAlbum?.albumName}
                 artist={track?.songArtist}
                 artwork={track?.artwork}
                 id={track?._id}

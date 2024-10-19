@@ -60,7 +60,7 @@ const ImportSong: React.FC<ImportSongProps> = ({
                 <p>
                   Album:{" "}
                   <Link href={"#"} className="underline">
-                    {songAlbum.albumName}
+                    {songAlbum?.albumName}
                   </Link>
                 </p>
               </div>
