@@ -3,10 +3,9 @@ import { Button } from "@/components/ui/button";
 
 export const UpdateCoverPhoto = () => {
   const handleUpdateCover = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]; // Change this to [0] to access the first file
+    const file = e.target.files?.[0];
     if (file) {
       console.log("Cover image file:", file);
-      // You can now use the file to update the cover (API call or preview)
     }
   };
   return (

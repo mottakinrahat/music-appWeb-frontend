@@ -1,126 +1,117 @@
-"use client";
 import { useAudio } from "@/lib/AudioProvider";
-import { pauseSong, playImport } from "@/redux/slice/music/musicActionSlice";
 import { RootState } from "@/redux/store";
-import React, { forwardRef, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { forwardRef, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import ReactPlayer from "react-player";
+import { OnProgressProps } from "react-player/base";
 
 interface AudioControlsProps {
-  src: string;
-  onTimeUpdate?: React.ChangeEventHandler<HTMLAudioElement>;
-  autoPlay?: boolean;
-  onLoadedMetadata?: React.ReactEventHandler<HTMLAudioElement>;
-  onEnded?: React.ReactEventHandler<HTMLAudioElement>;
-  playbackRate: number;
-  volume: number;
+  onTimeUpdate: (state: OnProgressProps) => void;
+  onLoadedMetadata: (duration: number) => void;
+  onEnded?: () => void;
+  playbackRate?: number;
+  volume?: number;
+  src?: string;
 }
 
-const AudioControls = ({
-  src,
-  onTimeUpdate,
-  onLoadedMetadata,
-  onEnded,
-  playbackRate,
-  volume,
-}: AudioControlsProps) => {
-  const playing = useSelector((state: RootState) => state.player.playing);
-  const dispatch = useDispatch();
-  const { audioRef } = useAudio();
-  // Use a ref to force updates only on volume changes
+const AudioControls = forwardRef<ReactPlayer, AudioControlsProps>(
+  (
+    { onTimeUpdate, onLoadedMetadata, onEnded, playbackRate, volume, src },
+    ref
+  ) => {
+    const playing = useSelector((state: RootState) => state.player.playing);
+    const audioVolume = useSelector(
+      (state: RootState) => state.player.audioVolume
+    );
+    const { setAudioRef, audioRef, setCurrentSongBlob } = useAudio();
+    const [currentSong, setCurrentSongUrl] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const importedUrl = useSelector(
+      (state: RootState) => state.musicData.fileData
+    );
 
-  useEffect(() => {
-    const audioElement =
-      audioRef && "current" in audioRef ? audioRef.current : null;
-
-    if (audioElement) {
-      // Apply immediate playback rate
-      if (playbackRate) {
-        audioElement.playbackRate = playbackRate;
+    useEffect(() => {
+      if (!audioRef) {
+        setAudioRef(ref);
       }
 
-      // Set the necessary pitch properties
-      (audioElement as any).preservesPitch = true;
-      (audioElement as any).mozPreservesPitch = true;
-      (audioElement as any).webkitPreservesPitch = true;
+      const fetchMusic = async () => {
+        if (src)
+          try {
+            // Fetch the raw audio data from the music URL
+            const res = await fetch(src);
 
-      if (playing) {
-        const playPromise = audioElement.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {
-            dispatch(playImport());
-            audioElement.play().catch(() => {
-              dispatch(playImport());
-            });
-          });
+            // Ensure the response is OK
+            if (!res.ok) {
+              throw new Error("Failed to fetch the music file");
+            }
+
+            // Retrieve the data as a blob
+            const blob = await res.blob();
+            setCurrentSongBlob(blob);
+
+            // You can now set the Blob URL for playback or further processing
+            const musicUrl = URL.createObjectURL(blob);
+
+            setCurrentSongUrl(musicUrl);
+          } catch (err) {
+            console.error("Failed to fetch music:", err);
+            setError("Failed to fetch music. Please try again later.");
+          }
+      };
+
+      fetchMusic();
+    }, [audioRef, ref, setAudioRef, setCurrentSongBlob, src]);
+
+    console.log(currentSong);
+
+    useEffect(() => {
+      if (audioRef?.current) {
+        const internalPlayer = audioRef.current.getInternalPlayer();
+        if (internalPlayer) {
+          // Set playback rate and volume
+          internalPlayer.playbackRate = playbackRate ?? 1;
+          internalPlayer.volume = audioVolume ?? 1;
         }
-      } else {
-        audioElement.pause();
-        dispatch(pauseSong());
       }
-    }
-  }, [audioRef, playing, dispatch, src, playbackRate]);
+    }, [audioRef, playbackRate, audioVolume]);
 
-  useEffect(() => {
-    const audioElement =
-      audioRef && "current" in audioRef ? audioRef.current : null;
+    // const handleError = (e: any) => {
+    //   console.error("Error loading audio:", e);
+    //   const corsProxy = "https://cors-anywhere.herokuapp.com/";
+    //   const fallbackUrl = corsProxy + (src || currentSongUrl);
+    //   setCurrentSongUrl(fallbackUrl);
+    //   setError("Error loading audio. Trying a fallback URL.");
+    // };
 
-    if (audioElement) {
-      const clampedVolume = Math.max(0, Math.min(volume, 1));
+    return (
+      <div className="hidden">
+        {error && <div className="error-message">{error}</div>}
+        {currentSong && (
+          <ReactPlayer
+            ref={audioRef}
+            url={importedUrl ? importedUrl : currentSong}
+            playing={playing}
+            volume={audioVolume}
+            onDuration={onLoadedMetadata}
+            onProgress={onTimeUpdate}
+            onEnded={onEnded}
+            // config={{
+            //   file: {
+            //     attributes: {
+            //       crossOrigin: "anonymous",
+            //     },
+            //   },
+            // }}
+            // onError={handleError}
+          />
+        )}
+      </div>
+    );
+  }
+);
 
-      const setVolume = () => {
-        // Unmute explicitly if the volume is greater than 0
-        if (audioElement.muted && clampedVolume > 0) {
-          audioElement.muted = false;
-        }
+AudioControls.displayName = "AudioControls";
 
-        if (!audioElement.muted) {
-          audioElement.volume = clampedVolume;
-        }
-      };
-
-      const handleMetadataLoaded = () => {
-        setVolume(); // Set volume when metadata is loaded
-      };
-
-      const handlePlay = () => {
-        setVolume(); // Ensure volume is set on play
-      };
-
-      // Set the volume immediately if metadata is already loaded
-      if (audioElement.readyState >= 1) {
-        setVolume();
-      } else {
-        audioElement.addEventListener("loadedmetadata", handleMetadataLoaded);
-        audioElement.addEventListener("canplaythrough", handleMetadataLoaded); // Added for Safari
-      }
-
-      // Safari-specific volume handling on play
-      audioElement.addEventListener("play", handlePlay);
-
-      return () => {
-        audioElement.removeEventListener(
-          "loadedmetadata",
-          handleMetadataLoaded
-        );
-        audioElement.removeEventListener("play", handlePlay);
-      };
-    }
-  }, [volume, audioRef]);
-
-  return (
-    <audio
-      crossOrigin="anonymous"
-      ref={audioRef}
-      src={src}
-      onTimeUpdate={onTimeUpdate}
-      autoPlay={playing}
-      onLoadedMetadata={onLoadedMetadata}
-      onEnded={onEnded}
-      muted={volume <= 0}
-    >
-      Your browser does not support the audio element.
-    </audio>
-  );
-};
 
 export default AudioControls;

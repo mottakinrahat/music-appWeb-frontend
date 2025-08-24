@@ -15,13 +15,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "../ui/button";
-import {
-  FaFacebook,
-  FaTwitter,
-  FaEnvelope,
-  FaWhatsapp,
-  FaTelegram,
-} from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaEnvelope, FaWhatsapp, FaTelegram } from "react-icons/fa";
 
 interface AlertDialogFace {
   open: boolean;
@@ -39,19 +33,19 @@ const ShareCard = ({ open, shareUrl, setOpen }: AlertDialogFace) => {
         </AlertDialogHeader>
         <div className="flex space-x-4">
           <FacebookShareButton url={shareUrl}>
-            <FaFacebook size={32} />
+            <FaFacebook size={32} color="#3b5998" />
           </FacebookShareButton>
           <TwitterShareButton url={shareUrl}>
-            <FaTwitter size={32} />
+            <FaTwitter size={32} color="#1DA1F2" />
           </TwitterShareButton>
           <EmailShareButton url={shareUrl}>
-            <FaEnvelope size={32} />
+            <FaEnvelope size={32} color="#D44638" />
           </EmailShareButton>
           <WhatsappShareButton url={shareUrl}>
-            <FaWhatsapp size={32} />
+            <FaWhatsapp size={32} color="#25D366" />
           </WhatsappShareButton>
           <TelegramShareButton url={shareUrl}>
-            <FaTelegram size={32} />
+            <FaTelegram size={32} color="#0088cc" />
           </TelegramShareButton>
         </div>
         <AlertDialogFooter>

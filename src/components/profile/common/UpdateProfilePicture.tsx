@@ -18,7 +18,6 @@ export const UpdateProfilePicture: React.FC<UpdateProfilePictureProps> = ({
     const file = e.target.files?.[0];
     if (file) {
       console.log(file);
-      // Handle file upload or processing here
     }
   };
 

@@ -33,6 +33,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     <div className="relative py-5 sm:py-14 md:py-5 lg:py-10 overflow-hidden">
       <div className="absolute w-full h-full left-1/2 -translate-x-1/2 top-0 md:bottom-0  z-[-1]">
         <Image
+          style={{ width: "auto", height: "auto" }}
+          height={Banner.height}
+          width={Banner.width}
           src={Banner}
           alt="Cover photo"
           priority

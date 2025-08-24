@@ -1,72 +1,52 @@
 "use client";
-import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
-import useLocalSongData from "@/hooks/useLocalSongData";
-import axios from "axios";
+
+import { RootState } from "@/redux/store";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Loading from "../loading"; // Assuming you have a loading component
+import { setSongId } from "@/redux/slice/music/musicSlice";
 
 interface PlayerInterface {
   params?: {
-    id: any;
+    id: string | undefined;
   };
 }
 
 const Player: React.FC<PlayerInterface> = ({ params }) => {
-  const [currentTrackIndex, setCurrentTrackIndex] = useState<number | null>(
-    null
-  );
-  // const [eqOpen, setEqOpen] = useState(false);
-  const [tracks, setTracks] = useState<any>([]);
-  const [currentSong, setCurrentSong] = useState<any>(null);
-
-  // Fetch tracks on mount
+  const playing = useSelector((state: RootState) => state.player.playing);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [hasReloaded, setHasReloaded] = useState(false);
+  const dispatch = useDispatch();
   useEffect(() => {
-    axios
-      .get("https://music-app-web.vercel.app/api/v1/songs")
-      .then((response) => {
-        setTracks(response.data.data.songs);
-      })
-      .catch((error) => {
-        console.error("Error fetching tracks:", error);
-      });
-  }, []);
+    // Check if the code is running in the browser
+    if (typeof window !== "undefined") {
+      const songId = params?.id;
+      const reloaded = localStorage.getItem("hasReloaded") === "true";
+      if (songId) dispatch(setSongId(songId));
 
-  // Set the current track based on params.id
-  useEffect(() => {
-    if (tracks.length > 0 && params?.id) {
-      const initialTrackIndex = tracks.findIndex(
-        (track: any) => track._id === params?.id
-      );
+      if (songId && !reloaded) {
+        // Store the song data in localStorage
+        // localStorage.setItem(
+        //   "songData",
+        //   JSON.stringify({ play: playing, id: songId })
+        // );
+        setIsDataLoaded(true); // Mark as loaded
 
-      if (initialTrackIndex !== -1) {
-        setCurrentTrackIndex(initialTrackIndex);
-        setCurrentSong(tracks[initialTrackIndex]);
-
-        // Ensure the song data is set in localStorage
-        const storedSongData = localStorage.getItem("songData");
-        let songData;
-
-        try {
-          songData = JSON.parse(storedSongData!);
-        } catch (error) {
-          songData = null;
-        }
+        // Trigger a page reload only once
+        localStorage.setItem("hasReloaded", "true"); // Persist reload state
+        setHasReloaded(true);
+        window.location.reload(); // Reload the page
+      } else if (reloaded) {
+        setIsDataLoaded(true); // Mark as loaded if already reloaded
       }
     }
-  }, [params?.id, tracks]);
+  }, [dispatch, params?.id, playing]);
 
-  // Synchronize play state with localStorage data
-  const songData = useLocalSongData();
-
-  // Display loading animation if current song is not set
-  if (!currentSong) {
-    return (
-      <div>
-        <LoadingAnimation />
-      </div>
-    );
+  if (!isDataLoaded) {
+    return <Loading />; // Display a loading component if data isn't loaded yet
   }
 
-  return <div>{/* Your player UI goes here */}</div>;
+  return null; // No need to render anything once data is set and the reload is triggered
 };
 
 export default Player;

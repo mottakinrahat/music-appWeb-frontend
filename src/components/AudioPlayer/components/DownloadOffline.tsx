@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { LucideDownload, LucideCheckCircle } from "lucide-react";
 import { openDB } from "idb";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 // Function to initialize IndexedDB
 const initDB = async () => {
@@ -120,6 +122,9 @@ const DownloadOffline: React.FC<DownloadButtonProps> = ({
   );
   const [progress, setProgress] = useState<number>(0);
   const [isCanceled, setIsCanceled] = useState<boolean>(false);
+  const importedUrl: any = useSelector(
+    (state: RootState) => state.musicData.fileData
+  );
 
   useEffect(() => {
     const checkDownloadStatus = async () => {
@@ -177,29 +182,35 @@ const DownloadOffline: React.FC<DownloadButtonProps> = ({
   };
 
   return (
-    <a
-      onClick={
-        isLoading && currentDownloadId === songId
-          ? handleCancelDownload
-          : handleDownload
-      }
-      className="cursor-pointer relative"
-      role="button"
-      aria-label={`Download ${songName}`}
-    >
-      {isDownloaded ? (
-        <LucideCheckCircle className="text-white  p-[2px] sm:p-0 text-xl sm:text-2xl" />
-      ) : isLoading && currentDownloadId === songId ? (
-        <div className="relative flex items-center justify-center">
-          <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-          <span className="absolute text-white text-[10px] sm:text-xs">
-            {progress}%
-          </span>
-        </div>
+    <>
+      {importedUrl ? (
+        <LucideDownload className="text-gray-400 cursor-not-allowed  p-[2px] sm:p-0 text-xl sm:text-2xl" />
       ) : (
-        <LucideDownload className="active:text-accent group-hover:text-accent transition hover:text-accent text-white focus-within:text-accent focus:text-accent focus-visible:text-accent  p-[2px] sm:p-0 sm:text-2xl" />
+        <a
+          onClick={
+            isLoading && currentDownloadId === songId
+              ? handleCancelDownload
+              : handleDownload
+          }
+          className="cursor-pointer relative"
+          role="button"
+          aria-label={`Download ${songName}`}
+        >
+          {isDownloaded ? (
+            <LucideCheckCircle className="text-white  p-[2px] sm:p-0 text-xl sm:text-2xl" />
+          ) : isLoading && currentDownloadId === songId ? (
+            <div className="relative flex items-center justify-center">
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span className="absolute text-white text-[10px] sm:text-xs">
+                {progress}%
+              </span>
+            </div>
+          ) : (
+            <LucideDownload className="active:text-accent group-hover:text-accent transition hover:text-accent text-white focus-within:text-accent focus:text-accent focus-visible:text-accent  p-[2px] sm:p-0 sm:text-2xl" />
+          )}
+        </a>
       )}
-    </a>
+    </>
   );
 };
 

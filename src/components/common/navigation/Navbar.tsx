@@ -9,17 +9,18 @@ import AlertCard from "@/components/Card/AlertCard";
 import ToastCard from "@/components/Card/ToastCard";
 import { MdOutlineCancel } from "react-icons/md";
 import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { logoutUser } from "@/service/actions/logoutUser";
 
 interface NavInterface {
-  blur?: boolean; // blur the background image? default is false.
+  blur?: boolean;
 }
 
 const Navbar = ({ blur = false }: NavInterface) => {
   const [blurNav, setBlurNav] = useState(true);
   const pathname = usePathname();
   const [user, setUser] = useState(null);
-
+  const router = useRouter();
   const [showNav, setShowNav] = useState(false);
 
   useEffect(() => {
@@ -92,19 +93,20 @@ const Navbar = ({ blur = false }: NavInterface) => {
 
   const handleLogout = () => {
     setAlertOpen(true);
+    logoutUser(router);
   };
 
   return (
     <nav
       className={`${
         showNav || blur
-          ? "bg-white/10 fixed  z-[9999] w-full text-white"
+          ? "bg-white/10 fixed  z-[99] w-full text-white"
           : "bg-navigation"
       } h-16 md:h-20 lg:h-24 flex items-center`}
     >
       <div
         className={`${
-          blur || showNav ? "md:p-10 p-4  xl:px-[120px]" : "container"
+          blur || showNav ? "md:p-10 p-4 z-10  xl:px-[120px]" : "container"
         } w-full flex justify-between flex-wrap items-center`}
       >
         <div className="">
