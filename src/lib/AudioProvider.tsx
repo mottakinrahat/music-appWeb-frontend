@@ -1,4 +1,4 @@
-// context/AudioContext.tsx
+"use client";
 import React, {
   createContext,
   useContext,
@@ -6,13 +6,19 @@ import React, {
   ReactNode,
   useState,
   useEffect,
+  SetStateAction,
 } from "react";
+import ReactPlayer from "react-player";
 
 interface AudioContextProps {
   audioContext: AudioContext | null;
-  audioRef: React.RefObject<HTMLAudioElement>;
+  audioRef: React.RefObject<ReactPlayer>;
   musicSource: MediaElementAudioSourceNode | null | any;
   setMusicSource: (source: MediaElementAudioSourceNode | null | any) => void;
+  setAudioRef: (value: ReactPlayer | null | any) => void;
+  setAudioContext: (value: AudioContext | null) => void;
+  setCurrentSongBlob: (data: Blob | null) => void;
+  currentSongBlob: Blob | null;
 }
 
 const CombinedAudioContext = createContext<AudioContextProps | undefined>(
@@ -23,14 +29,17 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
+  const audioElementRef = useRef<HTMLAudioElement | null>(null); // New ref for HTML audio element
+  const [audioRef, setAudioRef] = useState<ReactPlayer | null | any>(null);
+  const [currentSongBlob, setCurrentSongBlob] = useState<Blob | null>(null);
   const [musicSource, setMusicSource] =
     useState<MediaElementAudioSourceNode | null>(null);
 
   useEffect(() => {
     const initializeAudioContext = async () => {
-      const context = new AudioContext();
+      const AudioCtx = (window.AudioContext ||
+        (window as any).webkitAudioContext) as typeof AudioContext;
+      const context = new AudioCtx();
       setAudioContext(context);
 
       // Cleanup function
@@ -49,24 +58,46 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   useEffect(() => {
-    if (audioContext && audioRef.current) {
-      const newMusicSource = audioContext.createMediaElementSource(
-        audioRef.current
-      );
-      setMusicSource(newMusicSource);
+    const initializeAudioContext = async () => {
+      const AudioCtx = (window.AudioContext ||
+        (window as any).webkitAudioContext) as typeof AudioContext;
+      const context = new AudioCtx();
+      setAudioContext(context);
 
+      // Resume the context if it's suspended
+      if (context.state === "suspended") {
+        await context.resume();
+      }
+
+      // Cleanup function
       return () => {
-        if (newMusicSource) {
-          newMusicSource.disconnect();
-        }
+        context.close();
       };
-    }
-  }, [audioContext]);
+    };
+
+    const cleanup = initializeAudioContext();
+
+    return () => {
+      if (cleanup instanceof Promise) {
+        cleanup.then(() => {});
+      }
+    };
+  }, []);
 
   return (
     <CombinedAudioContext.Provider
-      value={{ audioContext, audioRef, musicSource, setMusicSource }}
+      value={{
+        audioContext,
+        audioRef,
+        musicSource,
+        setAudioRef,
+        setMusicSource,
+        setAudioContext,
+        setCurrentSongBlob,
+        currentSongBlob,
+      }}
     >
+      <audio ref={audioElementRef} style={{ display: "none" }} />
       {children}
     </CombinedAudioContext.Provider>
   );

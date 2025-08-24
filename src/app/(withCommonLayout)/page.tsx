@@ -11,9 +11,7 @@ import Soponsors from "@/components/pageComponents/Home/Soponsors";
 import TopList from "@/components/pageComponents/Home/TopList";
 import VRConcerts from "@/components/pageComponents/Home/VRConcerts";
 import WhoAreUse from "@/components/pageComponents/Home/WhoAreUse";
-// import { useEffect, useState } from "react";
-// import { Coming_Soon } from "next/font/google";
-// import Link from "next/link";
+
 
 export default function Home() {
   return (

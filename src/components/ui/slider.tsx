@@ -85,7 +85,6 @@ const VolumeRange2 = React.forwardRef<
 ));
 VolumeRange2.displayName = SliderPrimitive.Root.displayName;
 
-
 const VolumeRangeMixer = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
