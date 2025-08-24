@@ -10,7 +10,6 @@ type DTextareaProps = {
   required?: boolean;
   rows?: number;
   cols?: number;
-  // Additional props specific to Textarea component
   [key: string]: any;
 };
 

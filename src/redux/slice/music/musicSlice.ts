@@ -15,11 +15,13 @@ const initialState: MusicState = {
   playlistOpen: 0, // Initial value
 };
 
+
+
 const musicSlice = createSlice({
   name: "music",
   initialState,
   reducers: {
-    setId(state, action: PayloadAction<string | null>) {
+    setSongId(state, action: PayloadAction<MusicState['id']>) {
       state.id = action.payload;
     },
     setPathHistory(state, action: PayloadAction<string | null>) {
@@ -49,7 +51,7 @@ const musicSlice = createSlice({
 });
 
 export const {
-  setId,
+  setSongId,
   setPathHistory,
   clearPathHistory,
   togglePlaylist,
