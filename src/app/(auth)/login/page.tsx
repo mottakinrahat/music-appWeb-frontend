@@ -29,12 +29,12 @@ const Login = () => {
       const res = await login(formData).unwrap();
       const user = res?.data?.user;
 
-      localStorage.setItem("token", res.data.data?.token);
+      localStorage.setItem("token", res.data?.token);
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem(
-        "songData",
-        JSON.stringify({ play: false, id: songId })
-      );
+      // localStorage.setItem(
+      //   "songData",
+      //   JSON.stringify({ play: false, id: songId })
+      // );
       dispatch(pauseSong());
       toast.success("Login successful");
       router.push("/");

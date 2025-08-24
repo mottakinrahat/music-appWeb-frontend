@@ -27,6 +27,9 @@ const musicDataSlice = createSlice({
       state.fileData = null;
       state.title = null;
     },
+    globalMusicId(state, action) {
+      state.id = action.payload.id;
+    },
   },
 });
 

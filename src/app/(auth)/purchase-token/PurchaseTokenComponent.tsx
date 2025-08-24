@@ -28,7 +28,7 @@ const PurchaseTokenComponent: React.FC<PurchaseTokenComponentProps> = () => {
   };
 
   const handleSubmit = (data: any) => {};
-  console.log(selectedPlan);
+  // console.log(selectedPlan);
 
   return (
     <div className="container">
